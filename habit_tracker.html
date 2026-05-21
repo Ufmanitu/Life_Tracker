@@ -7,196 +7,428 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body {
   width: 100%; height: 100%; min-height: 100vh;
-  background: #07111f;
-  font-family: 'Montserrat', sans-serif;
-  color: #fff;
-  overflow-x: hidden;
+  background: #07111f; font-family: 'Montserrat', sans-serif; color: #fff; overflow-x: hidden;
 }
 
-body {
-  background-image:
-    radial-gradient(ellipse at 15% 15%, #0c1e3f 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 85%, #091830 0%, transparent 55%);
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 8% 15%, rgba(79,110,247,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 92% 88%, rgba(62,207,178,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 350px at 50% 50%, rgba(224,90,154,0.03) 0%, transparent 70%);
+  animation: bgBreath 14s ease-in-out infinite alternate;
+}
+@keyframes bgBreath {
+  0%   { opacity: 0.6; transform: scale(1); }
+  50%  { opacity: 1;   transform: scale(1.03); }
+  100% { opacity: 0.7; transform: scale(0.98); }
+}
+.bg-orb {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  will-change: transform; filter: blur(60px);
+}
+.bg-orb-1 { width: 380px; height: 380px; top: -8%; left: -6%;
+  background: radial-gradient(circle, rgba(79,110,247,0.08), transparent 70%);
+  animation: orbFloat 11s ease-in-out infinite; }
+.bg-orb-2 { width: 260px; height: 260px; bottom: 8%; right: -4%;
+  background: radial-gradient(circle, rgba(62,207,178,0.07), transparent 70%);
+  animation: orbFloat 9s 3s ease-in-out infinite; }
+.bg-orb-3 { width: 200px; height: 200px; top: 45%; left: 35%;
+  background: radial-gradient(circle, rgba(224,90,154,0.05), transparent 70%);
+  animation: orbFloat 13s 6s ease-in-out infinite; }
+@keyframes orbFloat {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  33%      { transform: translate(-12px,-18px) rotate(4deg); }
+  66%      { transform: translate(10px,-8px) rotate(-3deg); }
 }
 
-/* ── LAYOUT ── */
-#app { display: flex; flex-direction: column; min-height: 100vh; }
+#app { display: flex; flex-direction: column; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ── KEYFRAMES ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scalePop {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeSection {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes checkPop {
+  0%   { transform: scale(0.7); }
+  55%  { transform: scale(1.18); }
+  80%  { transform: scale(0.93); }
+  100% { transform: scale(1.06); }
+}
+@keyframes shimmerSlide {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes todayPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(79,110,247,0); }
+  50%      { box-shadow: 0 0 0 6px rgba(79,110,247,0.18); }
+}
+@keyframes arcGlow {
+  0%,100% { filter: drop-shadow(0 0 3px rgba(62,207,178,0.3)); }
+  50%      { filter: drop-shadow(0 0 8px rgba(62,207,178,0.55)); }
+}
+@keyframes savedSlide {
+  0%   { opacity: 0; transform: translateY(12px); }
+  20%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(6px); }
+}
+@keyframes inputFocus {
+  from { box-shadow: 0 0 0 0px rgba(79,110,247,0); }
+  to   { box-shadow: 0 0 0 3px rgba(79,110,247,0.18); }
+}
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 
 /* ── HEADER ── */
 #header {
-  padding: clamp(20px, 3vw, 36px) clamp(16px, 4vw, 48px) 0;
-  display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  padding: clamp(20px,3vw,36px) clamp(16px,4vw,48px) 0;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  animation: fadeSlideUp 0.65s cubic-bezier(.4,0,.2,1) both;
 }
-
 #month-title {
-  font-size: clamp(32px, 6vw, 58px);
-  font-weight: 900; letter-spacing: -2px; line-height: 1;
+  font-size: clamp(32px,6vw,58px); font-weight: 900; letter-spacing: -2px; line-height: 1;
+  background: linear-gradient(120deg, #fff 30%, #7090c0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-#month-sub { font-size: clamp(11px, 1.5vw, 14px); color: #4a6a9a; letter-spacing: 3px; margin-top: 6px; font-weight: 600; }
+#month-sub { font-size: clamp(11px,1.5vw,14px); color: #4a6a9a; letter-spacing: 3px; margin-top: 6px; font-weight: 600; }
 
 .nav-row { display: flex; align-items: center; gap: 14px; }
 .nav-btn {
-  background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 8px;
-  color: #7090c0; width: clamp(36px, 4vw, 44px); height: clamp(36px, 4vw, 44px);
-  cursor: pointer; font-size: clamp(22px, 3vw, 28px);
+  background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 10px;
+  color: #7090c0; width: clamp(36px,4vw,44px); height: clamp(36px,4vw,44px);
+  cursor: pointer; font-size: clamp(22px,3vw,28px);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Montserrat', sans-serif; transition: background 0.2s, transform 0.1s;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.2s, border-color 0.2s, transform 0.12s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
 }
-.nav-btn:hover { background: #1a2d50; }
-.nav-btn:active { transform: scale(0.93); }
-#year-label { font-size: clamp(16px, 2vw, 20px); color: #7090c0; min-width: 70px; text-align: center; font-weight: 700; }
+.nav-btn:hover { background: #152540; border-color: #3a5890; box-shadow: 0 0 14px rgba(79,110,247,0.14); }
+.nav-btn:active { transform: scale(0.9); }
+#year-label { font-size: clamp(16px,2vw,20px); color: #7090c0; min-width: 70px; text-align: center; font-weight: 700; }
 
 .tab-switcher {
-  display: flex; background: #0d1e3a; border-radius: 12px; overflow: hidden;
-  border: 1.5px solid #1e3060;
+  display: flex; background: #0d1e3a; border-radius: 12px; overflow: hidden; border: 1.5px solid #1e3060;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 .tab-btn {
-  padding: clamp(10px, 1.5vw, 14px) clamp(18px, 3vw, 28px);
-  font-size: clamp(11px, 1.4vw, 13px); font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; border: none; cursor: pointer;
-  font-family: 'Montserrat', sans-serif; transition: all 0.2s;
-  color: #4a6a9a; background: transparent;
+  padding: clamp(10px,1.5vw,14px) clamp(14px,2.5vw,24px);
+  font-size: clamp(10px,1.3vw,13px); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  border: none; cursor: pointer; font-family: 'Montserrat', sans-serif;
+  color: #4a6a9a; background: transparent; position: relative; overflow: hidden;
+  transition: color 0.25s;
 }
-.tab-btn.active { background: #4f6ef7; color: #fff; }
+.tab-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: #4f6ef7; border-radius: 0; transform: scaleX(0); transform-origin: center;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1); z-index: 0;
+}
+.tab-btn.active::before { transform: scaleX(1); }
+.tab-btn.active { color: #fff; }
+.tab-btn span { position: relative; z-index: 1; }
 
 /* ── STATS ROW ── */
 #stats-row {
-  padding: clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 48px) 0;
-  display: flex; gap: clamp(12px, 2vw, 20px); flex-wrap: wrap; align-items: center;
+  padding: clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) 0;
+  display: flex; gap: clamp(12px,2vw,20px); flex-wrap: wrap; align-items: center;
+  animation: fadeSlideUp 0.65s 0.12s cubic-bezier(.4,0,.2,1) both;
 }
 .stat-card {
   background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 14px;
-  padding: clamp(12px, 1.5vw, 18px) clamp(16px, 2.5vw, 28px);
+  padding: clamp(12px,1.5vw,18px) clamp(16px,2.5vw,28px);
   display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 100px;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  position: relative; overflow: hidden;
 }
-.stat-label { font-size: clamp(9px, 1.2vw, 11px); color: #4a6a9a; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
-.stat-val { font-size: clamp(26px, 4vw, 38px); font-weight: 900; color: #fff; line-height: 1; }
+.stat-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(79,110,247,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.stat-card:hover { border-color: #2d4a7a; box-shadow: 0 0 20px rgba(79,110,247,0.08); transform: translateY(-2px); }
+.stat-label { font-size: clamp(9px,1.2vw,11px); color: #4a6a9a; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.stat-val {
+  font-size: clamp(26px,4vw,38px); font-weight: 900; color: #fff; line-height: 1;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+}
+.stat-val.bump { animation: checkPop 0.35s cubic-bezier(.4,0,.2,1); }
 
 .radial-wrap { position: relative; flex-shrink: 0; }
 .radial-text {
   position: absolute; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; pointer-events: none;
 }
-.radial-pct { font-size: clamp(16px, 2vw, 22px); font-weight: 800; color: #fff; font-family: 'Montserrat', sans-serif; }
-.radial-sub { font-size: clamp(9px, 1vw, 11px); color: #7090c0; margin-top: 2px; }
+.radial-pct { font-size: clamp(16px,2vw,22px); font-weight: 800; color: #fff; font-family: 'Montserrat', sans-serif; }
+.radial-sub { font-size: clamp(9px,1vw,11px); color: #7090c0; margin-top: 2px; }
+#overall-arc { animation: arcGlow 3s ease-in-out infinite; }
 
 /* ── TRACKER ── */
-#tracker-section { padding: clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 48px) clamp(20px, 3vw, 40px); overflow-x: auto; flex: 1; }
+#tracker-section { padding: clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px); overflow-x: auto; flex: 1; }
 #tracker-inner { display: flex; gap: 0; }
-
-#habit-names-col { min-width: clamp(160px, 22vw, 260px); flex-shrink: 0; }
+#habit-names-col { min-width: clamp(160px,22vw,260px); flex-shrink: 0; }
 .habit-name-header {
-  height: clamp(56px, 7vw, 72px);
-  display: flex; align-items: flex-end; padding-bottom: 10px;
-  font-size: clamp(14px, 1.8vw, 18px); font-weight: 800; color: #fff; letter-spacing: 0.5px;
+  height: clamp(60px,7vw,78px); display: flex; align-items: flex-end; padding-bottom: 10px;
+  font-size: clamp(14px,1.8vw,18px); font-weight: 800; color: #fff; letter-spacing: 0.5px;
 }
 .habit-name-row {
-  height: clamp(40px, 5vw, 52px); display: flex; align-items: center; gap: 8px; padding-right: 14px;
+  height: clamp(40px,5vw,52px); display: flex; align-items: center; gap: 6px; padding-right: 10px;
+  animation: rowIn 0.3s both;
 }
-.habit-name-text { font-size: clamp(12px, 1.4vw, 15px); color: #c0d4f0; font-weight: 600; flex: 1; line-height: 1.25; }
+.habit-name-text { font-size: clamp(12px,1.4vw,15px); color: #c0d4f0; font-weight: 600; flex: 1; line-height: 1.25; }
+
+/* Edit mode input */
+.habit-name-input {
+  background: #071828; border: 1.5px solid #4f6ef7; border-radius: 7px;
+  color: #fff; font-family: 'Montserrat', sans-serif;
+  font-size: clamp(11px,1.3vw,13px); font-weight: 600;
+  padding: 4px 8px; outline: none; flex: 1;
+  animation: inputFocus 0.25s forwards;
+  box-shadow: 0 0 0 3px rgba(79,110,247,0.15);
+  transition: border-color 0.2s;
+}
+.habit-name-input:focus { border-color: #6a8af9; }
+
+.habit-edit-btn {
+  background: none; border: none; color: #4a6a9a; cursor: pointer; font-size: 14px;
+  line-height: 1; flex-shrink: 0; opacity: 0;
+  transition: opacity 0.2s, color 0.2s, transform 0.15s; padding: 2px 4px;
+}
+.habit-edit-save-btn {
+  background: rgba(62,207,178,0.12); border: 1px solid #3ecfb260; border-radius: 5px;
+  color: #3ecfb2; cursor: pointer; font-size: 13px; line-height: 1;
+  flex-shrink: 0; padding: 3px 7px; font-weight: 700;
+  transition: background 0.2s, transform 0.12s;
+}
+.habit-edit-save-btn:hover { background: rgba(62,207,178,0.22); transform: scale(1.06); }
+.habit-name-row:hover .habit-edit-btn { opacity: 1; }
+.habit-edit-btn:hover { color: #4f6ef7; transform: scale(1.15); }
+
 .habit-remove-btn {
   background: none; border: none; color: #2a3d5e; cursor: pointer;
-  font-size: clamp(18px, 2vw, 22px); line-height: 1; flex-shrink: 0; opacity: 0.4;
-  transition: opacity 0.2s, color 0.2s; padding: 0 4px;
-  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(18px,2vw,22px); line-height: 1; flex-shrink: 0; opacity: 0;
+  transition: opacity 0.2s, color 0.2s, transform 0.15s; padding: 0 3px; font-family: 'Montserrat', sans-serif;
 }
-.habit-remove-btn:hover { opacity: 1; color: #e05a9a; }
+.habit-name-row:hover .habit-remove-btn { opacity: 0.5; }
+.habit-remove-btn:hover { opacity: 1 !important; color: #e05a9a; transform: scale(1.15); }
 
-#weeks-container { display: flex; gap: clamp(5px, 1vw, 10px); flex: 1; }
-.week-col { flex: 1 1 0; min-width: 0; }
+#weeks-container { display: flex; gap: clamp(5px,1vw,10px); flex: 1; }
+.week-col { flex: 1 1 0; min-width: 0; opacity: 0; }
+
 .week-header {
-  border-radius: 10px 10px 0 0; padding: clamp(8px, 1vw, 12px) 0 clamp(6px, 0.8vw, 10px);
+  border-radius: 10px 10px 0 0; padding: clamp(8px,1vw,12px) 0 clamp(6px,0.8vw,10px);
   display: flex; align-items: center; justify-content: center;
-  font-size: clamp(11px, 1.3vw, 14px); font-weight: 800; letter-spacing: 1px; color: #fff;
+  font-size: clamp(11px,1.3vw,14px); font-weight: 800; letter-spacing: 1px; color: #fff;
+  position: relative; overflow: hidden;
 }
-.week-days-row {
-  display: flex; gap: clamp(3px, 0.5vw, 6px); padding: clamp(4px, 0.6vw, 8px) clamp(4px, 0.6vw, 8px) clamp(3px, 0.5vw, 6px);
+.week-header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmerSlide 3.5s ease-in-out infinite;
+  pointer-events: none;
 }
-.day-header-cell { flex: 1; text-align: center; }
-.day-dow { font-size: clamp(9px, 1vw, 11px); font-weight: 700; }
-.day-num { font-size: clamp(9px, 1vw, 11px); color: #4a6a9a; margin-top: 2px; }
+
+.week-days-row { display: flex; padding: clamp(4px,0.6vw,8px) clamp(4px,0.6vw,8px) clamp(3px,0.5vw,6px); }
+.day-header-cell { flex: 1; text-align: center; min-width: 0; }
+.day-dow { font-size: clamp(9px,1vw,11px); font-weight: 700; }
+.day-num { font-size: clamp(9px,1vw,12px); color: #4a6a9a; margin-top: 2px; }
+.day-num.today-num {
+  color: #fff; font-weight: 900; background: #4f6ef7; border-radius: 50%;
+  width: clamp(16px,2vw,22px); height: clamp(16px,2vw,22px);
+  display: inline-flex; align-items: center; justify-content: center; margin: 1px auto 0;
+  animation: todayPulse 2.5s ease-in-out infinite;
+}
+
 .week-habit-row {
-  display: flex; gap: clamp(3px, 0.5vw, 6px);
-  padding: clamp(2px, 0.3vw, 4px) clamp(4px, 0.6vw, 8px);
-  height: clamp(40px, 5vw, 54px); align-items: center;
+  display: flex; padding: clamp(2px,0.3vw,4px) clamp(4px,0.6vw,8px);
+  height: clamp(40px,5vw,54px); align-items: center;
 }
 .checkbox {
-  flex: 1; aspect-ratio: 1/1; max-width: clamp(28px, 3.5vw, 42px); height: auto;
-  border-radius: 6px; flex-shrink: 0;
-  border: 2.5px solid #2a3d6e; background: transparent; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s cubic-bezier(.4,0,.2,1); min-height: clamp(26px, 3vw, 38px);
+  flex: 1; min-width: 0; aspect-ratio: 1/1; max-width: clamp(28px,3.5vw,42px);
+  border-radius: 7px; flex-shrink: 0; border: 2.5px solid #2a3d6e; background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.14s cubic-bezier(.4,0,.2,1), border-color 0.14s, background 0.14s, box-shadow 0.2s;
+  min-height: clamp(26px,3vw,38px); position: relative;
 }
+.checkbox:hover:not(.invisible):not(.done) {
+  border-color: #4f6ef7 !important; background: rgba(79,110,247,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(79,110,247,0.12); transform: scale(1.08);
+}
+.checkbox:active:not(.invisible) { transform: scale(0.86) !important; }
 .checkbox.done { transform: scale(1.06); }
+.checkbox.done:hover { box-shadow: 0 0 0 4px rgba(62,207,178,0.15) !important; }
+.checkbox.checking { animation: checkPop 0.32s cubic-bezier(.4,0,.2,1) both; }
 .checkbox svg { display: none; width: 55%; height: 55%; }
 .checkbox.done svg { display: block; }
+.checkbox svg polyline { stroke-dasharray: 20; stroke-dashoffset: 0; animation: drawCheck 0.28s ease-out both; }
+@keyframes drawCheck {
+  from { stroke-dashoffset: 20; }
+  to   { stroke-dashoffset: 0; }
+}
+.checkbox.invisible { visibility: hidden; pointer-events: none; }
 .week-footer {
-  border-radius: 0 0 10px 10px; padding: clamp(6px, 0.8vw, 10px) clamp(4px, 0.6vw, 8px);
-  display: flex; justify-content: center;
-  font-size: clamp(12px, 1.4vw, 16px); font-weight: 800;
+  border-radius: 0 0 10px 10px; padding: clamp(6px,0.8vw,10px) clamp(4px,0.6vw,8px);
+  display: flex; justify-content: center; font-size: clamp(12px,1.4vw,16px); font-weight: 800;
 }
 
-/* ── ADD HABIT ── */
-#add-habit-row { margin-top: clamp(18px, 2.5vw, 28px); display: flex; gap: 10px; max-width: 480px; }
+/* ── ADD + EDIT ROW ── */
+#add-habit-row { margin-top: clamp(18px,2.5vw,28px); display: flex; gap: 10px; max-width: 520px; flex-wrap: wrap; }
 #new-habit-input {
-  flex: 1; background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 10px;
-  padding: clamp(10px, 1.5vw, 14px) clamp(14px, 2vw, 20px); color: #fff;
-  font-size: clamp(13px, 1.5vw, 16px); font-family: 'Montserrat', sans-serif;
-  outline: none; transition: border-color 0.2s;
+  flex: 1; min-width: 160px; background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 10px;
+  padding: clamp(10px,1.5vw,14px) clamp(14px,2vw,20px); color: #fff;
+  font-size: clamp(13px,1.5vw,16px); font-family: 'Montserrat', sans-serif; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-#new-habit-input:focus { border-color: #4f6ef7; }
+#new-habit-input:focus { border-color: #4f6ef7; box-shadow: 0 0 0 3px rgba(79,110,247,0.14); }
 #new-habit-input::placeholder { color: #2a4060; }
 #add-habit-btn {
-  background: #4f6ef7; border: none; border-radius: 10px; color: #fff;
-  padding: clamp(10px, 1.5vw, 14px) clamp(18px, 2.5vw, 28px);
-  font-size: clamp(13px, 1.5vw, 16px); font-weight: 700; cursor: pointer;
-  font-family: 'Montserrat', sans-serif; transition: background 0.2s, transform 0.1s;
-  white-space: nowrap;
+  background: linear-gradient(135deg, #4f6ef7, #6a85fa);
+  border: none; border-radius: 10px; color: #fff;
+  padding: clamp(10px,1.5vw,14px) clamp(18px,2.5vw,28px);
+  font-size: clamp(13px,1.5vw,16px); font-weight: 700; cursor: pointer;
+  font-family: 'Montserrat', sans-serif; white-space: nowrap;
+  transition: transform 0.12s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 4px 16px rgba(79,110,247,0.3); position: relative; overflow: hidden;
 }
-#add-habit-btn:hover { background: #3a5de0; }
-#add-habit-btn:active { transform: scale(0.96); }
+#add-habit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0; transition: opacity 0.2s;
+}
+#add-habit-btn:hover { filter: brightness(1.12); box-shadow: 0 6px 22px rgba(79,110,247,0.4); transform: translateY(-1px); }
+#add-habit-btn:hover::before { opacity: 1; }
+#add-habit-btn:active { transform: scale(0.95) translateY(0); }
 
-/* ── ANALYSIS ── */
-#analysis-section { padding: clamp(16px, 2.5vw, 32px) clamp(16px, 4vw, 48px) clamp(20px, 3vw, 40px); display: flex; flex-direction: column; gap: clamp(16px, 2.5vw, 28px); }
+/* ── DAYS VIEW ── */
+#days-section { padding: clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px); flex: 1; }
+#days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(260px,30vw,380px), 1fr));
+  gap: clamp(12px,2vw,20px);
+}
+.day-card {
+  background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 16px;
+  padding: clamp(14px,2vw,22px) clamp(16px,2.5vw,26px);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  opacity: 0;
+}
+.day-card:hover { border-color: #2a4a80; box-shadow: 0 4px 24px rgba(79,110,247,0.09); transform: translateY(-2px); }
+.day-card.is-today { border-color: #4f6ef7; box-shadow: 0 0 0 1px #4f6ef755, 0 4px 24px rgba(79,110,247,0.16); }
+.day-card.future { opacity: 0.4; pointer-events: none; }
+.day-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.day-card-label { font-size: clamp(10px,1.2vw,12px); color: #4a6a9a; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.day-card-today-badge {
+  background: linear-gradient(135deg, #4f6ef7, #6a85fa); color: #fff;
+  font-size: clamp(9px,1vw,11px); font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; animation: todayPulse 2.5s ease-in-out infinite;
+}
+.day-card-date { font-size: clamp(18px,2.5vw,28px); font-weight: 900; color: #fff; margin-bottom: clamp(10px,1.5vw,16px); }
+.day-card-progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: clamp(12px,1.8vw,18px); }
+.day-card-pct { font-size: clamp(12px,1.4vw,15px); font-weight: 800; min-width: 42px; color: #fff; }
+.day-card-track { flex: 1; height: clamp(6px,0.8vw,9px); background: #071020; border-radius: 10px; overflow: hidden; }
+.day-card-fill { height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+.day-habit-item { display: flex; align-items: center; gap: clamp(8px,1.2vw,12px); padding: clamp(5px,0.7vw,8px) 0; border-bottom: 1px solid #111e38; transition: background 0.15s; }
+.day-habit-item:last-child { border-bottom: none; }
+.day-habit-cb {
+  width: clamp(18px,2.2vw,24px); height: clamp(18px,2.2vw,24px); border-radius: 5px; flex-shrink: 0;
+  border: 2px solid #2a3d6e; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s cubic-bezier(.4,0,.2,1);
+}
+.day-habit-cb:hover:not(.checked) { border-color: #4f6ef7; background: rgba(79,110,247,0.1); transform: scale(1.1); }
+.day-habit-cb.checked { border-color: #3ecfb2; background: #3ecfb228; }
+.day-habit-cb.checked:hover { box-shadow: 0 0 0 3px rgba(62,207,178,0.15); }
+.day-habit-cb svg { display: none; width: 55%; height: 55%; }
+.day-habit-cb.checked svg { display: block; }
+.day-habit-label { font-size: clamp(12px,1.4vw,14px); color: #c0d4f0; font-weight: 500; flex: 1; line-height: 1.3; transition: color 0.2s; }
+.day-habit-label.done-label { color: #4a6a9a; text-decoration: line-through; }
+
+/* ── ANALYSIS LAYOUT ── */
+#analysis-section {
+  padding: clamp(16px,2.5vw,32px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);
+  display: flex; flex-direction: column; gap: clamp(14px,2vw,22px);
+}
+.analysis-bottom-row {
+  display: flex; gap: clamp(14px,2vw,22px); align-items: flex-start;
+}
 .analysis-card {
   background: #0d1e3a; border: 1.5px solid #1e3060; border-radius: 16px;
-  padding: clamp(16px, 2vw, 24px) clamp(18px, 2.5vw, 28px);
+  padding: clamp(14px,1.8vw,22px) clamp(16px,2.2vw,26px);
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
-.section-title { font-size: clamp(11px, 1.3vw, 14px); font-weight: 800; color: #7090c0; letter-spacing: 2px; text-transform: uppercase; }
+.analysis-card:hover { border-color: #1e3c6a; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.analysis-card.full-width { width: 100%; }
+.analysis-main { flex: 1; min-width: 0; }
+.analysis-side { width: clamp(220px,28vw,320px); flex-shrink: 0; display: flex; flex-direction: column; gap: clamp(14px,2vw,22px); }
 
-.habit-bar-row { display: flex; align-items: center; gap: clamp(10px, 1.5vw, 18px); margin-top: clamp(10px, 1.5vw, 16px); }
-.habit-bar-label { font-size: clamp(12px, 1.4vw, 15px); color: #c0d4f0; min-width: clamp(140px, 20vw, 220px); font-weight: 600; }
-.habit-bar-track { flex: 1; height: clamp(14px, 1.8vw, 20px); background: #071020; border-radius: 10px; overflow: hidden; max-width: 260px; }
-.habit-bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
-.habit-bar-pct { font-size: clamp(12px, 1.4vw, 15px); font-weight: 800; min-width: 50px; text-align: right; }
+.section-title {
+  font-size: clamp(10px,1.2vw,12px); font-weight: 800; color: #5a7aaa;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2px;
+  display: flex; align-items: center; gap: 7px;
+}
+.section-title::before {
+  content: ''; display: block; width: 3px; height: 3px; border-radius: 50%; background: #4f6ef7;
+  box-shadow: 0 0 6px #4f6ef7;
+}
 
-.week-radials { display: flex; gap: clamp(12px, 2vw, 24px); margin-top: clamp(12px, 1.8vw, 20px); flex-wrap: wrap; }
-.week-radial-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.week-radial-label { font-size: clamp(11px, 1.3vw, 14px); font-weight: 700; }
+.habit-bar-row { display: flex; align-items: center; gap: clamp(8px,1.2vw,14px); margin-top: clamp(8px,1.2vw,12px); }
+.habit-bar-label { font-size: clamp(11px,1.3vw,13px); color: #c0d4f0; min-width: clamp(120px,16vw,190px); font-weight: 600; line-height: 1.3; }
+.habit-bar-track { flex: 1; height: clamp(10px,1.4vw,16px); background: #071020; border-radius: 10px; overflow: hidden; max-width: 220px; }
+.habit-bar-fill { height: 100%; border-radius: 10px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+.habit-bar-pct { font-size: clamp(11px,1.3vw,14px); font-weight: 800; min-width: 44px; text-align: right; }
 
-.bar-chart-wrap { display: flex; align-items: flex-end; gap: clamp(5px, 1vw, 10px); height: clamp(80px, 10vw, 110px); margin-top: clamp(12px, 1.5vw, 18px); }
+/* Weekly score compact radials */
+.week-radials { display: flex; gap: clamp(8px,1.2vw,14px); margin-top: clamp(10px,1.4vw,14px); flex-wrap: wrap; justify-content: center; }
+.week-radial-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.week-radial-label { font-size: clamp(9px,1vw,11px); font-weight: 700; }
+
+.bar-chart-wrap { display: flex; align-items: flex-end; gap: clamp(5px,1vw,10px); height: clamp(70px,9vw,96px); margin-top: clamp(10px,1.4vw,14px); }
 .bar-chart-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
-.bar-chart-bar { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.5s cubic-bezier(.4,0,.2,1); }
-.bar-chart-lbl { font-size: clamp(9px, 1vw, 12px); color: #7090c0; margin-top: 4px; font-weight: 600; }
+.bar-chart-bar {
+  width: 100%; border-radius: 4px 4px 0 0;
+  transition: height 0.6s cubic-bezier(.4,0,.2,1);
+  position: relative; overflow: hidden;
+}
+.bar-chart-bar::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+}
+.bar-chart-lbl { font-size: clamp(9px,1vw,11px); color: #7090c0; margin-top: 4px; font-weight: 600; }
 
-.overall-row { display: flex; align-items: center; gap: clamp(20px, 3vw, 36px); margin-top: clamp(14px, 1.8vw, 20px); }
-.overall-stats div { font-size: clamp(13px, 1.6vw, 16px); color: #7090c0; margin-bottom: 6px; font-weight: 500; }
-
-.hidden { display: none !important; }
+.overall-row { display: flex; align-items: center; gap: clamp(12px,2vw,22px); margin-top: clamp(10px,1.4vw,16px); }
+.overall-stats div { font-size: clamp(11px,1.3vw,13px); color: #7090c0; margin-bottom: 5px; font-weight: 500; }
 
 /* ── SAVE INDICATOR ── */
 #save-indicator {
   position: fixed; bottom: 20px; right: 24px;
-  background: #1a3060; border: 1.5px solid #3ecfb2; border-radius: 10px;
-  padding: 8px 18px; font-size: 13px; font-weight: 700; color: #3ecfb2;
-  opacity: 0; pointer-events: none; transition: opacity 0.3s;
-  z-index: 100; letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #0d2040, #0a1a30);
+  border: 1.5px solid #3ecfb2; border-radius: 12px;
+  padding: 9px 20px; font-size: 13px; font-weight: 700; color: #3ecfb2;
+  opacity: 0; pointer-events: none; z-index: 100; letter-spacing: 0.5px;
+  box-shadow: 0 4px 20px rgba(62,207,178,0.2);
 }
-#save-indicator.show { opacity: 1; }
+#save-indicator.show { animation: savedSlide 1.6s cubic-bezier(.4,0,.2,1) both; }
+
+.hidden { display: none !important; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
@@ -204,26 +436,32 @@ body {
   .tab-switcher { order: 3; width: 100%; }
   .tab-btn { flex: 1; text-align: center; }
   .stat-card { min-width: calc(33% - 8px); }
+  .analysis-bottom-row { flex-direction: column; }
+  .analysis-side { width: 100%; flex-direction: row; }
+  .analysis-side .analysis-card { flex: 1; }
 }
-
 @media (max-width: 640px) {
   .stat-card { flex: 1 1 calc(50% - 6px); }
-  #habit-names-col { min-width: 130px; }
+  #habit-names-col { min-width: 120px; }
   .habit-name-text { font-size: 11px; }
-  .week-header { font-size: 10px; padding: 6px 0; }
-  .week-footer { font-size: 11px; }
-  .habit-bar-label { min-width: 110px; font-size: 11px; }
+  .habit-bar-label { min-width: 100px; font-size: 11px; }
   .overall-row { flex-direction: column; }
   #add-habit-row { max-width: 100%; }
+  #days-grid { grid-template-columns: 1fr; }
+  .analysis-side { flex-direction: column; }
 }
-
 @media (max-width: 480px) {
   .day-dow, .day-num { font-size: 8px; }
-  #habit-names-col { min-width: 110px; }
+  #habit-names-col { min-width: 100px; }
 }
 </style>
 </head>
 <body>
+
+<!-- Animated background orbs -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
 
 <div id="app">
 
@@ -239,31 +477,23 @@ body {
     <button class="nav-btn" id="next-month">&#8250;</button>
   </div>
   <div class="tab-switcher">
-    <button class="tab-btn active" data-tab="tracker">Tracker</button>
-    <button class="tab-btn" data-tab="analysis">Analysis</button>
+    <button class="tab-btn active" data-tab="tracker"><span>Tracker</span></button>
+    <button class="tab-btn" data-tab="days"><span>Days</span></button>
+    <button class="tab-btn" data-tab="analysis"><span>Analysis</span></button>
   </div>
 </div>
 
 <!-- STATS ROW -->
 <div id="stats-row">
-  <div class="stat-card">
-    <div class="stat-label">Habits</div>
-    <div class="stat-val" id="stat-habits">0</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">Completed</div>
-    <div class="stat-val" id="stat-done">0</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">Progress</div>
-    <div class="stat-val" id="stat-pct">0%</div>
-  </div>
+  <div class="stat-card"><div class="stat-label">Habits</div><div class="stat-val" id="stat-habits">0</div></div>
+  <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" id="stat-done">0</div></div>
+  <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-val" id="stat-pct">0%</div></div>
   <div style="margin-left:auto;flex-shrink:0;">
-    <div class="radial-wrap" id="overall-radial" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
-      <svg id="overall-svg" width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+    <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
+      <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
         <circle cx="50" cy="50" r="42" fill="none" stroke="#1e3060" stroke-width="9"/>
         <circle id="overall-arc" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
-          stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray 0.6s cubic-bezier(.4,0,.2,1)"/>
+          stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray 0.7s cubic-bezier(.4,0,.2,1)"/>
       </svg>
       <div class="radial-text">
         <span class="radial-pct" id="overall-pct-text">0%</span>
@@ -274,7 +504,7 @@ body {
 </div>
 
 <!-- TRACKER SECTION -->
-<div id="tracker-section">
+<div id="tracker-section" style="animation: fadeSlideUp 0.65s 0.22s cubic-bezier(.4,0,.2,1) both;">
   <div id="tracker-inner">
     <div id="habit-names-col">
       <div class="habit-name-header">My Habits</div>
@@ -283,61 +513,75 @@ body {
     <div id="weeks-container"></div>
   </div>
   <div id="add-habit-row">
-    <input type="text" id="new-habit-input" placeholder="Add a new habit..." />
+    <input type="text" id="new-habit-input" placeholder="Add a new habit…" />
     <button id="add-habit-btn">+ Add</button>
   </div>
 </div>
 
+<!-- DAYS SECTION -->
+<div id="days-section" class="hidden">
+  <div id="days-grid"></div>
+</div>
+
 <!-- ANALYSIS SECTION -->
 <div id="analysis-section" class="hidden">
-  <div class="analysis-card">
+  <!-- Full-width: Daily Consistency -->
+  <div class="analysis-card full-width">
     <div class="section-title">Daily Consistency</div>
     <div class="bar-chart-wrap" id="bar-chart-days"></div>
   </div>
-  <div class="analysis-card">
-    <div class="section-title">Habit Breakdown</div>
-    <div id="habit-bars" style="margin-top:6px;display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
-  <div class="analysis-card">
-    <div class="section-title">Weekly Score</div>
-    <div class="week-radials" id="week-radials"></div>
-  </div>
-  <div class="analysis-card">
-    <div class="section-title">Overall Progress</div>
-    <div class="overall-row">
-      <div class="radial-wrap" style="width:clamp(90px,12vw,130px);height:clamp(90px,12vw,130px);">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-          <circle cx="50" cy="50" r="42" fill="none" stroke="#1e3060" stroke-width="9"/>
-          <circle id="overall-arc-2" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
-            stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray 0.6s cubic-bezier(.4,0,.2,1)"/>
-        </svg>
-        <div class="radial-text">
-          <span class="radial-pct" id="overall-pct-text-2">0%</span>
-          <span class="radial-sub" id="overall-sub-text-2">0/0</span>
+
+  <!-- Bottom row: Habit Breakdown (left) + Weekly Score & Overall (right stack) -->
+  <div class="analysis-bottom-row">
+    <div class="analysis-card analysis-main">
+      <div class="section-title">Habit Breakdown</div>
+      <div id="habit-bars" style="margin-top:4px;display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+    <div class="analysis-side">
+      <div class="analysis-card">
+        <div class="section-title">Weekly Score</div>
+        <div class="week-radials" id="week-radials"></div>
+      </div>
+      <div class="analysis-card">
+        <div class="section-title">Overall Progress</div>
+        <div class="overall-row">
+          <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#1e3060" stroke-width="9"/>
+              <circle id="overall-arc-2" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
+                stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray 0.7s cubic-bezier(.4,0,.2,1)"/>
+            </svg>
+            <div class="radial-text">
+              <span class="radial-pct" id="overall-pct-text-2">0%</span>
+              <span class="radial-sub" id="overall-sub-text-2">0/0</span>
+            </div>
+          </div>
+          <div class="overall-stats" id="overall-stats"></div>
         </div>
       </div>
-      <div class="overall-stats" id="overall-stats"></div>
     </div>
   </div>
 </div>
 
 </div><!-- #app -->
-
 <div id="save-indicator">✓ Saved</div>
 
 <script>
 const DAYS = ["Mo","Tu","We","Th","Fr","Sa","Su"];
 const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTH_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const WEEK_COLORS = ["#4f6ef7","#e05a9a","#3ecfb2","#f5a623","#a78bfa","#e07a3a"];
-const WEEK_BG    = ["rgba(79,110,247,0.12)","rgba(224,90,154,0.12)","rgba(62,207,178,0.12)","rgba(245,166,35,0.12)","rgba(167,139,250,0.12)","rgba(224,122,58,0.12)"];
-
-const CIRC = 2 * Math.PI * 42; // for viewBox 100×100 r=42
+const WEEK_BG     = ["rgba(79,110,247,0.09)","rgba(224,90,154,0.09)","rgba(62,207,178,0.09)","rgba(245,166,35,0.09)","rgba(167,139,250,0.09)","rgba(224,122,58,0.09)"];
+const CIRC = 2 * Math.PI * 42;
 
 let saveTimer = null;
+let editingHabit = null; // index of habit being edited inline
+let shouldAnimate = true;
+const NOW = new Date();
 
 let state = {
-  year: new Date().getFullYear(),
-  month: new Date().getMonth(),
+  year: NOW.getFullYear(),
+  month: NOW.getMonth(),
   habits: [
     "Wake up at 05:00 ⏰","Gym 💪","Work on Side Hustle 🌿",
     "Day Planning 📋","Budget Tracking 💰","Project Work 🎯",
@@ -348,7 +592,7 @@ let state = {
 };
 
 // ── STORAGE ──
-function habitsKey() { return "ht_habits_v2"; }
+function habitsKey()  { return "ht_habits_v2"; }
 function checkedKey() { return `ht_checked_v2_${state.year}_${state.month}`; }
 
 function saveAll() {
@@ -358,26 +602,19 @@ function saveAll() {
   } catch(e) { console.warn("Save failed:", e); }
   flashSaved();
 }
-
 function loadHabits() {
-  try {
-    const h = localStorage.getItem(habitsKey());
-    if (h) state.habits = JSON.parse(h);
-  } catch(e) {}
+  try { const h = localStorage.getItem(habitsKey()); if (h) state.habits = JSON.parse(h); } catch(e) {}
 }
-
 function loadChecked() {
-  try {
-    const c = localStorage.getItem(checkedKey());
-    state.checked = c ? JSON.parse(c) : {};
-  } catch(e) { state.checked = {}; }
+  try { const c = localStorage.getItem(checkedKey()); state.checked = c ? JSON.parse(c) : {}; } catch(e) { state.checked = {}; }
 }
-
 function flashSaved() {
   const el = document.getElementById("save-indicator");
+  el.classList.remove("show");
+  void el.offsetWidth;
   el.classList.add("show");
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => el.classList.remove("show"), 1400);
+  saveTimer = setTimeout(() => el.classList.remove("show"), 1700);
 }
 
 // ── HELPERS ──
@@ -386,13 +623,15 @@ function getFirstDayOffset(y, m) { const d = new Date(y,m,1).getDay(); return d=
 function getDow(y, m, d) { const w = new Date(y,m,d).getDay(); return w===0?6:w-1; }
 function getWeekIdx(d, offset) { return Math.floor((d-1+offset)/7); }
 function isChecked(hi, d) { return !!state.checked[`${hi}_${d}`]; }
+function isToday(d) { return state.year === NOW.getFullYear() && state.month === NOW.getMonth() && d === NOW.getDate(); }
+function isFuture(d) { return new Date(state.year, state.month, d) > NOW; }
 
 function toggleCheck(hi, d) {
   const k = `${hi}_${d}`;
   state.checked[k] = !state.checked[k];
   if (!state.checked[k]) delete state.checked[k];
   saveAll();
-  render();
+  render(false); // no column animation on checkbox toggle
 }
 
 // ── STATS ──
@@ -405,7 +644,6 @@ function calcStats() {
       if (isChecked(hi, d)) done++;
   return { days, total, done, pct: total > 0 ? (done/total)*100 : 0 };
 }
-
 function calcHabitPcts() {
   const days = getDaysInMonth(state.year, state.month);
   return state.habits.map((_, hi) => {
@@ -414,7 +652,6 @@ function calcHabitPcts() {
     return days > 0 ? (done/days)*100 : 0;
   });
 }
-
 function calcWeekTotals(weekGroups) {
   return weekGroups.map(days => {
     let done=0, possible=0;
@@ -425,7 +662,6 @@ function calcWeekTotals(weekGroups) {
     return possible > 0 ? Math.round((done/possible)*100) : 0;
   });
 }
-
 function calcDowTotals() {
   const days = getDaysInMonth(state.year, state.month);
   return DAYS.map((_, di) => {
@@ -439,7 +675,12 @@ function calcDowTotals() {
     return possible > 0 ? Math.round((done/possible)*100) : 0;
   });
 }
-
+function calcDayPct(d) {
+  if (state.habits.length === 0) return 0;
+  let done = 0;
+  state.habits.forEach((_, hi) => { if (isChecked(hi, d)) done++; });
+  return Math.round((done / state.habits.length) * 100);
+}
 function getWeekGroups() {
   const days = getDaysInMonth(state.year, state.month);
   const offset = getFirstDayOffset(state.year, state.month);
@@ -452,82 +693,123 @@ function getWeekGroups() {
   return groups.filter(g => g && g.length > 0);
 }
 
-// ── RADIAL ARC ──
+// ── ARC ──
 function updateArc(id, pct) {
   const el = document.getElementById(id);
   if (!el) return;
-  const dash = (pct / 100) * CIRC;
-  el.setAttribute("stroke-dasharray", `${dash.toFixed(2)} ${CIRC.toFixed(2)}`);
+  el.setAttribute("stroke-dasharray", `${((pct/100)*CIRC).toFixed(2)} ${CIRC.toFixed(2)}`);
 }
-
 function makeRadialHTML(pct, color, size) {
-  const sz = size || 80;
-  const dash = (pct / 100) * CIRC;
-  return `<div class="radial-wrap" style="width:${sz}px;height:${sz}px;">
-    <svg width="${sz}" height="${sz}" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#0d1e3a" stroke-width="9"/>
-      <circle cx="50" cy="50" r="42" fill="none" stroke="${color}" stroke-width="9"
+  const dash = (pct/100)*CIRC;
+  return `<div class="radial-wrap" style="width:${size}px;height:${size}px;">
+    <svg width="${size}" height="${size}" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#0d1e3a" stroke-width="10"/>
+      <circle cx="50" cy="50" r="42" fill="none" stroke="${color}" stroke-width="10"
         stroke-dasharray="${dash.toFixed(2)} ${CIRC.toFixed(2)}" stroke-linecap="round"/>
     </svg>
     <div class="radial-text">
-      <span style="font-size:${sz<85?'13':'16'}px;font-weight:800;color:#fff;font-family:'Montserrat',sans-serif;">${Math.round(pct)}%</span>
+      <span style="font-size:${size<75?'11':'13'}px;font-weight:800;color:#fff;font-family:'Montserrat',sans-serif;">${Math.round(pct)}%</span>
     </div>
   </div>`;
 }
+function pctColor(p) { return p >= 70 ? "#3ecfb2" : p >= 40 ? "#f5a623" : "#e05a9a"; }
+
+// ── BUMP ANIMATION ──
+function bumpEl(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove("bump");
+  void el.offsetWidth;
+  el.classList.add("bump");
+}
 
 // ── RENDER ──
-function render() {
+function render(animate) {
+  if (animate === undefined) animate = shouldAnimate;
   const { days, total, done, pct } = calcStats();
-  const offset = getFirstDayOffset(state.year, state.month);
-  const weekGroups = getWeekGroups();
-  const weekTotals = calcWeekTotals(weekGroups);
-  const habitPcts  = calcHabitPcts();
-  const dowTotals  = calcDowTotals();
+  const weekGroups  = getWeekGroups();
+  const weekTotals  = calcWeekTotals(weekGroups);
+  const habitPcts   = calcHabitPcts();
+  const dowTotals   = calcDowTotals();
 
-  // Header
   document.getElementById("month-title").textContent = MONTH_NAMES[state.month];
   document.getElementById("year-label").textContent  = state.year;
 
-  // Stats
+  const prevHabits = document.getElementById("stat-habits").textContent;
+  const prevDone   = document.getElementById("stat-done").textContent;
+  const prevPct    = document.getElementById("stat-pct").textContent;
+
   document.getElementById("stat-habits").textContent = state.habits.length;
   document.getElementById("stat-done").textContent   = done;
   document.getElementById("stat-pct").textContent    = Math.round(pct) + "%";
 
-  // Overall radial
+  if (prevHabits !== String(state.habits.length)) bumpEl("stat-habits");
+  if (prevDone   !== String(done))               bumpEl("stat-done");
+  if (prevPct    !== Math.round(pct) + "%")      bumpEl("stat-pct");
+
   updateArc("overall-arc", pct);
   document.getElementById("overall-pct-text").textContent = Math.round(pct) + "%";
   document.getElementById("overall-sub-text").textContent = `${done}/${total}`;
 
-  // Habit names
+  // ── HABIT NAMES (with edit support) ──
   const namesList = document.getElementById("habit-names-list");
   namesList.innerHTML = "";
   state.habits.forEach((h, hi) => {
     const row = document.createElement("div");
     row.className = "habit-name-row";
-    row.innerHTML = `<span class="habit-name-text">${h}</span><button class="habit-remove-btn" data-hi="${hi}" title="Remove habit">×</button>`;
-    namesList.appendChild(row);
+    row.style.animationDelay = `${hi * 0.04}s`;
+
+    if (editingHabit === hi) {
+      row.innerHTML = `
+        <input class="habit-name-input" type="text" value="" data-hi="${hi}" id="edit-input-${hi}" />
+        <button class="habit-edit-save-btn" data-savehi="${hi}" title="Save">✓</button>
+        <button class="habit-remove-btn" data-cancelhi="${hi}" title="Cancel" style="opacity:0.5;font-size:14px;">✕</button>`;
+      namesList.appendChild(row);
+      const inp = row.querySelector(".habit-name-input");
+      inp.value = h;
+      requestAnimationFrame(() => { inp.focus(); inp.select(); });
+    } else {
+      row.innerHTML = `
+        <span class="habit-name-text">${h}</span>
+        <button class="habit-edit-btn" data-edithi="${hi}" title="Edit habit">✎</button>
+        <button class="habit-remove-btn" data-hi="${hi}" title="Remove">×</button>`;
+      namesList.appendChild(row);
+    }
   });
 
-  // Weekly grids
+  // ── WEEKLY GRID ──
   const weeksContainer = document.getElementById("weeks-container");
   weeksContainer.innerHTML = "";
-  weekGroups.forEach((days_, wi) => {
+  weekGroups.forEach((daysInWeek, wi) => {
     const col = document.createElement("div");
     col.className = "week-col";
+    const wc = WEEK_COLORS[wi % WEEK_COLORS.length];
+    const wb = WEEK_BG[wi % WEEK_BG.length];
+
+    const dowMap = {};
+    daysInWeek.forEach(d => { dowMap[getDow(state.year, state.month, d)] = d; });
+    const slots = Array.from({length: 7}, (_, dow) => dowMap[dow] !== undefined ? dowMap[dow] : null);
 
     const hdr = document.createElement("div");
     hdr.className = "week-header";
-    hdr.style.background = WEEK_COLORS[wi % WEEK_COLORS.length];
+    hdr.style.background = wc;
     hdr.textContent = `Week ${wi+1}`;
     col.appendChild(hdr);
 
     const daysRow = document.createElement("div");
     daysRow.className = "week-days-row";
-    daysRow.style.background = WEEK_BG[wi % WEEK_BG.length];
-    days_.forEach(d => {
+    daysRow.style.background = wb;
+    slots.forEach((d, dow) => {
       const cell = document.createElement("div");
       cell.className = "day-header-cell";
-      cell.innerHTML = `<div class="day-dow" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">${DAYS[getDow(state.year, state.month, d)]}</div><div class="day-num">${d}</div>`;
+      if (d === null) {
+        cell.style.visibility = "hidden";
+        cell.innerHTML = `<div class="day-dow">${DAYS[dow]}</div><div class="day-num">0</div>`;
+      } else {
+        const today = isToday(d);
+        cell.innerHTML = `<div class="day-dow" style="color:${wc}">${DAYS[dow]}</div>`
+          + `<div class="day-num ${today ? 'today-num' : ''}">${d}</div>`;
+      }
       daysRow.appendChild(cell);
     });
     col.appendChild(daysRow);
@@ -535,19 +817,22 @@ function render() {
     state.habits.forEach((_, hi) => {
       const row = document.createElement("div");
       row.className = "week-habit-row";
-      row.style.background = WEEK_BG[wi % WEEK_BG.length];
-      days_.forEach(d => {
-        const ck = isChecked(hi, d);
+      row.style.background = wb;
+      slots.forEach((d) => {
         const box = document.createElement("div");
-        box.className = "checkbox" + (ck ? " done" : "");
-        box.style.border = `2.5px solid ${ck ? WEEK_COLORS[wi%WEEK_COLORS.length] : "#2a3d6e"}`;
-        box.style.background = ck ? WEEK_COLORS[wi%WEEK_COLORS.length] + "28" : "transparent";
-        box.dataset.hi = hi;
-        box.dataset.d  = d;
-        if (ck) {
-          box.innerHTML = `<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="2,6 5,9 10,3" stroke="${WEEK_COLORS[wi%WEEK_COLORS.length]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>`;
+        box.className = "checkbox";
+        if (d === null) {
+          box.classList.add("invisible");
+        } else {
+          const ck = isChecked(hi, d);
+          if (ck) box.classList.add("done");
+          box.style.border = `2.5px solid ${ck ? wc : "#2a3d6e"}`;
+          box.style.background = ck ? wc + "28" : "transparent";
+          box.dataset.hi = hi;
+          box.dataset.d  = d;
+          if (ck) {
+            box.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${wc}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+          }
         }
         row.appendChild(box);
       });
@@ -556,126 +841,275 @@ function render() {
 
     const footer = document.createElement("div");
     footer.className = "week-footer";
-    footer.style.background = WEEK_BG[wi % WEEK_BG.length];
-    footer.style.color = WEEK_COLORS[wi % WEEK_COLORS.length];
+    footer.style.background = wb;
+    footer.style.color = wc;
     footer.textContent = weekTotals[wi] + "%";
     col.appendChild(footer);
 
     weeksContainer.appendChild(col);
   });
 
+  // Animate week columns staggered
+  if (animate) {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".week-col").forEach((col, i) => {
+        col.style.animation = `fadeSlideUp 0.45s ${0.08 + i * 0.07}s cubic-bezier(.4,0,.2,1) both`;
+      });
+    });
+  } else {
+    document.querySelectorAll(".week-col").forEach(col => {
+      col.style.opacity = "1";
+      col.style.animation = "none";
+    });
+  }
+
+  // ── DAYS VIEW ──
+  if (state.tab === "days") renderDaysView(animate);
+
   // ── ANALYSIS ──
-  // Day of week bar chart
-  const barChartDays = document.getElementById("bar-chart-days");
-  const maxH = 80;
-  barChartDays.innerHTML = DAYS.map((dl, i) => {
-    const h = Math.round((dowTotals[i]/100) * maxH);
+  const maxH = 72;
+  document.getElementById("bar-chart-days").innerHTML = DAYS.map((dl, i) => {
+    const h = Math.round((dowTotals[i]/100)*maxH);
+    const col = WEEK_COLORS[i % WEEK_COLORS.length];
     return `<div class="bar-chart-col">
-      <div class="bar-chart-bar" style="height:${Math.max(h,2)}px;background:#4f6ef7;opacity:${dowTotals[i]===0?0.18:1};"></div>
+      <div class="bar-chart-bar" style="height:${Math.max(h,2)}px;background:${col};opacity:${dowTotals[i]===0?0.15:0.85};"></div>
       <div class="bar-chart-lbl">${dl}</div>
     </div>`;
   }).join("");
 
-  // Habit bars
   const habitBarsEl = document.getElementById("habit-bars");
   habitBarsEl.innerHTML = "";
   state.habits.forEach((h, hi) => {
     const p = habitPcts[hi];
-    const color = p >= 70 ? "#3ecfb2" : p >= 40 ? "#f5a623" : "#e05a9a";
+    const color = pctColor(p);
     const row = document.createElement("div");
     row.className = "habit-bar-row";
-    row.innerHTML = `
-      <span class="habit-bar-label">${h}</span>
-      <div class="habit-bar-track"><div class="habit-bar-fill" style="width:${p}%;background:${color};"></div></div>
+    row.innerHTML = `<span class="habit-bar-label">${h}</span>
+      <div class="habit-bar-track"><div class="habit-bar-fill" style="width:0%;background:${color};"></div></div>
       <span class="habit-bar-pct" style="color:${color};">${Math.round(p)}%</span>`;
     habitBarsEl.appendChild(row);
+    // Animate bar fill
+    requestAnimationFrame(() => {
+      const fill = row.querySelector(".habit-bar-fill");
+      if (fill) setTimeout(() => { fill.style.width = p + "%"; }, 60 + hi * 40);
+    });
   });
 
-  // Week radials
   const weekRadialsEl = document.getElementById("week-radials");
   weekRadialsEl.innerHTML = "";
   weekGroups.forEach((_, wi) => {
     const item = document.createElement("div");
     item.className = "week-radial-item";
-    item.innerHTML = makeRadialHTML(weekTotals[wi], WEEK_COLORS[wi%WEEK_COLORS.length], 82) +
-      `<span class="week-radial-label" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">Week ${wi+1}</span>`;
+    item.innerHTML = makeRadialHTML(weekTotals[wi], WEEK_COLORS[wi%WEEK_COLORS.length], 68)
+      + `<span class="week-radial-label" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">Wk ${wi+1}</span>`;
     weekRadialsEl.appendChild(item);
   });
 
-  // Overall analysis radial
   updateArc("overall-arc-2", pct);
   document.getElementById("overall-pct-text-2").textContent = Math.round(pct) + "%";
   document.getElementById("overall-sub-text-2").textContent = `${done}/${total}`;
   document.getElementById("overall-stats").innerHTML = `
-    <div><strong style="color:#fff;font-size:1.1em;">${done}</strong> &nbsp;habits completed</div>
-    <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong> &nbsp;habits tracked</div>
-    <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year, state.month)}</strong> &nbsp;days this month</div>`;
+    <div><strong style="color:#fff;font-size:1.1em;">${done}</strong> &nbsp;completed</div>
+    <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong> &nbsp;habits</div>
+    <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year, state.month)}</strong> &nbsp;days</div>`;
+}
+
+function renderDaysView(animate) {
+  const totalDays = getDaysInMonth(state.year, state.month);
+  const grid = document.getElementById("days-grid");
+  grid.innerHTML = "";
+  for (let d = totalDays; d >= 1; d--) {
+    const pct    = calcDayPct(d);
+    const color  = pctColor(pct);
+    const today  = isToday(d);
+    const future = isFuture(d);
+
+    const card = document.createElement("div");
+    card.className = "day-card" + (today ? " is-today" : "") + (future ? " future" : "");
+
+    let habitsHTML = "";
+    state.habits.forEach((h, hi) => {
+      const ck = isChecked(hi, d);
+      habitsHTML += `<div class="day-habit-item">
+        <div class="day-habit-cb ${ck ? 'checked' : ''}" data-hi="${hi}" data-d="${d}">
+          ${ck ? `<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ""}
+        </div>
+        <span class="day-habit-label ${ck ? 'done-label' : ''}">${h}</span>
+      </div>`;
+    });
+
+    card.innerHTML = `
+      <div class="day-card-top">
+        <span class="day-card-label">This day</span>
+        ${today ? '<span class="day-card-today-badge">Today</span>' : ''}
+      </div>
+      <div class="day-card-date">${MONTH_SHORT[state.month]} ${d}</div>
+      <div class="day-card-progress-row">
+        <span class="day-card-pct" style="color:${color}">${pct}%</span>
+        <div class="day-card-track"><div class="day-card-fill" style="width:0%;background:${color};"></div></div>
+      </div>
+      <div class="day-habits-list">${habitsHTML}</div>`;
+
+    grid.appendChild(card);
+
+    // Stagger card entrance
+    const delay = (totalDays - d) * 0.035;
+    setTimeout(() => {
+      card.style.animation = `scalePop 0.38s ${delay}s cubic-bezier(.4,0,.2,1) both`;
+    }, 10);
+
+    // Animate progress bar
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const fill = card.querySelector(".day-card-fill");
+        if (fill) fill.style.width = pct + "%";
+      }, 80 + (totalDays - d) * 30);
+    });
+  }
+}
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  ["tracker","days","analysis"].forEach(t => {
+    const el = document.getElementById(t + "-section");
+    el.classList.toggle("hidden", t !== tab);
+    if (t === tab) {
+      el.style.animation = "none";
+      void el.offsetWidth;
+      el.style.animation = "fadeSection 0.35s cubic-bezier(.4,0,.2,1) both";
+    }
+  });
+  if (tab === "days")     renderDaysView(true);
+  if (tab === "tracker")  render(true);
 }
 
 // ── EVENTS ──
 document.getElementById("prev-month").addEventListener("click", () => {
-  if (state.month === 0) { state.month = 11; state.year--; }
-  else state.month--;
-  loadChecked();
-  render();
+  if (state.month === 0) { state.month = 11; state.year--; } else state.month--;
+  editingHabit = null;
+  loadChecked(); render(true);
 });
-
 document.getElementById("next-month").addEventListener("click", () => {
-  if (state.month === 11) { state.month = 0; state.year++; }
-  else state.month++;
-  loadChecked();
-  render();
+  if (state.month === 11) { state.month = 0; state.year++; } else state.month++;
+  editingHabit = null;
+  loadChecked(); render(true);
 });
 
 document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    state.tab = btn.dataset.tab;
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b === btn));
-    document.getElementById("tracker-section").classList.toggle("hidden", state.tab !== "tracker");
-    document.getElementById("analysis-section").classList.toggle("hidden", state.tab !== "analysis");
-  });
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
 });
 
+// Tracker checkboxes
 document.getElementById("weeks-container").addEventListener("click", e => {
   const box = e.target.closest(".checkbox");
-  if (box) toggleCheck(parseInt(box.dataset.hi), parseInt(box.dataset.d));
+  if (box && !box.classList.contains("invisible") && box.dataset.hi !== undefined)
+    toggleCheck(parseInt(box.dataset.hi), parseInt(box.dataset.d));
 });
 
+// Days view checkboxes
+document.getElementById("days-grid").addEventListener("click", e => {
+  const cb = e.target.closest(".day-habit-cb");
+  if (cb) toggleCheck(parseInt(cb.dataset.hi), parseInt(cb.dataset.d));
+});
+
+// Habit name list events (remove, edit, save, cancel)
 document.getElementById("habit-names-list").addEventListener("click", e => {
-  const btn = e.target.closest(".habit-remove-btn");
-  if (!btn) return;
-  const hi = parseInt(btn.dataset.hi);
-  const newChecked = {};
-  Object.entries(state.checked).forEach(([k, v]) => {
-    const parts = k.split("_");
-    const h = parseInt(parts[0]), d = parseInt(parts[1]);
-    if (h !== hi) newChecked[`${h > hi ? h-1 : h}_${d}`] = v;
-  });
-  state.habits.splice(hi, 1);
-  state.checked = newChecked;
-  saveAll();
-  render();
+  // Edit button clicked
+  const editBtn = e.target.closest("[data-edithi]");
+  if (editBtn) {
+    editingHabit = parseInt(editBtn.dataset.edithi);
+    render(false); return;
+  }
+  // Save edit button
+  const saveBtn = e.target.closest("[data-savehi]");
+  if (saveBtn) {
+    const hi = parseInt(saveBtn.dataset.savehi);
+    const inp = document.getElementById(`edit-input-${hi}`);
+    if (inp && inp.value.trim()) {
+      state.habits[hi] = inp.value.trim();
+      editingHabit = null;
+      saveAll(); render(false);
+    }
+    return;
+  }
+  // Cancel edit (✕ button while editing)
+  const cancelBtn = e.target.closest("[data-cancelhi]");
+  if (cancelBtn) {
+    editingHabit = null;
+    render(false); return;
+  }
+  // Remove habit
+  const removeBtn = e.target.closest(".habit-remove-btn");
+  if (removeBtn && removeBtn.dataset.hi !== undefined) {
+    const hi = parseInt(removeBtn.dataset.hi);
+    const newChecked = {};
+    Object.entries(state.checked).forEach(([k, v]) => {
+      const parts = k.split("_"); const h = parseInt(parts[0]); const d = parseInt(parts[1]);
+      if (h !== hi) newChecked[`${h > hi ? h-1 : h}_${d}`] = v;
+    });
+    state.habits.splice(hi, 1);
+    state.checked = newChecked;
+    editingHabit = null;
+    saveAll(); render(true);
+  }
+});
+
+// Save edit on Enter / cancel on Escape
+document.getElementById("habit-names-list").addEventListener("keydown", e => {
+  if (!e.target.classList.contains("habit-name-input")) return;
+  const hi = parseInt(e.target.dataset.hi);
+  if (e.key === "Enter") {
+    if (e.target.value.trim()) {
+      state.habits[hi] = e.target.value.trim();
+      editingHabit = null;
+      saveAll(); render(false);
+    }
+  } else if (e.key === "Escape") {
+    editingHabit = null;
+    render(false);
+  }
 });
 
 document.getElementById("add-habit-btn").addEventListener("click", addHabit);
-document.getElementById("new-habit-input").addEventListener("keydown", e => {
-  if (e.key === "Enter") addHabit();
-});
+document.getElementById("new-habit-input").addEventListener("keydown", e => { if (e.key === "Enter") addHabit(); });
 
 function addHabit() {
   const val = document.getElementById("new-habit-input").value.trim();
   if (val) {
     state.habits.push(val);
     document.getElementById("new-habit-input").value = "";
-    saveAll();
-    render();
+    saveAll(); render(true);
   }
 }
+
+// ── RIPPLE EFFECT ──
+function addRipple(btn) {
+  btn.addEventListener("click", function(e) {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+    const ripple = document.createElement("span");
+    ripple.style.cssText = `
+      position:absolute; border-radius:50%; pointer-events:none;
+      background:rgba(255,255,255,0.25);
+      width:60px; height:60px;
+      left:${x-30}px; top:${y-30}px;
+      animation:rippleAnim 0.5s ease-out forwards;`;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 520);
+  });
+}
+const style = document.createElement("style");
+style.textContent = `@keyframes rippleAnim { from{transform:scale(0);opacity:0.6} to{transform:scale(2.8);opacity:0} }`;
+document.head.appendChild(style);
+document.querySelectorAll(".nav-btn, #add-habit-btn").forEach(addRipple);
 
 // ── INIT ──
 loadHabits();
 loadChecked();
-render();
+render(true);
+shouldAnimate = false; // subsequent renders without nav don't re-animate columns
 </script>
 </body>
 </html>

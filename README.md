@@ -1,4 +1,4 @@
-# BoardGame
+# HabitTracker
 Here's the full build plan. Each step produces something testable before moving to the next.
  
 ---

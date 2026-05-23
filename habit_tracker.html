@@ -29,6 +29,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 @keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes taskRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes drawCheck{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}
+@keyframes langDropIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* HEADER */
 #header{padding:clamp(20px,3vw,36px) clamp(16px,4vw,48px) 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;animation:fadeSlideUp .65s cubic-bezier(.4,0,.2,1) both;}
@@ -45,6 +46,19 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tab-btn.active::before{transform:scaleX(1);}
 .tab-btn.active{color:#fff;}
 .tab-btn span{position:relative;z-index:1;}
+
+/* LANGUAGE SELECTOR */
+.lang-selector{position:relative;flex-shrink:0;}
+#lang-btn{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:10px;color:#7090c0;padding:9px 13px;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.6px;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;line-height:1;}
+#lang-btn:hover{background:#152540;border-color:#3a5890;color:#c0d4f0;box-shadow:0 0 14px rgba(79,110,247,.12);}
+#lang-btn.open{border-color:#4f6ef7;color:#7090f9;background:#111e38;}
+.lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#08182e;border:1.5px solid #1e3060;border-radius:13px;overflow:hidden;min-width:158px;box-shadow:0 12px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03);z-index:400;display:none;}
+.lang-dropdown.open{display:block;animation:langDropIn .2s cubic-bezier(.4,0,.2,1) both;}
+.lang-option{padding:10px 15px;font-size:12px;font-weight:700;color:#7090c0;cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;gap:9px;letter-spacing:.3px;}
+.lang-option:hover{background:rgba(79,110,247,.12);color:#c0d4f0;}
+.lang-option.active{color:#4f6ef7;background:rgba(79,110,247,.1);}
+.lang-option .lang-flag{font-size:16px;line-height:1;}
+.lang-divider{height:1px;background:#111e38;margin:3px 0;}
 
 /* POMODORO TOGGLE */
 #pomo-toggle{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:10px;color:#7090c0;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.8px;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
@@ -161,7 +175,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .day-habit-label{font-size:clamp(12px,1.4vw,14px);color:#c0d4f0;font-weight:500;flex:1;line-height:1.3;transition:color .2s;}
 .day-habit-label.done-label{color:#4a6a9a;text-decoration:line-through;}
 
-/* MINDSET CHECK-IN */
+/* MINDSET */
 .mindset-section{margin-top:14px;padding-top:12px;border-top:1px solid #111e38;}
 .mindset-title{font-size:10px;color:#4a6a9a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
 .mindset-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
@@ -173,7 +187,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .mindset-star:hover{transform:scale(1.18);}
 .mindset-val{font-size:11px;font-weight:800;min-width:20px;text-align:right;}
 
-/* TASKS SECTION */
+/* TASKS */
 #tasks-section{padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;}
 .tasks-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
 .tasks-title{font-size:clamp(14px,1.8vw,18px);font-weight:800;color:#fff;}
@@ -241,15 +255,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .bar-chart-lbl{font-size:clamp(9px,1vw,11px);color:#7090c0;margin-top:4px;font-weight:600;}
 .overall-row{display:flex;align-items:center;gap:clamp(12px,2vw,22px);margin-top:clamp(10px,1.4vw,16px);}
 .overall-stats div{font-size:clamp(11px,1.3vw,13px);color:#7090c0;margin-bottom:5px;font-weight:500;}
-
-/* MINDSET CHART */
 .mindset-chart-wrap{margin-top:14px;position:relative;height:90px;}
 .mindset-chart-wrap svg{overflow:visible;}
 .mindset-legend{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap;}
 .mindset-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#7090c0;}
 .mindset-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-
-/* GOALS */
 .goals-add-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
 .goal-input{flex:1;min-width:140px;background:#071828;border:1.5px solid #1e3060;border-radius:8px;color:#fff;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:7px 12px;outline:none;transition:border-color .2s;}
 .goal-input:focus{border-color:#3ecfb2;}
@@ -270,12 +280,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .goal-item:hover .goal-remove-btn{opacity:.5;}
 .goal-remove-btn:hover{opacity:1 !important;color:#e05a9a;}
 
-/* SAVE INDICATOR */
+/* SAVE */
 #save-indicator{position:fixed;bottom:20px;right:24px;background:linear-gradient(135deg,#0d2040,#0a1a30);border:1.5px solid #3ecfb2;border-radius:12px;padding:9px 20px;font-size:13px;font-weight:700;color:#3ecfb2;opacity:0;pointer-events:none;z-index:100;letter-spacing:.5px;box-shadow:0 4px 20px rgba(62,207,178,.2);}
 #save-indicator.show{animation:savedSlide 1.6s cubic-bezier(.4,0,.2,1) both;}
 .hidden{display:none !important;}
 
-/* RESPONSIVE */
 @media(max-width:900px){
   #header{gap:10px;}
   .tab-switcher{order:3;width:100%;}
@@ -316,8 +325,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 <!-- HEADER -->
 <div id="header">
   <div>
-    <div id="month-title">April</div>
-    <div id="month-sub">— Life Tracker —</div>
+    <div id="month-title">May</div>
+    <div id="month-sub" data-i18n="subtitle">— Life Tracker —</div>
   </div>
   <div class="nav-row">
     <button class="nav-btn" id="prev-month">&#8249;</button>
@@ -325,20 +334,32 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     <button class="nav-btn" id="next-month">&#8250;</button>
   </div>
   <div class="tab-switcher">
-    <button class="tab-btn active" data-tab="tracker"><span>Tracker</span></button>
-    <button class="tab-btn" data-tab="days"><span>Days</span></button>
-    <button class="tab-btn" data-tab="tasks"><span>Tasks</span></button>
-    <button class="tab-btn" data-tab="analysis"><span>Analysis</span></button>
+    <button class="tab-btn active" data-tab="tracker"><span data-i18n="tabTracker">Tracker</span></button>
+    <button class="tab-btn" data-tab="days"><span data-i18n="tabDays">Days</span></button>
+    <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">Tasks</span></button>
+    <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">Analysis</span></button>
   </div>
-  <button id="pomo-toggle">⏱ Pomodoro</button>
+  <!-- Language Selector -->
+  <div class="lang-selector">
+    <button id="lang-btn">🌐 EN 🇬🇧 ▾</button>
+    <div class="lang-dropdown" id="lang-dropdown">
+      <div class="lang-option active" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+      <div class="lang-option" data-lang="hu"><span class="lang-flag">🇭🇺</span> Magyar</div>
+      <div class="lang-divider"></div>
+      <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch</div>
+      <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span> Español</div>
+      <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</div>
+    </div>
+  </div>
+  <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
 </div>
 
 <!-- STATS ROW -->
 <div id="stats-row">
-  <div class="stat-card"><div class="stat-label">Habits</div><div class="stat-val" id="stat-habits">0</div></div>
-  <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" id="stat-done">0</div></div>
-  <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-val" id="stat-pct">0%</div></div>
-  <div class="stat-card"><div class="stat-label">Tasks Done</div><div class="stat-val" id="stat-tasks">0/0</div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="statHabits">Habits</div><div class="stat-val" id="stat-habits">0</div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="statCompleted">Completed</div><div class="stat-val" id="stat-done">0</div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="statProgress">Progress</div><div class="stat-val" id="stat-pct">0%</div></div>
+  <div class="stat-card"><div class="stat-label" data-i18n="statTasksDone">Tasks Done</div><div class="stat-val" id="stat-tasks">0/0</div></div>
   <div style="margin-left:auto;flex-shrink:0;">
     <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
       <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
@@ -358,14 +379,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 <div id="tracker-section" style="animation:fadeSlideUp .65s .22s cubic-bezier(.4,0,.2,1) both;">
   <div id="tracker-inner">
     <div id="habit-names-col">
-      <div class="habit-name-header">My Habits</div>
+      <div class="habit-name-header" id="my-habits-header">My Habits</div>
       <div id="habit-names-list"></div>
     </div>
     <div id="weeks-container"></div>
   </div>
   <div id="add-habit-row">
-    <input type="text" id="new-habit-input" placeholder="Add a new habit…"/>
-    <button id="add-habit-btn">+ Add</button>
+    <input type="text" id="new-habit-input" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"/>
+    <button id="add-habit-btn" data-i18n="addHabitBtn">+ Add</button>
   </div>
 </div>
 
@@ -377,22 +398,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 <!-- TASKS SECTION -->
 <div id="tasks-section" class="hidden">
   <div class="tasks-header">
-    <div class="tasks-title">📋 Tasks This Week</div>
+    <div class="tasks-title" id="tasks-title">📋 Tasks This Week</div>
     <div class="tasks-filter-row">
-      <button class="task-filter-btn active" data-filter="all">All</button>
-      <button class="task-filter-btn" data-filter="high">🔴 High</button>
-      <button class="task-filter-btn" data-filter="medium">⚡ Medium</button>
-      <button class="task-filter-btn" data-filter="low">🔵 Low</button>
+      <button class="task-filter-btn active" data-filter="all" data-i18n="filterAll">All</button>
+      <button class="task-filter-btn" data-filter="high" data-i18n="filterHigh">🔴 High</button>
+      <button class="task-filter-btn" data-filter="medium" data-i18n="filterMedium">⚡ Medium</button>
+      <button class="task-filter-btn" data-filter="low" data-i18n="filterLow">🔵 Low</button>
     </div>
   </div>
   <div class="tasks-list" id="tasks-list"></div>
   <div class="add-task-form">
     <div class="form-field task-name-field">
-      <label class="form-label">Task Name</label>
-      <input class="form-input" id="task-name-input" placeholder="What needs to be done?"/>
+      <label class="form-label" data-i18n="taskNameLabel">Task Name</label>
+      <input class="form-input" id="task-name-input" placeholder="What needs to be done?" data-i18n-placeholder="taskNamePlaceholder"/>
     </div>
     <div class="form-field">
-      <label class="form-label">Priority</label>
+      <label class="form-label" data-i18n="priorityLabel">Priority</label>
       <select class="form-select" id="task-priority-select">
         <option value="high">🔴 High</option>
         <option value="medium" selected>⚡ Medium</option>
@@ -400,59 +421,59 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
       </select>
     </div>
     <div class="form-field">
-      <label class="form-label">Due Date</label>
+      <label class="form-label" data-i18n="dueDateLabel">Due Date</label>
       <input class="form-input" type="date" id="task-due-input" style="color-scheme:dark;"/>
     </div>
     <div class="form-field">
-      <label class="form-label">Status</label>
+      <label class="form-label" data-i18n="statusLabel">Status</label>
       <select class="form-select" id="task-status-select">
         <option value="notstarted">Not Started</option>
         <option value="inprogress" selected>In Progress</option>
       </select>
     </div>
-    <button class="goal-add-btn" id="add-task-btn" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Task</button>
+    <button class="goal-add-btn" id="add-task-btn" data-i18n="addTaskBtn" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Task</button>
   </div>
 </div>
 
 <!-- ANALYSIS SECTION -->
 <div id="analysis-section" class="hidden">
   <div class="analysis-card full-width">
-    <div class="section-title">Daily Consistency</div>
+    <div class="section-title" data-i18n="dailyConsistency">Daily Consistency</div>
     <div class="bar-chart-wrap" id="bar-chart-days"></div>
   </div>
   <div class="analysis-card full-width">
-    <div class="section-title">Mindset Tracker — Energy · Focus · Motivation</div>
+    <div class="section-title" id="mindset-tracker-title" data-i18n="mindsetTrackerTitle">Mindset Tracker — Energy · Focus · Motivation</div>
     <div class="mindset-chart-wrap">
       <svg id="mindset-chart-svg" width="100%" height="90" viewBox="0 0 700 90" preserveAspectRatio="none"></svg>
     </div>
     <div class="mindset-legend">
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#f5a623"></div>Energy</div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#4f6ef7"></div>Focus</div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div>Motivation</div>
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#f5a623"></div><span data-i18n="energy">Energy</span></div>
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#4f6ef7"></div><span data-i18n="focus">Focus</span></div>
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div><span data-i18n="motivation">Motivation</span></div>
     </div>
   </div>
   <div class="analysis-bottom-row">
     <div class="analysis-main">
       <div class="analysis-card">
-        <div class="section-title">Habit Breakdown</div>
+        <div class="section-title" data-i18n="habitBreakdown">Habit Breakdown</div>
         <div id="habit-bars" style="margin-top:4px;display:flex;flex-direction:column;gap:6px;"></div>
       </div>
       <div class="analysis-card">
-        <div class="section-title">Goals This Month 🎯</div>
+        <div class="section-title" data-i18n="goalsThisMonth">Goals This Month 🎯</div>
         <div class="goals-add-row">
-          <input class="goal-input" id="goal-input" placeholder="Add a goal for this month…"/>
-          <button class="goal-add-btn" id="goal-add-btn">+ Add Goal</button>
+          <input class="goal-input" id="goal-input" placeholder="Add a goal for this month…" data-i18n-placeholder="goalPlaceholder"/>
+          <button class="goal-add-btn" id="goal-add-btn" data-i18n="addGoalBtn">+ Add Goal</button>
         </div>
         <div class="goal-list" id="goal-list"></div>
       </div>
     </div>
     <div class="analysis-side">
       <div class="analysis-card">
-        <div class="section-title">Weekly Score</div>
+        <div class="section-title" data-i18n="weeklyScore">Weekly Score</div>
         <div class="week-radials" id="week-radials"></div>
       </div>
       <div class="analysis-card">
-        <div class="section-title">Overall Progress</div>
+        <div class="section-title" data-i18n="overallProgress">Overall Progress</div>
         <div class="overall-row">
           <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
             <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
@@ -477,9 +498,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 <!-- POMODORO WIDGET -->
 <div id="pomo-widget" class="hidden">
   <div class="pomo-mode-btns">
-    <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500">Pomodoro</button>
-    <button class="pomo-mode-btn break-mode" data-mode="break" data-time="300">Short Break</button>
-    <button class="pomo-mode-btn long-mode" data-mode="long" data-time="900">Long Break</button>
+    <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>
+    <button class="pomo-mode-btn break-mode" data-mode="break" data-time="300" data-i18n="shortBreak">Short Break</button>
+    <button class="pomo-mode-btn long-mode" data-mode="long" data-time="900" data-i18n="longBreak">Long Break</button>
   </div>
   <div class="pomo-ring-wrap">
     <svg id="pomo-ring-svg" viewBox="0 0 120 120" width="120" height="120" style="position:absolute;inset:0;">
@@ -500,12 +521,189 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   </div>
 </div>
 
-<div id="save-indicator">✓ Saved</div>
+<div id="save-indicator" data-i18n="saved">✓ Saved</div>
 
 <script>
-const DAYS=["Mo","Tu","We","Th","Fr","Sa","Su"];
-const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MONTH_SHORT=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+// ─── TRANSLATIONS ────────────────────────────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],
+    monthShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    days:["Mo","Tu","We","Th","Fr","Sa","Su"],
+    subtitle:"— Life Tracker —",
+    tabTracker:"Tracker", tabDays:"Days", tabTasks:"Tasks", tabAnalysis:"Analysis",
+    pomodoroBtn:"⏱ Pomodoro",
+    statHabits:"Habits", statCompleted:"Completed", statProgress:"Progress", statTasksDone:"Tasks Done",
+    myHabits:"My Habits",
+    addHabitPlaceholder:"Add a new habit…", addHabitBtn:"+ Add",
+    thisDay:"This day", todayBadge:"Today",
+    mindsetTitle:"Mindset Check-In", energy:"Energy", focus:"Focus", mood:"Mood", motivation:"Motivation",
+    tasksThisWeek:"📋 Tasks This Week",
+    filterAll:"All", filterHigh:"🔴 High", filterMedium:"⚡ Medium", filterLow:"🔵 Low",
+    taskNameLabel:"Task Name", taskNamePlaceholder:"What needs to be done?",
+    priorityLabel:"Priority", dueDateLabel:"Due Date", statusLabel:"Status", addTaskBtn:"+ Add Task",
+    priorityHigh:"🔴 High Priority", priorityMedium:"⚡ Medium Priority", priorityLow:"🔵 Low Priority",
+    statusInProgress:"In Progress", statusNotStarted:"Not Started", statusCompleted:"Completed",
+    noTasks:"No tasks. Add one below!",
+    dailyConsistency:"Daily Consistency",
+    mindsetTrackerTitle:"Mindset Tracker — Energy · Focus · Motivation",
+    habitBreakdown:"Habit Breakdown",
+    goalsThisMonth:"Goals This Month 🎯", goalPlaceholder:"Add a goal for this month…", addGoalBtn:"+ Add Goal",
+    weeklyScore:"Weekly Score", overallProgress:"Overall Progress",
+    weekPrefix:"Week", weekShort:"Wk",
+    session:"Session", focusTime:"Focus Time",
+    pomodoroMode:"Pomodoro", shortBreak:"Short Break", longBreak:"Long Break",
+    startBtn:"▶ Start", pauseBtn:"⏸ Pause", resetBtn:"↺ Reset",
+    saved:"✓ Saved",
+    completedStat:"completed", habitsStat:"habits", daysStat:"days",
+    dueToday:"Today", dueTomorrow:"Tomorrow",
+    dueOverdue:(n)=>`${n}d overdue`, dueFuture:(n)=>`In ${n} days`,
+    langLabel:"EN 🇬🇧",
+  },
+  hu: {
+    monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
+    monthShort:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Sze","Okt","Nov","Dec"],
+    days:["H","K","Sze","Cs","P","Szo","V"],
+    subtitle:"— Életkövető —",
+    tabTracker:"Nyomkövető", tabDays:"Napok", tabTasks:"Feladatok", tabAnalysis:"Elemzés",
+    pomodoroBtn:"⏱ Pomodoro",
+    statHabits:"Szokások", statCompleted:"Teljesítve", statProgress:"Haladás", statTasksDone:"Kész feladat",
+    myHabits:"Szokásaim",
+    addHabitPlaceholder:"Új szokás hozzáadása…", addHabitBtn:"+ Hozzáad",
+    thisDay:"Ezen a napon", todayBadge:"Ma",
+    mindsetTitle:"Napi értékelés", energy:"Energia", focus:"Fókusz", mood:"Hangulat", motivation:"Motiváció",
+    tasksThisWeek:"📋 Heti feladatok",
+    filterAll:"Mind", filterHigh:"🔴 Magas", filterMedium:"⚡ Közepes", filterLow:"🔵 Alacsony",
+    taskNameLabel:"Feladat neve", taskNamePlaceholder:"Mit kell elvégezni?",
+    priorityLabel:"Prioritás", dueDateLabel:"Határidő", statusLabel:"Állapot", addTaskBtn:"+ Feladat hozzáadása",
+    priorityHigh:"🔴 Magas prioritás", priorityMedium:"⚡ Közepes prioritás", priorityLow:"🔵 Alacsony prioritás",
+    statusInProgress:"Folyamatban", statusNotStarted:"Nem kezdett", statusCompleted:"Befejezett",
+    noTasks:"Nincs feladat. Adj hozzá egyet!",
+    dailyConsistency:"Napi következetesség",
+    mindsetTrackerTitle:"Mentális nyomkövető — Energia · Fókusz · Motiváció",
+    habitBreakdown:"Szokások részletezése",
+    goalsThisMonth:"Havi célok 🎯", goalPlaceholder:"Havi cél hozzáadása…", addGoalBtn:"+ Cél hozzáadása",
+    weeklyScore:"Heti eredmény", overallProgress:"Összesített haladás",
+    weekPrefix:"Hét", weekShort:"Hét",
+    session:"Munkamenet", focusTime:"Fókusz idő",
+    pomodoroMode:"Pomodoro", shortBreak:"Rövid szünet", longBreak:"Hosszú szünet",
+    startBtn:"▶ Indítás", pauseBtn:"⏸ Szünet", resetBtn:"↺ Visszaállít",
+    saved:"✓ Mentve",
+    completedStat:"teljesítve", habitsStat:"szokás", daysStat:"nap",
+    dueToday:"Ma", dueTomorrow:"Holnap",
+    dueOverdue:(n)=>`${n} napja lejárt`, dueFuture:(n)=>`Még ${n} nap`,
+    langLabel:"HU 🇭🇺",
+  },
+  de: {
+    monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+    monthShort:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],
+    days:["Mo","Di","Mi","Do","Fr","Sa","So"],
+    subtitle:"— Leben Tracker —",
+    tabTracker:"Tracker", tabDays:"Tage", tabTasks:"Aufgaben", tabAnalysis:"Analyse",
+    pomodoroBtn:"⏱ Pomodoro",
+    statHabits:"Gewohnheiten", statCompleted:"Erledigt", statProgress:"Fortschritt", statTasksDone:"Aufgaben",
+    myHabits:"Meine Gewohnheiten",
+    addHabitPlaceholder:"Neue Gewohnheit…", addHabitBtn:"+ Hinzufügen",
+    thisDay:"Dieser Tag", todayBadge:"Heute",
+    mindsetTitle:"Tages-Check-In", energy:"Energie", focus:"Fokus", mood:"Stimmung", motivation:"Motivation",
+    tasksThisWeek:"📋 Aufgaben diese Woche",
+    filterAll:"Alle", filterHigh:"🔴 Hoch", filterMedium:"⚡ Mittel", filterLow:"🔵 Niedrig",
+    taskNameLabel:"Aufgabenname", taskNamePlaceholder:"Was muss erledigt werden?",
+    priorityLabel:"Priorität", dueDateLabel:"Fälligkeitsdatum", statusLabel:"Status", addTaskBtn:"+ Aufgabe hinzufügen",
+    priorityHigh:"🔴 Hohe Priorität", priorityMedium:"⚡ Mittlere Priorität", priorityLow:"🔵 Niedrige Priorität",
+    statusInProgress:"In Bearbeitung", statusNotStarted:"Nicht begonnen", statusCompleted:"Abgeschlossen",
+    noTasks:"Keine Aufgaben. Füge eine hinzu!",
+    dailyConsistency:"Tägliche Konsistenz",
+    mindsetTrackerTitle:"Mentaler Tracker — Energie · Fokus · Motivation",
+    habitBreakdown:"Gewohnheiten Übersicht",
+    goalsThisMonth:"Monatsziele 🎯", goalPlaceholder:"Monatsziel hinzufügen…", addGoalBtn:"+ Ziel hinzufügen",
+    weeklyScore:"Wochenpunktzahl", overallProgress:"Gesamtfortschritt",
+    weekPrefix:"Woche", weekShort:"Wo",
+    session:"Sitzung", focusTime:"Fokuszeit",
+    pomodoroMode:"Pomodoro", shortBreak:"Kurze Pause", longBreak:"Lange Pause",
+    startBtn:"▶ Start", pauseBtn:"⏸ Pause", resetBtn:"↺ Zurücksetzen",
+    saved:"✓ Gespeichert",
+    completedStat:"erledigt", habitsStat:"Gewohnheiten", daysStat:"Tage",
+    dueToday:"Heute", dueTomorrow:"Morgen",
+    dueOverdue:(n)=>`${n}T überfällig`, dueFuture:(n)=>`In ${n} Tagen`,
+    langLabel:"DE 🇩🇪",
+  },
+  es: {
+    monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    monthShort:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+    days:["Lu","Ma","Mi","Ju","Vi","Sá","Do"],
+    subtitle:"— Rastreador de Vida —",
+    tabTracker:"Rastreador", tabDays:"Días", tabTasks:"Tareas", tabAnalysis:"Análisis",
+    pomodoroBtn:"⏱ Pomodoro",
+    statHabits:"Hábitos", statCompleted:"Completado", statProgress:"Progreso", statTasksDone:"Tareas",
+    myHabits:"Mis Hábitos",
+    addHabitPlaceholder:"Añadir un hábito…", addHabitBtn:"+ Añadir",
+    thisDay:"Este día", todayBadge:"Hoy",
+    mindsetTitle:"Check-In Diario", energy:"Energía", focus:"Enfoque", mood:"Ánimo", motivation:"Motivación",
+    tasksThisWeek:"📋 Tareas de esta semana",
+    filterAll:"Todas", filterHigh:"🔴 Alta", filterMedium:"⚡ Media", filterLow:"🔵 Baja",
+    taskNameLabel:"Nombre de tarea", taskNamePlaceholder:"¿Qué hay que hacer?",
+    priorityLabel:"Prioridad", dueDateLabel:"Fecha límite", statusLabel:"Estado", addTaskBtn:"+ Añadir tarea",
+    priorityHigh:"🔴 Alta Prioridad", priorityMedium:"⚡ Prioridad Media", priorityLow:"🔵 Baja Prioridad",
+    statusInProgress:"En curso", statusNotStarted:"Sin empezar", statusCompleted:"Completado",
+    noTasks:"Sin tareas. ¡Añade una!",
+    dailyConsistency:"Consistencia Diaria",
+    mindsetTrackerTitle:"Rastreador Mental — Energía · Enfoque · Motivación",
+    habitBreakdown:"Desglose de Hábitos",
+    goalsThisMonth:"Metas del Mes 🎯", goalPlaceholder:"Añadir meta mensual…", addGoalBtn:"+ Añadir Meta",
+    weeklyScore:"Puntuación Semanal", overallProgress:"Progreso Total",
+    weekPrefix:"Semana", weekShort:"Sem",
+    session:"Sesión", focusTime:"Tiempo de Enfoque",
+    pomodoroMode:"Pomodoro", shortBreak:"Descanso Corto", longBreak:"Descanso Largo",
+    startBtn:"▶ Iniciar", pauseBtn:"⏸ Pausa", resetBtn:"↺ Reiniciar",
+    saved:"✓ Guardado",
+    completedStat:"completado", habitsStat:"hábitos", daysStat:"días",
+    dueToday:"Hoy", dueTomorrow:"Mañana",
+    dueOverdue:(n)=>`${n}d de retraso`, dueFuture:(n)=>`En ${n} días`,
+    langLabel:"ES 🇪🇸",
+  },
+  fr: {
+    monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+    monthShort:["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"],
+    days:["Lu","Ma","Me","Je","Ve","Sa","Di"],
+    subtitle:"— Suivi de Vie —",
+    tabTracker:"Suivi", tabDays:"Jours", tabTasks:"Tâches", tabAnalysis:"Analyse",
+    pomodoroBtn:"⏱ Pomodoro",
+    statHabits:"Habitudes", statCompleted:"Complété", statProgress:"Progrès", statTasksDone:"Tâches",
+    myHabits:"Mes Habitudes",
+    addHabitPlaceholder:"Ajouter une habitude…", addHabitBtn:"+ Ajouter",
+    thisDay:"Ce jour", todayBadge:"Aujourd'hui",
+    mindsetTitle:"Bilan Quotidien", energy:"Énergie", focus:"Concentration", mood:"Humeur", motivation:"Motivation",
+    tasksThisWeek:"📋 Tâches cette semaine",
+    filterAll:"Toutes", filterHigh:"🔴 Haute", filterMedium:"⚡ Moyenne", filterLow:"🔵 Basse",
+    taskNameLabel:"Nom de la tâche", taskNamePlaceholder:"Que faut-il faire ?",
+    priorityLabel:"Priorité", dueDateLabel:"Date d'échéance", statusLabel:"Statut", addTaskBtn:"+ Ajouter tâche",
+    priorityHigh:"🔴 Haute Priorité", priorityMedium:"⚡ Priorité Moyenne", priorityLow:"🔵 Basse Priorité",
+    statusInProgress:"En cours", statusNotStarted:"Non commencé", statusCompleted:"Terminé",
+    noTasks:"Aucune tâche. Ajoutez-en une !",
+    dailyConsistency:"Cohérence Quotidienne",
+    mindsetTrackerTitle:"Suivi Mental — Énergie · Concentration · Motivation",
+    habitBreakdown:"Détail des Habitudes",
+    goalsThisMonth:"Objectifs du Mois 🎯", goalPlaceholder:"Ajouter un objectif mensuel…", addGoalBtn:"+ Ajouter Objectif",
+    weeklyScore:"Score Hebdomadaire", overallProgress:"Progrès Global",
+    weekPrefix:"Semaine", weekShort:"Sem",
+    session:"Séance", focusTime:"Temps de Focus",
+    pomodoroMode:"Pomodoro", shortBreak:"Courte Pause", longBreak:"Longue Pause",
+    startBtn:"▶ Démarrer", pauseBtn:"⏸ Pause", resetBtn:"↺ Réinitialiser",
+    saved:"✓ Sauvegardé",
+    completedStat:"complété", habitsStat:"habitudes", daysStat:"jours",
+    dueToday:"Aujourd'hui", dueTomorrow:"Demain",
+    dueOverdue:(n)=>`${n}j de retard`, dueFuture:(n)=>`Dans ${n} jours`,
+    langLabel:"FR 🇫🇷",
+  }
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function t(key){ return (TRANSLATIONS[state.lang]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
+function getDays(){ return t('days'); }
+function getMonthNames(){ return t('monthNames'); }
+function getMonthShort(){ return t('monthShort'); }
+
 const WEEK_COLORS=["#4f6ef7","#e05a9a","#3ecfb2","#f5a623","#a78bfa","#e07a3a"];
 const WEEK_BG=["rgba(79,110,247,.09)","rgba(224,90,154,.09)","rgba(62,207,178,.09)","rgba(245,166,35,.09)","rgba(167,139,250,.09)","rgba(224,122,58,.09)"];
 const CIRC=2*Math.PI*42;
@@ -515,9 +713,9 @@ let saveTimer=null,editingHabit=null,taskFilter="all";
 const NOW=new Date();
 
 let state={
-  year:NOW.getFullYear(),month:NOW.getMonth(),
+  year:NOW.getFullYear(), month:NOW.getMonth(), lang:"en",
   habits:["Wake up at 05:00 ⏰","Gym 💪","Work on Side Hustle 🌿","Day Planning 📋","Budget Tracking 💰","Project Work 🎯","No Alcohol 🚫","Social Media Detox 🌱","Goal Journaling 📓","Cold Shower ❄️"],
-  checked:{},mindset:{},
+  checked:{}, mindset:{},
   tasks:[
     {id:1,name:"Call Jack with idea",priority:"high",due:"",status:"inprogress",done:false},
     {id:2,name:"Look for new platforms",priority:"high",due:"",status:"inprogress",done:false},
@@ -531,16 +729,17 @@ let state={
     {id:3,name:"Read 2 books 📚",progress:40},
     {id:4,name:"Save €500 💰",progress:25},
   ],
-  tab:"tracker",taskIdCtr:6,goalIdCtr:5
+  tab:"tracker", taskIdCtr:6, goalIdCtr:5
 };
 
-// STORAGE
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
 const K={
   habits:()=>"ht_habits_v4",
   checked:()=>`ht_checked_v4_${state.year}_${state.month}`,
   mindset:()=>`ht_mindset_v4_${state.year}_${state.month}`,
   tasks:()=>"ht_tasks_v4",
-  goals:()=>`ht_goals_v4_${state.year}_${state.month}`
+  goals:()=>`ht_goals_v4_${state.year}_${state.month}`,
+  lang:()=>"ht_lang_v4"
 };
 function saveAll(){
   try{
@@ -549,10 +748,12 @@ function saveAll(){
     localStorage.setItem(K.mindset(),JSON.stringify(state.mindset));
     localStorage.setItem(K.tasks(),JSON.stringify({tasks:state.tasks,ctr:state.taskIdCtr}));
     localStorage.setItem(K.goals(),JSON.stringify({goals:state.goals,ctr:state.goalIdCtr}));
+    localStorage.setItem(K.lang(),state.lang);
   }catch(e){}
   flashSaved();
 }
 function loadAll(){
+  try{const l=localStorage.getItem(K.lang());if(l&&TRANSLATIONS[l])state.lang=l;}catch(e){}
   try{const h=localStorage.getItem(K.habits());if(h)state.habits=JSON.parse(h);}catch(e){}
   loadMonthData();
   try{const t=localStorage.getItem(K.tasks());if(t){const p=JSON.parse(t);state.tasks=p.tasks;state.taskIdCtr=p.ctr;}}catch(e){}
@@ -564,11 +765,55 @@ function loadMonthData(){
 }
 function flashSaved(){
   const el=document.getElementById("save-indicator");
+  el.textContent=t('saved');
   el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
   clearTimeout(saveTimer);saveTimer=setTimeout(()=>el.classList.remove("show"),1700);
 }
 
-// HELPERS
+// ─── APPLY TRANSLATIONS (static DOM) ─────────────────────────────────────────
+function applyTranslations(){
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  // data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    if(tr[key]!==undefined&&typeof tr[key]==='string') el.textContent=tr[key];
+  });
+  // placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key=el.dataset.i18nPlaceholder;
+    if(tr[key]) el.placeholder=tr[key];
+  });
+  // lang button
+  document.getElementById('lang-btn').innerHTML=`🌐 ${tr.langLabel} ▾`;
+  // lang option active state
+  document.querySelectorAll('.lang-option').forEach(opt=>{
+    opt.classList.toggle('active',opt.dataset.lang===state.lang);
+  });
+  // priority select options
+  const ps=document.getElementById('task-priority-select');
+  if(ps){
+    ps.options[0].text=tr.priorityHigh||'🔴 High';
+    ps.options[1].text=tr.priorityMedium||'⚡ Medium';
+    ps.options[2].text=tr.priorityLow||'🔵 Low';
+  }
+  // status select options
+  const ss=document.getElementById('task-status-select');
+  if(ss){
+    ss.options[0].text=tr.statusNotStarted||'Not Started';
+    ss.options[1].text=tr.statusInProgress||'In Progress';
+  }
+  // pomo ctrl buttons
+  if(pomoRunning){document.getElementById('pomo-start').textContent=tr.pauseBtn||'⏸ Pause';}
+  else{document.getElementById('pomo-start').textContent=tr.startBtn||'▶ Start';}
+  document.getElementById('pomo-reset').textContent=tr.resetBtn||'↺ Reset';
+  // my habits header
+  const mh=document.getElementById('my-habits-header');
+  if(mh)mh.textContent=tr.myHabits||'My Habits';
+  // save indicator
+  document.getElementById('save-indicator').textContent=tr.saved||'✓ Saved';
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
 function getDaysInMonth(y,m){return new Date(y,m+1,0).getDate();}
 function getFirstDayOffset(y,m){const d=new Date(y,m,1).getDay();return d===0?6:d-1;}
 function getDow(y,m,d){const w=new Date(y,m,d).getDay();return w===0?6:w-1;}
@@ -584,7 +829,18 @@ function toggleCheck(hi,d){
   saveAll();render(false);
 }
 
-// STATS
+function getDueLabel(s){
+  if(!s)return null;
+  const due=new Date(s+"T00:00:00");const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.round((due-today)/86400000);
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  if(diff<0)return{text:tr.dueOverdue(Math.abs(diff)),overdue:true};
+  if(diff===0)return{text:tr.dueToday,overdue:false};
+  if(diff===1)return{text:tr.dueTomorrow,overdue:false};
+  return{text:tr.dueFuture(diff),overdue:false};
+}
+
+// ─── STATS ───────────────────────────────────────────────────────────────────
 function calcStats(){
   const days=getDaysInMonth(state.year,state.month);
   const total=state.habits.length*days;
@@ -609,7 +865,7 @@ function calcWeekTotals(wg){
 }
 function calcDowTotals(){
   const days=getDaysInMonth(state.year,state.month);
-  return DAYS.map((_,di)=>{
+  return getDays().map((_,di)=>{
     let done=0,pos=0;
     for(let d=1;d<=days;d++){
       if(getDow(state.year,state.month,d)===di){
@@ -633,17 +889,6 @@ function getWeekGroups(){
   return groups.filter(g=>g&&g.length>0);
 }
 function tasksDone(){return state.tasks.filter(t=>t.done).length;}
-function getDueLabel(s){
-  if(!s)return null;
-  const due=new Date(s+"T00:00:00");const today=new Date();today.setHours(0,0,0,0);
-  const diff=Math.round((due-today)/86400000);
-  if(diff<0)return{text:`${Math.abs(diff)}d overdue`,overdue:true};
-  if(diff===0)return{text:"Today",overdue:false};
-  if(diff===1)return{text:"Tomorrow",overdue:false};
-  return{text:`In ${diff} days`,overdue:false};
-}
-
-// ARC
 function updateArc(id,pct){
   const el=document.getElementById(id);
   if(!el)return;
@@ -663,7 +908,7 @@ function makeRadialHTML(pct,color,size){
 function pctColor(p){return p>=70?"#3ecfb2":p>=40?"#f5a623":"#e05a9a";}
 function bumpEl(id){const el=document.getElementById(id);if(!el)return;el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");}
 
-// RENDER
+// ─── RENDER ───────────────────────────────────────────────────────────────────
 function render(animate){
   const{days,total,done,pct}=calcStats();
   const wg=getWeekGroups();
@@ -672,7 +917,7 @@ function render(animate){
   const dt=calcDowTotals();
   const td=tasksDone();
 
-  document.getElementById("month-title").textContent=MONTH_NAMES[state.month];
+  document.getElementById("month-title").textContent=getMonthNames()[state.month];
   document.getElementById("year-label").textContent=state.year;
 
   const ph=document.getElementById("stat-habits").textContent;
@@ -694,6 +939,7 @@ function render(animate){
 
   // Habit names
   const nl=document.getElementById("habit-names-list");nl.innerHTML="";
+  document.getElementById("my-habits-header").textContent=t('myHabits');
   state.habits.forEach((h,hi)=>{
     const row=document.createElement("div");row.className="habit-name-row";row.style.animationDelay=`${hi*.04}s`;
     if(editingHabit===hi){
@@ -713,6 +959,7 @@ function render(animate){
 
   // Weekly grid
   const wc_el=document.getElementById("weeks-container");wc_el.innerHTML="";
+  const DAYS_ARR=getDays();
   wg.forEach((diw,wi)=>{
     const col=document.createElement("div");col.className="week-col";
     const wcolor=WEEK_COLORS[wi%WEEK_COLORS.length];
@@ -720,13 +967,14 @@ function render(animate){
     const dm={};diw.forEach(d=>{dm[getDow(state.year,state.month,d)]=d;});
     const slots=Array.from({length:7},(_,dow)=>dm[dow]!==undefined?dm[dow]:null);
 
-    const hdr=document.createElement("div");hdr.className="week-header";hdr.style.background=wcolor;hdr.textContent=`Week ${wi+1}`;col.appendChild(hdr);
+    const hdr=document.createElement("div");hdr.className="week-header";hdr.style.background=wcolor;
+    hdr.textContent=`${t('weekPrefix')} ${wi+1}`;col.appendChild(hdr);
 
     const dr=document.createElement("div");dr.className="week-days-row";dr.style.background=wbg;
     slots.forEach((d,dow)=>{
       const cell=document.createElement("div");cell.className="day-header-cell";
-      if(d===null){cell.style.visibility="hidden";cell.innerHTML=`<div class="day-dow">${DAYS[dow]}</div><div class="day-num">0</div>`;}
-      else{const today=isToday(d);cell.innerHTML=`<div class="day-dow" style="color:${wcolor}">${DAYS[dow]}</div><div class="day-num ${today?'today-num':''}">${d}</div>`;}
+      if(d===null){cell.style.visibility="hidden";cell.innerHTML=`<div class="day-dow">${DAYS_ARR[dow]}</div><div class="day-num">0</div>`;}
+      else{const today=isToday(d);cell.innerHTML=`<div class="day-dow" style="color:${wcolor}">${DAYS_ARR[dow]}</div><div class="day-num ${today?'today-num':''}">${d}</div>`;}
       dr.appendChild(cell);
     });col.appendChild(dr);
 
@@ -784,11 +1032,11 @@ function renderDaysView(animate){
     });
 
     const mtypes=[
-      {key:"energy",label:"Energy",icon:"⚡",cols:["#2a3d5e","#f5a62388","#f5a623bb","#f5a623","#ffbe4a"]},
-      {key:"focus",label:"Focus",icon:"🎯",cols:["#2a3d5e","#4f6ef788","#4f6ef7bb","#4f6ef7","#7090f9"]},
-      {key:"motivation",label:"Mood",icon:"🔥",cols:["#2a3d5e","#e05a9a88","#e05a9abb","#e05a9a","#f07ab0"]},
+      {key:"energy",label:t('energy'),icon:"⚡",cols:["#2a3d5e","#f5a62388","#f5a623bb","#f5a623","#ffbe4a"]},
+      {key:"focus",label:t('focus'),icon:"🎯",cols:["#2a3d5e","#4f6ef788","#4f6ef7bb","#4f6ef7","#7090f9"]},
+      {key:"motivation",label:t('mood'),icon:"🔥",cols:["#2a3d5e","#e05a9a88","#e05a9abb","#e05a9a","#f07ab0"]},
     ];
-    let mHTML=`<div class="mindset-section"><div class="mindset-title">Mindset Check-In</div>`;
+    let mHTML=`<div class="mindset-section"><div class="mindset-title">${t('mindsetTitle')}</div>`;
     mtypes.forEach(mt=>{
       const val=getMindset(d,mt.key);
       mHTML+=`<div class="mindset-row"><span class="mindset-icon">${mt.icon}</span><span class="mindset-label">${mt.label}</span><div class="mindset-stars">`;
@@ -801,12 +1049,13 @@ function renderDaysView(animate){
     });
     mHTML+=`</div>`;
 
+    const ms=getMonthShort();
     card.innerHTML=`
       <div class="day-card-top">
-        <span class="day-card-label">This day</span>
-        ${today?'<span class="day-card-today-badge">Today</span>':""}
+        <span class="day-card-label">${t('thisDay')}</span>
+        ${today?`<span class="day-card-today-badge">${t('todayBadge')}</span>`:""}
       </div>
-      <div class="day-card-date">${MONTH_SHORT[state.month]} ${d}</div>
+      <div class="day-card-date">${ms[state.month]} ${d}</div>
       <div class="day-card-progress-row">
         <span class="day-card-pct" style="color:${color}">${pct}%</span>
         <div class="day-card-track"><div class="day-card-fill" style="width:0%;background:${color};"></div></div>
@@ -825,43 +1074,49 @@ function renderDaysView(animate){
 
 function renderTasksView(){
   const list=document.getElementById("tasks-list");list.innerHTML="";
+  // Update tasks title
+  document.getElementById('tasks-title').textContent=t('tasksThisWeek');
+  // Update filter buttons
+  document.querySelectorAll('.task-filter-btn[data-i18n]').forEach(b=>{
+    const key=b.dataset.i18n;const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+    if(tr[key])b.textContent=tr[key];
+  });
   const filtered=state.tasks.filter(t=>taskFilter==="all"||t.priority===taskFilter);
   if(!filtered.length){
-    list.innerHTML=`<div style="text-align:center;color:#4a6a9a;padding:30px;font-size:14px;font-weight:600;">No tasks. Add one below!</div>`;
+    list.innerHTML=`<div style="text-align:center;color:#4a6a9a;padding:30px;font-size:14px;font-weight:600;">${t('noTasks')}</div>`;
     return;
   }
   const pClass={high:"priority-high",medium:"priority-medium",low:"priority-low"};
-  const pLabel={high:"🔴 High Priority",medium:"⚡ Medium Priority",low:"🔵 Low Priority"};
+  const pLabel={high:t('priorityHigh'),medium:t('priorityMedium'),low:t('priorityLow')};
   const sClass={inprogress:"status-inprogress",notstarted:"status-notstarted",completed:"status-completed"};
-  const sLabel={inprogress:"In Progress",notstarted:"Not Started",completed:"Completed"};
-  filtered.forEach((t,idx)=>{
+  const sLabel={inprogress:t('statusInProgress'),notstarted:t('statusNotStarted'),completed:t('statusCompleted')};
+  filtered.forEach((task,idx)=>{
     const item=document.createElement("div");
-    item.className="task-item"+(t.done?" completed":"");
+    item.className="task-item"+(task.done?" completed":"");
     item.style.animationDelay=`${idx*.05}s`;
-    const due=getDueLabel(t.due);
+    const due=getDueLabel(task.due);
     const dueHTML=due?`<span class="task-due ${due.overdue?'overdue':''}">${due.text}</span>`:"";
     item.innerHTML=`
-      <div class="task-cb ${t.done?'checked':''}" data-tid="${t.id}">
-        ${t.done?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}
+      <div class="task-cb ${task.done?'checked':''}" data-tid="${task.id}">
+        ${task.done?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}
       </div>
-      <span class="task-name ${t.done?'done':''}">${t.name}</span>
-      <span class="priority-badge ${pClass[t.priority]}">${pLabel[t.priority]}</span>
+      <span class="task-name ${task.done?'done':''}">${task.name}</span>
+      <span class="priority-badge ${pClass[task.priority]}">${pLabel[task.priority]}</span>
       ${dueHTML}
-      <span class="status-badge ${sClass[t.status]||'status-notstarted'}">${sLabel[t.status]||t.status}</span>
-      <button class="task-remove-btn" data-rtid="${t.id}">×</button>`;
+      <span class="status-badge ${sClass[task.status]||'status-notstarted'}">${sLabel[task.status]||task.status}</span>
+      <button class="task-remove-btn" data-rtid="${task.id}">×</button>`;
     list.appendChild(item);
   });
 }
 
 function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
-  // Bar chart
   const maxH=72;
-  document.getElementById("bar-chart-days").innerHTML=DAYS.map((dl,i)=>{
+  const DAYS_ARR=getDays();
+  document.getElementById("bar-chart-days").innerHTML=DAYS_ARR.map((dl,i)=>{
     const h=Math.round((dt[i]/100)*maxH);const col=WEEK_COLORS[i%WEEK_COLORS.length];
     return `<div class="bar-chart-col"><div class="bar-chart-bar" style="height:${Math.max(h,2)}px;background:${col};opacity:${dt[i]===0?.15:.85};"></div><div class="bar-chart-lbl">${dl}</div></div>`;
   }).join("");
 
-  // Habit bars
   const hbEl=document.getElementById("habit-bars");hbEl.innerHTML="";
   state.habits.forEach((h,hi)=>{
     const p=hp[hi];const color=pctColor(p);
@@ -873,11 +1128,10 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
     requestAnimationFrame(()=>{setTimeout(()=>{const f=row.querySelector(".habit-bar-fill");if(f)f.style.width=p+"%";},60+hi*40);});
   });
 
-  // Week radials
   const wrEl=document.getElementById("week-radials");wrEl.innerHTML="";
   wg.forEach((_,wi)=>{
     const item=document.createElement("div");item.className="week-radial-item";
-    item.innerHTML=makeRadialHTML(wt[wi],WEEK_COLORS[wi%WEEK_COLORS.length],68)+`<span class="week-radial-label" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">Wk ${wi+1}</span>`;
+    item.innerHTML=makeRadialHTML(wt[wi],WEEK_COLORS[wi%WEEK_COLORS.length],68)+`<span class="week-radial-label" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">${t('weekShort')} ${wi+1}</span>`;
     wrEl.appendChild(item);
   });
 
@@ -885,9 +1139,9 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
   document.getElementById("overall-pct-text-2").textContent=Math.round(pct)+"%";
   document.getElementById("overall-sub-text-2").textContent=`${done}/${total}`;
   document.getElementById("overall-stats").innerHTML=`
-    <div><strong style="color:#fff;font-size:1.1em;">${done}</strong>&nbsp;completed</div>
-    <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong>&nbsp;habits</div>
-    <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year,state.month)}</strong>&nbsp;days</div>`;
+    <div><strong style="color:#fff;font-size:1.1em;">${done}</strong>&nbsp;${t('completedStat')}</div>
+    <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong>&nbsp;${t('habitsStat')}</div>
+    <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year,state.month)}</strong>&nbsp;${t('daysStat')}</div>`;
 
   renderMindsetChart(days);
   renderGoals();
@@ -898,7 +1152,6 @@ function renderMindsetChart(days){
   const W=700,H=90;
   const mtypes=[{key:"energy",color:"#f5a623"},{key:"focus",color:"#4f6ef7"},{key:"motivation",color:"#e05a9a"}];
   let paths=`<line x1="0" y1="${H-4}" x2="${W}" y2="${H-4}" stroke="#1e3060" stroke-width="1"/>`;
-  // Grid lines
   for(let v=1;v<=4;v++){const y=H-(v/5)*(H-14)-4;paths+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#111e38" stroke-width="1" stroke-dasharray="4,4"/>`;}
   mtypes.forEach(mt=>{
     const pts=[];
@@ -910,7 +1163,7 @@ function renderMindsetChart(days){
       const polyPts=pts.map(p=>`${p.x},${p.y}`).join(" ");
       paths+=`<polyline points="${polyPts}" fill="none" stroke="${mt.color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
     }
-    pts.forEach(p=>{paths+=`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${mt.color}" opacity="0.95"/>`;});
+    pts.forEach(p=>{paths+=`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${p.color||mt.color}" opacity="0.95"/>`;});
   });
   svg.innerHTML=paths;
 }
@@ -931,7 +1184,7 @@ function renderGoals(){
   });
 }
 
-// TAB SWITCHING
+// ─── TAB SWITCHING ────────────────────────────────────────────────────────────
 function switchTab(tab){
   state.tab=tab;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
@@ -948,16 +1201,57 @@ function switchTab(tab){
   }else if(tab==="tracker")render(true);
 }
 
-// POMODORO
+// ─── LANGUAGE SELECTOR ───────────────────────────────────────────────────────
+const langBtn=document.getElementById('lang-btn');
+const langDropdown=document.getElementById('lang-dropdown');
+
+langBtn.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  const open=langDropdown.classList.contains('open');
+  langDropdown.classList.toggle('open',!open);
+  langBtn.classList.toggle('open',!open);
+});
+
+document.addEventListener('click',()=>{
+  langDropdown.classList.remove('open');
+  langBtn.classList.remove('open');
+});
+
+langDropdown.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  const opt=e.target.closest('.lang-option');
+  if(!opt)return;
+  const lang=opt.dataset.lang;
+  if(!lang||!TRANSLATIONS[lang])return;
+  state.lang=lang;
+  langDropdown.classList.remove('open');
+  langBtn.classList.remove('open');
+  applyTranslations();
+  render(false);
+  // Re-render active tab content for translated strings
+  if(state.tab==="days")renderDaysView(false);
+  else if(state.tab==="tasks")renderTasksView();
+  else if(state.tab==="analysis"){
+    const{days,total,done,pct}=calcStats();const wg=getWeekGroups();
+    renderAnalysis(days,total,done,pct,calcHabitPcts(),wg,calcWeekTotals(wg),calcDowTotals());
+  }
+  try{localStorage.setItem(K.lang(),lang);}catch(e){}
+});
+
+// ─── POMODORO ─────────────────────────────────────────────────────────────────
 let pomoInterval=null,pomoRunning=false,pomoMode="pomo",pomoTotal=1500,pomoRemaining=1500,pomoSessions=1;
 const POMO_COLORS={pomo:"#e05a9a",break:"#3ecfb2",long:"#a78bfa"};
-const POMO_LABELS={pomo:"Focus Time",break:"Short Break",long:"Long Break"};
+
+function getPomoLabel(){
+  const map={pomo:t('focusTime'),break:t('shortBreak'),long:t('longBreak')};
+  return map[pomoMode]||t('focusTime');
+}
 
 function updatePomoDisplay(){
   const m=Math.floor(pomoRemaining/60),s=pomoRemaining%60;
   document.getElementById("pomo-display").textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  document.getElementById("pomo-session-lbl").textContent=`Session ${pomoSessions}`;
-  document.getElementById("pomo-label").textContent=POMO_LABELS[pomoMode];
+  document.getElementById("pomo-session-lbl").textContent=`${t('session')} ${pomoSessions}`;
+  document.getElementById("pomo-label").textContent=getPomoLabel();
   const col=POMO_COLORS[pomoMode];
   const arc=document.getElementById("pomo-arc");
   const dash=(pomoRemaining/pomoTotal)*POMO_CIRC;
@@ -969,15 +1263,18 @@ function updatePomoDisplay(){
   widget.className=widget.className.replace(/\s*mode-\w+/g,"").trim();
   if(pomoMode!=="pomo")widget.classList.add("mode-"+pomoMode);
 }
+
 function startPomo(){
-  if(pomoRunning){clearInterval(pomoInterval);pomoRunning=false;document.getElementById("pomo-start").textContent="▶ Start";}
-  else{
-    pomoRunning=true;document.getElementById("pomo-start").textContent="⏸ Pause";
+  if(pomoRunning){
+    clearInterval(pomoInterval);pomoRunning=false;
+    document.getElementById("pomo-start").textContent=t('startBtn');
+  }else{
+    pomoRunning=true;document.getElementById("pomo-start").textContent=t('pauseBtn');
     pomoInterval=setInterval(()=>{
       pomoRemaining--;
       if(pomoRemaining<=0){
         clearInterval(pomoInterval);pomoRunning=false;
-        document.getElementById("pomo-start").textContent="▶ Start";
+        document.getElementById("pomo-start").textContent=t('startBtn');
         if(pomoMode==="pomo")pomoSessions++;
         try{new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAA").play();}catch(e){}
       }
@@ -985,7 +1282,12 @@ function startPomo(){
     },1000);
   }
 }
-function resetPomo(){clearInterval(pomoInterval);pomoRunning=false;pomoRemaining=pomoTotal;document.getElementById("pomo-start").textContent="▶ Start";updatePomoDisplay();}
+
+function resetPomo(){
+  clearInterval(pomoInterval);pomoRunning=false;pomoRemaining=pomoTotal;
+  document.getElementById("pomo-start").textContent=t('startBtn');
+  updatePomoDisplay();
+}
 
 document.getElementById("pomo-toggle").addEventListener("click",()=>{
   const w=document.getElementById("pomo-widget");const b=document.getElementById("pomo-toggle");
@@ -997,22 +1299,21 @@ document.querySelectorAll(".pomo-mode-btn").forEach(btn=>{
     btn.classList.add("active");
     pomoMode=btn.dataset.mode;pomoTotal=+btn.dataset.time;pomoRemaining=pomoTotal;
     clearInterval(pomoInterval);pomoRunning=false;
-    document.getElementById("pomo-start").textContent="▶ Start";
+    document.getElementById("pomo-start").textContent=t('startBtn');
     updatePomoDisplay();
   });
 });
 document.getElementById("pomo-start").addEventListener("click",startPomo);
 document.getElementById("pomo-reset").addEventListener("click",resetPomo);
-updatePomoDisplay();
 
-// EVENTS
+// ─── EVENTS ───────────────────────────────────────────────────────────────────
 document.getElementById("prev-month").addEventListener("click",()=>{
   if(state.month===0){state.month=11;state.year--;}else state.month--;
-  editingHabit=null;loadMonthData();render(true);
+  editingHabit=null;loadMonthData();render(true);applyTranslations();
 });
 document.getElementById("next-month").addEventListener("click",()=>{
   if(state.month===11){state.month=0;state.year++;}else state.month++;
-  editingHabit=null;loadMonthData();render(true);
+  editingHabit=null;loadMonthData();render(true);applyTranslations();
 });
 document.querySelectorAll(".tab-btn").forEach(btn=>{btn.addEventListener("click",()=>switchTab(btn.dataset.tab));});
 
@@ -1045,12 +1346,15 @@ document.getElementById("days-section").addEventListener("click",e=>{
 
 document.getElementById("tasks-section").addEventListener("click",e=>{
   const cb=e.target.closest(".task-cb[data-tid]");
-  if(cb){const t=state.tasks.find(x=>x.id===+cb.dataset.tid);if(t){t.done=!t.done;t.status=t.done?"completed":"inprogress";}saveAll();renderTasksView();render(false);return;}
+  if(cb){const task=state.tasks.find(x=>x.id===+cb.dataset.tid);if(task){task.done=!task.done;task.status=task.done?"completed":"inprogress";}saveAll();renderTasksView();render(false);return;}
   const rem=e.target.closest("[data-rtid]");
-  if(rem){state.tasks=state.tasks.filter(t=>t.id!==+rem.dataset.rtid);saveAll();renderTasksView();render(false);}
+  if(rem){state.tasks=state.tasks.filter(task=>task.id!==+rem.dataset.rtid);saveAll();renderTasksView();render(false);}
 });
 document.querySelectorAll(".task-filter-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{document.querySelectorAll(".task-filter-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");taskFilter=btn.dataset.filter;renderTasksView();});
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".task-filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");taskFilter=btn.dataset.filter;renderTasksView();
+  });
 });
 document.getElementById("add-task-btn").addEventListener("click",()=>{
   const name=document.getElementById("task-name-input").value.trim();if(!name)return;
@@ -1080,8 +1384,11 @@ const addInput=document.getElementById("new-habit-input");
 addBtn.addEventListener("click",()=>{const v=addInput.value.trim();if(!v)return;state.habits.push(v);addInput.value="";saveAll();render(true);});
 addInput.addEventListener("keydown",e=>{if(e.key==="Enter")addBtn.click();});
 
-// INIT
-loadAll();render(true);
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadAll();
+applyTranslations();
+updatePomoDisplay();
+render(true);
 </script>
 </body>
 </html>

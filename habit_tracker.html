@@ -314,6 +314,120 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   #habit-names-col{min-width:100px;}
   .tab-btn{padding:10px 8px;font-size:9px;}
 }
+
+/* SHOPPING */
+.shop-category-card{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:16px;padding:clamp(14px,1.8vw,20px) clamp(16px,2.2vw,24px);transition:border-color .25s;}
+.shop-category-title{font-size:clamp(10px,1.1vw,12px);font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.shop-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #0d1828;transition:opacity .2s;animation:taskRowIn .25s both;}
+.shop-item:last-child{border-bottom:none;}
+.shop-cb{width:20px;height:20px;border-radius:5px;flex-shrink:0;border:2px solid #2a3d6e;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.shop-cb.checked{border-color:#3ecfb2;background:rgba(62,207,178,.15);}
+.shop-cb:hover:not(.checked){border-color:#4f6ef7;background:rgba(79,110,247,.1);}
+.shop-cb svg{display:none;width:55%;height:55%;}
+.shop-cb.checked svg{display:block;}
+.shop-item-name{flex:1;font-size:13px;color:#c0d4f0;font-weight:600;transition:color .2s;}
+.shop-item-name.checked-name{text-decoration:line-through;color:#4a6a9a;}
+.shop-item-qty{font-size:11px;color:#5a7aaa;font-weight:700;min-width:28px;text-align:right;}
+.shop-remove-btn{background:none;border:none;color:#2a3d5e;cursor:pointer;font-size:16px;opacity:0;transition:opacity .2s,color .2s;}
+.shop-item:hover .shop-remove-btn{opacity:.5;}
+.shop-remove-btn:hover{opacity:1 !important;color:#e05a9a;}
+
+/* ── CYCLE TRACKER v2 ─────────────────────────────────────────── */
+@keyframes pillPop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes pillTaken{0%{transform:scale(1)}40%{transform:scale(.8) rotate(-8deg)}100%{transform:scale(1) rotate(0deg)}}
+@keyframes calHighlight{0%{box-shadow:0 0 0 0 rgba(224,90,154,0)}100%{box-shadow:0 0 0 4px rgba(224,90,154,.35)}}
+
+#cycle-section{padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;}
+
+/* Mode toggle */
+.cycle-mode-toggle{display:flex;background:#0d1e3a;border-radius:12px;overflow:hidden;border:1.5px solid #1e3060;width:fit-content;margin-bottom:24px;}
+.cycle-mode-btn{padding:10px 22px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;color:#4a6a9a;background:transparent;position:relative;overflow:hidden;transition:color .25s;}
+.cycle-mode-btn::before{content:'';position:absolute;inset:0;background:#e05a9a;transform:scaleX(0);transform-origin:center;transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:0;}
+.cycle-mode-btn.active::before{transform:scaleX(1);}
+.cycle-mode-btn.active{color:#fff;}
+.cycle-mode-btn span{position:relative;z-index:1;}
+
+/* Main layout */
+#cycle-main-layout{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;}
+
+/* ── PILL PACK ── */
+#pill-pack-wrap{display:flex;flex-direction:column;gap:20px;}
+.pill-pack-card{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:20px;padding:24px;position:relative;overflow:hidden;}
+.pill-pack-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(224,90,154,.04),transparent 60%);pointer-events:none;}
+.pill-pack-title{font-size:11px;font-weight:800;color:#5a7aaa;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.pill-pack-title::before{content:'';display:block;width:3px;height:3px;border-radius:50%;background:#e05a9a;box-shadow:0 0 6px #e05a9a;}
+.pill-pack-subtitle{font-size:11px;color:#2a4060;font-weight:600;margin-bottom:18px;}
+.pill-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;width:fit-content;}
+.pill-cell{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.pill{width:clamp(28px,3.5vw,38px);height:clamp(28px,3.5vw,38px);border-radius:50%;border:2px solid transparent;display:flex;align-items:center;justify-content:center;transition:transform .18s cubic-bezier(.4,0,.2,1),box-shadow .18s,border-color .18s;position:relative;flex-shrink:0;}
+.pill:hover{transform:scale(1.18) translateY(-2px);}
+.pill.active-pill{transform:scale(1.08);}
+.pill-inner{width:65%;height:65%;border-radius:50%;}
+/* Active pill colours */
+.pill.pink{border-color:#e05a9a44;background:rgba(224,90,154,.08);}
+.pill.pink .pill-inner{background:radial-gradient(circle at 35% 35%,#f590c0,#e05a9a);box-shadow:0 2px 8px rgba(224,90,154,.5),inset 0 1px 2px rgba(255,255,255,.3);}
+.pill.white-pill{border-color:#ffffff22;background:rgba(255,255,255,.04);}
+.pill.white-pill .pill-inner{background:radial-gradient(circle at 35% 35%,#e8e8f0,#b0b8cc);box-shadow:0 2px 6px rgba(180,190,210,.4),inset 0 1px 2px rgba(255,255,255,.5);}
+/* Taken state */
+.pill.taken{opacity:.35;}
+.pill.taken .pill-inner{background:radial-gradient(circle at 35% 35%,#2a4060,#1a2840)!important;box-shadow:none!important;}
+/* Hovered */
+.pill.hovered{border-color:#e05a9a!important;box-shadow:0 0 14px rgba(224,90,154,.5);transform:scale(1.2) translateY(-3px)!important;z-index:2;}
+/* today pill */
+.pill.today-pill{border-color:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 0 16px rgba(224,90,154,.4);}
+.pill-day-num{font-size:8px;color:#2a4060;font-weight:700;transition:color .15s;}
+.pill-cell.hovered-cell .pill-day-num{color:#e05a9a;}
+
+/* Pill pack setup form */
+#pill-setup-card{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:16px;padding:18px;}
+.cycle-insight-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#071828;border-radius:10px;border:1px solid #111e38;margin-bottom:6px;}
+.cycle-insight-label{font-size:11px;color:#5a7aaa;font-weight:700;letter-spacing:.5px;}
+.cycle-insight-val{font-size:14px;color:#fff;font-weight:900;}
+
+/* ── CALENDAR ── */
+#cycle-cal-card{background:#0d1e3a;border:1.5px solid #1e3060;border-radius:20px;padding:22px;}
+.cycle-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cycle-cal-title-txt{font-size:15px;font-weight:800;color:#fff;}
+.cycle-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cycle-cal-header{font-size:10px;font-weight:700;color:#2a4060;text-align:center;padding:4px 0;letter-spacing:.5px;}
+.cycle-cal-day{aspect-ratio:1/1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(10px,1.1vw,12px);font-weight:700;cursor:default;transition:all .18s;border:1.5px solid transparent;position:relative;}
+.cycle-cal-day.period{background:rgba(224,90,154,.22);border-color:#e05a9a55;color:#f59cc4;}
+.cycle-cal-day.fertile{background:rgba(62,207,178,.12);border-color:#3ecfb233;color:#3ecfb2;}
+.cycle-cal-day.ovulation{background:rgba(62,207,178,.28);border-color:#3ecfb2;color:#fff;}
+.cycle-cal-day.pms-zone{background:rgba(167,139,250,.1);border-color:#a78bfa22;color:#c4b5fd;}
+.cycle-cal-day.pill-day{background:rgba(224,90,154,.1);border-color:#e05a9a33;}
+.cycle-cal-day.pill-placebo{background:rgba(180,190,210,.06);border-color:#ffffff18;}
+.cycle-cal-day.today-cycle{box-shadow:0 0 0 2px #fff!important;color:#fff;}
+.cycle-cal-day.other-month{opacity:.2;}
+.cycle-cal-day.pill-highlighted{background:rgba(224,90,154,.35)!important;border-color:#e05a9a!important;box-shadow:0 0 12px rgba(224,90,154,.4);transform:scale(1.06);animation:calHighlight .3s ease-out;}
+.cycle-cal-day.cal-hover-highlight{background:rgba(224,90,154,.25)!important;border-color:#e05a9a88!important;transform:scale(1.04);}
+
+/* Legend */
+.cycle-legend{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#5a7aaa;font-weight:700;}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* Right column */
+#cycle-right-col{display:flex;flex-direction:column;gap:16px;}
+.cycle-status-card{background:linear-gradient(135deg,rgba(224,90,154,.08),rgba(167,139,250,.06));border:1.5px solid #e05a9a33;border-radius:20px;padding:20px;}
+
+/* Symptoms / mood */
+.symptom-btn{padding:6px 10px;border-radius:8px;border:1.5px solid #1e3060;background:transparent;color:#5a7aaa;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;text-align:left;}
+.symptom-btn.active{border-color:#e05a9a;color:#e05a9a;background:rgba(224,90,154,.1);}
+.symptom-btn:hover:not(.active){border-color:#2d4a7a;color:#c0d4f0;}
+.cycle-mood-btn{padding:6px 12px;border-radius:20px;border:1.5px solid #1e3060;background:transparent;color:#5a7aaa;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.cycle-mood-btn.active{border-color:#e05a9a;background:rgba(224,90,154,.12);color:#f59cc4;}
+.cycle-mood-btn:hover:not(.active){border-color:#2d4a7a;}
+
+/* History */
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#071828;border-radius:10px;border:1px solid #111e38;animation:taskRowIn .25s both;}
+.history-remove-btn{background:none;border:none;color:#2a3d5e;cursor:pointer;font-size:14px;opacity:0;transition:opacity .2s,color .2s;}
+.history-item:hover .history-remove-btn{opacity:.6;}
+.history-remove-btn:hover{opacity:1!important;color:#e05a9a;}
+
+@media(max-width:900px){
+  #cycle-main-layout{grid-template-columns:1fr!important;}
+}
 </style>
 </head>
 <body>
@@ -339,6 +453,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     <button class="tab-btn" data-tab="days"><span data-i18n="tabDays">Days</span></button>
     <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">Tasks</span></button>
     <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">Analysis</span></button>
+    <button class="tab-btn" data-tab="shopping"><span>🛒 Shop</span></button>
+    <button class="tab-btn" data-tab="cycle"><span>🌸 Cycle</span></button>
   </div>
   <!-- Language Selector -->
   <div class="lang-selector">
@@ -481,6 +597,148 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
           </div>
           <div class="overall-stats" id="overall-stats"></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOPPING LIST SECTION -->
+<div id="shopping-section" class="hidden" style="padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+    <div style="font-size:clamp(14px,1.8vw,18px);font-weight:800;color:#fff;">🛒 Shopping List</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="shop-filter-row">
+      <button class="task-filter-btn active" data-shopcat="all">All</button>
+      <button class="task-filter-btn" data-shopcat="grocery">🥦 Grocery</button>
+      <button class="task-filter-btn" data-shopcat="household">🏠 Household</button>
+      <button class="task-filter-btn" data-shopcat="personal">💄 Personal</button>
+      <button class="task-filter-btn" data-shopcat="other">📦 Other</button>
+    </div>
+  </div>
+  <!-- Category columns -->
+  <div id="shop-lists" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(260px,30vw,380px),1fr));gap:clamp(12px,2vw,20px);margin-bottom:20px;"></div>
+  <!-- Add item form -->
+  <div class="add-task-form" style="flex-wrap:wrap;gap:10px;align-items:flex-end;">
+    <div class="form-field" style="flex:1;min-width:160px;">
+      <label class="form-label">Item Name</label>
+      <input class="form-input" id="shop-name-input" placeholder="Add an item…" style="width:100%;"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Qty</label>
+      <input class="form-input" id="shop-qty-input" type="number" min="1" value="1" style="width:72px;"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="shop-cat-select">
+        <option value="grocery">🥦 Grocery</option>
+        <option value="household">🏠 Household</option>
+        <option value="personal">💄 Personal</option>
+        <option value="other">📦 Other</option>
+      </select>
+    </div>
+    <button class="goal-add-btn" id="add-shop-btn" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Item</button>
+    <button id="clear-checked-shop-btn" style="background:#0d1e3a;border:1.5px solid #1e3060;border-radius:8px;color:#4a6a9a;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;align-self:flex-end;transition:all .2s;" onmouseover="this.style.borderColor='#e05a9a';this.style.color='#e05a9a'" onmouseout="this.style.borderColor='#1e3060';this.style.color='#4a6a9a'">🗑 Clear Checked</button>
+  </div>
+</div>
+
+<!-- MENSTRUAL CYCLE TRACKER SECTION -->
+<div id="cycle-section" class="hidden">
+
+  <!-- Mode toggle: Natural / Birth Control -->
+  <div style="padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) 0;">
+    <div class="cycle-mode-toggle">
+      <button class="cycle-mode-btn active" data-cmode="natural"><span>🌸 Natural Cycle</span></button>
+      <button class="cycle-mode-btn" data-cmode="pill"><span>💊 Birth Control Pill</span></button>
+    </div>
+  </div>
+
+  <div style="padding:0 clamp(16px,4vw,48px) clamp(20px,3vw,40px);">
+    <div id="cycle-main-layout">
+
+      <!-- LEFT: Pill pack (pill mode) OR status (natural mode) -->
+      <div id="pill-pack-wrap">
+
+        <!-- PILL PACK (shown in pill mode) -->
+        <div class="pill-pack-card" id="pill-pack-card">
+          <div class="pill-pack-title">💊 Pill Pack</div>
+          <div class="pill-pack-subtitle" id="pill-pack-date-range">Set your cycle start date to begin</div>
+          <div class="pill-grid" id="pill-grid"></div>
+          <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#f590c0,#e05a9a);border-radius:50%;"></div> Active (21)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#e8e8f0,#b0b8cc);border-radius:50%;"></div> Placebo (7)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1a2840;border-radius:50%;border:1px solid #2a4060;"></div> Taken</div>
+          </div>
+        </div>
+
+        <!-- CYCLE STATUS (shown in natural mode) -->
+        <div class="cycle-status-card" id="cycle-status-card">
+          <div class="pill-pack-title">🌸 Cycle Status</div>
+          <div id="cycle-status-inner" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Setup card -->
+        <div id="pill-setup-card" class="analysis-card">
+          <div class="section-title" id="cycle-setup-title">📅 Log Cycle Start</div>
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:flex-end;">
+            <div class="form-field" style="flex:1;min-width:140px;">
+              <label class="form-label">Start Date of Last Period</label>
+              <input class="form-input" type="date" id="cycle-start-input" style="color-scheme:dark;"/>
+            </div>
+            <div class="form-field" id="period-dur-field">
+              <label class="form-label">Period Duration (days)</label>
+              <input class="form-input" type="number" id="cycle-duration-input" value="5" min="1" max="14" style="width:80px;"/>
+            </div>
+            <div class="form-field" id="cycle-len-field">
+              <label class="form-label">Cycle Length (days)</label>
+              <input class="form-input" type="number" id="cycle-length-input" value="28" min="21" max="45" style="width:80px;"/>
+            </div>
+            <button class="goal-add-btn" id="add-cycle-btn" style="padding:9px 16px;font-size:12px;background:linear-gradient(135deg,#e05a9a,#c84080);box-shadow:0 3px 10px rgba(224,90,154,.3);">+ Set Cycle</button>
+          </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="analysis-card">
+          <div class="section-title">📊 Cycle Insights</div>
+          <div id="cycle-insights" style="margin-top:12px;display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+
+        <!-- History -->
+        <div class="analysis-card">
+          <div class="section-title">🗓 History</div>
+          <div id="cycle-history-list" style="margin-top:10px;display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Calendar + Symptoms + Mood -->
+      <div id="cycle-right-col">
+
+        <!-- Calendar -->
+        <div id="cycle-cal-card">
+          <div class="cycle-cal-nav">
+            <div class="cycle-cal-title-txt" id="cycle-cal-title">May 2026</div>
+            <div style="display:flex;gap:8px;">
+              <button id="cycle-prev-month" class="nav-btn" style="width:32px;height:32px;font-size:20px;">‹</button>
+              <button id="cycle-next-month" class="nav-btn" style="width:32px;height:32px;font-size:20px;">›</button>
+            </div>
+          </div>
+          <div class="cycle-cal-grid" id="cycle-calendar"></div>
+          <div id="cycle-hovered-date" style="min-height:20px;margin-top:10px;font-size:12px;color:#e05a9a;font-weight:700;letter-spacing:.5px;text-align:center;transition:opacity .2s;opacity:0;"></div>
+          <div class="cycle-legend" id="cycle-legend"></div>
+        </div>
+
+        <!-- Symptoms -->
+        <div class="analysis-card">
+          <div class="section-title">💊 Today's Symptoms</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;" id="symptom-grid"></div>
+        </div>
+
+        <!-- Mood + Notes -->
+        <div class="analysis-card">
+          <div class="section-title">💭 Mood & Notes</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;" id="cycle-mood-row"></div>
+          <textarea id="cycle-notes-input" placeholder="Any notes for today…" style="margin-top:12px;width:100%;background:#071828;border:1.5px solid #1e3060;border-radius:8px;color:#fff;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;padding:10px 12px;outline:none;resize:vertical;min-height:68px;transition:border-color .2s;" onfocus="this.style.borderColor='#e05a9a'" onblur="this.style.borderColor='#1e3060'"></textarea>
+          <button class="goal-add-btn" id="save-cycle-day-btn" style="margin-top:10px;background:linear-gradient(135deg,#e05a9a,#c84080);box-shadow:0 3px 10px rgba(224,90,154,.3);padding:9px 18px;font-size:12px;">💾 Save Today</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -731,7 +989,9 @@ let state={
     {id:3,name:"Read 2 books 📚",progress:40},
     {id:4,name:"Save €500 💰",progress:25},
   ],
-  tab:"tracker", taskIdCtr:6, goalIdCtr:5
+  tab:"tracker", taskIdCtr:6, goalIdCtr:5,
+  shopItems:[], shopIdCtr:1,
+  cycleData:{ periods:[], days:{}, cycleLen:28, mode:"natural", takenPills:{} }
 };
 
 const K={
@@ -758,6 +1018,8 @@ function loadAll(){
   try{const h=localStorage.getItem(K.habits());if(h)state.habits=JSON.parse(h);}catch(e){}
   loadMonthData();
   try{const t=localStorage.getItem(K.tasks());if(t){const p=JSON.parse(t);state.tasks=p.tasks;state.taskIdCtr=p.ctr;}}catch(e){}
+  loadShop();
+  loadCycle();
 }
 function loadMonthData(){
   try{const c=localStorage.getItem(K.checked());state.checked=c?JSON.parse(c):{};}catch(e){state.checked={};}
@@ -1132,7 +1394,7 @@ function renderGoals(){
 function switchTab(tab){
   state.tab=tab;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
-  ["tracker","days","tasks","analysis"].forEach(t=>{
+  ["tracker","days","tasks","analysis","shopping","cycle"].forEach(t=>{
     const el=document.getElementById(t+"-section");
     el.classList.toggle("hidden",t!==tab);
     if(t===tab){el.style.animation="none";void el.offsetWidth;el.style.animation="fadeSection .35s cubic-bezier(.4,0,.2,1) both";}
@@ -1143,7 +1405,493 @@ function switchTab(tab){
     const{days,total,done,pct}=calcStats();const wg=getWeekGroups();
     renderAnalysis(days,total,done,pct,calcHabitPcts(),wg,calcWeekTotals(wg),calcDowTotals());
   }else if(tab==="tracker")render(true);
+  else if(tab==="shopping")renderShoppingList();
+  else if(tab==="cycle")renderCycleTracker();
 }
+
+// ─── SHOPPING LIST ────────────────────────────────────────────────────────────
+const SHOP_CATS = {
+  grocery: {label:"🥦 Grocery", color:"#3ecfb2"},
+  household: {label:"🏠 Household", color:"#4f6ef7"},
+  personal: {label:"💄 Personal", color:"#e05a9a"},
+  other: {label:"📦 Other", color:"#f5a623"},
+};
+let shopFilter = "all";
+
+function saveShop(){ try{localStorage.setItem("ht_shop_v1",JSON.stringify({items:state.shopItems,ctr:state.shopIdCtr}));}catch(e){} }
+function loadShop(){
+  try{
+    const d=JSON.parse(localStorage.getItem("ht_shop_v1")||"null");
+    if(d){state.shopItems=d.items||[];state.shopIdCtr=d.ctr||1;}
+  }catch(e){}
+}
+
+function renderShoppingList(){
+  const cats = shopFilter === "all" ? Object.keys(SHOP_CATS) : [shopFilter];
+  const wrap = document.getElementById("shop-lists");
+  wrap.innerHTML = "";
+  cats.forEach(cat=>{
+    const items = state.shopItems.filter(i=>i.cat===cat);
+    if(shopFilter==="all" && items.length===0) return;
+    const catInfo = SHOP_CATS[cat];
+    const card = document.createElement("div");
+    card.className = "shop-category-card";
+    card.innerHTML = `<div class="shop-category-title" style="color:${catInfo.color};">${catInfo.label}</div><div class="shop-items-list" data-cat="${cat}"></div>`;
+    const list = card.querySelector(".shop-items-list");
+    if(items.length===0){
+      list.innerHTML = `<div style="font-size:12px;color:#2a4060;padding:6px 0;">No items yet.</div>`;
+    } else {
+      items.forEach(item=>{
+        const row = document.createElement("div");
+        row.className = "shop-item";
+        row.innerHTML = `
+          <div class="shop-cb ${item.done?"checked":""}" data-sid="${item.id}">
+            <svg viewBox="0 0 20 20" fill="none" stroke="#3ecfb2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,10 8,14 16,6"/></svg>
+          </div>
+          <span class="shop-item-name ${item.done?"checked-name":""}">${item.name}</span>
+          <span class="shop-item-qty">×${item.qty}</span>
+          <button class="shop-remove-btn" data-rsid="${item.id}">✕</button>`;
+        list.appendChild(row);
+      });
+    }
+    wrap.appendChild(card);
+  });
+  // Show placeholder if no items at all
+  if(wrap.innerHTML === ""){
+    wrap.innerHTML = `<div style="font-size:13px;color:#2a4060;padding:20px 0;">No items yet. Add some below!</div>`;
+  }
+}
+
+document.getElementById("add-shop-btn").addEventListener("click",()=>{
+  const name = document.getElementById("shop-name-input").value.trim();
+  if(!name)return;
+  const qty = Math.max(1,parseInt(document.getElementById("shop-qty-input").value)||1);
+  const cat = document.getElementById("shop-cat-select").value;
+  state.shopItems.push({id:state.shopIdCtr++, name, qty, cat, done:false});
+  document.getElementById("shop-name-input").value="";
+  document.getElementById("shop-qty-input").value="1";
+  saveShop(); renderShoppingList();
+});
+document.getElementById("shop-name-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-shop-btn").click();});
+document.getElementById("clear-checked-shop-btn").addEventListener("click",()=>{
+  state.shopItems = state.shopItems.filter(i=>!i.done);
+  saveShop(); renderShoppingList();
+});
+document.getElementById("shop-lists").addEventListener("click",e=>{
+  const cb = e.target.closest(".shop-cb[data-sid]");
+  if(cb){const it=state.shopItems.find(x=>x.id===+cb.dataset.sid);if(it)it.done=!it.done;saveShop();renderShoppingList();return;}
+  const rb = e.target.closest(".shop-remove-btn[data-rsid]");
+  if(rb){state.shopItems=state.shopItems.filter(x=>x.id!==+rb.dataset.rsid);saveShop();renderShoppingList();}
+});
+document.getElementById("shop-filter-row").addEventListener("click",e=>{
+  const btn = e.target.closest("[data-shopcat]");
+  if(!btn)return;
+  document.querySelectorAll("[data-shopcat]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  shopFilter = btn.dataset.shopcat;
+  renderShoppingList();
+});
+
+// ─── MENSTRUAL CYCLE TRACKER v2 ──────────────────────────────────────────────
+const SYMPTOMS = ["🤕 Cramps","😴 Fatigue","🤢 Nausea","🎭 Mood Swings","🍫 Cravings","💧 Bloating","🤯 Headache","💔 Breast Tenderness","😰 Anxiety","🥵 Hot Flashes","💤 Insomnia","✨ High Energy"];
+const MOODS = ["😊","😌","😢","😠","😤","🥰","😶","🤩"];
+const MOOD_LABELS = ["Happy","Calm","Sad","Irritable","Stressed","Loving","Numb","Energetic"];
+
+let cycleCalYear = NOW.getFullYear(), cycleCalMonth = NOW.getMonth();
+let todaySymptoms = [], todayMood = "";
+let cycleMode = "natural"; // "natural" | "pill"
+let hoveredPillIdx = -1; // which pill (0-27) is hovered
+
+function saveCycle(){ try{localStorage.setItem("ht_cycle_v2",JSON.stringify(state.cycleData));}catch(e){} }
+function loadCycle(){
+  try{
+    // Try v2 key first, fall back to v1
+    const raw = localStorage.getItem("ht_cycle_v2") || localStorage.getItem("ht_cycle_v1");
+    const d = JSON.parse(raw||"null");
+    if(d) state.cycleData = {...{periods:[],days:{},cycleLen:28,mode:"natural",takenPills:{}},  ...d};
+  }catch(e){}
+}
+function todayKey(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
+function dateKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function addDays(date, n){ const d=new Date(date); d.setDate(d.getDate()+n); return d; }
+
+// Get the anchor (most recent period start)
+function getAnchor(){
+  const periods = (state.cycleData.periods||[]).slice().sort((a,b)=>new Date(a.start)-new Date(b.start));
+  if(!periods.length) return null;
+  return periods[periods.length-1];
+}
+
+// For pill mode: given cycle start, pill index 0-27 → corresponding calendar date
+function pillIndexToDate(cycleStart, idx){
+  return addDays(new Date(cycleStart), idx);
+}
+
+// For any calendar date → pill index in current pack (0-27) or -1
+function dateToPillIdx(cycleStart, date){
+  const start = new Date(cycleStart); start.setHours(0,0,0,0);
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const diff = Math.round((d-start)/86400000);
+  if(diff<0) return -1;
+  return diff % 28; // repeating 28-day packs
+}
+
+// Calculate all predicted periods for a given year range based on anchor
+function getPredictedPeriods(anchor, cycleLen, months=18){
+  const result = [];
+  const dur = anchor.dur || 5;
+  const base = new Date(anchor.start);
+  // Past packs: go back up to 6 cycles
+  for(let i=-6;i<=months;i++){
+    const start = addDays(base, i*cycleLen);
+    result.push({ start: dateKey(start), dur, predicted: i!==0 });
+  }
+  return result;
+}
+
+// Get phase tag for a given date (natural mode)
+function getNaturalDayTag(date, anchor, cycleLen){
+  if(!anchor) return null;
+  const dur = anchor.dur||5;
+  const base = new Date(anchor.start); base.setHours(0,0,0,0);
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const diff = ((d-base)/86400000 % cycleLen + cycleLen) % cycleLen;
+  if(diff<dur) return "period";
+  if(diff===cycleLen-14) return "ovulation";
+  if(diff>=cycleLen-19 && diff<cycleLen-13) return "fertile";
+  if(diff>=cycleLen-7) return "pms-zone";
+  return null;
+}
+
+// Get pill tag for a calendar date (pill mode)
+function getPillDayTag(date, anchor){
+  if(!anchor) return null;
+  const idx = dateToPillIdx(anchor.start, date) ;
+  if(idx<0) return null;
+  if(idx<21) return "pill-day";    // rows 1-3 = active (pink)
+  return "pill-placebo";           // row 4 = placebo (white)
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+
+function renderCycleTracker(){
+  // Sync mode
+  cycleMode = state.cycleData.mode || "natural";
+  document.querySelectorAll(".cycle-mode-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.cmode===cycleMode);
+  });
+
+  // Show/hide pack vs status card
+  document.getElementById("pill-pack-card").style.display = cycleMode==="pill" ? "" : "none";
+  document.getElementById("cycle-status-card").style.display = cycleMode==="natural" ? "" : "none";
+  document.getElementById("period-dur-field").style.display = cycleMode==="natural" ? "" : "none";
+
+  renderPillPack();
+  renderCycleCalendar();
+  renderCycleInsights();
+  renderCycleStatus();
+  renderCycleSymptoms();
+  renderCycleMood();
+  renderCycleHistory();
+
+  const tk = todayKey();
+  const dayData = (state.cycleData.days||{})[tk]||{};
+  todaySymptoms = dayData.symptoms||[];
+  todayMood = dayData.mood||"";
+  document.getElementById("cycle-notes-input").value = dayData.notes||"";
+  updateSymptomButtons();
+  updateMoodButtons();
+}
+
+function renderPillPack(){
+  if(cycleMode !== "pill") return;
+  const anchor = getAnchor();
+  const grid = document.getElementById("pill-grid");
+  grid.innerHTML = "";
+  const today = new Date(); today.setHours(0,0,0,0);
+  const takenPills = state.cycleData.takenPills || {};
+
+  if(anchor){
+    const packStart = new Date(anchor.start); packStart.setHours(0,0,0,0);
+    // Find which 28-day pack we're currently in
+    const daysSinceAnchor = Math.floor((today - packStart)/86400000);
+    const currentPackOffset = Math.floor(daysSinceAnchor / 28) * 28;
+    const currentPackStart = addDays(packStart, currentPackOffset);
+
+    // Date range label
+    const packEnd = addDays(currentPackStart, 27);
+    const fmtDate = d => `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]}`;
+    document.getElementById("pill-pack-date-range").textContent = `${fmtDate(currentPackStart)} – ${fmtDate(packEnd)} ${packEnd.getFullYear()}`;
+
+    for(let i=0;i<28;i++){
+      const pillDate = addDays(currentPackStart, i);
+      const dk = dateKey(pillDate);
+      const isPink = i<21;
+      const isToday = pillDate.getTime()===today.getTime();
+      const isTaken = !!takenPills[dk];
+      const isPast = pillDate < today;
+
+      const cell = document.createElement("div");
+      cell.className = "pill-cell";
+      cell.dataset.pillIdx = i;
+      cell.dataset.pillDate = dk;
+
+      const pill = document.createElement("div");
+      pill.className = `pill ${isPink?"pink":"white-pill"}${isTaken?" taken":""}${isToday?" today-pill":""}`;
+      const inner = document.createElement("div");
+      inner.className = "pill-inner";
+      pill.appendChild(inner);
+
+      const dayNum = document.createElement("div");
+      dayNum.className = "pill-day-num";
+      dayNum.textContent = pillDate.getDate();
+
+      cell.appendChild(pill);
+      cell.appendChild(dayNum);
+      grid.appendChild(cell);
+
+      // Hover: highlight pill + calendar date
+      cell.addEventListener("mouseenter",()=>{
+        hoveredPillIdx = i;
+        document.querySelectorAll(".pill-cell").forEach(c=>c.classList.remove("hovered-cell"));
+        document.querySelectorAll(".pill").forEach(p=>p.classList.remove("hovered"));
+        cell.classList.add("hovered-cell");
+        pill.classList.add("hovered");
+        // Highlight corresponding calendar day
+        highlightCalendarDate(dk);
+        // Show date label under calendar
+        const hl = document.getElementById("cycle-hovered-date");
+        hl.textContent = `💊 ${fmtDate(pillDate)} ${pillDate.getFullYear()} · ${isPink?"Active Pill":"Placebo"}`;
+        hl.style.opacity="1";
+      });
+      cell.addEventListener("mouseleave",()=>{
+        cell.classList.remove("hovered-cell");
+        pill.classList.remove("hovered");
+        clearCalendarHighlight();
+        document.getElementById("cycle-hovered-date").style.opacity="0";
+        hoveredPillIdx=-1;
+      });
+
+      // Click to mark taken/untaken
+      cell.addEventListener("click",()=>{
+        if(!state.cycleData.takenPills) state.cycleData.takenPills={};
+        if(state.cycleData.takenPills[dk]) delete state.cycleData.takenPills[dk];
+        else state.cycleData.takenPills[dk]=true;
+        saveCycle(); renderPillPack();
+      });
+    }
+  } else {
+    document.getElementById("pill-pack-date-range").textContent = "Set your cycle start date to begin";
+    // Show empty greyed pills
+    for(let i=0;i<28;i++){
+      const cell=document.createElement("div"); cell.className="pill-cell";
+      const pill=document.createElement("div"); pill.className=`pill ${i<21?"pink":"white-pill"} taken`;
+      const inner=document.createElement("div"); inner.className="pill-inner";
+      pill.appendChild(inner);
+      const num=document.createElement("div"); num.className="pill-day-num"; num.textContent="—";
+      cell.appendChild(pill); cell.appendChild(num);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function highlightCalendarDate(dk){
+  document.querySelectorAll(".cycle-cal-day[data-date]").forEach(el=>{
+    el.classList.remove("pill-highlighted","cal-hover-highlight");
+    if(el.dataset.date===dk) el.classList.add("pill-highlighted");
+  });
+}
+function clearCalendarHighlight(){
+  document.querySelectorAll(".cycle-cal-day").forEach(el=>el.classList.remove("pill-highlighted","cal-hover-highlight"));
+}
+
+function renderCycleCalendar(){
+  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("cycle-cal-title").textContent = `${monthNames[cycleCalMonth]} ${cycleCalYear}`;
+  const cal = document.getElementById("cycle-calendar");
+  cal.innerHTML = "";
+
+  const anchor = getAnchor();
+  const cycleLen = state.cycleData.cycleLen || 28;
+  const days = ["Mo","Tu","We","Th","Fr","Sa","Su"];
+  days.forEach(d=>{const h=document.createElement("div");h.className="cycle-cal-header";h.textContent=d;cal.appendChild(h);});
+
+  const first=new Date(cycleCalYear,cycleCalMonth,1);
+  let dow=(first.getDay()+6)%7;
+  const daysInMonth=new Date(cycleCalYear,cycleCalMonth+1,0).getDate();
+  const daysInPrev=new Date(cycleCalYear,cycleCalMonth,0).getDate();
+  const todayD=new Date();todayD.setHours(0,0,0,0);
+
+  for(let i=dow-1;i>=0;i--){
+    const cell=document.createElement("div");cell.className="cycle-cal-day other-month";cell.textContent=daysInPrev-i;cal.appendChild(cell);
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(cycleCalYear,cycleCalMonth,d);date.setHours(0,0,0,0);
+    let tag = cycleMode==="pill"
+      ? getPillDayTag(date, anchor)
+      : getNaturalDayTag(date, anchor, cycleLen);
+    const cell=document.createElement("div");
+    const dk=dateKey(date);
+    cell.className="cycle-cal-day"+(tag?" "+tag:"")+(date.getTime()===todayD.getTime()?" today-cycle":"");
+    cell.textContent=d;
+    cell.dataset.date=dk;
+    cal.appendChild(cell);
+  }
+
+  // Legend
+  const legend=document.getElementById("cycle-legend");
+  if(cycleMode==="pill"){
+    legend.innerHTML=`
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(224,90,154,.4);"></div> Active</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(180,190,210,.2);"></div> Placebo</div>`;
+  } else {
+    legend.innerHTML=`
+      <div class="legend-item"><div class="legend-dot" style="background:#e05a9a;"></div> Period</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(62,207,178,.5);"></div> Fertile</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3ecfb2;"></div> Ovulation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(167,139,250,.4);"></div> PMS Zone</div>`;
+  }
+}
+
+function renderCycleInsights(){
+  const anchor = getAnchor();
+  const ins = document.getElementById("cycle-insights");
+  if(!anchor){ins.innerHTML=`<div style="font-size:12px;color:#2a4060;">Set your cycle start date to see insights.</div>`;return;}
+  const cycleLen = state.cycleData.cycleLen||28;
+  const today=new Date();today.setHours(0,0,0,0);
+  const base=new Date(anchor.start);base.setHours(0,0,0,0);
+  const daysSinceBase=Math.floor((today-base)/86400000);
+  const dayOfCycle=(daysSinceBase%cycleLen)+1;
+  const daysUntilNext=cycleLen-dayOfCycle+1;
+
+  if(cycleMode==="pill"){
+    const packDay=(daysSinceBase%28)+1;
+    const pillType=packDay<=21?"Active (Pink)":"Placebo (White)";
+    const takenToday=!!(state.cycleData.takenPills||{})[todayKey()];
+    ins.innerHTML=`
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Today's Pack Day</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${packDay}/28</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Pill Type Today</span><span class="cycle-insight-val">${pillType}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Taken Today</span><span class="cycle-insight-val" style="color:${takenToday?"#3ecfb2":"#f5a623"};">${takenToday?"✓ Yes":"✗ Not yet"}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Next Period Est.</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?"Today":daysUntilNext+" days"}</span></div>`;
+  } else {
+    const ovDay=cycleLen-14;
+    const daysUntilOv=ovDay-dayOfCycle+1;
+    const tag=getNaturalDayTag(today,anchor,cycleLen);
+    ins.innerHTML=`
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Cycle Day</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${dayOfCycle}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Cycle Length</span><span class="cycle-insight-val">${cycleLen} days</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Next Period</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?"Today / Overdue":daysUntilNext+" days"}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">Ovulation Est.</span><span class="cycle-insight-val" style="color:#3ecfb2;">${daysUntilOv<0?"Passed":daysUntilOv===0?"Today":daysUntilOv+" days"}</span></div>`;
+  }
+}
+
+function renderCycleStatus(){
+  const anchor = getAnchor();
+  const card = document.getElementById("cycle-status-inner");
+  if(!anchor){card.innerHTML=`<div style="font-size:12px;color:#5a7aaa;line-height:1.6;">Set your cycle start date to get phase insights.</div>`;return;}
+  const cycleLen=state.cycleData.cycleLen||28;
+  const today=new Date();today.setHours(0,0,0,0);
+  const tag=getNaturalDayTag(today,anchor,cycleLen);
+  const phases={
+    period:{emoji:"🌹",label:"Menstrual Phase",desc:"Rest and be gentle with yourself.",color:"#e05a9a"},
+    fertile:{emoji:"🌿",label:"Fertile Window",desc:"High energy. Great for social plans.",color:"#3ecfb2"},
+    ovulation:{emoji:"✨",label:"Ovulation",desc:"Peak energy and confidence!",color:"#3ecfb2"},
+    "pms-zone":{emoji:"🌙",label:"Luteal / PMS",desc:"Slow down, prioritize rest.",color:"#a78bfa"},
+  };
+  const ph=phases[tag]||{emoji:"🌸",label:"Follicular Phase",desc:"Energy is rising!",color:"#4f6ef7"};
+  card.innerHTML=`<div style="font-size:28px;margin-bottom:6px;">${ph.emoji}</div><div style="font-size:15px;font-weight:800;color:${ph.color};margin-bottom:4px;">${ph.label}</div><div style="font-size:12px;color:#7090c0;line-height:1.6;">${ph.desc}</div>`;
+}
+
+function renderCycleSymptoms(){
+  const grid=document.getElementById("symptom-grid");grid.innerHTML="";
+  SYMPTOMS.forEach(s=>{
+    const btn=document.createElement("button");
+    btn.className="symptom-btn"+(todaySymptoms.includes(s)?" active":"");
+    btn.textContent=s;btn.dataset.sym=s;
+    btn.addEventListener("click",()=>{
+      if(todaySymptoms.includes(s))todaySymptoms=todaySymptoms.filter(x=>x!==s);
+      else todaySymptoms.push(s);
+      btn.classList.toggle("active",todaySymptoms.includes(s));
+    });
+    grid.appendChild(btn);
+  });
+}
+function updateSymptomButtons(){document.querySelectorAll(".symptom-btn").forEach(b=>b.classList.toggle("active",todaySymptoms.includes(b.dataset.sym)));}
+
+function renderCycleMood(){
+  const row=document.getElementById("cycle-mood-row");row.innerHTML="";
+  MOODS.forEach((m,i)=>{
+    const btn=document.createElement("button");
+    btn.className="cycle-mood-btn"+(todayMood===m?" active":"");
+    btn.title=MOOD_LABELS[i];btn.textContent=m;btn.dataset.mood=m;
+    btn.addEventListener("click",()=>{todayMood=(todayMood===m)?"":m;updateMoodButtons();});
+    row.appendChild(btn);
+  });
+}
+function updateMoodButtons(){document.querySelectorAll(".cycle-mood-btn").forEach(b=>b.classList.toggle("active",todayMood===b.dataset.mood));}
+
+function renderCycleHistory(){
+  const list=document.getElementById("cycle-history-list");list.innerHTML="";
+  const periods=(state.cycleData.periods||[]).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
+  if(!periods.length){list.innerHTML=`<div style="font-size:12px;color:#2a4060;">No cycles logged yet.</div>`;return;}
+  periods.forEach((p,i)=>{
+    const row=document.createElement("div");row.className="history-item";
+    const predicted=p.predicted?`<span style="font-size:10px;color:#2a4060;font-weight:600;"> (predicted)</span>`:"";
+    row.innerHTML=`<div><div style="font-size:12px;font-weight:700;color:#c0d4f0;">🌹 ${p.start}${predicted}</div><div style="font-size:11px;color:#4a6a9a;margin-top:1px;">${p.dur||5} day period</div></div>${p.predicted?"":`<button class="history-remove-btn" data-cycidx="${i}">✕</button>`}`;
+    list.appendChild(row);
+  });
+}
+
+// ── EVENTS ──────────────────────────────────────────────────────────────────
+
+// Mode switch
+document.querySelectorAll(".cycle-mode-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    cycleMode = btn.dataset.cmode;
+    state.cycleData.mode = cycleMode;
+    saveCycle(); renderCycleTracker();
+  });
+});
+
+document.getElementById("add-cycle-btn").addEventListener("click",()=>{
+  const start=document.getElementById("cycle-start-input").value;
+  if(!start)return;
+  const dur=parseInt(document.getElementById("cycle-duration-input").value)||5;
+  const cycleLen=parseInt(document.getElementById("cycle-length-input").value)||28;
+  state.cycleData.cycleLen=cycleLen;
+  if(!state.cycleData.periods)state.cycleData.periods=[];
+  // Remove any existing entry for same date
+  state.cycleData.periods=state.cycleData.periods.filter(p=>p.start!==start&&!p.predicted);
+  state.cycleData.periods.push({start,dur,predicted:false});
+  state.cycleData.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));
+  saveCycle();renderCycleTracker();
+});
+
+document.getElementById("cycle-history-list").addEventListener("click",e=>{
+  const rb=e.target.closest(".history-remove-btn[data-cycidx]");
+  if(!rb)return;
+  const periods=(state.cycleData.periods||[]).filter(p=>!p.predicted).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
+  const p=periods[+rb.dataset.cycidx];
+  if(p)state.cycleData.periods=state.cycleData.periods.filter(x=>x.start!==p.start);
+  saveCycle();renderCycleTracker();
+});
+
+document.getElementById("save-cycle-day-btn").addEventListener("click",()=>{
+  const tk=todayKey();
+  if(!state.cycleData.days)state.cycleData.days={};
+  state.cycleData.days[tk]={symptoms:[...todaySymptoms],mood:todayMood,notes:document.getElementById("cycle-notes-input").value};
+  saveCycle();
+  const ind=document.getElementById("save-indicator");ind.classList.add("show");setTimeout(()=>ind.classList.remove("show"),1700);
+});
+
+document.getElementById("cycle-prev-month").addEventListener("click",()=>{
+  if(cycleCalMonth===0){cycleCalMonth=11;cycleCalYear--;}else cycleCalMonth--;
+  renderCycleCalendar();
+});
+document.getElementById("cycle-next-month").addEventListener("click",()=>{
+  if(cycleCalMonth===11){cycleCalMonth=0;cycleCalYear++;}else cycleCalMonth++;
+  renderCycleCalendar();
+});
 
 // ─── LANGUAGE SELECTOR — fixed-position dropdown, positioned via JS ───────────
 const langBtn=document.getElementById('lang-btn');

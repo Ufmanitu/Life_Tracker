@@ -716,36 +716,36 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 
         <!-- PILL PACK (shown in pill mode) -->
         <div class="pill-pack-card" id="pill-pack-card">
-          <div class="pill-pack-title">💊 Pill Pack</div>
-          <div class="pill-pack-subtitle" id="pill-pack-date-range">Set your cycle start date to begin</div>
+          <div class="pill-pack-title" data-i18n="cyclePillPackTitle">💊 Pill Pack</div>
+          <div class="pill-pack-subtitle" id="pill-pack-date-range" data-i18n="cyclePillPackSetup">Set your cycle start date to begin</div>
           <div class="pill-grid" id="pill-grid"></div>
           <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#f590c0,#e05a9a);border-radius:50%;"></div> Active (21)</div>
-            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#e8e8f0,#b0b8cc);border-radius:50%;"></div> Placebo (7)</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#1a2840;border-radius:50%;border:1px solid #2a4060;"></div> Taken</div>
+            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#f590c0,#e05a9a);border-radius:50%;"></div> <span data-i18n="cyclePillLegendActive">Active (21)</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:radial-gradient(circle at 35% 35%,#e8e8f0,#b0b8cc);border-radius:50%;"></div> <span data-i18n="cyclePillLegendPlacebo">Placebo (7)</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1a2840;border-radius:50%;border:1px solid #2a4060;"></div> <span data-i18n="cyclePillLegendTaken">Taken</span></div>
           </div>
         </div>
 
         <!-- CYCLE STATUS (shown in natural mode) -->
         <div class="cycle-status-card" id="cycle-status-card">
-          <div class="pill-pack-title">🌸 Cycle Status</div>
+          <div class="pill-pack-title" data-i18n="cycleStatusTitle">🌸 Cycle Status</div>
           <div id="cycle-status-inner" style="margin-top:12px;"></div>
         </div>
 
         <!-- Setup card -->
         <div id="pill-setup-card" class="analysis-card">
-          <div class="section-title" id="cycle-setup-title">📅 Log Cycle Start</div>
+          <div class="section-title" id="cycle-setup-title" data-i18n="cycleSetupTitle">📅 Log Cycle Start</div>
           <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:flex-end;">
             <div class="form-field" style="flex:1;min-width:140px;">
-              <label class="form-label">Start Date of Last Period</label>
+              <label class="form-label" data-i18n="cycleStartDateLabel">Start Date of Last Period</label>
               <input class="form-input" type="date" id="cycle-start-input" style="color-scheme:dark;"/>
             </div>
             <div class="form-field" id="period-dur-field">
-              <label class="form-label">Period Duration (days)</label>
+              <label class="form-label" data-i18n="cyclePeriodDurLabel">Period Duration (days)</label>
               <input class="form-input" type="number" id="cycle-duration-input" value="5" min="1" max="14" style="width:80px;"/>
             </div>
             <div class="form-field" id="cycle-len-field">
-              <label class="form-label">Cycle Length (days)</label>
+              <label class="form-label" data-i18n="cycleLengthLabel">Cycle Length (days)</label>
               <input class="form-input" type="number" id="cycle-length-input" value="28" min="21" max="45" style="width:80px;"/>
             </div>
             <button class="goal-add-btn" id="add-cycle-btn" data-i18n="cycleSetBtn" style="padding:9px 16px;font-size:12px;background:linear-gradient(135deg,#e05a9a,#c84080);box-shadow:0 3px 10px rgba(224,90,154,.3);">+ Set Cycle</button>
@@ -754,13 +754,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 
         <!-- Insights -->
         <div class="analysis-card">
-          <div class="section-title">📊 Cycle Insights</div>
+          <div class="section-title" data-i18n="cycleInsightsTitleCard">📊 Cycle Insights</div>
           <div id="cycle-insights" style="margin-top:12px;display:flex;flex-direction:column;gap:6px;"></div>
         </div>
 
         <!-- History -->
         <div class="analysis-card">
-          <div class="section-title">🗓 History</div>
+          <div class="section-title" data-i18n="cycleHistoryTitleCard">🗓 History</div>
           <div id="cycle-history-list" style="margin-top:10px;display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;"></div>
         </div>
       </div>
@@ -900,6 +900,22 @@ const TRANSLATIONS = {
     cycleStartDateLabel:"Start Date of Last Period",
     cyclePeriodDurLabel:"Period Duration (days)",
     cycleLengthLabel:"Cycle Length (days)",
+    cycleSymptoms:["🤕 Cramps","😴 Fatigue","🤢 Nausea","🎭 Mood Swings","🍫 Cravings","💧 Bloating","🤯 Headache","💔 Breast Tenderness","😰 Anxiety","🥵 Hot Flashes","💤 Insomnia","✨ High Energy"],
+    cycleMoods:["😊","😌","😢","😠","😤","🥰","😶","🤩"],
+    cycleMoodLabels:["Happy","Calm","Sad","Irritable","Stressed","Loving","Numb","Energetic"],
+    cyclePillLegendActive:"Active (21)", cyclePillLegendPlacebo:"Placebo (7)", cyclePillLegendTaken:"Taken",
+    cycleInsightsPackDay:"Pack Day", cycleInsightsPillType:"Pill Type", cycleInsightsTakenToday:"Taken Today",
+    cycleInsightsNextPeriod:"Next Period", cycleInsightsCycleDay:"Cycle Day", cycleInsightsCycleLen:"Cycle Length",
+    cycleInsightsOvulation:"Ovulation Est.", cycleInsightsTakenYes:"✓ Yes", cycleInsightsTakenNo:"✗ Not yet",
+    cycleInsightsDays:"days", cycleInsightsToday:"Today", cycleInsightsPassed:"Passed", cycleInsightsOverdue:"Today / Overdue",
+    cycleInsightsActive:"Active (Pink)", cycleInsightsPlacebo:"Placebo (White)",
+    cycleHistoryNoData:"No cycles logged yet.", cyclePillHoverActive:"Active Pill",
+    cycleSetupTitle:"📅 Log Cycle Start",
+    cycleInsightsTitleCard:"📊 Cycle Insights", cycleHistoryTitleCard:"🗓 History",
+    cyclePillPackTitle:"💊 Pill Pack", cyclePillPackSetup:"Set your cycle start date to begin",
+    cycleStatusTitle:"🌸 Cycle Status",
+    cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
+    cycleHistoryDayPeriod:"day period", cycleHistoryPredicted:"predicted",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
@@ -957,6 +973,22 @@ const TRANSLATIONS = {
     cycleStartDateLabel:"Az utolsó menstruáció kezdete",
     cyclePeriodDurLabel:"Menstruáció hossza (nap)",
     cycleLengthLabel:"Ciklus hossza (nap)",
+    cycleSymptoms:["🤕 Görcsök","😴 Fáradtság","🤢 Hányinger","🎭 Hangulatingadozás","🍫 Sóvárgás","💧 Puffadás","🤯 Fejfájás","💔 Mellérzékenység","😰 Szorongás","🥵 Hőhullámok","💤 Álmatlanság","✨ Magas energia"],
+    cycleMoods:["😊","😌","😢","😠","😤","🥰","😶","🤩"],
+    cycleMoodLabels:["Boldog","Nyugodt","Szomorú","Ingerlékeny","Stresszes","Szerető","Közömbös","Energikus"],
+    cyclePillLegendActive:"Aktív (21)", cyclePillLegendPlacebo:"Placebo (7)", cyclePillLegendTaken:"Bevéve",
+    cycleInsightsPackDay:"Csomag napja", cycleInsightsPillType:"Tabletta típusa", cycleInsightsTakenToday:"Ma bevéve",
+    cycleInsightsNextPeriod:"Következő menstruáció", cycleInsightsCycleDay:"Ciklus napja", cycleInsightsCycleLen:"Ciklus hossza",
+    cycleInsightsOvulation:"Ovuláció becslés", cycleInsightsTakenYes:"✓ Igen", cycleInsightsTakenNo:"✗ Még nem",
+    cycleInsightsDays:"nap", cycleInsightsToday:"Ma", cycleInsightsPassed:"Elmúlt", cycleInsightsOverdue:"Ma / Lejárt",
+    cycleInsightsActive:"Aktív (Rózsaszín)", cycleInsightsPlacebo:"Placebo (Fehér)",
+    cycleHistoryNoData:"Még nincs naplózott ciklus.", cyclePillHoverActive:"Aktív tabletta",
+    cycleSetupTitle:"📅 Ciklus kezdet rögzítése",
+    cycleInsightsTitleCard:"📊 Ciklus-elemzés", cycleHistoryTitleCard:"🗓 Előzmények",
+    cyclePillPackTitle:"💊 Tablettacsomag", cyclePillPackSetup:"Állítsd be a ciklus kezdőnapját",
+    cycleStatusTitle:"🌸 Ciklus állapot",
+    cyclePillCalLegendActive:"Aktív", cyclePillCalLegendPlacebo:"Placebo",
+    cycleHistoryDayPeriod:"napos periódus", cycleHistoryPredicted:"becsült",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
@@ -1014,6 +1046,22 @@ const TRANSLATIONS = {
     cycleStartDateLabel:"Beginn der letzten Periode",
     cyclePeriodDurLabel:"Periodendauer (Tage)",
     cycleLengthLabel:"Zykluslänge (Tage)",
+    cycleSymptoms:["🤕 Krämpfe","😴 Müdigkeit","🤢 Übelkeit","🎭 Stimmungsschwankungen","🍫 Heißhunger","💧 Blähungen","🤯 Kopfschmerzen","💔 Brustschmerzen","😰 Angst","🥵 Hitzewallungen","💤 Schlaflosigkeit","✨ Hohe Energie"],
+    cycleMoods:["😊","😌","😢","😠","😤","🥰","😶","🤩"],
+    cycleMoodLabels:["Glücklich","Ruhig","Traurig","Reizbar","Gestresst","Liebevoll","Gefühllos","Energiegeladen"],
+    cyclePillLegendActive:"Aktiv (21)", cyclePillLegendPlacebo:"Placebo (7)", cyclePillLegendTaken:"Eingenommen",
+    cycleInsightsPackDay:"Packungstag", cycleInsightsPillType:"Pillentyp", cycleInsightsTakenToday:"Heute eingenommen",
+    cycleInsightsNextPeriod:"Nächste Periode", cycleInsightsCycleDay:"Zyklustag", cycleInsightsCycleLen:"Zykluslänge",
+    cycleInsightsOvulation:"Eisprung geschätzt", cycleInsightsTakenYes:"✓ Ja", cycleInsightsTakenNo:"✗ Noch nicht",
+    cycleInsightsDays:"Tage", cycleInsightsToday:"Heute", cycleInsightsPassed:"Vorbei", cycleInsightsOverdue:"Heute / Überfällig",
+    cycleInsightsActive:"Aktiv (Rosa)", cycleInsightsPlacebo:"Placebo (Weiß)",
+    cycleHistoryNoData:"Noch keine Zyklen protokolliert.", cyclePillHoverActive:"Aktive Pille",
+    cycleSetupTitle:"📅 Zyklusbeginn eintragen",
+    cycleInsightsTitleCard:"📊 Zykluseinblicke", cycleHistoryTitleCard:"🗓 Verlauf",
+    cyclePillPackTitle:"💊 Pillenpack", cyclePillPackSetup:"Lege das Zyklusstartdatum fest",
+    cycleStatusTitle:"🌸 Zyklusstatus",
+    cyclePillCalLegendActive:"Aktiv", cyclePillCalLegendPlacebo:"Placebo",
+    cycleHistoryDayPeriod:"Tage Periode", cycleHistoryPredicted:"vorhergesagt",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
@@ -1071,6 +1119,22 @@ const TRANSLATIONS = {
     cycleStartDateLabel:"Inicio del último período",
     cyclePeriodDurLabel:"Duración del período (días)",
     cycleLengthLabel:"Duración del ciclo (días)",
+    cycleSymptoms:["🤕 Cólicos","😴 Fatiga","🤢 Náuseas","🎭 Cambios de humor","🍫 Antojos","💧 Hinchazón","🤯 Dolor de cabeza","💔 Sensibilidad mamaria","😰 Ansiedad","🥵 Sofocos","💤 Insomnio","✨ Alta energía"],
+    cycleMoods:["😊","😌","😢","😠","😤","🥰","😶","🤩"],
+    cycleMoodLabels:["Feliz","Tranquila","Triste","Irritable","Estresada","Amorosa","Indiferente","Enérgica"],
+    cyclePillLegendActive:"Activa (21)", cyclePillLegendPlacebo:"Placebo (7)", cyclePillLegendTaken:"Tomada",
+    cycleInsightsPackDay:"Día del blíster", cycleInsightsPillType:"Tipo de píldora", cycleInsightsTakenToday:"Tomada hoy",
+    cycleInsightsNextPeriod:"Próxima regla", cycleInsightsCycleDay:"Día del ciclo", cycleInsightsCycleLen:"Longitud del ciclo",
+    cycleInsightsOvulation:"Ovulación est.", cycleInsightsTakenYes:"✓ Sí", cycleInsightsTakenNo:"✗ Aún no",
+    cycleInsightsDays:"días", cycleInsightsToday:"Hoy", cycleInsightsPassed:"Pasó", cycleInsightsOverdue:"Hoy / Atrasado",
+    cycleInsightsActive:"Activa (Rosa)", cycleInsightsPlacebo:"Placebo (Blanca)",
+    cycleHistoryNoData:"Sin ciclos registrados.", cyclePillHoverActive:"Píldora activa",
+    cycleSetupTitle:"📅 Registrar inicio del ciclo",
+    cycleInsightsTitleCard:"📊 Análisis del ciclo", cycleHistoryTitleCard:"🗓 Historial",
+    cyclePillPackTitle:"💊 Blíster", cyclePillPackSetup:"Configura la fecha de inicio del ciclo",
+    cycleStatusTitle:"🌸 Estado del ciclo",
+    cyclePillCalLegendActive:"Activa", cyclePillCalLegendPlacebo:"Placebo",
+    cycleHistoryDayPeriod:"días de regla", cycleHistoryPredicted:"predicho",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
@@ -1128,6 +1192,22 @@ const TRANSLATIONS = {
     cycleStartDateLabel:"Début des dernières règles",
     cyclePeriodDurLabel:"Durée des règles (jours)",
     cycleLengthLabel:"Longueur du cycle (jours)",
+    cycleSymptoms:["🤕 Crampes","😴 Fatigue","🤢 Nausées","🎭 Sautes d'humeur","🍫 Envies","💧 Ballonnements","🤯 Maux de tête","💔 Sensibilité mammaire","😰 Anxiété","🥵 Bouffées de chaleur","💤 Insomnie","✨ Haute énergie"],
+    cycleMoods:["😊","😌","😢","😠","😤","🥰","😶","🤩"],
+    cycleMoodLabels:["Heureuse","Calme","Triste","Irritable","Stressée","Aimante","Engourdissement","Énergique"],
+    cyclePillLegendActive:"Active (21)", cyclePillLegendPlacebo:"Placebo (7)", cyclePillLegendTaken:"Prise",
+    cycleInsightsPackDay:"Jour du pack", cycleInsightsPillType:"Type de pilule", cycleInsightsTakenToday:"Prise aujourd'hui",
+    cycleInsightsNextPeriod:"Prochaines règles", cycleInsightsCycleDay:"Jour du cycle", cycleInsightsCycleLen:"Longueur du cycle",
+    cycleInsightsOvulation:"Ovulation est.", cycleInsightsTakenYes:"✓ Oui", cycleInsightsTakenNo:"✗ Pas encore",
+    cycleInsightsDays:"jours", cycleInsightsToday:"Aujourd'hui", cycleInsightsPassed:"Passé", cycleInsightsOverdue:"Aujourd'hui / En retard",
+    cycleInsightsActive:"Active (Rose)", cycleInsightsPlacebo:"Placebo (Blanche)",
+    cycleHistoryNoData:"Aucun cycle enregistré.", cyclePillHoverActive:"Pilule active",
+    cycleSetupTitle:"📅 Enregistrer début du cycle",
+    cycleInsightsTitleCard:"📊 Aperçu du cycle", cycleHistoryTitleCard:"🗓 Historique",
+    cyclePillPackTitle:"💊 Plaquette", cyclePillPackSetup:"Configurez la date de début du cycle",
+    cycleStatusTitle:"🌸 Statut du cycle",
+    cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
+    cycleHistoryDayPeriod:"jours de règles", cycleHistoryPredicted:"prédit",
   }
 };
 
@@ -1590,6 +1670,11 @@ function switchTab(tab){
   }else if(tab==="tracker")render(true);
   else if(tab==="shopping")renderShoppingList();
   else if(tab==="cycle")renderCycleTracker();
+  // When leaving cycle tab, restore header to habit tracker month/year
+  if(tab!=="cycle"){
+    document.getElementById("month-title").textContent=getMonthNames()[state.month];
+    document.getElementById("year-label").textContent=state.year;
+  }
 }
 
 // ─── SHOPPING LIST ────────────────────────────────────────────────────────────
@@ -1682,9 +1767,11 @@ document.getElementById("shop-filter-row").addEventListener("click",e=>{
 });
 
 // ─── MENSTRUAL CYCLE TRACKER v2 ──────────────────────────────────────────────
-const SYMPTOMS = ["🤕 Cramps","😴 Fatigue","🤢 Nausea","🎭 Mood Swings","🍫 Cravings","💧 Bloating","🤯 Headache","💔 Breast Tenderness","😰 Anxiety","🥵 Hot Flashes","💤 Insomnia","✨ High Energy"];
+const SYMPTOMS_EN = ["🤕 Cramps","😴 Fatigue","🤢 Nausea","🎭 Mood Swings","🍫 Cravings","💧 Bloating","🤯 Headache","💔 Breast Tenderness","😰 Anxiety","🥵 Hot Flashes","💤 Insomnia","✨ High Energy"];
 const MOODS = ["😊","😌","😢","😠","😤","🥰","😶","🤩"];
-const MOOD_LABELS = ["Happy","Calm","Sad","Irritable","Stressed","Loving","Numb","Energetic"];
+const MOOD_LABELS_EN = ["Happy","Calm","Sad","Irritable","Stressed","Loving","Numb","Energetic"];
+function getSymptoms(){ return (TRANSLATIONS[state.lang]||TRANSLATIONS.en).cycleSymptoms || SYMPTOMS_EN; }
+function getMoodLabels(){ return (TRANSLATIONS[state.lang]||TRANSLATIONS.en).cycleMoodLabels || MOOD_LABELS_EN; }
 
 let cycleCalYear = NOW.getFullYear(), cycleCalMonth = NOW.getMonth();
 let todaySymptoms = [], todayMood = "";
@@ -1794,6 +1881,7 @@ function renderCycleTracker(){
 
 function renderPillPack(){
   if(cycleMode !== "pill") return;
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
   const anchor = getAnchor();
   const grid = document.getElementById("pill-grid");
   grid.innerHTML = "";
@@ -1850,7 +1938,7 @@ function renderPillPack(){
         highlightCalendarDate(dk);
         // Show date label under calendar
         const hl = document.getElementById("cycle-hovered-date");
-        hl.textContent = `💊 ${fmtDate(pillDate)} ${pillDate.getFullYear()} · ${isPink?"Active Pill":"Placebo"}`;
+        hl.textContent = `💊 ${fmtDate(pillDate)} ${pillDate.getFullYear()} · ${isPink?(tr.cyclePillHoverActive||"Active Pill"):(tr.cyclePillLegendPlacebo||"Placebo")}`;
         hl.style.opacity="1";
       });
       cell.addEventListener("mouseleave",()=>{
@@ -1870,7 +1958,7 @@ function renderPillPack(){
       });
     }
   } else {
-    document.getElementById("pill-pack-date-range").textContent = "Set your cycle start date to begin";
+    document.getElementById("pill-pack-date-range").textContent = tr.cyclePillPackSetup||"Set your cycle start date to begin";
     // Show empty greyed pills
     for(let i=0;i<28;i++){
       const cell=document.createElement("div"); cell.className="pill-cell";
@@ -1898,6 +1986,11 @@ function renderCycleCalendar(){
   const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
   const monthNames=tr.monthNames||["January","February","March","April","May","June","July","August","September","October","November","December"];
   document.getElementById("cycle-cal-title").textContent = `${monthNames[cycleCalMonth]} ${cycleCalYear}`;
+  // Also sync the top header to reflect cycle month/year
+  if(state.tab==="cycle"){
+    document.getElementById("month-title").textContent = monthNames[cycleCalMonth];
+    document.getElementById("year-label").textContent = cycleCalYear;
+  }
   const cal = document.getElementById("cycle-calendar");
   cal.innerHTML = "";
 
@@ -1932,8 +2025,8 @@ function renderCycleCalendar(){
   const legend=document.getElementById("cycle-legend");
   if(cycleMode==="pill"){
     legend.innerHTML=`
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(224,90,154,.5);border:2px solid #e05a9a;"></div> ${tr.cyclePill||"Active"}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(150,165,195,.3);border:2px solid #8a9ab8;"></div> Placebo</div>`;
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(224,90,154,.5);border:2px solid #e05a9a;"></div> ${tr.cyclePillCalLegendActive||tr.cyclePill||"Active"}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(150,165,195,.3);border:2px solid #8a9ab8;"></div> ${tr.cyclePillCalLegendPlacebo||"Placebo"}</div>`;
   } else {
     legend.innerHTML=`
       <div class="legend-item"><div class="legend-dot" style="background:rgba(250,2,118,.5);border:2px solid rgb(250,2,118);"></div> ${tr.cyclePeriodPhase||"Period"}</div>
@@ -1957,21 +2050,21 @@ function renderCycleInsights(){
 
   if(cycleMode==="pill"){
     const packDay=(daysSinceBase%28)+1;
-    const pillType=packDay<=21?"Active (Pink)":"Placebo (White)";
+    const pillType=packDay<=21?(tr.cycleInsightsActive||"Active (Pink)"):(tr.cycleInsightsPlacebo||"Placebo (White)");
     const takenToday=!!(state.cycleData.takenPills||{})[todayKey()];
     ins.innerHTML=`
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Pack Day</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${packDay}/28</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Pill Type</span><span class="cycle-insight-val">${pillType}</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Taken Today</span><span class="cycle-insight-val" style="color:${takenToday?"#3ecfb2":"#f5a623"};">${takenToday?"✓ Yes":"✗ Not yet"}</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Next Period</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?"Today":daysUntilNext+" days"}</span></div>`;
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsPackDay||"Pack Day"}</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${packDay}/28</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsPillType||"Pill Type"}</span><span class="cycle-insight-val">${pillType}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsTakenToday||"Taken Today"}</span><span class="cycle-insight-val" style="color:${takenToday?"#3ecfb2":"#f5a623"};">${takenToday?(tr.cycleInsightsTakenYes||"✓ Yes"):(tr.cycleInsightsTakenNo||"✗ Not yet")}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsNextPeriod||"Next Period"}</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?(tr.cycleInsightsToday||"Today"):daysUntilNext+" "+(tr.cycleInsightsDays||"days")}</span></div>`;
   } else {
     const ovDay=cycleLen-14;
     const daysUntilOv=ovDay-dayOfCycle+1;
     ins.innerHTML=`
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Cycle Day</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${dayOfCycle}</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Cycle Length</span><span class="cycle-insight-val">${cycleLen} days</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Next Period</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?"Today / Overdue":daysUntilNext+" days"}</span></div>
-      <div class="cycle-insight-row"><span class="cycle-insight-label">Ovulation Est.</span><span class="cycle-insight-val" style="color:rgb(0,195,255);">${daysUntilOv<0?"Passed":daysUntilOv===0?"Today":daysUntilOv+" days"}</span></div>`;
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsCycleDay||"Cycle Day"}</span><span class="cycle-insight-val" style="color:#e05a9a;">Day ${dayOfCycle}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsCycleLen||"Cycle Length"}</span><span class="cycle-insight-val">${cycleLen} ${tr.cycleInsightsDays||"days"}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsNextPeriod||"Next Period"}</span><span class="cycle-insight-val" style="color:#f5a623;">${daysUntilNext<=0?(tr.cycleInsightsOverdue||"Today / Overdue"):daysUntilNext+" "+(tr.cycleInsightsDays||"days")}</span></div>
+      <div class="cycle-insight-row"><span class="cycle-insight-label">${tr.cycleInsightsOvulation||"Ovulation Est."}</span><span class="cycle-insight-val" style="color:rgb(0,195,255);">${daysUntilOv<0?(tr.cycleInsightsPassed||"Passed"):daysUntilOv===0?(tr.cycleInsightsToday||"Today"):daysUntilOv+" "+(tr.cycleInsightsDays||"days")}</span></div>`;
   }
 }
 
@@ -1995,14 +2088,16 @@ function renderCycleStatus(){
 
 function renderCycleSymptoms(){
   const grid=document.getElementById("symptom-grid");grid.innerHTML="";
-  SYMPTOMS.forEach(s=>{
+  const symptoms=getSymptoms();
+  symptoms.forEach((s,i)=>{
+    const enKey=SYMPTOMS_EN[i]||s; // use English key for storage, translated label for display
     const btn=document.createElement("button");
-    btn.className="symptom-btn"+(todaySymptoms.includes(s)?" active":"");
-    btn.textContent=s;btn.dataset.sym=s;
+    btn.className="symptom-btn"+(todaySymptoms.includes(enKey)?" active":"");
+    btn.textContent=s;btn.dataset.sym=enKey;
     btn.addEventListener("click",()=>{
-      if(todaySymptoms.includes(s))todaySymptoms=todaySymptoms.filter(x=>x!==s);
-      else todaySymptoms.push(s);
-      btn.classList.toggle("active",todaySymptoms.includes(s));
+      if(todaySymptoms.includes(enKey))todaySymptoms=todaySymptoms.filter(x=>x!==enKey);
+      else todaySymptoms.push(enKey);
+      btn.classList.toggle("active",todaySymptoms.includes(enKey));
     });
     grid.appendChild(btn);
   });
@@ -2011,10 +2106,11 @@ function updateSymptomButtons(){document.querySelectorAll(".symptom-btn").forEac
 
 function renderCycleMood(){
   const row=document.getElementById("cycle-mood-row");row.innerHTML="";
+  const moodLabels=getMoodLabels();
   MOODS.forEach((m,i)=>{
     const btn=document.createElement("button");
     btn.className="cycle-mood-btn"+(todayMood===m?" active":"");
-    btn.title=MOOD_LABELS[i];btn.textContent=m;btn.dataset.mood=m;
+    btn.title=moodLabels[i]||m;btn.textContent=m;btn.dataset.mood=m;
     btn.addEventListener("click",()=>{todayMood=(todayMood===m)?"":m;updateMoodButtons();});
     row.appendChild(btn);
   });
@@ -2025,11 +2121,11 @@ function renderCycleHistory(){
   const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
   const list=document.getElementById("cycle-history-list");list.innerHTML="";
   const periods=(state.cycleData.periods||[]).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
-  if(!periods.length){list.innerHTML=`<div style="font-size:12px;color:var(--text-muted);">No cycles logged yet.</div>`;return;}
+  if(!periods.length){list.innerHTML=`<div style="font-size:12px;color:var(--text-muted);">${tr.cycleHistoryNoData||"No cycles logged yet."}</div>`;return;}
   periods.forEach((p,i)=>{
     const row=document.createElement("div");row.className="history-item";
-    const predicted=p.predicted?`<span style="font-size:10px;color:var(--text-muted);font-weight:600;"> (predicted)</span>`:"";
-    row.innerHTML=`<div><div style="font-size:12px;font-weight:700;color:var(--text-sec);">🌹 ${p.start}${predicted}</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${p.dur||5} day period</div></div>${p.predicted?"":`<button class="history-remove-btn" data-cycidx="${i}">✕</button>`}`;
+    const predicted=p.predicted?`<span style="font-size:10px;color:var(--text-muted);font-weight:600;"> (${tr.cycleHistoryPredicted||"predicted"})</span>`:"";
+    row.innerHTML=`<div><div style="font-size:12px;font-weight:700;color:var(--text-sec);">🌹 ${p.start}${predicted}</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${p.dur||5} ${tr.cycleHistoryDayPeriod||"day period"}</div></div>${p.predicted?"":`<button class="history-remove-btn" data-cycidx="${i}">✕</button>`}`;
     list.appendChild(row);
   });
 }
@@ -2202,12 +2298,22 @@ document.getElementById("pomo-reset").addEventListener("click",resetPomo);
 
 // ─── EVENTS ───────────────────────────────────────────────────────────────────
 document.getElementById("prev-month").addEventListener("click",()=>{
-  if(state.month===0){state.month=11;state.year--;}else state.month--;
-  editingHabit=null;loadMonthData();render(true);applyTranslations();
+  if(state.tab==="cycle"){
+    if(cycleCalMonth===0){cycleCalMonth=11;cycleCalYear--;}else cycleCalMonth--;
+    renderCycleCalendar();
+  } else {
+    if(state.month===0){state.month=11;state.year--;}else state.month--;
+    editingHabit=null;loadMonthData();render(true);applyTranslations();
+  }
 });
 document.getElementById("next-month").addEventListener("click",()=>{
-  if(state.month===11){state.month=0;state.year++;}else state.month++;
-  editingHabit=null;loadMonthData();render(true);applyTranslations();
+  if(state.tab==="cycle"){
+    if(cycleCalMonth===11){cycleCalMonth=0;cycleCalYear++;}else cycleCalMonth++;
+    renderCycleCalendar();
+  } else {
+    if(state.month===11){state.month=0;state.year++;}else state.month++;
+    editingHabit=null;loadMonthData();render(true);applyTranslations();
+  }
 });
 document.querySelectorAll(".tab-btn").forEach(btn=>{btn.addEventListener("click",()=>switchTab(btn.dataset.tab));});
 

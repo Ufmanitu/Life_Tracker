@@ -26,22 +26,59 @@
   --orb3:rgba(224,90,154,.05);
   --input-scheme:dark;
 }
-body.light-theme{
-  --bg:#eef2fa;
-  --surface:#ffffff;
-  --surface2:#f4f7ff;
-  --border:#c8d4ee;
-  --border2:#dde5f5;
-  --text:#0a1628;
-  --text-sec:#1a2e50;
-  --text-muted:#4a6a9a;
-  --text-dim:#7090b0;
-  --text-faint:#a0b4cc;
-  --header-text:#3a5890;
-  --orb1:rgba(79,110,247,.06);
-  --orb2:rgba(62,207,178,.05);
-  --orb3:rgba(224,90,154,.04);
-  --input-scheme:light;
+/* ── LIGHT ── */
+body.theme-light{
+  --bg:#eef2fa;--surface:#ffffff;--surface2:#f4f7ff;--border:#c8d4ee;--border2:#dde5f5;
+  --text:#0a1628;--text-sec:#1a2e50;--text-muted:#4a6a9a;--text-dim:#7090b0;--text-faint:#a0b4cc;
+  --header-text:#3a5890;--orb1:rgba(79,110,247,.06);--orb2:rgba(62,207,178,.05);--orb3:rgba(224,90,154,.04);--input-scheme:light;
+}
+/* ── FOREST ── */
+body.theme-forest{
+  --bg:#0a1f14;--surface:#122b1c;--surface2:#0d2417;--border:#1f5c34;--border2:#164a28;
+  --text:#d8f5e4;--text-sec:#88dba8;--text-muted:#3db870;--text-dim:#1e6e40;--text-faint:#154d2c;
+  --header-text:#4dd880;--orb1:rgba(40,200,100,.18);--orb2:rgba(100,240,140,.14);--orb3:rgba(160,255,80,.10);--input-scheme:dark;
+}
+/* ── SAKURA ── */
+body.theme-sakura{
+  --bg:#1c0d18;--surface:#2e1428;--surface2:#240f20;--border:#7a2858;--border2:#5a1f42;
+  --text:#ffe4f2;--text-sec:#ff9cc8;--text-muted:#e060a0;--text-dim:#8a2060;--text-faint:#5a1040;
+  --header-text:#ff70b8;--orb1:rgba(255,80,160,.22);--orb2:rgba(255,160,210,.16);--orb3:rgba(220,60,140,.12);--input-scheme:dark;
+}
+/* ── OCEAN ── */
+body.theme-ocean{
+  --bg:#040f20;--surface:#081d38;--surface2:#051528;--border:#0e4878;--border2:#083460;
+  --text:#c8eeff;--text-sec:#60c8f8;--text-muted:#20a8e0;--text-dim:#0a5888;--text-faint:#063660;
+  --header-text:#30c8f8;--orb1:rgba(0,180,255,.22);--orb2:rgba(40,230,220,.16);--orb3:rgba(0,100,220,.12);--input-scheme:dark;
+}
+/* ── SUNSET ── */
+body.theme-sunset{
+  --bg:#160a04;--surface:#271408;--surface2:#1d0e05;--border:#7a3010;--border2:#5c2008;
+  --text:#fff4e0;--text-sec:#ffb850;--text-muted:#ff7820;--text-dim:#8a3a08;--text-faint:#5c2005;
+  --header-text:#ff9030;--orb1:rgba(255,100,20,.24);--orb2:rgba(255,180,40,.18);--orb3:rgba(220,40,80,.14);--input-scheme:dark;
+}
+/* ── MIDNIGHT PURPLE ── */
+body.theme-midnight{
+  --bg:#0a0614;--surface:#140a24;--surface2:#0c0618;--border:#2a1650;--border2:#1a0e38;
+  --text:#f0eaff;--text-sec:#c8b0f0;--text-muted:#6840a0;--text-dim:#3a1e70;--text-faint:#280e50;
+  --header-text:#9868d8;--orb1:rgba(120,60,220,.10);--orb2:rgba(180,80,240,.07);--orb3:rgba(80,40,160,.06);--input-scheme:dark;
+}
+/* ── AMOLED BLACK ── */
+body.theme-amoled{
+  --bg:#000000;--surface:#0a0a0a;--surface2:#050505;--border:#1a1a1a;--border2:#111111;
+  --text:#ffffff;--text-sec:#e0e0e0;--text-muted:#505050;--text-dim:#282828;--text-faint:#181818;
+  --header-text:#888888;--orb1:rgba(0,240,180,.06);--orb2:rgba(240,0,180,.05);--orb3:rgba(0,180,240,.04);--input-scheme:dark;
+}
+/* ── MINIMAL PAPER ── */
+body.theme-paper{
+  --bg:#f5f0e8;--surface:#fdfaf4;--surface2:#f0ebe0;--border:#d8cdb8;--border2:#e5ddd0;
+  --text:#1a1410;--text-sec:#2e2418;--text-muted:#806848;--text-dim:#b09878;--text-faint:#c8b898;
+  --header-text:#5a4830;--orb1:rgba(160,120,60,.06);--orb2:rgba(100,140,80,.05);--orb3:rgba(180,100,60,.04);--input-scheme:light;
+}
+/* ── SLATE ── */
+body.theme-slate{
+  --bg:#0e1218;--surface:#161d26;--surface2:#0c1016;--border:#2a3545;--border2:#1a2535;
+  --text:#dce8f5;--text-sec:#a8bcd4;--text-muted:#4a6070;--text-dim:#2a3848;--text-faint:#1e2c3a;
+  --header-text:#6888a8;--orb1:rgba(80,130,180,.08);--orb2:rgba(60,100,140,.06);--orb3:rgba(100,150,200,.05);--input-scheme:dark;
 }
 html,body{width:100%;height:100%;min-height:100vh;background:var(--bg);font-family:'Montserrat',sans-serif;color:var(--text);overflow-x:hidden;transition:background .3s,color .3s;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 700px 500px at 8% 15%,rgba(79,110,247,.07) 0%,transparent 70%),radial-gradient(ellipse 600px 400px at 92% 88%,rgba(62,207,178,.05) 0%,transparent 70%),radial-gradient(ellipse 500px 350px at 50% 50%,rgba(224,90,154,.03) 0%,transparent 70%);animation:bgBreath 14s ease-in-out infinite alternate;}
@@ -100,6 +137,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .lang-option.active{color:#4f6ef7;background:rgba(79,110,247,.1);}
 .lang-option .lang-flag{font-size:16px;line-height:1;}
 .lang-divider{height:1px;background:var(--border);margin:3px 0;}
+/* THEME DROPDOWN */
+#theme-dropdown{position:fixed;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;overflow:hidden;min-width:190px;box-shadow:0 12px 40px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03);z-index:99999;display:none;}
+#theme-dropdown.open{display:block;animation:langDropIn .2s cubic-bezier(.4,0,.2,1) both;}
+.theme-option{padding:10px 15px;font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;gap:9px;letter-spacing:.3px;user-select:none;}
+.theme-option:hover{background:rgba(79,110,247,.12);color:var(--text-sec);}
+.theme-option.active{color:#4f6ef7;background:rgba(79,110,247,.1);}
+.theme-divider{height:1px;background:var(--border);margin:3px 0;}
 
 /* POMODORO TOGGLE */
 #pomo-toggle{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--header-text);padding:10px 14px;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.8px;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
@@ -229,7 +273,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .mindset-val{font-size:12px;font-weight:800;min-width:20px;text-align:right;}
 
 /* TASKS */
-#tasks-section{padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;}
+#tasks-section{padding:0 clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;}
+.tasks-scope-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:20px;padding-top:clamp(16px,2.5vw,28px);}
+.tasks-scope-btn{background:transparent;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;padding:10px 22px;font-size:clamp(11px,1.3vw,13px);font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;font-family:'Montserrat',sans-serif;transition:color .2s,border-color .2s;}
+.tasks-scope-btn:hover{color:var(--text-sec);}
+.tasks-scope-btn.active{color:#4f6ef7;border-bottom-color:#4f6ef7;}
 .tasks-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
 .tasks-title{font-size:clamp(15px,2vw,20px);font-weight:800;color:var(--text);}
 .tasks-filter-row{display:flex;gap:8px;flex-wrap:wrap;}
@@ -465,14 +513,84 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .pill-day-num{font-size:9px;color:var(--text-dim);font-weight:700;transition:color .15s;}
 .pill-cell.hovered-cell .pill-day-num{color:#e05a9a;}
 
-.cycle-cal-day.period{background:rgba(250,2,118);border-color:rgb(250,2,118);color:#fff;font-weight:800;}
-.cycle-cal-day.fertile{background:rgba(112,231,247);border-color:rgb(112,231,247);color:#0a2a30;font-weight:800;}
-.cycle-cal-day.ovulation{background:rgba(0,195,255);border-color:rgb(0,195,255);color:#fff;font-weight:900;}
-.cycle-cal-day.pms-zone{background:rgba(255,114,161);border-color:rgb(255,114,161);color:#fff;font-weight:800;}
-.cycle-cal-day.pill-day{background:rgba(26,209,255);border-color:rgb(26,209,255);color:#fff;}
-.cycle-cal-day.pill-placebo{background:rgba(253,88,115);border-color:rgb(253,88,115);color:#fff;}
-.cycle-cal-day.pill-day{background:rgba(224,90,154);border-color:#e05a9a;color:#fff;}
-.cycle-cal-day.pill-placebo{background:rgba(150,165,195);border-color:#8a9ab8;color:var(--text);}
+:root{
+  --cy-period:rgb(250,2,118);--cy-period-txt:#fff;
+  --cy-fertile:rgb(112,231,247);--cy-fertile-txt:#0a2a30;
+  --cy-ovulation:rgb(0,195,255);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(255,114,161);--cy-pms-txt:#fff;
+  --cy-pill:rgb(224,90,154);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(150,165,195);--cy-placebo-txt:var(--text);
+}
+body.theme-forest{
+  --cy-period:rgb(255,60,100);--cy-period-txt:#fff;
+  --cy-fertile:rgb(80,240,160);--cy-fertile-txt:#032010;
+  --cy-ovulation:rgb(40,255,120);--cy-ovulation-txt:#021a0a;
+  --cy-pms:rgb(160,255,80);--cy-pms-txt:#0a1a00;
+  --cy-pill:rgb(50,220,100);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(80,160,90);--cy-placebo-txt:#fff;
+}
+body.theme-sakura{
+  --cy-period:rgb(255,40,120);--cy-period-txt:#fff;
+  --cy-fertile:rgb(255,160,220);--cy-fertile-txt:#300020;
+  --cy-ovulation:rgb(255,80,180);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(220,100,200);--cy-pms-txt:#fff;
+  --cy-pill:rgb(255,100,180);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(180,100,160);--cy-placebo-txt:#fff;
+}
+body.theme-ocean{
+  --cy-period:rgb(0,160,255);--cy-period-txt:#fff;
+  --cy-fertile:rgb(0,240,220);--cy-fertile-txt:#002830;
+  --cy-ovulation:rgb(40,220,255);--cy-ovulation-txt:#001828;
+  --cy-pms:rgb(80,140,255);--cy-pms-txt:#fff;
+  --cy-pill:rgb(0,200,240);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(40,100,160);--cy-placebo-txt:#fff;
+}
+body.theme-sunset{
+  --cy-period:rgb(255,60,40);--cy-period-txt:#fff;
+  --cy-fertile:rgb(255,200,40);--cy-fertile-txt:#200a00;
+  --cy-ovulation:rgb(255,140,20);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(255,80,80);--cy-pms-txt:#fff;
+  --cy-pill:rgb(255,120,30);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(180,80,40);--cy-placebo-txt:#fff;
+}
+body.theme-midnight{
+  --cy-period:rgb(200,80,255);--cy-period-txt:#fff;
+  --cy-fertile:rgb(160,100,255);--cy-fertile-txt:#fff;
+  --cy-ovulation:rgb(220,120,255);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(180,60,220);--cy-pms-txt:#fff;
+  --cy-pill:rgb(180,80,255);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(100,60,160);--cy-placebo-txt:#fff;
+}
+body.theme-amoled{
+  --cy-period:rgb(255,0,120);--cy-period-txt:#fff;
+  --cy-fertile:rgb(0,255,180);--cy-fertile-txt:#000;
+  --cy-ovulation:rgb(0,200,255);--cy-ovulation-txt:#000;
+  --cy-pms:rgb(200,0,255);--cy-pms-txt:#fff;
+  --cy-pill:rgb(0,240,160);--cy-pill-txt:#000;
+  --cy-placebo:rgb(60,60,60);--cy-placebo-txt:#fff;
+}
+body.theme-paper{
+  --cy-period:rgb(180,60,80);--cy-period-txt:#fff;
+  --cy-fertile:rgb(80,160,120);--cy-fertile-txt:#fff;
+  --cy-ovulation:rgb(60,130,160);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(160,100,140);--cy-pms-txt:#fff;
+  --cy-pill:rgb(140,80,120);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(180,160,130);--cy-placebo-txt:#fff;
+}
+body.theme-slate{
+  --cy-period:rgb(80,160,255);--cy-period-txt:#fff;
+  --cy-fertile:rgb(60,200,200);--cy-fertile-txt:#fff;
+  --cy-ovulation:rgb(100,180,240);--cy-ovulation-txt:#fff;
+  --cy-pms:rgb(100,140,220);--cy-pms-txt:#fff;
+  --cy-pill:rgb(80,160,220);--cy-pill-txt:#fff;
+  --cy-placebo:rgb(60,90,130);--cy-placebo-txt:#fff;
+}
+.cycle-cal-day.period{background:var(--cy-period);border-color:var(--cy-period);color:var(--cy-period-txt);font-weight:800;}
+.cycle-cal-day.fertile{background:var(--cy-fertile);border-color:var(--cy-fertile);color:var(--cy-fertile-txt);font-weight:800;}
+.cycle-cal-day.ovulation{background:var(--cy-ovulation);border-color:var(--cy-ovulation);color:var(--cy-ovulation-txt);font-weight:900;}
+.cycle-cal-day.pms-zone{background:var(--cy-pms);border-color:var(--cy-pms);color:var(--cy-pms-txt);font-weight:800;}
+.cycle-cal-day.pill-day{background:var(--cy-pill);border-color:var(--cy-pill);color:var(--cy-pill-txt);}
+.cycle-cal-day.pill-placebo{background:var(--cy-placebo);border-color:var(--cy-placebo);color:var(--cy-placebo-txt);}
 
 .cycle-notes-area{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;padding:10px 12px;outline:none;resize:vertical;min-height:68px;transition:border-color .2s;}
 .cycle-notes-area:focus{border-color:#e05a9a;}
@@ -483,6 +601,50 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 @media(max-width:900px){
   #cycle-main-layout{grid-template-columns:1fr!important;}
 }
+
+/* ── GOALS PAGE ── */
+.goals-page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(280px,35vw,480px),1fr));gap:clamp(14px,2vw,24px);}
+.goals-period-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:12px;transition:box-shadow .25s,border-color .25s;}
+.goals-period-card:hover{border-color:var(--text-muted);box-shadow:0 4px 24px rgba(79,110,247,.08);}
+.goals-period-card--wide{grid-column:1/-1;}
+.goals-period-header{display:flex;align-items:center;gap:12px;}
+.goals-period-icon{font-size:28px;line-height:1;flex-shrink:0;}
+.goals-period-title{font-size:clamp(14px,1.6vw,17px);font-weight:800;color:var(--text);letter-spacing:-.3px;}
+.goals-period-sub{font-size:11px;color:var(--text-muted);font-weight:600;margin-top:2px;letter-spacing:.5px;}
+.goals-period-progress{margin-left:auto;font-size:clamp(20px,2.4vw,28px);font-weight:900;color:#3ecfb2;flex-shrink:0;min-width:52px;text-align:right;}
+
+/* ── TO-DO PAGE ── */
+.todo-header-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.todo-main-title{font-size:clamp(15px,1.8vw,20px);font-weight:800;color:var(--text);flex:1;min-width:160px;}
+.todo-filters{display:flex;gap:6px;}
+.todo-add-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:22px;}
+.todo-quick-input{flex:1;min-width:180px;}
+.todo-lanes{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(240px,28vw,360px),1fr));gap:clamp(12px,1.8vw,20px);}
+.todo-lane{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:clamp(14px,1.8vw,20px);display:flex;flex-direction:column;gap:8px;transition:border-color .2s;}
+.todo-lane-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.todo-lane-icon{font-size:18px;}
+.todo-lane-title{font-size:13px;font-weight:800;color:var(--text);letter-spacing:.3px;text-transform:uppercase;}
+.todo-lane-count{margin-left:auto;font-size:11px;font-weight:700;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:2px 8px;}
+.todo-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);transition:border-color .15s,background .15s;animation:taskRowIn .25s both;}
+.todo-item:hover{border-color:var(--text-muted);}
+.todo-item.todo-done{opacity:.55;}
+.todo-cb{width:18px;height:18px;border-radius:5px;border:2px solid var(--text-muted);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;}
+.todo-cb.checked{background:#3ecfb2;border-color:#3ecfb2;}
+.todo-cb svg{display:none;width:10px;height:10px;}
+.todo-cb.checked svg{display:block;}
+.todo-item-name{flex:1;font-size:13px;font-weight:600;color:var(--text-sec);line-height:1.35;}
+.todo-item-name.done-name{text-decoration:line-through;color:var(--text-muted);}
+.todo-item-meta{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.todo-pri{font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;letter-spacing:.4px;}
+.todo-pri-high{background:rgba(224,90,154,.15);color:#e05a9a;}
+.todo-pri-medium{background:rgba(245,166,35,.15);color:#f5a623;}
+.todo-pri-low{background:rgba(79,110,247,.15);color:#4f6ef7;}
+.todo-due-badge{font-size:10px;font-weight:700;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px 6px;}
+.todo-due-badge.overdue{color:#e05a9a;border-color:#e05a9a44;}
+.todo-remove-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;line-height:1;padding:0 2px;opacity:0;transition:opacity .15s,color .15s;}
+.todo-item:hover .todo-remove-btn{opacity:.6;}
+.todo-remove-btn:hover{opacity:1!important;color:#e05a9a;}
+.todo-empty{font-size:12px;color:var(--text-muted);padding:10px 0;text-align:center;font-weight:600;}
 </style>
 </head>
 <body>
@@ -508,6 +670,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     <button class="tab-btn" data-tab="days"><span data-i18n="tabDays">Days</span></button>
     <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">Tasks</span></button>
     <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">Analysis</span></button>
+    <button class="tab-btn" data-tab="todo"><span data-i18n="tabTodo">✅ To-Do</span></button>
     <button class="tab-btn" data-tab="shopping"><span data-i18n="tabShopping">🛒 Shop</span></button>
     <button class="tab-btn" data-tab="cycle"><span data-i18n="tabCycle">🌸 Cycle</span></button>
   </div>
@@ -516,7 +679,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     <button id="lang-btn">🌐 EN 🇬🇧 ▾</button>
   </div>
   <!-- Theme Toggle -->
-  <button id="theme-toggle" title="Toggle light/dark theme">🌙</button>
+  <button id="theme-toggle" title="Change theme">🌙</button>
   <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
 </div>
 
@@ -563,6 +726,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 
 <!-- TASKS SECTION -->
 <div id="tasks-section" class="hidden">
+  <!-- Scope sub-tabs -->
+  <div class="tasks-scope-bar">
+    <button class="tasks-scope-btn active" data-scope="daily">☀️ Daily</button>
+    <button class="tasks-scope-btn" data-scope="weekly">📅 Weekly</button>
+    <button class="tasks-scope-btn" data-scope="monthly">🗓 Monthly</button>
+  </div>
   <div class="tasks-header">
     <div class="tasks-title" id="tasks-title">📋 Tasks This Week</div>
     <div class="tasks-filter-row">
@@ -588,7 +757,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     </div>
     <div class="form-field">
       <label class="form-label" data-i18n="dueDateLabel">Due Date</label>
-      <input class="form-input" type="date" id="task-due-input" style="color-scheme:dark;"/>
+      <input class="form-input" type="date" id="task-due-input" style="color-scheme:var(--input-scheme);"/>
     </div>
     <div class="form-field">
       <label class="form-label" data-i18n="statusLabel">Status</label>
@@ -657,6 +826,45 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
       </div>
     </div>
   </div>
+</div>
+
+
+
+
+<!-- TO-DO SECTION -->
+<div id="todo-section" class="hidden" style="padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;">
+  <div class="todo-header-row">
+    <div class="todo-main-title" data-i18n="todoTitle">✅ To-Do List</div>
+    <div class="todo-filters" id="todo-filter-row">
+      <button class="task-filter-btn active" data-todofilter="all" data-i18n="filterAll">All</button>
+      <button class="task-filter-btn" data-todofilter="active" data-i18n="todoFilterActive">Active</button>
+      <button class="task-filter-btn" data-todofilter="done" data-i18n="todoFilterDone">Done</button>
+    </div>
+    <button class="clear-shop-btn" id="clear-done-todo-btn" data-i18n="todoClearDone">🗑 Clear Done</button>
+  </div>
+
+  <!-- Quick-add bar -->
+  <div class="todo-add-bar">
+    <input class="form-input todo-quick-input" id="todo-quick-input" data-i18n-placeholder="todoPlaceholder" placeholder="What needs to be done?"/>
+    <select class="form-select" id="todo-cat-select">
+      <option value="personal" data-i18n="todoCatPersonal">👤 Personal</option>
+      <option value="work" data-i18n="todoCatWork">💼 Work</option>
+      <option value="health" data-i18n="todoCatHealth">💪 Health</option>
+      <option value="finance" data-i18n="todoCatFinance">💰 Finance</option>
+      <option value="home" data-i18n="todoCatHome">🏠 Home</option>
+      <option value="other" data-i18n="todoCatOther">📦 Other</option>
+    </select>
+    <select class="form-select" id="todo-priority-select">
+      <option value="high" data-i18n="filterHigh">🔴 High</option>
+      <option value="medium" selected data-i18n="filterMedium">⚡ Medium</option>
+      <option value="low" data-i18n="filterLow">🔵 Low</option>
+    </select>
+    <input class="form-input" type="date" id="todo-due-input" style="color-scheme:var(--input-scheme);max-width:150px;"/>
+    <button class="goal-add-btn" id="add-todo-btn" data-i18n="todoAddBtn">+ Add</button>
+  </div>
+
+  <!-- Category lanes -->
+  <div class="todo-lanes" id="todo-lanes"></div>
 </div>
 
 <!-- SHOPPING LIST SECTION -->
@@ -738,7 +946,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
           <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:flex-end;">
             <div class="form-field" style="flex:1;min-width:140px;">
               <label class="form-label" data-i18n="cycleStartDateLabel">Start Date of Last Period</label>
-              <input class="form-input" type="date" id="cycle-start-input" style="color-scheme:dark;"/>
+              <input class="form-input" type="date" id="cycle-start-input" style="color-scheme:var(--input-scheme);"/>
             </div>
             <div class="form-field" id="period-dur-field">
               <label class="form-label" data-i18n="cyclePeriodDurLabel">Period Duration (days)</label>
@@ -839,6 +1047,20 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</div>
 </div>
 
+<div id="theme-dropdown">
+  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="forest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+</div>
 <div id="save-indicator" data-i18n="saved">✓ Saved</div>
 
 <script>
@@ -916,6 +1138,19 @@ const TRANSLATIONS = {
     cycleStatusTitle:"🌸 Cycle Status",
     cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
     cycleHistoryDayPeriod:"day period", cycleHistoryPredicted:"predicted",
+    tabGoals:"🎯 Goals", tabTodo:"✅ To-Do",
+    goalsDailyTitle:"Daily Goals", goalsDailySub:"Reset every day",
+    goalsWeeklyTitle:"Weekly Goals", goalsWeeklySub:"Reset every week",
+    goalsMonthlyTitle:"Monthly Goals", goalsMonthlySub:"Reset every month",
+    goalsYearlyTitle:"Yearly Goals", goalsYearlySub:"Big picture milestones",
+    goalDailyPlaceholder:"Add a daily goal…", goalWeeklyPlaceholder:"Add a weekly goal…",
+    goalMonthlyPlaceholder:"Add a monthly goal…", goalYearlyPlaceholder:"Add a yearly goal…",
+    goalsEmpty:"No goals yet. Add one above!",
+    todoTitle:"✅ To-Do List", todoPlaceholder:"What needs to be done?",
+    todoFilterActive:"Active", todoFilterDone:"Done", todoClearDone:"🗑 Clear Done",
+    todoAddBtn:"+ Add", todoEmpty:"Nothing here yet. Add your first task above!",
+    todoCatPersonal:"👤 Personal", todoCatWork:"💼 Work", todoCatHealth:"💪 Health",
+    todoCatFinance:"💰 Finance", todoCatHome:"🏠 Home", todoCatOther:"📦 Other",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
@@ -989,6 +1224,19 @@ const TRANSLATIONS = {
     cycleStatusTitle:"🌸 Ciklus állapot",
     cyclePillCalLegendActive:"Aktív", cyclePillCalLegendPlacebo:"Placebo",
     cycleHistoryDayPeriod:"napos periódus", cycleHistoryPredicted:"becsült",
+    tabGoals:"🎯 Célok", tabTodo:"✅ Teendők",
+    goalsDailyTitle:"Napi célok", goalsDailySub:"Naponta visszaáll",
+    goalsWeeklyTitle:"Heti célok", goalsWeeklySub:"Hetente visszaáll",
+    goalsMonthlyTitle:"Havi célok", goalsMonthlySub:"Havonta visszaáll",
+    goalsYearlyTitle:"Éves célok", goalsYearlySub:"Nagy mérföldkövek",
+    goalDailyPlaceholder:"Napi cél hozzáadása…", goalWeeklyPlaceholder:"Heti cél hozzáadása…",
+    goalMonthlyPlaceholder:"Havi cél hozzáadása…", goalYearlyPlaceholder:"Éves cél hozzáadása…",
+    goalsEmpty:"Még nincs cél. Adj hozzá egyet!",
+    todoTitle:"✅ Teendőlista", todoPlaceholder:"Mit kell elvégezni?",
+    todoFilterActive:"Aktív", todoFilterDone:"Kész", todoClearDone:"🗑 Kész törlése",
+    todoAddBtn:"+ Hozzáad", todoEmpty:"Még semmi sincs itt. Add hozzá az első feladatot!",
+    todoCatPersonal:"👤 Személyes", todoCatWork:"💼 Munka", todoCatHealth:"💪 Egészség",
+    todoCatFinance:"💰 Pénzügy", todoCatHome:"🏠 Otthon", todoCatOther:"📦 Egyéb",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
@@ -1062,6 +1310,19 @@ const TRANSLATIONS = {
     cycleStatusTitle:"🌸 Zyklusstatus",
     cyclePillCalLegendActive:"Aktiv", cyclePillCalLegendPlacebo:"Placebo",
     cycleHistoryDayPeriod:"Tage Periode", cycleHistoryPredicted:"vorhergesagt",
+    tabGoals:"🎯 Ziele", tabTodo:"✅ To-Do",
+    goalsDailyTitle:"Tagesziele", goalsDailySub:"Täglich zurückgesetzt",
+    goalsWeeklyTitle:"Wochenziele", goalsWeeklySub:"Wöchentlich zurückgesetzt",
+    goalsMonthlyTitle:"Monatsziele", goalsMonthlySub:"Monatlich zurückgesetzt",
+    goalsYearlyTitle:"Jahresziele", goalsYearlySub:"Große Meilensteine",
+    goalDailyPlaceholder:"Tagesziel hinzufügen…", goalWeeklyPlaceholder:"Wochenziel hinzufügen…",
+    goalMonthlyPlaceholder:"Monatsziel hinzufügen…", goalYearlyPlaceholder:"Jahresziel hinzufügen…",
+    goalsEmpty:"Noch keine Ziele. Füge eines hinzu!",
+    todoTitle:"✅ To-Do-Liste", todoPlaceholder:"Was muss erledigt werden?",
+    todoFilterActive:"Aktiv", todoFilterDone:"Erledigt", todoClearDone:"🗑 Erledigte löschen",
+    todoAddBtn:"+ Hinzufügen", todoEmpty:"Noch nichts hier. Füge deine erste Aufgabe hinzu!",
+    todoCatPersonal:"👤 Persönlich", todoCatWork:"💼 Arbeit", todoCatHealth:"💪 Gesundheit",
+    todoCatFinance:"💰 Finanzen", todoCatHome:"🏠 Zuhause", todoCatOther:"📦 Sonstiges",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
@@ -1135,6 +1396,19 @@ const TRANSLATIONS = {
     cycleStatusTitle:"🌸 Estado del ciclo",
     cyclePillCalLegendActive:"Activa", cyclePillCalLegendPlacebo:"Placebo",
     cycleHistoryDayPeriod:"días de regla", cycleHistoryPredicted:"predicho",
+    tabGoals:"🎯 Metas", tabTodo:"✅ Tareas",
+    goalsDailyTitle:"Metas diarias", goalsDailySub:"Se reinician cada día",
+    goalsWeeklyTitle:"Metas semanales", goalsWeeklySub:"Se reinician cada semana",
+    goalsMonthlyTitle:"Metas mensuales", goalsMonthlySub:"Se reinician cada mes",
+    goalsYearlyTitle:"Metas anuales", goalsYearlySub:"Grandes hitos del año",
+    goalDailyPlaceholder:"Añadir meta diaria…", goalWeeklyPlaceholder:"Añadir meta semanal…",
+    goalMonthlyPlaceholder:"Añadir meta mensual…", goalYearlyPlaceholder:"Añadir meta anual…",
+    goalsEmpty:"Sin metas aún. ¡Añade una!",
+    todoTitle:"✅ Lista de tareas", todoPlaceholder:"¿Qué hay que hacer?",
+    todoFilterActive:"Activas", todoFilterDone:"Hechas", todoClearDone:"🗑 Borrar hechas",
+    todoAddBtn:"+ Añadir", todoEmpty:"Nada aquí aún. ¡Añade tu primera tarea!",
+    todoCatPersonal:"👤 Personal", todoCatWork:"💼 Trabajo", todoCatHealth:"💪 Salud",
+    todoCatFinance:"💰 Finanzas", todoCatHome:"🏠 Hogar", todoCatOther:"📦 Otros",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
@@ -1208,6 +1482,19 @@ const TRANSLATIONS = {
     cycleStatusTitle:"🌸 Statut du cycle",
     cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
     cycleHistoryDayPeriod:"jours de règles", cycleHistoryPredicted:"prédit",
+    tabGoals:"🎯 Objectifs", tabTodo:"✅ À faire",
+    goalsDailyTitle:"Objectifs quotidiens", goalsDailySub:"Remis à zéro chaque jour",
+    goalsWeeklyTitle:"Objectifs hebdomadaires", goalsWeeklySub:"Remis à zéro chaque semaine",
+    goalsMonthlyTitle:"Objectifs mensuels", goalsMonthlySub:"Remis à zéro chaque mois",
+    goalsYearlyTitle:"Objectifs annuels", goalsYearlySub:"Grandes étapes de l'année",
+    goalDailyPlaceholder:"Ajouter un objectif quotidien…", goalWeeklyPlaceholder:"Ajouter un objectif hebdomadaire…",
+    goalMonthlyPlaceholder:"Ajouter un objectif mensuel…", goalYearlyPlaceholder:"Ajouter un objectif annuel…",
+    goalsEmpty:"Aucun objectif. Ajoutez-en un !",
+    todoTitle:"✅ Liste de tâches", todoPlaceholder:"Que faut-il faire ?",
+    todoFilterActive:"Actives", todoFilterDone:"Faites", todoClearDone:"🗑 Supprimer faites",
+    todoAddBtn:"+ Ajouter", todoEmpty:"Rien ici encore. Ajoutez votre première tâche !",
+    todoCatPersonal:"👤 Personnel", todoCatWork:"💼 Travail", todoCatHealth:"💪 Santé",
+    todoCatFinance:"💰 Finances", todoCatHome:"🏠 Maison", todoCatOther:"📦 Autre",
   }
 };
 
@@ -1216,12 +1503,41 @@ function getDays(){ return t('days'); }
 function getMonthNames(){ return t('monthNames'); }
 function getMonthShort(){ return t('monthShort'); }
 
-const WEEK_COLORS=["#4f6ef7","#e05a9a","#3ecfb2","#f5a623","#a78bfa","#e07a3a"];
-const WEEK_BG=["rgba(79,110,247,.09)","rgba(224,90,154,.09)","rgba(62,207,178,.09)","rgba(245,166,35,.09)","rgba(167,139,250,.09)","rgba(224,122,58,.09)"];
+const THEME_WEEK_COLORS = {
+  dark:    ["#4f6ef7","#e05a9a","#3ecfb2","#f5a623","#a78bfa","#e07a3a"],
+  light:   ["#4060e8","#d0407a","#28b898","#d08010","#8060d8","#c05820"],
+  forest:  ["#30d870","#80f040","#20c890","#a0e840","#50e8a0","#60d040"],
+  sakura:  ["#ff60b0","#ff90c8","#e040a0","#ff70d8","#d850b8","#ff80a0"],
+  ocean:   ["#20c8f8","#40e0d0","#2090e8","#30d8f0","#50a8ff","#00e8c8"],
+  sunset:  ["#ff8020","#ff5030","#ffb030","#ff3860","#ffa010","#ff6040"],
+  midnight:["#a860f8","#e060e8","#8040d8","#c070ff","#9050e0","#d040c0"],
+  amoled:  ["#00f0b0","#f000b0","#00b0f0","#f0a000","#b000f0","#00f050"],
+  paper:   ["#7060a0","#a05060","#407870","#906820","#604890","#806040"],
+  slate:   ["#4898d8","#6878c8","#38a8c8","#5888e8","#4878b8","#5898c8"],
+};
+const THEME_WEEK_BG = {
+  dark:    ["rgba(79,110,247,.09)","rgba(224,90,154,.09)","rgba(62,207,178,.09)","rgba(245,166,35,.09)","rgba(167,139,250,.09)","rgba(224,122,58,.09)"],
+  light:   ["rgba(64,96,232,.07)","rgba(208,64,122,.07)","rgba(40,184,152,.07)","rgba(208,128,16,.07)","rgba(128,96,216,.07)","rgba(192,88,32,.07)"],
+  forest:  ["rgba(48,216,112,.13)","rgba(128,240,64,.11)","rgba(32,200,144,.11)","rgba(160,232,64,.09)","rgba(80,232,160,.11)","rgba(96,208,64,.09)"],
+  sakura:  ["rgba(255,96,176,.13)","rgba(255,144,200,.11)","rgba(224,64,160,.11)","rgba(255,112,216,.09)","rgba(216,80,184,.11)","rgba(255,128,160,.09)"],
+  ocean:   ["rgba(32,200,248,.13)","rgba(64,224,208,.11)","rgba(32,144,232,.11)","rgba(48,216,240,.09)","rgba(80,168,255,.11)","rgba(0,232,200,.09)"],
+  sunset:  ["rgba(255,128,32,.14)","rgba(255,80,48,.12)","rgba(255,176,48,.12)","rgba(255,56,96,.10)","rgba(255,160,16,.12)","rgba(255,96,64,.10)"],
+  midnight:["rgba(168,96,248,.13)","rgba(224,96,232,.11)","rgba(128,64,216,.11)","rgba(192,112,255,.09)","rgba(144,80,224,.11)","rgba(208,64,192,.09)"],
+  amoled:  ["rgba(0,240,176,.10)","rgba(240,0,176,.09)","rgba(0,176,240,.09)","rgba(240,160,0,.08)","rgba(176,0,240,.09)","rgba(0,240,80,.08)"],
+  paper:   ["rgba(112,96,160,.08)","rgba(160,80,96,.07)","rgba(64,120,112,.07)","rgba(144,104,32,.06)","rgba(96,72,144,.07)","rgba(128,96,64,.06)"],
+  slate:   ["rgba(72,152,216,.09)","rgba(104,120,200,.08)","rgba(56,168,200,.08)","rgba(88,136,232,.07)","rgba(72,120,184,.08)","rgba(88,152,200,.07)"],
+};
+function getThemeName(){
+  const cls=document.body.className;
+  const match=cls.match(/theme-(\w+)/);
+  return match?match[1]:'dark';
+}
+function getWeekColors(){ return THEME_WEEK_COLORS[getThemeName()]||THEME_WEEK_COLORS.dark; }
+function getWeekBg(){ return THEME_WEEK_BG[getThemeName()]||THEME_WEEK_BG.dark; }
 const CIRC=2*Math.PI*42;
 const POMO_CIRC=2*Math.PI*52;
 
-let saveTimer=null,editingHabit=null,taskFilter="all";
+let saveTimer=null,editingHabit=null,taskFilter="all",taskScope="daily";
 const NOW=new Date();
 
 let state={
@@ -1229,11 +1545,11 @@ let state={
   habits:["Wake up at 05:00 ⏰","Gym 💪","Work on Side Hustle 🌿","Day Planning 📋","Budget Tracking 💰","Project Work 🎯","No Alcohol 🚫","Social Media Detox 🌱","Goal Journaling 📓","Cold Shower ❄️"],
   checked:{}, mindset:{},
   tasks:[
-    {id:1,name:"Call Jack with idea",priority:"high",due:"",status:"inprogress",done:false},
-    {id:2,name:"Look for new platforms",priority:"high",due:"",status:"inprogress",done:false},
-    {id:3,name:"Prepare necessary docs",priority:"medium",due:"",status:"notstarted",done:false},
-    {id:4,name:"Weekly review & log progress",priority:"medium",due:"",status:"inprogress",done:false},
-    {id:5,name:"Clean workspace",priority:"low",due:"",status:"notstarted",done:false},
+    {id:1,name:"Call Jack with idea",priority:"high",due:"",status:"inprogress",done:false,scope:"daily"},
+    {id:2,name:"Look for new platforms",priority:"high",due:"",status:"inprogress",done:false,scope:"weekly"},
+    {id:3,name:"Prepare necessary docs",priority:"medium",due:"",status:"notstarted",done:false,scope:"weekly"},
+    {id:4,name:"Weekly review & log progress",priority:"medium",due:"",status:"inprogress",done:false,scope:"weekly"},
+    {id:5,name:"Clean workspace",priority:"low",due:"",status:"notstarted",done:false,scope:"daily"},
   ],
   goals:[
     {id:1,name:"Complete all tasks ✅",progress:60},
@@ -1243,6 +1559,11 @@ let state={
   ],
   tab:"tracker", taskIdCtr:6, goalIdCtr:5,
   shopItems:[], shopIdCtr:1,
+  goalsDaily:[], goalsDailyCtr:1,
+  goalsWeekly:[], goalsWeeklyCtr:1,
+  goalsMonthly:[], goalsMonthlyCtr:1,
+  goalsYearly:[], goalsYearlyCtr:1,
+  todos:[], todoCtr:1,
   cycleData:{ periods:[], days:{}, cycleLen:28, mode:"natural", takenPills:{} }
 };
 
@@ -1262,6 +1583,8 @@ function saveAll(){
     localStorage.setItem(K.tasks(),JSON.stringify({tasks:state.tasks,ctr:state.taskIdCtr}));
     localStorage.setItem(K.goals(),JSON.stringify({goals:state.goals,ctr:state.goalIdCtr}));
     localStorage.setItem(K.lang(),state.lang);
+    localStorage.setItem('ht_goals_ext_v1',JSON.stringify({daily:state.goalsDaily,dCtr:state.goalsDailyCtr,weekly:state.goalsWeekly,wCtr:state.goalsWeeklyCtr,monthly:state.goalsMonthly,mCtr:state.goalsMonthlyCtr,yearly:state.goalsYearly,yCtr:state.goalsYearlyCtr}));
+    localStorage.setItem('ht_todos_v1',JSON.stringify({todos:state.todos,ctr:state.todoCtr}));
   }catch(e){}
   flashSaved();
 }
@@ -1272,6 +1595,8 @@ function loadAll(){
   try{const t=localStorage.getItem(K.tasks());if(t){const p=JSON.parse(t);state.tasks=p.tasks;state.taskIdCtr=p.ctr;}}catch(e){}
   loadShop();
   loadCycle();
+  try{const eg=JSON.parse(localStorage.getItem('ht_goals_ext_v1')||'null');if(eg){state.goalsDaily=eg.daily||[];state.goalsDailyCtr=eg.dCtr||1;state.goalsWeekly=eg.weekly||[];state.goalsWeeklyCtr=eg.wCtr||1;state.goalsMonthly=eg.monthly||[];state.goalsMonthlyCtr=eg.mCtr||1;state.goalsYearly=eg.yearly||[];state.goalsYearlyCtr=eg.yCtr||1;}}catch(e){}
+  try{const td=JSON.parse(localStorage.getItem('ht_todos_v1')||'null');if(td){state.todos=td.todos||[];state.todoCtr=td.ctr||1;}}catch(e){}
 }
 function loadMonthData(){
   try{const c=localStorage.getItem(K.checked());state.checked=c?JSON.parse(c):{};}catch(e){state.checked={};}
@@ -1317,6 +1642,7 @@ function applyTranslations(){
   // Re-render shopping/cycle if currently shown
   if(state.tab==='shopping')renderShoppingList();
   if(state.tab==='cycle')renderCycleTracker();
+  if(state.tab==='todo')renderTodoPage();
 }
 
 function getDaysInMonth(y,m){return new Date(y,m+1,0).getDate();}
@@ -1399,7 +1725,7 @@ function updateArc(id,pct){
 }
 function makeRadialHTML(pct,color,size){
   const dash=(pct/100)*CIRC;
-  const isDarkMode=!document.body.classList.contains('light-theme');
+  const isDarkMode=!['theme-light','theme-paper'].some(c=>document.body.classList.contains(c));
   const trackColor=isDarkMode?'#0d1e3a':'#d0dcea';
   return `<div class="radial-wrap" style="width:${size}px;height:${size}px;">
     <svg width="${size}" height="${size}" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
@@ -1455,7 +1781,7 @@ function render(animate){
   const DAYS_ARR=getDays();
   wg.forEach((diw,wi)=>{
     const col=document.createElement("div");col.className="week-col";
-    const wcolor=WEEK_COLORS[wi%WEEK_COLORS.length];const wbg=WEEK_BG[wi%WEEK_BG.length];
+    const WC=getWeekColors();const WB=getWeekBg();const wcolor=WC[wi%WC.length];const wbg=WB[wi%WB.length];
     const dm={};diw.forEach(d=>{dm[getDow(state.year,state.month,d)]=d;});
     const slots=Array.from({length:7},(_,dow)=>dm[dow]!==undefined?dm[dow]:null);
     const hdr=document.createElement("div");hdr.className="week-header";hdr.style.background=wcolor;
@@ -1554,12 +1880,20 @@ function renderDaysView(animate){
 
 function renderTasksView(){
   const list=document.getElementById("tasks-list");list.innerHTML="";
-  document.getElementById('tasks-title').textContent=t('tasksThisWeek');
+  // Scope title
+  const scopeTitles={daily:"☀️ Daily Tasks",weekly:"📅 Weekly Tasks",monthly:"🗓 Monthly Tasks"};
+  document.getElementById('tasks-title').textContent=scopeTitles[taskScope]||t('tasksThisWeek');
+  // Update scope btn active state
+  document.querySelectorAll('.tasks-scope-btn').forEach(b=>b.classList.toggle('active',b.dataset.scope===taskScope));
   document.querySelectorAll('.task-filter-btn[data-i18n]').forEach(b=>{
     const key=b.dataset.i18n;const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
     if(tr[key])b.textContent=tr[key];
   });
-  const filtered=state.tasks.filter(t=>taskFilter==="all"||t.priority===taskFilter);
+  const filtered=state.tasks.filter(t=>{
+    const scopeMatch = !t.scope || t.scope===taskScope;
+    const priMatch = taskFilter==="all"||t.priority===taskFilter;
+    return scopeMatch && priMatch;
+  });
   if(!filtered.length){
     list.innerHTML=`<div style="text-align:center;color:#4a6a9a;padding:30px;font-size:14px;font-weight:600;">${t('noTasks')}</div>`;return;
   }
@@ -1588,7 +1922,7 @@ function renderTasksView(){
 function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
   const maxH=72;const DAYS_ARR=getDays();
   document.getElementById("bar-chart-days").innerHTML=DAYS_ARR.map((dl,i)=>{
-    const h=Math.round((dt[i]/100)*maxH);const col=WEEK_COLORS[i%WEEK_COLORS.length];
+    const _WC=getWeekColors();const h=Math.round((dt[i]/100)*maxH);const col=_WC[i%_WC.length];
     return `<div class="bar-chart-col"><div class="bar-chart-bar" style="height:${Math.max(h,2)}px;background:${col};opacity:${dt[i]===0?.15:.85};"></div><div class="bar-chart-lbl">${dl}</div></div>`;
   }).join("");
   const hbEl=document.getElementById("habit-bars");hbEl.innerHTML="";
@@ -1604,7 +1938,7 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
   const wrEl=document.getElementById("week-radials");wrEl.innerHTML="";
   wg.forEach((_,wi)=>{
     const item=document.createElement("div");item.className="week-radial-item";
-    item.innerHTML=makeRadialHTML(wt[wi],WEEK_COLORS[wi%WEEK_COLORS.length],68)+`<span class="week-radial-label" style="color:${WEEK_COLORS[wi%WEEK_COLORS.length]}">${t('weekShort')} ${wi+1}</span>`;
+    const _WC2=getWeekColors();item.innerHTML=makeRadialHTML(wt[wi],_WC2[wi%_WC2.length],68)+`<span class="week-radial-label" style="color:${_WC2[wi%_WC2.length]}">${t('weekShort')} ${wi+1}</span>`;
     wrEl.appendChild(item);
   });
   updateArc("overall-arc-2",pct);
@@ -1657,7 +1991,7 @@ function renderGoals(){
 function switchTab(tab){
   state.tab=tab;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
-  ["tracker","days","tasks","analysis","shopping","cycle"].forEach(t=>{
+  ["tracker","days","tasks","analysis","todo","shopping","cycle"].forEach(t=>{
     const el=document.getElementById(t+"-section");
     el.classList.toggle("hidden",t!==tab);
     if(t===tab){el.style.animation="none";void el.offsetWidth;el.style.animation="fadeSection .35s cubic-bezier(.4,0,.2,1) both";}
@@ -1668,6 +2002,7 @@ function switchTab(tab){
     const{days,total,done,pct}=calcStats();const wg=getWeekGroups();
     renderAnalysis(days,total,done,pct,calcHabitPcts(),wg,calcWeekTotals(wg),calcDowTotals());
   }else if(tab==="tracker")render(true);
+  else if(tab==="todo")renderTodoPage();
   else if(tab==="shopping")renderShoppingList();
   else if(tab==="cycle")renderCycleTracker();
   // When leaving cycle tab, restore header to habit tracker month/year
@@ -1676,6 +2011,157 @@ function switchTab(tab){
     document.getElementById("year-label").textContent=state.year;
   }
 }
+
+
+// ─── GOALS PAGE ───────────────────────────────────────────────────────────────
+const GOAL_PERIODS = ['daily','weekly','monthly','yearly'];
+
+function renderGoalPeriod(period){
+  const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  const listEl = document.getElementById(period+'-goal-list');
+  const progEl = document.getElementById(period+'-goal-progress');
+  if(!listEl) return;
+  const goals = state['goals'+period.charAt(0).toUpperCase()+period.slice(1)] || [];
+  listEl.innerHTML = '';
+  const done = goals.filter(g=>g.progress>=100).length;
+  const pct = goals.length ? Math.round(done/goals.length*100) : 0;
+  if(progEl){ progEl.textContent = pct+'%'; progEl.style.color = pct>=70?'#3ecfb2':pct>=40?'#f5a623':'#e05a9a'; }
+  if(!goals.length){
+    listEl.innerHTML=`<div class="todo-empty">${tr.goalsEmpty||'No goals yet. Add one above!'}</div>`;
+    return;
+  }
+  goals.forEach(g=>{
+    const item=document.createElement('div');item.className='goal-item';
+    const isDone=g.progress>=100;
+    item.innerHTML=`<span class="goal-name ${isDone?'done-goal':''}">${g.name}</span>
+      <div class="goal-progress-wrap">
+        <div class="goal-prog-track"><div class="goal-prog-fill" style="width:${g.progress}%"></div></div>
+        <div class="goal-prog-pct">${g.progress}%</div>
+      </div>
+      <input class="goal-prog-input" type="number" min="0" max="100" value="${g.progress}" data-gperiod="${period}" data-gid="${g.id}" title="Progress %"/>
+      <button class="goal-remove-btn" data-gperiod="${period}" data-rgid="${g.id}">×</button>`;
+    listEl.appendChild(item);
+  });
+}
+
+function renderGoalsPage(){
+  GOAL_PERIODS.forEach(renderGoalPeriod);
+}
+
+function addGoalToPeriod(period){
+  const inp = document.getElementById(period+'-goal-input');
+  const name = inp.value.trim(); if(!name) return;
+  const key = 'goals'+period.charAt(0).toUpperCase()+period.slice(1);
+  const ctrKey = key+'Ctr';
+  state[key].push({id:state[ctrKey]++, name, progress:0});
+  inp.value=''; saveAll(); renderGoalPeriod(period);
+}
+
+
+
+// ─── TO-DO PAGE ───────────────────────────────────────────────────────────────
+const TODO_CATS = {
+  personal:{icon:'👤', color:'#a78bfa'},
+  work:    {icon:'💼', color:'#4f6ef7'},
+  health:  {icon:'💪', color:'#3ecfb2'},
+  finance: {icon:'💰', color:'#f5a623'},
+  home:    {icon:'🏠', color:'#e07a3a'},
+  other:   {icon:'📦', color:'#e05a9a'},
+};
+let todoFilter = 'all';
+
+function renderTodoPage(){
+  const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  const lanes = document.getElementById('todo-lanes');
+  lanes.innerHTML='';
+  const catLabels = {
+    personal: tr.todoCatPersonal||'👤 Personal',
+    work:     tr.todoCatWork||'💼 Work',
+    health:   tr.todoCatHealth||'💪 Health',
+    finance:  tr.todoCatFinance||'💰 Finance',
+    home:     tr.todoCatHome||'🏠 Home',
+    other:    tr.todoCatOther||'📦 Other',
+  };
+  const priClass={high:'todo-pri-high',medium:'todo-pri-medium',low:'todo-pri-low'};
+  const priLabel={high:tr.filterHigh||'🔴 High',medium:tr.filterMedium||'⚡ Medium',low:tr.filterLow||'🔵 Low'};
+
+  const filtered = state.todos.filter(td=>{
+    if(todoFilter==='active') return !td.done;
+    if(todoFilter==='done') return td.done;
+    return true;
+  });
+
+  // Group by category, only show cats that have items (or all if filter=all)
+  const cats = Object.keys(TODO_CATS);
+  const byCat = {};
+  cats.forEach(c=>{ byCat[c]=filtered.filter(td=>td.cat===c); });
+  const activeCats = cats.filter(c=>byCat[c].length>0);
+  if(!activeCats.length){
+    lanes.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-size:14px;font-weight:600;">${tr.todoEmpty||'Nothing here yet. Add your first task above!'}</div>`;
+    return;
+  }
+
+  activeCats.forEach(cat=>{
+    const info = TODO_CATS[cat];
+    const items = byCat[cat];
+    const lane = document.createElement('div'); lane.className='todo-lane';
+    lane.style.borderTopColor=info.color; lane.style.borderTopWidth='3px';
+    const doneCount = items.filter(i=>i.done).length;
+    lane.innerHTML=`<div class="todo-lane-header">
+      <span class="todo-lane-icon">${info.icon}</span>
+      <span class="todo-lane-title" style="color:${info.color};">${catLabels[cat].replace(/^[^ ]+ /,'')}</span>
+      <span class="todo-lane-count">${doneCount}/${items.length}</span>
+    </div>`;
+    items.forEach((td,idx)=>{
+      const item=document.createElement('div');
+      item.className='todo-item'+(td.done?' todo-done':'');
+      item.style.animationDelay=idx*.04+'s';
+      const due = getDueLabel(td.due);
+      const dueHTML = due?`<span class="todo-due-badge ${due.overdue?'overdue':''}">${due.text}</span>`:'';
+      item.innerHTML=`
+        <div class="todo-cb ${td.done?'checked':''}" data-tdid="${td.id}">
+          <svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="todo-item-name ${td.done?'done-name':''}">${td.name}</span>
+        <div class="todo-item-meta">
+          <span class="todo-pri ${priClass[td.priority]||'todo-pri-medium'}">${priLabel[td.priority]||td.priority}</span>
+          ${dueHTML}
+        </div>
+        <button class="todo-remove-btn" data-rtdid="${td.id}">×</button>`;
+      lane.appendChild(item);
+    });
+    lanes.appendChild(lane);
+  });
+}
+
+document.getElementById('add-todo-btn').addEventListener('click',()=>{
+  const name=document.getElementById('todo-quick-input').value.trim(); if(!name)return;
+  const cat=document.getElementById('todo-cat-select').value;
+  const pri=document.getElementById('todo-priority-select').value;
+  const due=document.getElementById('todo-due-input').value;
+  state.todos.push({id:state.todoCtr++,name,cat,priority:pri,due,done:false});
+  document.getElementById('todo-quick-input').value='';
+  document.getElementById('todo-due-input').value='';
+  saveAll(); renderTodoPage();
+});
+document.getElementById('todo-quick-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('add-todo-btn').click();});
+
+document.getElementById('clear-done-todo-btn').addEventListener('click',()=>{
+  state.todos=state.todos.filter(td=>!td.done); saveAll(); renderTodoPage();
+});
+
+document.getElementById('todo-filter-row').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-todofilter]'); if(!btn)return;
+  document.querySelectorAll('[data-todofilter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); todoFilter=btn.dataset.todofilter; renderTodoPage();
+});
+
+document.getElementById('todo-lanes').addEventListener('click',e=>{
+  const cb=e.target.closest('.todo-cb[data-tdid]');
+  if(cb){const td=state.todos.find(x=>x.id===+cb.dataset.tdid);if(td){td.done=!td.done;saveAll();renderTodoPage();}return;}
+  const rb=e.target.closest('.todo-remove-btn[data-rtdid]');
+  if(rb){state.todos=state.todos.filter(x=>x.id!==+rb.dataset.rtdid);saveAll();renderTodoPage();}
+});
 
 // ─── SHOPPING LIST ────────────────────────────────────────────────────────────
 const SHOP_CATS = {
@@ -2023,16 +2509,23 @@ function renderCycleCalendar(){
 
   // Legend
   const legend=document.getElementById("cycle-legend");
+  const cs=getComputedStyle(document.body);
+  const cPeriod=cs.getPropertyValue('--cy-period').trim()||'rgb(250,2,118)';
+  const cFertile=cs.getPropertyValue('--cy-fertile').trim()||'rgb(112,231,247)';
+  const cOvul=cs.getPropertyValue('--cy-ovulation').trim()||'rgb(0,195,255)';
+  const cPms=cs.getPropertyValue('--cy-pms').trim()||'rgb(255,114,161)';
+  const cPill=cs.getPropertyValue('--cy-pill').trim()||'rgb(224,90,154)';
+  const cPlacebo=cs.getPropertyValue('--cy-placebo').trim()||'rgb(150,165,195)';
   if(cycleMode==="pill"){
     legend.innerHTML=`
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(224,90,154,.5);border:2px solid #e05a9a;"></div> ${tr.cyclePillCalLegendActive||tr.cyclePill||"Active"}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(150,165,195,.3);border:2px solid #8a9ab8;"></div> ${tr.cyclePillCalLegendPlacebo||"Placebo"}</div>`;
+      <div class="legend-item"><div class="legend-dot" style="background:${cPill};opacity:.8;border:2px solid ${cPill};"></div> ${tr.cyclePillCalLegendActive||tr.cyclePill||"Active"}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${cPlacebo};opacity:.7;border:2px solid ${cPlacebo};"></div> ${tr.cyclePillCalLegendPlacebo||"Placebo"}</div>`;
   } else {
     legend.innerHTML=`
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(250,2,118,.5);border:2px solid rgb(250,2,118);"></div> ${tr.cyclePeriodPhase||"Period"}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(112,231,247,.5);border:2px solid rgb(112,231,247);"></div> ${tr.cycleFertilePhase||"Fertile"}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(0,195,255,.5);border:2px solid rgb(0,195,255);"></div> ${tr.cycleOvulationPhase||"Ovulation"}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,114,161,.5);border:2px solid rgb(255,114,161);"></div> ${tr.cyclePmsPhase||"PMS Zone"}</div>`;
+      <div class="legend-item"><div class="legend-dot" style="background:${cPeriod};opacity:.8;border:2px solid ${cPeriod};"></div> ${tr.cyclePeriodPhase||"Period"}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${cFertile};opacity:.8;border:2px solid ${cFertile};"></div> ${tr.cycleFertilePhase||"Fertile"}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${cOvul};opacity:.8;border:2px solid ${cOvul};"></div> ${tr.cycleOvulationPhase||"Ovulation"}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${cPms};opacity:.8;border:2px solid ${cPms};"></div> ${tr.cyclePmsPhase||"PMS Zone"}</div>`;
   }
 }
 
@@ -2356,9 +2849,15 @@ document.querySelectorAll(".task-filter-btn").forEach(btn=>{
     btn.classList.add("active");taskFilter=btn.dataset.filter;renderTasksView();
   });
 });
+document.querySelectorAll(".tasks-scope-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    taskScope=btn.dataset.scope;
+    renderTasksView();
+  });
+});
 document.getElementById("add-task-btn").addEventListener("click",()=>{
   const name=document.getElementById("task-name-input").value.trim();if(!name)return;
-  state.tasks.push({id:state.taskIdCtr++,name,priority:document.getElementById("task-priority-select").value,due:document.getElementById("task-due-input").value,status:document.getElementById("task-status-select").value,done:false});
+  state.tasks.push({id:state.taskIdCtr++,name,priority:document.getElementById("task-priority-select").value,due:document.getElementById("task-due-input").value,status:document.getElementById("task-status-select").value,done:false,scope:taskScope});
   document.getElementById("task-name-input").value="";document.getElementById("task-due-input").value="";
   saveAll();renderTasksView();render(false);
 });
@@ -2379,24 +2878,71 @@ document.getElementById("goal-add-btn").addEventListener("click",()=>{
 });
 document.getElementById("goal-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("goal-add-btn").click();});
 
+
 const addBtn=document.getElementById("add-habit-btn");
 const addInput=document.getElementById("new-habit-input");
 addBtn.addEventListener("click",()=>{const v=addInput.value.trim();if(!v)return;state.habits.push(v);addInput.value="";saveAll();render(true);});
 addInput.addEventListener("keydown",e=>{if(e.key==="Enter")addBtn.click();});
 
-// ─── THEME TOGGLE ─────────────────────────────────────────────────────────────
+// ─── THEME SYSTEM ─────────────────────────────────────────────────────────────
 (function(){
-  const THEME_KEY='ht_theme_v1';
+  const THEME_KEY='ht_theme_v2';
   const btn=document.getElementById('theme-toggle');
-  let isDark=true;
-  try{const s=localStorage.getItem(THEME_KEY);if(s==='light')isDark=false;}catch(e){}
-  function applyTheme(dark){
-    if(dark){document.body.classList.remove('light-theme');btn.textContent='🌙';}
-    else{document.body.classList.add('light-theme');btn.textContent='☀️';}
-    try{localStorage.setItem(THEME_KEY,dark?'dark':'light');}catch(e){}
+  const dropdown=document.getElementById('theme-dropdown');
+  const THEMES={
+    dark:{icon:'🌑',cls:''},
+    light:{icon:'☀️',cls:'theme-light'},
+    forest:{icon:'🌿',cls:'theme-forest'},
+    sakura:{icon:'🌸',cls:'theme-sakura'},
+    ocean:{icon:'🌊',cls:'theme-ocean'},
+    sunset:{icon:'🌅',cls:'theme-sunset'},
+    midnight:{icon:'🌙',cls:'theme-midnight'},
+    amoled:{icon:'🖤',cls:'theme-amoled'},
+    paper:{icon:'🤍',cls:'theme-paper'},
+    slate:{icon:'🌫️',cls:'theme-slate'},
+  };
+  const ALL_CLS=Object.values(THEMES).map(t=>t.cls).filter(Boolean);
+  let current='dark';
+  let open=false;
+
+  function applyTheme(name){
+    current=name;
+    const th=THEMES[name]||THEMES.dark;
+    document.body.classList.remove(...ALL_CLS);
+    if(th.cls) document.body.classList.add(th.cls);
+    btn.textContent=th.icon;
+    dropdown.querySelectorAll('.theme-option').forEach(o=>o.classList.toggle('active',o.dataset.theme===name));
+    try{localStorage.setItem(THEME_KEY,name);}catch(e){}
+    // Re-render colour-dependent views
+    if(typeof render==='function') render(false);
+    if(typeof renderCycleCalendar==='function' && state && state.tab==='cycle') renderCycleCalendar();
   }
-  applyTheme(isDark);
-  btn.addEventListener('click',()=>{isDark=!isDark;applyTheme(isDark);});
+
+  function openDrop(){
+    const rect=btn.getBoundingClientRect();
+    dropdown.style.top=(rect.bottom+6)+'px';
+    const dw=dropdown.offsetWidth||192;
+    dropdown.style.left=Math.max(4,rect.right-dw)+'px';
+    dropdown.style.right='auto';
+    dropdown.classList.add('open');
+    btn.style.borderColor='#4f6ef7';
+    open=true;
+  }
+  function closeDrop(){
+    dropdown.classList.remove('open');
+    btn.style.borderColor='';
+    open=false;
+  }
+
+  // Load saved theme
+  try{const s=localStorage.getItem(THEME_KEY);if(s&&THEMES[s])current=s;}catch(e){}
+  applyTheme(current);
+
+  btn.addEventListener('click',e=>{e.stopPropagation();open?closeDrop():openDrop();});
+  document.addEventListener('click',e=>{if(open&&!dropdown.contains(e.target)&&e.target!==btn)closeDrop();});
+  dropdown.querySelectorAll('.theme-option').forEach(opt=>{
+    opt.addEventListener('click',e=>{e.stopPropagation();applyTheme(opt.dataset.theme);closeDrop();});
+  });
 })();
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────

@@ -711,6 +711,55 @@ body.theme-slate{
 .todo-item:hover .todo-remove-btn{opacity:.6;}
 .todo-remove-btn:hover{opacity:1!important;color:#e05a9a;}
 .todo-empty{font-size:12px;color:var(--text-muted);padding:10px 0;text-align:center;font-weight:600;}
+
+/* ── INLINE EDIT STYLES ─────────────────────────────────────────── */
+/* Timetable edit button */
+.tt-event-edit{position:absolute;top:1px;right:18px;background:none;border:none;color:currentColor;cursor:pointer;font-size:11px;line-height:1;opacity:0;transition:opacity .15s;padding:0;font-family:monospace;}
+.tt-event:hover .tt-event-edit{opacity:.75;}
+.tt-event-edit:hover{opacity:1!important;}
+
+/* Task edit button */
+.task-edit-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:14px;line-height:1;padding:0 3px;opacity:0;transition:opacity .15s,color .15s;}
+.task-item:hover .task-edit-btn{opacity:.65;}
+.task-edit-btn:hover{opacity:1!important;color:#4f6ef7;}
+
+/* Shopping edit button */
+.shop-edit-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:13px;line-height:1;padding:0 3px;opacity:0;transition:opacity .15s,color .15s;}
+.shop-item:hover .shop-edit-btn{opacity:.65;}
+.shop-edit-btn:hover{opacity:1!important;color:#4f6ef7;}
+
+/* Shopping inline edit row */
+.shop-item.editing{background:rgba(79,110,247,.07);border-color:#4f6ef7;flex-wrap:wrap;gap:5px;}
+.shop-edit-wrap{display:flex;align-items:center;gap:6px;flex:1;flex-wrap:wrap;}
+.shop-edit-input{background:var(--surface2);border:1.5px solid #4f6ef7;border-radius:6px;color:var(--text);font-size:12px;font-family:'Montserrat',sans-serif;padding:4px 8px;outline:none;color-scheme:var(--input-scheme);}
+.shop-edit-name{flex:1;min-width:80px;}
+.shop-edit-qty{width:46px;}
+.shop-edit-cat{font-size:12px;font-family:'Montserrat',sans-serif;background:var(--surface2);border:1.5px solid #4f6ef7;border-radius:6px;color:var(--text);padding:4px 6px;outline:none;cursor:pointer;}
+.shop-edit-save{background:#4f6ef7;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:11px;font-weight:700;padding:5px 10px;font-family:'Montserrat',sans-serif;transition:filter .15s;}
+.shop-edit-save:hover{filter:brightness(1.15);}
+.shop-edit-cancel{background:var(--surface);border:1.5px solid var(--border);border-radius:6px;color:var(--text-muted);cursor:pointer;font-size:11px;font-weight:700;padding:5px 8px;font-family:'Montserrat',sans-serif;}
+
+/* Cycle history edit button */
+.history-edit-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:13px;padding:0 4px;opacity:0;transition:opacity .15s,color .15s;}
+.history-item:hover .history-edit-btn{opacity:.65;}
+.history-edit-btn:hover{opacity:1!important;color:#e05a9a;}
+
+/* Cycle history inline edit */
+.history-item.editing{background:rgba(224,90,154,.07);border-color:#e05a9a;flex-wrap:wrap;gap:5px;}
+.history-edit-wrap{display:flex;gap:6px;align-items:center;flex-wrap:wrap;width:100%;margin-top:4px;}
+.history-edit-input{background:var(--surface2);border:1.5px solid #e05a9a;border-radius:6px;color:var(--text);font-size:12px;font-family:'Montserrat',sans-serif;padding:4px 8px;outline:none;color-scheme:var(--input-scheme);}
+.history-edit-date{width:130px;}
+.history-edit-num{width:55px;}
+.history-edit-save{background:#e05a9a;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:11px;font-weight:700;padding:5px 10px;font-family:'Montserrat',sans-serif;transition:filter .15s;}
+.history-edit-save:hover{filter:brightness(1.12);}
+.history-edit-cancel{background:var(--surface);border:1.5px solid var(--border);border-radius:6px;color:var(--text-muted);cursor:pointer;font-size:11px;font-weight:700;padding:5px 8px;font-family:'Montserrat',sans-serif;}
+
+/* Edit-mode form banner */
+.form-edit-banner{display:none;background:rgba(79,110,247,.1);border:1.5px solid #4f6ef744;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:700;color:#7090f9;letter-spacing:.3px;align-items:center;gap:8px;margin-bottom:2px;}
+.form-edit-banner.show{display:flex;}
+.form-edit-cancel-btn{background:none;border:1.5px solid #4f6ef755;border-radius:6px;color:#7090f9;cursor:pointer;font-size:10px;font-weight:700;padding:3px 8px;margin-left:auto;font-family:'Montserrat',sans-serif;transition:border-color .15s;}
+.form-edit-cancel-btn:hover{border-color:#4f6ef7;}
+.tt-add-form.editing,.add-task-form.editing{border-color:#4f6ef7;box-shadow:0 0 0 3px rgba(79,110,247,.10);}
 </style>
 </head>
 <body>
@@ -835,7 +884,8 @@ body.theme-slate{
     </div>
   </div>
   <div class="tasks-list" id="tasks-list"></div>
-  <div class="add-task-form">
+  <div class="add-task-form" id="add-task-form">
+    <div class="form-edit-banner" id="task-edit-banner">✎ Editing task — <button class="form-edit-cancel-btn" id="task-cancel-edit">✕ Cancel</button></div>
     <div class="form-field task-name-field">
       <label class="form-label" data-i18n="taskNameLabel">Task Name</label>
       <input class="form-input" id="task-name-input" placeholder="What needs to be done?" data-i18n-placeholder="taskNamePlaceholder"/>
@@ -1076,7 +1126,8 @@ body.theme-slate{
   </div>
   <div id="tt-grid-wrap"><div class="tt-grid" id="tt-grid"></div></div>
   <!-- Add-event form -->
-  <div class="tt-add-form">
+  <div class="tt-add-form" id="tt-add-form">
+    <div class="form-edit-banner" id="tt-edit-banner">✎ Editing event — <button class="form-edit-cancel-btn" id="tt-cancel-edit">✕ Cancel</button></div>
     <div class="form-field" style="flex:1;min-width:150px;">
       <label class="form-label">Event Title</label>
       <input class="form-input" id="tt-title-input" placeholder="e.g. Morning run…" style="width:100%;"/>
@@ -1643,6 +1694,7 @@ const CIRC=2*Math.PI*42;
 const POMO_CIRC=2*Math.PI*52;
 
 let saveTimer=null,editingHabit=null,taskFilter="all",taskScope="daily",trackerScope="weekly",currentWeekIdx=null;
+let editingTTId=null, editingTaskId=null;
 const NOW=new Date();
 
 let state={
@@ -2049,6 +2101,7 @@ function renderTasksView(){
       <span class="priority-badge ${pClass[task.priority]}">${pLabel[task.priority]}</span>
       ${dueHTML}
       <span class="status-badge ${sClass[task.status]||'status-notstarted'}">${sLabel[task.status]||task.status}</span>
+      <button class="task-edit-btn" data-etid="${task.id}" title="Edit">✎</button>
       <button class="task-remove-btn" data-rtid="${task.id}">×</button>`;
     list.appendChild(item);
   });
@@ -2459,12 +2512,14 @@ function renderShoppingList(){
       items.forEach(item=>{
         const row = document.createElement("div");
         row.className = "shop-item";
+        row.dataset.sid = item.id;
         row.innerHTML = `
           <div class="shop-cb ${item.done?"checked":""}" data-sid="${item.id}">
             <svg viewBox="0 0 20 20" fill="none" stroke="#3ecfb2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,10 8,14 16,6"/></svg>
           </div>
           <span class="shop-item-name ${item.done?"checked-name":""}">${item.name}</span>
           <span class="shop-item-qty">×${item.qty}</span>
+          <button class="shop-edit-btn" data-esid="${item.id}" title="Edit">✎</button>
           <button class="shop-remove-btn" data-rsid="${item.id}">✕</button>`;
         list.appendChild(row);
       });
@@ -2494,6 +2549,52 @@ document.getElementById("clear-checked-shop-btn").addEventListener("click",()=>{
 document.getElementById("shop-lists").addEventListener("click",e=>{
   const cb = e.target.closest(".shop-cb[data-sid]");
   if(cb){const it=state.shopItems.find(x=>x.id===+cb.dataset.sid);if(it)it.done=!it.done;saveShop();renderShoppingList();return;}
+
+  // Edit button — expand row into inline edit form
+  const eb = e.target.closest(".shop-edit-btn[data-esid]");
+  if(eb){
+    const id=+eb.dataset.esid;
+    const it=state.shopItems.find(x=>x.id===id);
+    if(!it)return;
+    const row=eb.closest(".shop-item");
+    if(row.classList.contains("editing"))return;
+    row.classList.add("editing");
+    const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+    const catOpts=[
+      {v:"grocery",l:tr.shopGrocery||"🥦 Grocery"},
+      {v:"household",l:tr.shopHousehold||"🏠 Household"},
+      {v:"personal",l:tr.shopPersonal||"💄 Personal"},
+      {v:"other",l:tr.shopOther||"📦 Other"},
+    ];
+    row.innerHTML=`
+      <div class="shop-edit-wrap">
+        <input class="shop-edit-input shop-edit-name" value="${it.name.replace(/"/g,'&quot;')}" placeholder="Item name" data-field="name"/>
+        <input class="shop-edit-input shop-edit-qty" type="number" min="1" value="${it.qty}" data-field="qty"/>
+        <select class="shop-edit-cat" data-field="cat">${catOpts.map(o=>`<option value="${o.v}"${it.cat===o.v?" selected":""}>${o.l}</option>`).join("")}</select>
+        <button class="shop-edit-save" data-savesid="${id}">✓ Save</button>
+        <button class="shop-edit-cancel" data-cancelsid="${id}">✕</button>
+      </div>`;
+    row.querySelector('.shop-edit-input').focus();
+    return;
+  }
+
+  // Save inline edit
+  const sb = e.target.closest(".shop-edit-save[data-savesid]");
+  if(sb){
+    const id=+sb.dataset.savesid;
+    const row=sb.closest(".shop-item");
+    const name=row.querySelector('[data-field="name"]').value.trim();
+    const qty=Math.max(1,parseInt(row.querySelector('[data-field="qty"]').value)||1);
+    const cat=row.querySelector('[data-field="cat"]').value;
+    if(name){const it=state.shopItems.find(x=>x.id===id);if(it){it.name=name;it.qty=qty;it.cat=cat;}}
+    saveShop();renderShoppingList();
+    return;
+  }
+
+  // Cancel inline edit
+  const xb = e.target.closest(".shop-edit-cancel[data-cancelsid]");
+  if(xb){saveShop();renderShoppingList();return;}
+
   const rb = e.target.closest(".shop-remove-btn[data-rsid]");
   if(rb){state.shopItems=state.shopItems.filter(x=>x.id!==+rb.dataset.rsid);saveShop();renderShoppingList();}
 });
@@ -2867,12 +2968,19 @@ function updateMoodButtons(){document.querySelectorAll(".cycle-mood-btn").forEac
 function renderCycleHistory(){
   const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
   const list=document.getElementById("cycle-history-list");list.innerHTML="";
-  const periods=(state.cycleData.periods||[]).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
-  if(!periods.length){list.innerHTML=`<div style="font-size:12px;color:var(--text-muted);">${tr.cycleHistoryNoData||"No cycles logged yet."}</div>`;return;}
-  periods.forEach((p,i)=>{
+  const allPeriods=(state.cycleData.periods||[]).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
+  const realPeriods=allPeriods.filter(p=>!p.predicted);
+  if(!realPeriods.length){list.innerHTML=`<div style="font-size:12px;color:var(--text-muted);">${tr.cycleHistoryNoData||"No cycles logged yet."}</div>`;return;}
+  realPeriods.forEach((p,i)=>{
     const row=document.createElement("div");row.className="history-item";
-    const predicted=p.predicted?`<span style="font-size:10px;color:var(--text-muted);font-weight:600;"> (${tr.cycleHistoryPredicted||"predicted"})</span>`:"";
-    row.innerHTML=`<div><div style="font-size:12px;font-weight:700;color:var(--text-sec);">🌹 ${p.start}${predicted}</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${p.dur||5} ${tr.cycleHistoryDayPeriod||"day period"}</div></div>${p.predicted?"":`<button class="history-remove-btn" data-cycidx="${i}">✕</button>`}`;
+    row.dataset.cycstart=p.start;
+    row.innerHTML=`
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:700;color:var(--text-sec);">🌹 ${p.start}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${p.dur||5} ${tr.cycleHistoryDayPeriod||"day period"}</div>
+      </div>
+      <button class="history-edit-btn" data-heidx="${i}" title="Edit">✎</button>
+      <button class="history-remove-btn" data-cycidx="${i}">✕</button>`;
     list.appendChild(row);
   });
 }
@@ -2903,6 +3011,48 @@ document.getElementById("add-cycle-btn").addEventListener("click",()=>{
 });
 
 document.getElementById("cycle-history-list").addEventListener("click",e=>{
+  // Edit button
+  const eb=e.target.closest(".history-edit-btn[data-heidx]");
+  if(eb){
+    const realPeriods=(state.cycleData.periods||[]).filter(p=>!p.predicted).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
+    const p=realPeriods[+eb.dataset.heidx];
+    if(!p)return;
+    const row=eb.closest(".history-item");
+    if(row.classList.contains("editing"))return;
+    row.classList.add("editing");
+    const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+    row.innerHTML=`
+      <div class="history-edit-wrap">
+        <label style="font-size:11px;color:var(--text-muted);font-weight:700;">Date</label>
+        <input class="history-edit-input history-edit-date" type="date" value="${p.start}" data-origstart="${p.start}" style="color-scheme:var(--input-scheme);"/>
+        <label style="font-size:11px;color:var(--text-muted);font-weight:700;">Days</label>
+        <input class="history-edit-input history-edit-num" type="number" min="1" max="14" value="${p.dur||5}"/>
+        <button class="history-edit-save">✓ Save</button>
+        <button class="history-edit-cancel">✕</button>
+      </div>`;
+    row.querySelector('.history-edit-date').focus();
+    return;
+  }
+
+  // Save inline edit
+  const sb=e.target.closest(".history-edit-save");
+  if(sb){
+    const row=sb.closest(".history-item");
+    const origStart=row.querySelector('.history-edit-date').dataset.origstart;
+    const newStart=row.querySelector('.history-edit-date').value;
+    const newDur=Math.max(1,parseInt(row.querySelector('.history-edit-num').value)||5);
+    const entry=state.cycleData.periods.find(x=>x.start===origStart&&!x.predicted);
+    if(entry&&newStart){entry.start=newStart;entry.dur=newDur;}
+    state.cycleData.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));
+    saveCycle();renderCycleTracker();
+    return;
+  }
+
+  // Cancel inline edit
+  const xb=e.target.closest(".history-edit-cancel");
+  if(xb){renderCycleHistory();return;}
+
+  // Remove button
   const rb=e.target.closest(".history-remove-btn[data-cycidx]");
   if(!rb)return;
   const periods=(state.cycleData.periods||[]).filter(p=>!p.predicted).slice().sort((a,b)=>new Date(b.start)-new Date(a.start));
@@ -3101,7 +3251,7 @@ function renderTimetable(){
     const el=document.createElement('div');
     el.className='tt-event';
     el.style.cssText=`grid-row:${rowStart}/${rowEnd};grid-column:${col};background:${cat.bg};border-color:${cat.border};color:${cat.text};`;
-    el.innerHTML=`<span class="tt-event-title">${ev.title}</span><span class="tt-event-time">${ev.start}–${ev.end}</span><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
+    el.innerHTML=`<span class="tt-event-title">${ev.title}</span><span class="tt-event-time">${ev.start}–${ev.end}</span><button class="tt-event-edit" data-tteditid="${ev.id}" title="Edit">✎</button><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
     grid.appendChild(el);
   });
 
@@ -3114,6 +3264,16 @@ function renderTimetable(){
   }
 }
 
+function ttCancelEdit(){
+  editingTTId=null;
+  document.getElementById('tt-add-btn').textContent='+ Add Event';
+  document.getElementById('tt-title-input').value='';
+  document.getElementById('tt-start-input').value='09:00';
+  document.getElementById('tt-end-input').value='10:00';
+  document.getElementById('tt-edit-banner').classList.remove('show');
+  document.getElementById('tt-add-form').classList.remove('editing');
+}
+document.getElementById('tt-cancel-edit').addEventListener('click',ttCancelEdit);
 document.getElementById('tt-add-btn').addEventListener('click',()=>{
   const title=document.getElementById('tt-title-input').value.trim();
   if(!title)return;
@@ -3124,12 +3284,37 @@ document.getElementById('tt-add-btn').addEventListener('click',()=>{
   if(!start||!end||start>=end)return;
   const startSlot=ttTimeToSlot(start),endSlot=ttTimeToSlot(end);
   if(startSlot<0||endSlot>TT_SLOTS||startSlot>=endSlot)return;
+  if(editingTTId!==null){
+    const ev=state.timetable.find(x=>x.id===editingTTId);
+    if(ev){ev.title=title;ev.day=day;ev.start=start;ev.end=end;ev.cat=cat;}
+    ttCancelEdit();
+    saveAll();renderTimetable();
+    return;
+  }
   state.timetable.push({id:state.ttIdCtr++,title,day,start,end,cat});
   document.getElementById('tt-title-input').value='';
   saveAll();renderTimetable();
 });
-document.getElementById('tt-title-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('tt-add-btn').click();});
+document.getElementById('tt-title-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('tt-add-btn').click();if(e.key==='Escape'&&editingTTId!==null)ttCancelEdit();});
 document.getElementById('tt-grid').addEventListener('click',e=>{
+  const edit=e.target.closest('.tt-event-edit');
+  if(edit){
+    const id=+edit.dataset.tteditid;
+    const ev=state.timetable.find(x=>x.id===id);
+    if(ev){
+      editingTTId=id;
+      document.getElementById('tt-title-input').value=ev.title;
+      document.getElementById('tt-day-select').value=ev.day;
+      document.getElementById('tt-start-input').value=ev.start;
+      document.getElementById('tt-end-input').value=ev.end;
+      document.getElementById('tt-cat-select').value=ev.cat;
+      document.getElementById('tt-add-btn').textContent='✓ Update Event';
+      document.getElementById('tt-edit-banner').classList.add('show');
+      document.getElementById('tt-add-form').classList.add('editing');
+      document.getElementById('tt-title-input').focus();
+    }
+    return;
+  }
   const del=e.target.closest('.tt-event-del');
   if(del){
     const id=+del.dataset.ttid;
@@ -3196,6 +3381,23 @@ document.getElementById("tracker-section").addEventListener("click",e=>{
 document.getElementById("tasks-section").addEventListener("click",e=>{
   const cb=e.target.closest(".task-cb[data-tid]");
   if(cb){const task=state.tasks.find(x=>x.id===+cb.dataset.tid);if(task){task.done=!task.done;task.status=task.done?"completed":"inprogress";}saveAll();renderTasksView();render(false);return;}
+  const editBtn=e.target.closest(".task-edit-btn[data-etid]");
+  if(editBtn){
+    const task=state.tasks.find(x=>x.id===+editBtn.dataset.etid);
+    if(task){
+      editingTaskId=task.id;
+      document.getElementById('task-name-input').value=task.name;
+      document.getElementById('task-priority-select').value=task.priority||'medium';
+      document.getElementById('task-due-input').value=task.due||'';
+      document.getElementById('task-status-select').value=task.status||'notstarted';
+      document.getElementById('add-task-btn').textContent='✓ Update Task';
+      document.getElementById('task-edit-banner').classList.add('show');
+      document.getElementById('add-task-form').classList.add('editing');
+      document.getElementById('task-name-input').focus();
+      document.getElementById('task-name-input').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+    return;
+  }
   const rem=e.target.closest("[data-rtid]");
   if(rem){state.tasks=state.tasks.filter(task=>task.id!==+rem.dataset.rtid);saveAll();renderTasksView();render(false);}
 });
@@ -3211,13 +3413,32 @@ document.querySelectorAll(".tasks-scope-btn").forEach(btn=>{
     renderTasksView();
   });
 });
+function taskCancelEdit(){
+  editingTaskId=null;
+  document.getElementById('add-task-btn').textContent='+ Add Task';
+  document.getElementById('task-name-input').value='';
+  document.getElementById('task-due-input').value='';
+  document.getElementById('task-edit-banner').classList.remove('show');
+  document.getElementById('add-task-form').classList.remove('editing');
+}
+document.getElementById('task-cancel-edit').addEventListener('click',taskCancelEdit);
 document.getElementById("add-task-btn").addEventListener("click",()=>{
   const name=document.getElementById("task-name-input").value.trim();if(!name)return;
-  state.tasks.push({id:state.taskIdCtr++,name,priority:document.getElementById("task-priority-select").value,due:document.getElementById("task-due-input").value,status:document.getElementById("task-status-select").value,done:false,scope:taskScope});
+  const priority=document.getElementById("task-priority-select").value;
+  const due=document.getElementById("task-due-input").value;
+  const status=document.getElementById("task-status-select").value;
+  if(editingTaskId!==null){
+    const task=state.tasks.find(x=>x.id===editingTaskId);
+    if(task){task.name=name;task.priority=priority;task.due=due;task.status=status;}
+    taskCancelEdit();
+    saveAll();renderTasksView();render(false);
+    return;
+  }
+  state.tasks.push({id:state.taskIdCtr++,name,priority,due,status,done:false,scope:taskScope});
   document.getElementById("task-name-input").value="";document.getElementById("task-due-input").value="";
   saveAll();renderTasksView();render(false);
 });
-document.getElementById("task-name-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-task-btn").click();});
+document.getElementById("task-name-input").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-task-btn").click();if(e.key==="Escape"&&editingTaskId!==null)taskCancelEdit();});
 
 document.getElementById("analysis-section").addEventListener("click",e=>{
   const rem=e.target.closest("[data-rgid]");

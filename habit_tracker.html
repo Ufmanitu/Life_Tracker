@@ -862,6 +862,21 @@ body.theme-slate{
 .gcal-import-btn:hover{background:var(--surface2);border-color:#4285f4;color:#4285f4;box-shadow:0 0 16px rgba(66,133,244,.18);}
 .gcal-import-btn.loading{opacity:.6;pointer-events:none;}
 .gcal-import-btn .gcal-logo{width:14px;height:14px;flex-shrink:0;}
+.tt-clear-all-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text-muted);padding:9px 14px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.6px;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
+.tt-clear-all-btn:hover{background:rgba(224,90,154,.08);border-color:#e05a9a;color:#e05a9a;box-shadow:0 0 14px rgba(224,90,154,.18);}
+#tt-confirm-backdrop{position:fixed;inset:0;z-index:399;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;animation:fadeIn .18s ease both;}
+#tt-confirm-backdrop.open{display:block;}
+#tt-confirm-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:400;background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:28px 30px 24px;width:min(380px,90vw);box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);display:none;animation:centeredModalPop .22s cubic-bezier(.4,0,.2,1) both;text-align:center;}
+#tt-confirm-modal.open{display:block;}
+.tt-confirm-icon{font-size:32px;margin-bottom:12px;}
+.tt-confirm-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px;}
+.tt-confirm-desc{font-size:13px;color:var(--text-muted);font-weight:500;line-height:1.5;margin-bottom:22px;}
+.tt-confirm-btns{display:flex;gap:10px;justify-content:center;}
+.tt-confirm-cancel{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text-muted);padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .18s;}
+.tt-confirm-cancel:hover{border-color:var(--text-muted);color:var(--text);}
+.tt-confirm-delete{background:linear-gradient(135deg,#e05a9a,#c03878);border:none;border-radius:10px;color:#fff;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(224,90,154,.3);transition:all .18s;}
+.tt-confirm-delete:hover{filter:brightness(1.12);box-shadow:0 6px 20px rgba(224,90,154,.45);transform:translateY(-1px);}
+.tt-confirm-delete:active{transform:scale(.95);}
 #gcal-modal-backdrop{position:fixed;inset:0;z-index:299;background:rgba(0,0,0,.6);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;animation:fadeIn .2s ease both;}
 #gcal-modal-backdrop.open{display:block;}
 #gcal-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;background:var(--surface);border:1.5px solid var(--border);border-radius:22px;padding:28px 32px 24px;width:min(600px,94vw);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);animation:centeredModalPop .25s cubic-bezier(.4,0,.2,1) both;}
@@ -1334,6 +1349,16 @@ body.theme-slate{
         </svg>
         Import from Google Calendar (.ics)
       </button>
+      <button class="tt-clear-all-btn" id="tt-clear-all-btn" title="Remove all events from the timetable">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+          <polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 6V4h8v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Clear All Events
+      </button>
     </div>
   </div>
   <div id="tt-grid-wrap"><div class="tt-grid" id="tt-grid"></div></div>
@@ -1408,6 +1433,18 @@ body.theme-slate{
     <div class="gcal-count-label" id="gcal-count-label">0 selected</div>
     <button class="gcal-select-all-btn" id="gcal-select-all-btn">Select All</button>
     <button class="gcal-import-selected-btn" id="gcal-import-selected-btn" disabled>➕ Add to Timetable</button>
+  </div>
+</div>
+
+<!-- CLEAR ALL EVENTS CONFIRM MODAL -->
+<div id="tt-confirm-backdrop"></div>
+<div id="tt-confirm-modal">
+  <div class="tt-confirm-icon">🗑️</div>
+  <div class="tt-confirm-title">Clear All Events?</div>
+  <div class="tt-confirm-desc">This will permanently remove all events from your timetable. This action cannot be undone.</div>
+  <div class="tt-confirm-btns">
+    <button class="tt-confirm-cancel" id="tt-confirm-cancel">Cancel</button>
+    <button class="tt-confirm-delete" id="tt-confirm-delete">Delete All</button>
   </div>
 </div>
 
@@ -4332,6 +4369,38 @@ function ttNavigateWeek(delta){
 }
 document.getElementById('tt-week-prev-btn').addEventListener('click',()=>ttNavigateWeek(-1));
 document.getElementById('tt-week-next-btn').addEventListener('click',()=>ttNavigateWeek(1));
+
+// ── CLEAR ALL EVENTS ──────────────────────────────────────────────────────────
+(function(){
+  const clearBtn = document.getElementById('tt-clear-all-btn');
+  const backdrop = document.getElementById('tt-confirm-backdrop');
+  const modal    = document.getElementById('tt-confirm-modal');
+  const cancelBtn = document.getElementById('tt-confirm-cancel');
+  const deleteBtn = document.getElementById('tt-confirm-delete');
+
+  function openConfirm(){
+    if(!state.timetable.length){ return; }
+    backdrop.classList.add('open');
+    modal.classList.add('open');
+  }
+  function closeConfirm(){
+    backdrop.classList.remove('open');
+    modal.classList.remove('open');
+  }
+
+  clearBtn.addEventListener('click', openConfirm);
+  backdrop.addEventListener('click', closeConfirm);
+  cancelBtn.addEventListener('click', closeConfirm);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeConfirm(); });
+
+  deleteBtn.addEventListener('click', ()=>{
+    state.timetable = [];
+    state.ttIdCtr = 1;
+    saveAll();
+    renderTimetable();
+    closeConfirm();
+  });
+})();
 
 // Monthly view secondary add-habit (mirrors the primary)
 document.getElementById('add-habit-btn-monthly').addEventListener('click',()=>{

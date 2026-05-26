@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Timetable — Life Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="timetable">
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div id="app">
+<!-- HEADER -->
+<div id="header">
+  <div style="min-width:clamp(160px,18vw,320px);flex-shrink:0;">
+    <div id="month-title">Life Tracker</div>
+    <div id="month-sub" data-i18n="subtitle">— Life Tracker —</div>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-month">&#8249;</button>
+    <span id="year-label"></span>
+    <button class="nav-btn" id="next-month">&#8250;</button>
+  </div>
+  <div class="tab-switcher">
+    <button class="tab-btn" data-tab="tracker"><span data-i18n="tabTracker">Tracker</span></button>
+    <button class="tab-btn" data-tab="timetable"><span data-i18n="tabTimetable">🗓 Timetable</span></button>
+    <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">Tasks</span></button>
+    <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">Analysis</span></button>
+    <button class="tab-btn" data-tab="shopping"><span data-i18n="tabShopping">🛒 Shop</span></button>
+    <button class="tab-btn" data-tab="cycle"><span data-i18n="tabCycle">🌸 Cycle</span></button>
+  </div>
+  <div class="lang-selector">
+    <button id="lang-btn">🌐 EN 🇬🇧 ▾</button>
+  </div>
+  <button id="theme-toggle" title="Change theme">🌙</button>
+  <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
+</div>
+<!-- TIMETABLE SECTION -->
+<div id="timetable-section" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
+  <div class="tt-section-header">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="tt-title">🗓 Weekly Timetable</div>
+      <div class="tt-week-nav">
+        <button class="tt-week-btn" id="tt-week-prev-btn" title="Previous week">‹</button>
+        <span class="tt-week-label" id="tt-week-label">Week 1</span>
+        <button class="tt-week-btn" id="tt-week-next-btn" title="Next week">›</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="tt-legend" id="tt-legend-strip"></div>
+      <button class="gcal-import-btn" id="gcal-import-btn" title="Import events from Google Calendar">
+        <svg class="gcal-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/>
+          <path d="M3 9h18" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="9" cy="14" r="1.2" fill="#4285f4"/>
+          <circle cx="15" cy="14" r="1.2" fill="#ea4335"/>
+          <circle cx="12" cy="17" r="1.2" fill="#34a853"/>
+        </svg>
+        Import from Google Calendar (.ics)
+      </button>
+      <button class="tt-clear-all-btn" id="tt-clear-all-btn" title="Remove all events from the timetable">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+          <polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 6V4h8v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Clear All Events
+      </button>
+    </div>
+  </div>
+  <div id="tt-grid-wrap"><div class="tt-grid" id="tt-grid"></div></div>
+  <div class="tt-add-form" id="tt-add-form">
+    <div class="form-edit-banner" id="tt-edit-banner">✎ Editing event — <button class="form-edit-cancel-btn" id="tt-cancel-edit">✕ Cancel</button></div>
+    <div class="form-field" style="flex:1;min-width:150px;">
+      <label class="form-label">Event Title</label>
+      <input class="form-input" id="tt-title-input" placeholder="e.g. Morning run…" style="width:100%;"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Day</label>
+      <select class="form-select" id="tt-day-select">
+        <option value="0">Monday</option><option value="1">Tuesday</option>
+        <option value="2">Wednesday</option><option value="3">Thursday</option>
+        <option value="4">Friday</option><option value="5">Saturday</option>
+        <option value="6">Sunday</option>
+      </select>
+    </div>
+    <div class="form-field" style="justify-content:flex-end;">
+      <label class="form-label">All Day</label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;height:36px;">
+        <input type="checkbox" id="tt-allday-check" style="width:16px;height:16px;accent-color:#4f6ef7;cursor:pointer;" onchange="document.getElementById('tt-time-fields').style.display=this.checked?'none':'contents'"/>
+      </label>
+    </div>
+    <div id="tt-time-fields" style="display:contents;">
+      <div class="form-field">
+        <label class="form-label">Start</label>
+        <input class="form-input" type="time" id="tt-start-input" value="09:00" style="width:100px;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">End</label>
+        <input class="form-input" type="time" id="tt-end-input" value="10:00" style="width:100px;"/>
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="tt-cat-select">
+        <option value="work">Work</option><option value="study">Study</option>
+        <option value="health">Health</option><option value="personal">Personal</option>
+        <option value="social">Social</option><option value="other">Other</option>
+      </select>
+    </div>
+    <button class="goal-add-btn" id="tt-add-btn" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Event</button>
+  </div>
+</div>
+</div><!-- #app -->
+
+<!-- GOOGLE CALENDAR IMPORT MODAL -->
+<div id="gcal-modal-backdrop"></div>
+<div id="gcal-modal" class="hidden">
+  <div class="gcal-modal-header">
+    <div class="gcal-modal-icon">📅</div>
+    <div class="gcal-modal-title-wrap">
+      <div class="gcal-modal-title">Import from Google Calendar</div>
+      <div class="gcal-modal-subtitle" id="gcal-modal-subtitle">Fetching your events for this week…</div>
+    </div>
+    <button class="gcal-modal-close" id="gcal-modal-close">✕</button>
+  </div>
+  <div class="gcal-modal-body" id="gcal-modal-body">
+    <div class="gcal-loading"><div class="gcal-spinner"></div><div class="gcal-status-text">Connecting to Google Calendar…</div></div>
+  </div>
+  <div class="gcal-modal-footer" id="gcal-modal-footer" style="display:none;">
+    <div class="gcal-count-label" id="gcal-count-label">0 selected</div>
+    <button class="gcal-select-all-btn" id="gcal-select-all-btn">Select All</button>
+    <button class="gcal-import-selected-btn" id="gcal-import-selected-btn" disabled>➕ Add to Timetable</button>
+  </div>
+</div>
+
+<!-- CLEAR ALL EVENTS CONFIRM MODAL -->
+<div id="tt-confirm-backdrop"></div>
+<div id="tt-confirm-modal">
+  <div class="tt-confirm-icon">🗑️</div>
+  <div class="tt-confirm-title">Clear All Events?</div>
+  <div class="tt-confirm-desc">This will permanently remove all events from your timetable. This action cannot be undone.</div>
+  <div class="tt-confirm-btns">
+    <button class="tt-confirm-cancel" id="tt-confirm-cancel">Cancel</button>
+    <button class="tt-confirm-delete" id="tt-confirm-delete">Delete All</button>
+  </div>
+</div>
+
+<!-- LANGUAGE DROPDOWN -->
+<div id="lang-dropdown">
+  <div class="lang-option active" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+  <div class="lang-option" data-lang="hu"><span class="lang-flag">🇭🇺</span> Magyar</div>
+  <div class="lang-divider"></div>
+  <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch</div>
+  <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span> Español</div>
+  <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</div>
+</div>
+
+<!-- THEME DROPDOWN -->
+<div id="theme-dropdown">
+  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="forest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+</div>
+
+<!-- POMODORO BACKDROP -->
+<div id="pomo-backdrop" class="hidden"></div>
+
+<!-- POMODORO WIDGET -->
+<div id="pomo-widget" class="hidden">
+  <div class="pomo-header">
+    <div class="pomo-header-title">⏱ Pomodoro Timer</div>
+    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+  </div>
+  <div class="pomo-mode-btns">
+    <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>
+    <button class="pomo-mode-btn break-mode" data-mode="break" data-time="300" data-i18n="shortBreak">Short Break</button>
+    <button class="pomo-mode-btn long-mode" data-mode="long" data-time="900" data-i18n="longBreak">Long Break</button>
+  </div>
+  <div class="pomo-ring-wrap">
+    <svg id="pomo-ring-svg" viewBox="0 0 220 220" style="position:absolute;inset:0;">
+      <circle cx="110" cy="110" r="96" fill="none" stroke="var(--border)" stroke-width="10"/>
+      <circle id="pomo-arc" cx="110" cy="110" r="96" fill="none" stroke="#e05a9a" stroke-width="10"
+        stroke-dasharray="603.19 603.19" stroke-linecap="round"
+        style="transform:rotate(-90deg);transform-origin:110px 110px;transition:stroke-dasharray 1s linear,stroke .3s;"/>
+    </svg>
+    <div id="pomo-display-inner">
+      <div class="pomo-time-big" id="pomo-display">25:00</div>
+      <div class="pomo-sessions-lbl" id="pomo-session-lbl">Session 1</div>
+    </div>
+  </div>
+  <div id="pomo-label">Focus Time</div>
+  <div class="pomo-session-dots" id="pomo-dots"></div>
+  <div class="pomo-stats-strip">
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-sessions">0</div><div class="pomo-stat-lbl">Sessions</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-focus">0m</div><div class="pomo-stat-lbl">Focus Time</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-breaks">0</div><div class="pomo-stat-lbl">Breaks</div></div>
+  </div>
+  <div class="pomo-ctrl-btns">
+    <button class="pomo-ctrl-btn" id="pomo-start">▶ Start</button>
+    <button class="pomo-ctrl-btn secondary" id="pomo-reset">↺ Reset</button>
+  </div>
+  <div class="pomo-hint">Press Space to start · Esc to close</div>
+</div>
+
+<div id="save-indicator" data-i18n="saved">✓ Saved</div>
+<script src="app.js"></script>
+</body>
+</html>

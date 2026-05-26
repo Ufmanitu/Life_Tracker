@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Finance — Life Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="finance">
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div id="app">
+
+<!-- HEADER -->
+<div id="header">
+  <div style="min-width:clamp(160px,18vw,320px);flex-shrink:0;">
+    <div id="month-title">Life Tracker</div>
+    <div id="month-sub" data-i18n="subtitle">— Life Tracker —</div>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-month">&#8249;</button>
+    <span id="year-label"></span>
+    <button class="nav-btn" id="next-month">&#8250;</button>
+  </div>
+  <div class="tab-switcher">
+    <button class="tab-btn" data-tab="tracker"><span data-i18n="tabTracker">📊 Tracker</span></button>
+    <button class="tab-btn" data-tab="timetable"><span data-i18n="tabTimetable">🗓 Timetable</span></button>
+    <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">✅ Tasks</span></button>
+    <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">📈 Analysis</span></button>
+    <button class="tab-btn" data-tab="shopping"><span data-i18n="tabShopping">🛒 Shop</span></button>
+    <button class="tab-btn" data-tab="cycle"><span data-i18n="tabCycle">🌸 Cycle</span></button>
+    <button class="tab-btn" data-tab="finance"><span data-i18n="tabFinance">💰 Finance</span></button>
+  </div>
+  <div class="lang-selector">
+    <button id="lang-btn">🌐 EN 🇬🇧 ▾</button>
+  </div>
+  <button id="theme-toggle" title="Change theme">🌙</button>
+  <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
+</div>
+
+<!-- FINANCE STATS ROW -->
+<div id="finance-stats-row" style="animation:fadeSlideUp .45s .08s cubic-bezier(.4,0,.2,1) both;">
+  <div class="fin-stat-card">
+    <div class="fin-stat-icon">💸</div>
+    <div class="fin-stat-body">
+      <div class="fin-stat-label" data-i18n="finTotalExpenses">Total Expenses</div>
+      <div class="fin-stat-val" id="fin-stat-expenses">€0.00</div>
+    </div>
+  </div>
+  <div class="fin-stat-card income">
+    <div class="fin-stat-icon">💵</div>
+    <div class="fin-stat-body">
+      <div class="fin-stat-label" data-i18n="finTotalIncome">Total Income</div>
+      <div class="fin-stat-val" id="fin-stat-income">€0.00</div>
+    </div>
+  </div>
+  <div class="fin-stat-card balance" id="fin-balance-card">
+    <div class="fin-stat-icon">⚖️</div>
+    <div class="fin-stat-body">
+      <div class="fin-stat-label" data-i18n="finBalance">Balance</div>
+      <div class="fin-stat-val" id="fin-stat-balance">€0.00</div>
+    </div>
+  </div>
+  <div class="fin-stat-card budget">
+    <div class="fin-stat-icon">🎯</div>
+    <div class="fin-stat-body">
+      <div class="fin-stat-label" data-i18n="finMonthlyBudget">Monthly Budget</div>
+      <div class="fin-stat-val fin-budget-val">
+        <span id="fin-stat-budget-used">€0</span>
+        <span class="fin-budget-sep">/</span>
+        <span id="fin-stat-budget-limit" class="fin-budget-limit">€0</span>
+      </div>
+    </div>
+    <button class="fin-budget-set-btn" id="fin-budget-set-btn" title="Set budget">✎</button>
+  </div>
+</div>
+
+<!-- FINANCE MAIN SECTION -->
+<div id="finance-section" style="animation:fadeSlideUp .55s .18s cubic-bezier(.4,0,.2,1) both;">
+  <div class="finance-layout">
+
+    <!-- LEFT COLUMN: Expenses + Income -->
+    <div class="finance-main-col">
+
+      <!-- EXPENSES CARD -->
+      <div class="fin-card">
+        <div class="fin-card-header">
+          <div class="fin-card-title">
+            <span class="fin-card-icon">➖</span>
+            <span data-i18n="finExpenses">Expenses</span>
+          </div>
+          <div class="fin-time-filters">
+            <button class="fin-filter-btn" data-fscope="today" data-i18n="finToday">Today</button>
+            <button class="fin-filter-btn" data-fscope="week" data-i18n="finThisWeek">This week</button>
+            <button class="fin-filter-btn active" data-fscope="month" data-i18n="finThisMonth">This month</button>
+            <button class="fin-filter-btn" data-fscope="all" data-i18n="finAll">All</button>
+          </div>
+        </div>
+
+        <!-- TABLE HEADER -->
+        <div class="fin-table-head">
+          <div class="fin-col-desc" data-i18n="finDescription">Aa Description</div>
+          <div class="fin-col-amt" data-i18n="finAmount">💲 Amount</div>
+          <div class="fin-col-cat" data-i18n="finCategory">🏷 Category</div>
+          <div class="fin-col-actions"></div>
+        </div>
+
+        <!-- EXPENSE LIST -->
+        <div class="fin-entry-list" id="fin-expense-list">
+          <div class="fin-empty-msg" data-i18n="finNoExpenses">No expenses yet. Add one below!</div>
+        </div>
+
+        <!-- ADD EXPENSE FORM -->
+        <div class="fin-add-form" id="fin-expense-form">
+          <div class="fin-form-row">
+            <div class="fin-form-emoji-wrap">
+              <button class="fin-emoji-btn" id="fin-exp-emoji-btn" title="Pick emoji">💳</button>
+              <div class="fin-emoji-picker hidden" id="fin-exp-emoji-picker"></div>
+            </div>
+            <input class="fin-form-input fin-form-desc" type="text" id="fin-exp-desc" placeholder="Description…" data-i18n-placeholder="finDescPlaceholder" />
+            <input class="fin-form-input fin-form-amt" type="number" id="fin-exp-amt" placeholder="0.00" min="0" step="0.01" />
+            <select class="fin-form-select" id="fin-exp-cat">
+              <option value="Food">🍔 Food</option>
+              <option value="Health">💊 Health</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Entertainment">🎬 Entertainment</option>
+              <option value="Utilities">⚡ Utilities</option>
+              <option value="Home">🏠 Home</option>
+              <option value="Development">📚 Development</option>
+              <option value="Investment">📈 Investment</option>
+              <option value="Other">📦 Other</option>
+            </select>
+            <button class="fin-add-btn" id="fin-exp-add-btn" data-i18n="finAddEntry">+ Add</button>
+          </div>
+        </div>
+        <div class="fin-new-page-row">
+          <button class="fin-new-page-btn" id="fin-exp-newpage-btn">+ New page</button>
+        </div>
+      </div>
+
+      <!-- INCOME CARD -->
+      <div class="fin-card" style="margin-top:18px;">
+        <div class="fin-card-header">
+          <div class="fin-card-title">
+            <span class="fin-card-icon fin-income-icon">➕</span>
+            <span data-i18n="finIncome">Income</span>
+          </div>
+          <div class="fin-time-filters">
+            <button class="fin-filter-btn inc-filter" data-fscope="today" data-i18n="finToday">Today</button>
+            <button class="fin-filter-btn inc-filter" data-fscope="week" data-i18n="finThisWeek">This week</button>
+            <button class="fin-filter-btn inc-filter active" data-fscope="month" data-i18n="finThisMonth">This month</button>
+            <button class="fin-filter-btn inc-filter" data-fscope="all" data-i18n="finAll">All</button>
+          </div>
+        </div>
+
+        <div class="fin-table-head">
+          <div class="fin-col-desc" data-i18n="finDescription">Aa Description</div>
+          <div class="fin-col-amt" data-i18n="finAmount">💲 Amount</div>
+          <div class="fin-col-cat" data-i18n="finSource">🏷 Source</div>
+          <div class="fin-col-actions"></div>
+        </div>
+
+        <div class="fin-entry-list" id="fin-income-list">
+          <div class="fin-empty-msg" data-i18n="finNoIncome">No income yet. Add one below!</div>
+        </div>
+
+        <div class="fin-add-form" id="fin-income-form">
+          <div class="fin-form-row">
+            <div class="fin-form-emoji-wrap">
+              <button class="fin-emoji-btn" id="fin-inc-emoji-btn" title="Pick emoji">💼</button>
+              <div class="fin-emoji-picker hidden" id="fin-inc-emoji-picker"></div>
+            </div>
+            <input class="fin-form-input fin-form-desc" type="text" id="fin-inc-desc" placeholder="Source…" data-i18n-placeholder="finSourcePlaceholder" />
+            <input class="fin-form-input fin-form-amt" type="number" id="fin-inc-amt" placeholder="0.00" min="0" step="0.01" />
+            <select class="fin-form-select" id="fin-inc-cat">
+              <option value="Salary">💼 Salary</option>
+              <option value="Freelance">💻 Freelance</option>
+              <option value="Investment">📈 Investment</option>
+              <option value="Gift">🎁 Gift</option>
+              <option value="Other">📦 Other</option>
+            </select>
+            <button class="fin-add-btn fin-add-income-btn" id="fin-inc-add-btn" data-i18n="finAddEntry">+ Add</button>
+          </div>
+        </div>
+        <div class="fin-new-page-row">
+          <button class="fin-new-page-btn" id="fin-inc-newpage-btn">+ New page</button>
+        </div>
+      </div>
+
+    </div><!-- .finance-main-col -->
+
+    <!-- RIGHT COLUMN: Budget Breakdown + Savings Goal -->
+    <div class="finance-side-col">
+
+      <!-- BUDGET BREAKDOWN -->
+      <div class="fin-card fin-breakdown-card">
+        <div class="fin-card-title" style="margin-bottom:16px;">
+          <span class="fin-card-icon">📊</span>
+          <span data-i18n="finBudgetBreakdown">Budget Breakdown</span>
+        </div>
+        <div id="fin-breakdown-list"></div>
+        <div class="fin-breakdown-total-row">
+          <span data-i18n="finTotalSpent">Total spent</span>
+          <span id="fin-breakdown-total">€0.00</span>
+        </div>
+      </div>
+
+      <!-- SAVINGS GOAL -->
+      <div class="fin-card fin-savings-card" style="margin-top:18px;">
+        <div class="fin-card-title" style="margin-bottom:16px;">
+          <span class="fin-card-icon">🏦</span>
+          <span data-i18n="finSavingsGoals">Savings Goals</span>
+        </div>
+        <div id="fin-savings-list"></div>
+        <div class="fin-savings-add-row">
+          <input class="fin-savings-input" type="text" id="fin-sav-name" placeholder="Goal name…" />
+          <input class="fin-savings-input fin-savings-amt-input" type="number" id="fin-sav-target" placeholder="Target €" min="0" step="1" />
+          <button class="fin-add-btn" id="fin-sav-add-btn">+ Add</button>
+        </div>
+      </div>
+
+    </div><!-- .finance-side-col -->
+  </div><!-- .finance-layout -->
+</div><!-- #finance-section -->
+
+</div><!-- #app -->
+
+<!-- LANGUAGE DROPDOWN -->
+<div id="lang-dropdown">
+  <div class="lang-option active" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+  <div class="lang-option" data-lang="hu"><span class="lang-flag">🇭🇺</span> Magyar</div>
+  <div class="lang-divider"></div>
+  <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch</div>
+  <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span> Español</div>
+  <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</div>
+</div>
+
+<!-- THEME DROPDOWN -->
+<div id="theme-dropdown">
+  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="forest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+</div>
+
+<!-- BUDGET SET MODAL -->
+<div id="fin-budget-backdrop" class="hidden"></div>
+<div id="fin-budget-modal" class="hidden">
+  <div class="fin-modal-header">
+    <div class="fin-modal-title">🎯 Set Monthly Budget</div>
+    <button class="fin-modal-close" id="fin-budget-modal-close">✕</button>
+  </div>
+  <div class="fin-modal-body">
+    <label class="fin-modal-label">Budget limit (€)</label>
+    <input class="fin-form-input" type="number" id="fin-budget-input" placeholder="e.g. 1500" min="0" step="1" />
+  </div>
+  <div class="fin-modal-footer">
+    <button class="fin-modal-cancel" id="fin-budget-modal-cancel">Cancel</button>
+    <button class="fin-modal-save" id="fin-budget-modal-save">💾 Save Budget</button>
+  </div>
+</div>
+
+<!-- POMODORO BACKDROP -->
+<div id="pomo-backdrop" class="hidden"></div>
+
+<!-- POMODORO WIDGET -->
+<div id="pomo-widget" class="hidden">
+  <div class="pomo-header">
+    <div class="pomo-header-title">⏱ Pomodoro Timer</div>
+    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+  </div>
+  <div class="pomo-mode-btns">
+    <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>
+    <button class="pomo-mode-btn break-mode" data-mode="break" data-time="300" data-i18n="shortBreak">Short Break</button>
+    <button class="pomo-mode-btn long-mode" data-mode="long" data-time="900" data-i18n="longBreak">Long Break</button>
+  </div>
+  <div class="pomo-ring-wrap">
+    <svg id="pomo-ring-svg" viewBox="0 0 220 220" style="position:absolute;inset:0;">
+      <circle cx="110" cy="110" r="96" fill="none" stroke="var(--border)" stroke-width="10"/>
+      <circle id="pomo-arc" cx="110" cy="110" r="96" fill="none" stroke="#e05a9a" stroke-width="10"
+        stroke-dasharray="603.19 603.19" stroke-linecap="round"
+        style="transform:rotate(-90deg);transform-origin:110px 110px;transition:stroke-dasharray 1s linear,stroke .3s;"/>
+    </svg>
+    <div id="pomo-display-inner">
+      <div class="pomo-time-big" id="pomo-display">25:00</div>
+      <div class="pomo-sessions-lbl" id="pomo-session-lbl">Session 1</div>
+    </div>
+  </div>
+  <div id="pomo-label">Focus Time</div>
+  <div class="pomo-session-dots" id="pomo-dots"></div>
+  <div class="pomo-stats-strip">
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-sessions">0</div><div class="pomo-stat-lbl">Sessions</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-focus">0m</div><div class="pomo-stat-lbl">Focus Time</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-breaks">0</div><div class="pomo-stat-lbl">Breaks</div></div>
+  </div>
+  <div class="pomo-ctrl-btns">
+    <button class="pomo-ctrl-btn" id="pomo-start">▶ Start</button>
+    <button class="pomo-ctrl-btn secondary" id="pomo-reset">↺ Reset</button>
+  </div>
+  <div class="pomo-hint">Press Space to start · Esc to close</div>
+</div>
+
+<div id="save-indicator" data-i18n="saved">✓ Saved</div>
+<script src="app.js"></script>
+</body>
+</html>

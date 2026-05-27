@@ -26,7 +26,7 @@ const TRANSLATIONS = {
     monthShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
     days:["Mo","Tu","We","Th","Fr","Sa","Su"],
     subtitle:"— Life Tracker —",
-    tabTracker:"Tracker", tabDays:"Days", tabTasks:"Tasks", tabAnalysis:"Analysis",
+    tabTracker:"📊 Tracker", tabDays:"Days", tabTasks:"✅ Tasks", tabAnalysis:"📈 Analysis",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habits", statCompleted:"Completed", statProgress:"Progress", statTasksDone:"Tasks Done",
     myHabits:"My Habits",
@@ -54,7 +54,7 @@ const TRANSLATIONS = {
     dueToday:"Today", dueTomorrow:"Tomorrow",
     dueOverdue:(n)=>`${n}d overdue`, dueFuture:(n)=>`In ${n} days`,
     langLabel:"EN 🇬🇧",
-    tabTimetable:"🗓 Timetable", tabShopping:"🛒 Shop", tabCycle:"🌸 Cycle",
+    tabTimetable:"🗓 Timetable", tabShopping:"🛒 Shop", tabCycle:"🌸 Cycle", tabFinance:"💰 Finance",
     shopTitle:"🛒 Shopping List", shopGrocery:"🥦 Grocery", shopHousehold:"🏠 Household",
     shopPersonal:"💄 Personal", shopOther:"📦 Other",
     shopItemName:"Item Name", shopItemPlaceholder:"Add an item…", shopQty:"Qty",
@@ -106,13 +106,21 @@ const TRANSLATIONS = {
     todoAddBtn:"+ Add", todoEmpty:"Nothing here yet. Add your first task above!",
     todoCatPersonal:"👤 Personal", todoCatWork:"💼 Work", todoCatHealth:"💪 Health",
     todoCatFinance:"💰 Finance", todoCatHome:"🏠 Home", todoCatOther:"📦 Other",
+    finTotalExpenses:"Total Expenses", finTotalIncome:"Total Income", finBalance:"Balance",
+    finMonthlyBudget:"Monthly Budget", finExpenses:"Expenses", finIncome:"Income",
+    finToday:"Today", finThisWeek:"This week", finThisMonth:"This month", finAll:"All",
+    finDescription:"Aa Description", finAmount:"💲 Amount", finCategory:"🏷 Category", finSource:"🏷 Source",
+    finNoExpenses:"No expenses yet. Add one below!", finNoIncome:"No income yet. Add one below!",
+    finDescPlaceholder:"Description…", finSourcePlaceholder:"Source…",
+    finAddEntry:"+ Add", finBudgetBreakdown:"Budget Breakdown", finTotalSpent:"Total spent",
+    finSavingsGoals:"Savings Goals",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
     monthShort:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Sze","Okt","Nov","Dec"],
     days:["H","K","Sze","Cs","P","Szo","V"],
     subtitle:"— Életkövető —",
-    tabTracker:"Nyomkövető", tabDays:"Napok", tabTasks:"Feladatok", tabAnalysis:"Elemzés",
+    tabTracker:"📊 Nyomkövető", tabDays:"Napok", tabTasks:"✅ Feladatok", tabAnalysis:"📈 Elemzés",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Szokások", statCompleted:"Teljesítve", statProgress:"Haladás", statTasksDone:"Kész feladat",
     myHabits:"Szokásaim",
@@ -140,7 +148,7 @@ const TRANSLATIONS = {
     dueToday:"Ma", dueTomorrow:"Holnap",
     dueOverdue:(n)=>`${n} napja lejárt`, dueFuture:(n)=>`Még ${n} nap`,
     langLabel:"HU 🇭🇺",
-    tabShopping:"🛒 Bevásárlás", tabCycle:"🌸 Ciklus",
+    tabTimetable:"🗓 Órarend", tabShopping:"🛒 Bevásárlás", tabCycle:"🌸 Ciklus", tabFinance:"💰 Pénzügy",
     shopTitle:"🛒 Bevásárlólista", shopGrocery:"🥦 Élelmiszer", shopHousehold:"🏠 Háztartás",
     shopPersonal:"💄 Személyes", shopOther:"📦 Egyéb",
     shopItemName:"Termék neve", shopItemPlaceholder:"Elem hozzáadása…", shopQty:"Db",
@@ -192,13 +200,21 @@ const TRANSLATIONS = {
     todoAddBtn:"+ Hozzáad", todoEmpty:"Még semmi sincs itt. Add hozzá az első feladatot!",
     todoCatPersonal:"👤 Személyes", todoCatWork:"💼 Munka", todoCatHealth:"💪 Egészség",
     todoCatFinance:"💰 Pénzügy", todoCatHome:"🏠 Otthon", todoCatOther:"📦 Egyéb",
+    finTotalExpenses:"Összes kiadás", finTotalIncome:"Összes bevétel", finBalance:"Egyenleg",
+    finMonthlyBudget:"Havi keret", finExpenses:"Kiadások", finIncome:"Bevételek",
+    finToday:"Ma", finThisWeek:"Ezen a héten", finThisMonth:"Ezen a hónapban", finAll:"Mind",
+    finDescription:"Aa Leírás", finAmount:"💲 Összeg", finCategory:"🏷 Kategória", finSource:"🏷 Forrás",
+    finNoExpenses:"Még nincs kiadás. Adj hozzá egyet!", finNoIncome:"Még nincs bevétel. Adj hozzá egyet!",
+    finDescPlaceholder:"Leírás…", finSourcePlaceholder:"Forrás…",
+    finAddEntry:"+ Hozzáad", finBudgetBreakdown:"Keret áttekintés", finTotalSpent:"Összesen elköltve",
+    finSavingsGoals:"Megtakarítási célok",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
     monthShort:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],
     days:["Mo","Di","Mi","Do","Fr","Sa","So"],
     subtitle:"— Leben Tracker —",
-    tabTracker:"Tracker", tabDays:"Tage", tabTasks:"Aufgaben", tabAnalysis:"Analyse",
+    tabTracker:"📊 Tracker", tabDays:"Tage", tabTasks:"✅ Aufgaben", tabAnalysis:"📈 Analyse",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Gewohnheiten", statCompleted:"Erledigt", statProgress:"Fortschritt", statTasksDone:"Aufgaben",
     myHabits:"Meine Gewohnheiten",
@@ -226,7 +242,7 @@ const TRANSLATIONS = {
     dueToday:"Heute", dueTomorrow:"Morgen",
     dueOverdue:(n)=>`${n}T überfällig`, dueFuture:(n)=>`In ${n} Tagen`,
     langLabel:"DE 🇩🇪",
-    tabShopping:"🛒 Einkauf", tabCycle:"🌸 Zyklus",
+    tabTimetable:"🗓 Stundenplan", tabShopping:"🛒 Einkauf", tabCycle:"🌸 Zyklus", tabFinance:"💰 Finanzen",
     shopTitle:"🛒 Einkaufsliste", shopGrocery:"🥦 Lebensmittel", shopHousehold:"🏠 Haushalt",
     shopPersonal:"💄 Persönlich", shopOther:"📦 Sonstiges",
     shopItemName:"Artikelname", shopItemPlaceholder:"Artikel hinzufügen…", shopQty:"Menge",
@@ -278,13 +294,21 @@ const TRANSLATIONS = {
     todoAddBtn:"+ Hinzufügen", todoEmpty:"Noch nichts hier. Füge deine erste Aufgabe hinzu!",
     todoCatPersonal:"👤 Persönlich", todoCatWork:"💼 Arbeit", todoCatHealth:"💪 Gesundheit",
     todoCatFinance:"💰 Finanzen", todoCatHome:"🏠 Zuhause", todoCatOther:"📦 Sonstiges",
+    finTotalExpenses:"Gesamtausgaben", finTotalIncome:"Gesamteinnahmen", finBalance:"Saldo",
+    finMonthlyBudget:"Monatsbudget", finExpenses:"Ausgaben", finIncome:"Einnahmen",
+    finToday:"Heute", finThisWeek:"Diese Woche", finThisMonth:"Diesen Monat", finAll:"Alle",
+    finDescription:"Aa Beschreibung", finAmount:"💲 Betrag", finCategory:"🏷 Kategorie", finSource:"🏷 Quelle",
+    finNoExpenses:"Noch keine Ausgaben. Füge eine hinzu!", finNoIncome:"Noch keine Einnahmen. Füge eine hinzu!",
+    finDescPlaceholder:"Beschreibung…", finSourcePlaceholder:"Quelle…",
+    finAddEntry:"+ Hinzufügen", finBudgetBreakdown:"Budget Übersicht", finTotalSpent:"Gesamt ausgegeben",
+    finSavingsGoals:"Sparziele",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
     monthShort:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
     days:["Lu","Ma","Mi","Ju","Vi","Sá","Do"],
     subtitle:"— Rastreador de Vida —",
-    tabTracker:"Rastreador", tabDays:"Días", tabTasks:"Tareas", tabAnalysis:"Análisis",
+    tabTracker:"📊 Rastreador", tabDays:"Días", tabTasks:"✅ Tareas", tabAnalysis:"📈 Análisis",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Hábitos", statCompleted:"Completado", statProgress:"Progreso", statTasksDone:"Tareas",
     myHabits:"Mis Hábitos",
@@ -312,7 +336,7 @@ const TRANSLATIONS = {
     dueToday:"Hoy", dueTomorrow:"Mañana",
     dueOverdue:(n)=>`${n}d de retraso`, dueFuture:(n)=>`En ${n} días`,
     langLabel:"ES 🇪🇸",
-    tabShopping:"🛒 Compras", tabCycle:"🌸 Ciclo",
+    tabTimetable:"🗓 Horario", tabShopping:"🛒 Compras", tabCycle:"🌸 Ciclo", tabFinance:"💰 Finanzas",
     shopTitle:"🛒 Lista de compras", shopGrocery:"🥦 Supermercado", shopHousehold:"🏠 Hogar",
     shopPersonal:"💄 Personal", shopOther:"📦 Otros",
     shopItemName:"Nombre del artículo", shopItemPlaceholder:"Añadir artículo…", shopQty:"Cant.",
@@ -364,13 +388,21 @@ const TRANSLATIONS = {
     todoAddBtn:"+ Añadir", todoEmpty:"Nada aquí aún. ¡Añade tu primera tarea!",
     todoCatPersonal:"👤 Personal", todoCatWork:"💼 Trabajo", todoCatHealth:"💪 Salud",
     todoCatFinance:"💰 Finanzas", todoCatHome:"🏠 Hogar", todoCatOther:"📦 Otros",
+    finTotalExpenses:"Total Gastos", finTotalIncome:"Total Ingresos", finBalance:"Balance",
+    finMonthlyBudget:"Presupuesto Mensual", finExpenses:"Gastos", finIncome:"Ingresos",
+    finToday:"Hoy", finThisWeek:"Esta semana", finThisMonth:"Este mes", finAll:"Todos",
+    finDescription:"Aa Descripción", finAmount:"💲 Importe", finCategory:"🏷 Categoría", finSource:"🏷 Fuente",
+    finNoExpenses:"Sin gastos aún. ¡Añade uno!", finNoIncome:"Sin ingresos aún. ¡Añade uno!",
+    finDescPlaceholder:"Descripción…", finSourcePlaceholder:"Fuente…",
+    finAddEntry:"+ Añadir", finBudgetBreakdown:"Desglose del presupuesto", finTotalSpent:"Total gastado",
+    finSavingsGoals:"Metas de ahorro",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
     monthShort:["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"],
     days:["Lu","Ma","Me","Je","Ve","Sa","Di"],
     subtitle:"— Suivi de Vie —",
-    tabTracker:"Suivi", tabDays:"Jours", tabTasks:"Tâches", tabAnalysis:"Analyse",
+    tabTracker:"📊 Suivi", tabDays:"Jours", tabTasks:"✅ Tâches", tabAnalysis:"📈 Analyse",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habitudes", statCompleted:"Complété", statProgress:"Progrès", statTasksDone:"Tâches",
     myHabits:"Mes Habitudes",
@@ -398,7 +430,7 @@ const TRANSLATIONS = {
     dueToday:"Aujourd'hui", dueTomorrow:"Demain",
     dueOverdue:(n)=>`${n}j de retard`, dueFuture:(n)=>`Dans ${n} jours`,
     langLabel:"FR 🇫🇷",
-    tabShopping:"🛒 Courses", tabCycle:"🌸 Cycle",
+    tabTimetable:"🗓 Emploi du temps", tabShopping:"🛒 Courses", tabCycle:"🌸 Cycle", tabFinance:"💰 Finances",
     shopTitle:"🛒 Liste de courses", shopGrocery:"🥦 Épicerie", shopHousehold:"🏠 Maison",
     shopPersonal:"💄 Personnel", shopOther:"📦 Autre",
     shopItemName:"Nom de l'article", shopItemPlaceholder:"Ajouter un article…", shopQty:"Qté",
@@ -450,6 +482,14 @@ const TRANSLATIONS = {
     todoAddBtn:"+ Ajouter", todoEmpty:"Rien ici encore. Ajoutez votre première tâche !",
     todoCatPersonal:"👤 Personnel", todoCatWork:"💼 Travail", todoCatHealth:"💪 Santé",
     todoCatFinance:"💰 Finances", todoCatHome:"🏠 Maison", todoCatOther:"📦 Autre",
+    finTotalExpenses:"Total Dépenses", finTotalIncome:"Total Revenus", finBalance:"Solde",
+    finMonthlyBudget:"Budget Mensuel", finExpenses:"Dépenses", finIncome:"Revenus",
+    finToday:"Aujourd'hui", finThisWeek:"Cette semaine", finThisMonth:"Ce mois-ci", finAll:"Tout",
+    finDescription:"Aa Description", finAmount:"💲 Montant", finCategory:"🏷 Catégorie", finSource:"🏷 Source",
+    finNoExpenses:"Aucune dépense. Ajoutez-en une !", finNoIncome:"Aucun revenu. Ajoutez-en un !",
+    finDescPlaceholder:"Description…", finSourcePlaceholder:"Source…",
+    finAddEntry:"+ Ajouter", finBudgetBreakdown:"Détail du budget", finTotalSpent:"Total dépensé",
+    finSavingsGoals:"Objectifs d'épargne",
   }
 };
 
@@ -3181,5 +3221,429 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') DatePicker._all
     const dp = new DatePicker(inp, trig);
     dp.wrapper = inp.closest('.dp-wrapper');
     DatePicker._all.push(dp);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+// ── FINANCE MODULE ────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+if (CURRENT_PAGE === 'finance') {
+
+// ── TRANSLATIONS (finance keys) ───────────────────────────────────
+const FIN_I18N = {
+  en: { tabFinance:'💰 Finance', finTotalExpenses:'Total Expenses', finTotalIncome:'Total Income',
+        finBalance:'Balance', finMonthlyBudget:'Monthly Budget', finExpenses:'Expenses',
+        finIncome:'Income', finDescription:'Aa Description', finAmount:'💲 Amount',
+        finCategory:'🏷 Category', finSource:'🏷 Source', finNoExpenses:'No expenses yet. Add one below!',
+        finNoIncome:'No income yet. Add one below!', finDescPlaceholder:'Description…',
+        finSourcePlaceholder:'Source…', finAddEntry:'+ Add', finToday:'Today',
+        finThisWeek:'This week', finThisMonth:'This month', finAll:'All',
+        finBudgetBreakdown:'Budget Breakdown', finTotalSpent:'Total spent',
+        finSavingsGoals:'Savings Goals' },
+  hu: { tabFinance:'💰 Pénzügy', finTotalExpenses:'Összes kiadás', finTotalIncome:'Összes bevétel',
+        finBalance:'Egyenleg', finMonthlyBudget:'Havi keret', finExpenses:'Kiadások',
+        finIncome:'Bevételek', finDescription:'Megnevezés', finAmount:'Összeg',
+        finCategory:'Kategória', finSource:'Forrás', finNoExpenses:'Még nincs kiadás.',
+        finNoIncome:'Még nincs bevétel.', finDescPlaceholder:'Megnevezés…',
+        finSourcePlaceholder:'Forrás…', finAddEntry:'+ Hozzáad', finToday:'Ma',
+        finThisWeek:'Ez a hét', finThisMonth:'Ez a hónap', finAll:'Mind',
+        finBudgetBreakdown:'Kategóriák', finTotalSpent:'Összesen',
+        finSavingsGoals:'Megtakarítási célok' },
+  de: { tabFinance:'💰 Finanzen', finTotalExpenses:'Gesamtausgaben', finTotalIncome:'Gesamteinnahmen',
+        finBalance:'Saldo', finMonthlyBudget:'Monatsbudget', finExpenses:'Ausgaben',
+        finIncome:'Einnahmen', finNoExpenses:'Noch keine Ausgaben.', finNoIncome:'Noch keine Einnahmen.',
+        finDescPlaceholder:'Beschreibung…', finSourcePlaceholder:'Quelle…', finAddEntry:'+ Hinzufügen',
+        finToday:'Heute', finThisWeek:'Diese Woche', finThisMonth:'Dieser Monat', finAll:'Alle',
+        finBudgetBreakdown:'Ausgaben nach Kategorie', finTotalSpent:'Gesamt ausgegeben',
+        finSavingsGoals:'Sparziele' },
+  es: { tabFinance:'💰 Finanzas', finTotalExpenses:'Total gastos', finTotalIncome:'Total ingresos',
+        finBalance:'Balance', finMonthlyBudget:'Presupuesto mensual', finExpenses:'Gastos',
+        finIncome:'Ingresos', finNoExpenses:'Sin gastos aún.', finNoIncome:'Sin ingresos aún.',
+        finDescPlaceholder:'Descripción…', finSourcePlaceholder:'Fuente…', finAddEntry:'+ Añadir',
+        finToday:'Hoy', finThisWeek:'Esta semana', finThisMonth:'Este mes', finAll:'Todo',
+        finBudgetBreakdown:'Desglose', finTotalSpent:'Total gastado',
+        finSavingsGoals:'Metas de ahorro' },
+  fr: { tabFinance:'💰 Finances', finTotalExpenses:'Total dépenses', finTotalIncome:'Total revenus',
+        finBalance:'Solde', finMonthlyBudget:'Budget mensuel', finExpenses:'Dépenses',
+        finIncome:'Revenus', finNoExpenses:'Aucune dépense encore.', finNoIncome:'Aucun revenu encore.',
+        finDescPlaceholder:'Description…', finSourcePlaceholder:'Source…', finAddEntry:'+ Ajouter',
+        finToday:"Aujourd'hui", finThisWeek:'Cette semaine', finThisMonth:'Ce mois', finAll:'Tout',
+        finBudgetBreakdown:'Répartition', finTotalSpent:'Total dépensé',
+        finSavingsGoals:"Objectifs d'épargne" },
+};
+// Merge fin translations into main TRANSLATIONS
+Object.keys(TRANSLATIONS).forEach(lang => {
+  if (FIN_I18N[lang]) Object.assign(TRANSLATIONS[lang], FIN_I18N[lang]);
+});
+
+// ── FINANCE STATE & STORAGE ───────────────────────────────────────
+const FIN_KEY = 'ht_finance_v1';
+let finState = {
+  expenses: [], incomes: [], idCtr: 1,
+  monthlyBudget: 0,
+  savings: [], savIdCtr: 1,
+};
+function loadFinance() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FIN_KEY) || 'null');
+    if (raw) finState = Object.assign(finState, raw);
+  } catch(e) {}
+}
+function saveFinance() {
+  try { localStorage.setItem(FIN_KEY, JSON.stringify(finState)); } catch(e) {}
+  flashSaved();
+}
+
+// Sample data if empty
+function maybeAddSampleData() {
+  if (finState.expenses.length > 0 || finState.incomes.length > 0) return;
+  const today = fmtDate(new Date());
+  finState.expenses = [
+    {id:finState.idCtr++,emoji:'💊',desc:'Pharmacy',amount:39,category:'Health',date:today},
+    {id:finState.idCtr++,emoji:'📗',desc:'Books',amount:13,category:'Entertainment',date:today},
+    {id:finState.idCtr++,emoji:'⛽',desc:'Fuel',amount:80,category:'Transport',date:today},
+    {id:finState.idCtr++,emoji:'🥪',desc:'Lunch cafe',amount:37.65,category:'Food',date:today},
+    {id:finState.idCtr++,emoji:'🚻',desc:'Park toilet',amount:0.79,category:'Utilities',date:today},
+    {id:finState.idCtr++,emoji:'📒',desc:'New book',amount:25.99,category:'Development',date:today},
+    {id:finState.idCtr++,emoji:'🥤',desc:'Cola + snacks',amount:3.74,category:'Food',date:today},
+    {id:finState.idCtr++,emoji:'🥇',desc:'1 gram of Gold',amount:127,category:'Investment',date:today},
+  ];
+  saveFinance();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const CAT_COLORS = {
+  Food:'#f5a623',Health:'#3ecfb2',Transport:'#7090f9',Entertainment:'#a78bfa',
+  Utilities:'#e05a9a',Home:'#c09060',Development:'#20b4f8',Investment:'#ff8c00',
+  Salary:'#3ecfb2',Freelance:'#7090f9',Gift:'#e05a9a',Other:'#8898aa',
+};
+function catClass(cat) {
+  const map = {Food:'food',Health:'health',Transport:'transport',Entertainment:'entertainment',
+    Utilities:'utilities',Home:'home',Development:'development',Investment:'investment',
+    Salary:'salary',Freelance:'freelance',Gift:'gift',Other:'other'};
+  return 'fin-cat-'+(map[cat]||'other');
+}
+function fmtAmt(n) { return '€'+Number(n).toFixed(2); }
+
+let expScope = 'month', incScope = 'month';
+function inScope(dateStr, scope) {
+  const d = new Date(dateStr+'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  if (scope === 'all') return true;
+  if (scope === 'today') {
+    return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+  }
+  if (scope === 'week') {
+    const mon = getTTWeekMonday(now);
+    const sun = new Date(mon); sun.setDate(sun.getDate()+6); sun.setHours(23,59,59);
+    return d >= mon && d <= sun;
+  }
+  if (scope === 'month') {
+    return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+  }
+  return true;
+}
+
+// ── EMOJI PICKER ──────────────────────────────────────────────────
+const EMOJIS = ['💳','🏧','💵','💸','🛒','🍔','🥗','☕','🍕','🍺','🏥','💊','🚗','⛽','🚌','🎬','🎮','📚','📗','📒','🏠','🔧','⚡','💧','📱','💻','🎓','📈','🥇','💎','🛍️','🎁','🌍','✈️','🏋️','💼','🤝','🏦','🍫','🥤'];
+function buildEmojiPicker(pickerId, btnId, onPick) {
+  const picker = document.getElementById(pickerId);
+  if (!picker) return;
+  picker.innerHTML = EMOJIS.map(e=>`<div class="fin-emoji-opt" data-e="${e}">${e}</div>`).join('');
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', e => { e.stopPropagation(); picker.classList.toggle('hidden'); });
+  picker.addEventListener('click', e => {
+    const opt = e.target.closest('[data-e]');
+    if (!opt) return;
+    btn.textContent = opt.dataset.e;
+    picker.classList.add('hidden');
+    if (onPick) onPick(opt.dataset.e);
+  });
+  document.addEventListener('click', () => picker.classList.add('hidden'));
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function renderFinanceStats() {
+  const expAll = finState.expenses;
+  const incAll = finState.incomes;
+  const monthExp = expAll.filter(e => inScope(e.date,'month')).reduce((s,e)=>s+Number(e.amount),0);
+  const monthInc = incAll.filter(i => inScope(i.date,'month')).reduce((s,i)=>s+Number(i.amount),0);
+  const balance = monthInc - monthExp;
+
+  document.getElementById('fin-stat-expenses').textContent = fmtAmt(monthExp);
+  document.getElementById('fin-stat-income').textContent = fmtAmt(monthInc);
+  const balEl = document.getElementById('fin-stat-balance');
+  balEl.textContent = fmtAmt(balance);
+  const balCard = document.getElementById('fin-balance-card');
+  balCard.classList.toggle('negative', balance < 0);
+
+  const budgetUsed = monthExp;
+  const budgetLimit = finState.monthlyBudget || 0;
+  document.getElementById('fin-stat-budget-used').textContent = '€'+Math.round(budgetUsed);
+  document.getElementById('fin-stat-budget-limit').textContent = budgetLimit > 0 ? '€'+budgetLimit : '—';
+}
+
+function renderExpenseList() {
+  const list = document.getElementById('fin-expense-list');
+  const filtered = finState.expenses.filter(e => inScope(e.date, expScope));
+  if (!filtered.length) {
+    list.innerHTML = `<div class="fin-empty-msg">${t('finNoExpenses')||'No expenses yet.'}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  [...filtered].reverse().forEach((exp, idx) => {
+    const row = document.createElement('div');
+    row.className = 'fin-entry-row';
+    row.style.animationDelay = idx*0.03+'s';
+    row.innerHTML = `
+      <div>
+        <div class="fin-entry-desc">
+          <span class="fin-entry-emoji">${exp.emoji||'💳'}</span>
+          <span class="fin-entry-name">${exp.desc}</span>
+        </div>
+        <div class="fin-entry-date">${exp.date}</div>
+      </div>
+      <div class="fin-entry-amt">${fmtAmt(exp.amount)}</div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(exp.category)}">${exp.category}</span></div>
+      <div class="fin-entry-actions">
+        <button class="fin-entry-del-btn" data-del-exp="${exp.id}" title="Delete">×</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderIncomeList() {
+  const list = document.getElementById('fin-income-list');
+  const filtered = finState.incomes.filter(i => inScope(i.date, incScope));
+  if (!filtered.length) {
+    list.innerHTML = `<div class="fin-empty-msg">${t('finNoIncome')||'No income yet.'}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  [...filtered].reverse().forEach((inc, idx) => {
+    const row = document.createElement('div');
+    row.className = 'fin-entry-row income-row';
+    row.style.animationDelay = idx*0.03+'s';
+    row.innerHTML = `
+      <div>
+        <div class="fin-entry-desc">
+          <span class="fin-entry-emoji">${inc.emoji||'💵'}</span>
+          <span class="fin-entry-name">${inc.desc}</span>
+        </div>
+        <div class="fin-entry-date">${inc.date}</div>
+      </div>
+      <div class="fin-entry-amt">${fmtAmt(inc.amount)}</div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(inc.category)}">${inc.category}</span></div>
+      <div class="fin-entry-actions">
+        <button class="fin-entry-del-btn" data-del-inc="${inc.id}" title="Delete">×</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderBreakdown() {
+  const el = document.getElementById('fin-breakdown-list');
+  const totalEl = document.getElementById('fin-breakdown-total');
+  const monthExp = finState.expenses.filter(e => inScope(e.date,'month'));
+  const totals = {};
+  monthExp.forEach(e => { totals[e.category] = (totals[e.category]||0)+Number(e.amount); });
+  const total = Object.values(totals).reduce((s,v)=>s+v,0);
+  totalEl.textContent = fmtAmt(total);
+  const sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  if (!sorted.length) { el.innerHTML = '<div class="fin-empty-msg" style="font-size:12px;">No data this month.</div>'; return; }
+  el.innerHTML = '';
+  sorted.forEach(([cat, amt]) => {
+    const pct = total > 0 ? Math.round(amt/total*100) : 0;
+    const color = CAT_COLORS[cat]||'#8898aa';
+    const item = document.createElement('div');
+    item.className = 'fin-breakdown-item';
+    item.innerHTML = `
+      <div class="fin-breakdown-dot" style="background:${color}"></div>
+      <div class="fin-breakdown-label">${cat}</div>
+      <div class="fin-breakdown-bar-wrap"><div class="fin-breakdown-bar-fill" style="width:0%;background:${color}"></div></div>
+      <div class="fin-breakdown-pct">${pct}%</div>
+      <div class="fin-breakdown-amt">${fmtAmt(amt)}</div>`;
+    el.appendChild(item);
+    requestAnimationFrame(()=>setTimeout(()=>{ const f=item.querySelector('.fin-breakdown-bar-fill');if(f)f.style.width=pct+'%'; },80));
+  });
+}
+
+function renderSavings() {
+  const el = document.getElementById('fin-savings-list');
+  if (!finState.savings.length) {
+    el.innerHTML = '<div class="fin-empty-msg" style="font-size:12px;">No savings goals yet.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  finState.savings.forEach(sav => {
+    const pct = sav.target > 0 ? Math.min(100,Math.round(sav.current/sav.target*100)) : 0;
+    const item = document.createElement('div');
+    item.className = 'fin-savings-goal-item';
+    item.innerHTML = `
+      <div class="fin-savings-goal-header">
+        <span class="fin-savings-goal-name">${sav.name}</span>
+        <div class="fin-savings-goal-vals">
+          <span class="fin-savings-goal-current">€${sav.current||0}</span>
+          <span class="fin-savings-goal-sep">/</span>
+          <span class="fin-savings-goal-target">€${sav.target}</span>
+        </div>
+      </div>
+      <div class="fin-savings-track"><div class="fin-savings-fill" style="width:0%"></div></div>
+      <div class="fin-savings-actions">
+        <input class="fin-savings-contrib-input" type="number" placeholder="+€" min="0" step="1" data-savid="${sav.id}" />
+        <button class="fin-savings-contrib-btn" data-savcontrib="${sav.id}">+ Add</button>
+        <button class="fin-savings-del-btn" data-savdel="${sav.id}">×</button>
+      </div>`;
+    el.appendChild(item);
+    requestAnimationFrame(()=>setTimeout(()=>{ const f=item.querySelector('.fin-savings-fill');if(f)f.style.width=pct+'%'; },120));
+  });
+}
+
+function renderFinance() {
+  renderFinanceStats();
+  renderExpenseList();
+  renderIncomeList();
+  renderBreakdown();
+  renderSavings();
+  applyTranslations();
+}
+
+// ── EVENT WIRING ──────────────────────────────────────────────────
+// Scope filters — expenses
+document.querySelectorAll('.fin-filter-btn:not(.inc-filter)').forEach(btn => {
+  btn.addEventListener('click', () => {
+    expScope = btn.dataset.fscope;
+    document.querySelectorAll('.fin-filter-btn:not(.inc-filter)').forEach(b=>b.classList.toggle('active',b===btn));
+    renderExpenseList();
+  });
+});
+// Scope filters — income
+document.querySelectorAll('.fin-filter-btn.inc-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    incScope = btn.dataset.fscope;
+    document.querySelectorAll('.fin-filter-btn.inc-filter').forEach(b=>b.classList.toggle('active',b===btn));
+    renderIncomeList();
+  });
+});
+
+// Add expense
+let expEmoji = '💳';
+buildEmojiPicker('fin-exp-emoji-picker','fin-exp-emoji-btn', e => { expEmoji = e; });
+function addExpense() {
+  const desc = document.getElementById('fin-exp-desc').value.trim();
+  const amt = parseFloat(document.getElementById('fin-exp-amt').value);
+  if (!desc || isNaN(amt) || amt <= 0) return;
+  const cat = document.getElementById('fin-exp-cat').value;
+  finState.expenses.push({id:finState.idCtr++,emoji:expEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
+  document.getElementById('fin-exp-desc').value='';
+  document.getElementById('fin-exp-amt').value='';
+  saveFinance(); renderFinance();
+}
+on('fin-exp-add-btn','click',addExpense);
+on('fin-exp-desc','keydown',e=>{ if(e.key==='Enter') addExpense(); });
+on('fin-exp-amt','keydown',e=>{ if(e.key==='Enter') addExpense(); });
+on('fin-exp-newpage-btn','click',()=>{ document.getElementById('fin-exp-desc').focus(); });
+
+// Add income
+let incEmoji = '💼';
+buildEmojiPicker('fin-inc-emoji-picker','fin-inc-emoji-btn', e => { incEmoji = e; });
+function addIncome() {
+  const desc = document.getElementById('fin-inc-desc').value.trim();
+  const amt = parseFloat(document.getElementById('fin-inc-amt').value);
+  if (!desc || isNaN(amt) || amt <= 0) return;
+  const cat = document.getElementById('fin-inc-cat').value;
+  finState.incomes.push({id:finState.idCtr++,emoji:incEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
+  document.getElementById('fin-inc-desc').value='';
+  document.getElementById('fin-inc-amt').value='';
+  saveFinance(); renderFinance();
+}
+on('fin-inc-add-btn','click',addIncome);
+on('fin-inc-desc','keydown',e=>{ if(e.key==='Enter') addIncome(); });
+on('fin-inc-amt','keydown',e=>{ if(e.key==='Enter') addIncome(); });
+
+// Delete entry delegation
+on('fin-expense-list','click',e=>{
+  const btn = e.target.closest('[data-del-exp]');
+  if(btn){ finState.expenses=finState.expenses.filter(x=>x.id!==+btn.dataset.delExp); saveFinance(); renderFinance(); }
+});
+on('fin-income-list','click',e=>{
+  const btn = e.target.closest('[data-del-inc]');
+  if(btn){ finState.incomes=finState.incomes.filter(x=>x.id!==+btn.dataset.delInc); saveFinance(); renderFinance(); }
+});
+
+// Budget modal
+const budgetBackdrop = document.getElementById('fin-budget-backdrop');
+const budgetModal = document.getElementById('fin-budget-modal');
+function openBudgetModal() {
+  document.getElementById('fin-budget-input').value = finState.monthlyBudget || '';
+  budgetBackdrop.classList.remove('hidden');
+  budgetModal.classList.remove('hidden');
+  requestAnimationFrame(()=>document.getElementById('fin-budget-input').focus());
+}
+function closeBudgetModal() {
+  budgetBackdrop.classList.add('hidden');
+  budgetModal.classList.add('hidden');
+}
+on('fin-budget-set-btn','click', openBudgetModal);
+on('fin-budget-modal-close','click', closeBudgetModal);
+on('fin-budget-modal-cancel','click', closeBudgetModal);
+if(budgetBackdrop) budgetBackdrop.addEventListener('click', closeBudgetModal);
+on('fin-budget-modal-save','click',()=>{
+  const val = parseFloat(document.getElementById('fin-budget-input').value);
+  finState.monthlyBudget = isNaN(val) ? 0 : Math.max(0,val);
+  saveFinance(); renderFinance(); closeBudgetModal();
+});
+on('fin-budget-input','keydown',e=>{ if(e.key==='Enter') document.getElementById('fin-budget-modal-save').click(); if(e.key==='Escape') closeBudgetModal(); });
+
+// Savings
+on('fin-sav-add-btn','click',()=>{
+  const name = document.getElementById('fin-sav-name').value.trim();
+  const target = parseFloat(document.getElementById('fin-sav-target').value);
+  if(!name || isNaN(target) || target<=0) return;
+  finState.savings.push({id:finState.savIdCtr++,name,target,current:0});
+  document.getElementById('fin-sav-name').value='';
+  document.getElementById('fin-sav-target').value='';
+  saveFinance(); renderSavings();
+});
+on('fin-savings-list','click',e=>{
+  const contrib = e.target.closest('[data-savcontrib]');
+  if(contrib){
+    const id = +contrib.dataset.savcontrib;
+    const sav = finState.savings.find(s=>s.id===id);
+    const inp = document.querySelector(`.fin-savings-contrib-input[data-savid="${id}"]`);
+    if(sav&&inp){ const v=parseFloat(inp.value); if(!isNaN(v)&&v>0){ sav.current=(sav.current||0)+v; saveFinance(); renderSavings(); } }
+    return;
+  }
+  const del = e.target.closest('[data-savdel]');
+  if(del){ finState.savings=finState.savings.filter(s=>s.id!==+del.dataset.savdel); saveFinance(); renderSavings(); }
+});
+
+// Nav buttons update month title only (no tab re-render needed for finance)
+on('prev-month','click',()=>{
+  state.month--; if(state.month<0){state.month=11;state.year--;}
+  document.getElementById('month-title').textContent=getMonthNames()[state.month];
+  document.getElementById('year-label').textContent=state.year;
+  saveNav();
+});
+on('next-month','click',()=>{
+  state.month++; if(state.month>11){state.month=0;state.year++;}
+  document.getElementById('month-title').textContent=getMonthNames()[state.month];
+  document.getElementById('year-label').textContent=state.year;
+  saveNav();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadFinance();
+maybeAddSampleData();
+renderFinance();
+
+} // end if(CURRENT_PAGE === 'finance')
+
+// ── Add Finance tab to translations for non-finance pages ─────────
+(function() {
+  const tabKey = 'tabFinance';
+  const labels = { en:'💰 Finance', hu:'💰 Pénzügy', de:'💰 Finanzen', es:'💰 Finanzas', fr:'💰 Finances' };
+  Object.keys(TRANSLATIONS).forEach(lang => {
+    if (!TRANSLATIONS[lang][tabKey]) TRANSLATIONS[lang][tabKey] = labels[lang]||labels.en;
   });
 })();

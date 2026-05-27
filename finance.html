@@ -122,21 +122,21 @@
             <input class="fin-form-input fin-form-desc" type="text" id="fin-exp-desc" placeholder="Description…" data-i18n-placeholder="finDescPlaceholder" />
             <input class="fin-form-input fin-form-amt" type="number" id="fin-exp-amt" placeholder="0.00" min="0" step="0.01" />
             <select class="fin-form-select" id="fin-exp-cat">
-              <option value="Food">🍔 Food</option>
-              <option value="Health">💊 Health</option>
-              <option value="Transport">🚗 Transport</option>
-              <option value="Entertainment">🎬 Entertainment</option>
-              <option value="Utilities">⚡ Utilities</option>
-              <option value="Home">🏠 Home</option>
-              <option value="Development">📚 Development</option>
-              <option value="Investment">📈 Investment</option>
-              <option value="Other">📦 Other</option>
+              <option value="Food" data-i18n="finCatFood">🍔 Food</option>
+              <option value="Health" data-i18n="finCatHealth">💊 Health</option>
+              <option value="Transport" data-i18n="finCatTransport">🚗 Transport</option>
+              <option value="Entertainment" data-i18n="finCatEntertainment">🎬 Entertainment</option>
+              <option value="Utilities" data-i18n="finCatUtilities">⚡ Utilities</option>
+              <option value="Home" data-i18n="finCatHome">🏠 Home</option>
+              <option value="Development" data-i18n="finCatDevelopment">📚 Development</option>
+              <option value="Investment" data-i18n="finCatInvestment">📈 Investment</option>
+              <option value="Other" data-i18n="finCatOther">📦 Other</option>
             </select>
             <button class="fin-add-btn" id="fin-exp-add-btn" data-i18n="finAddEntry">+ Add</button>
           </div>
         </div>
         <div class="fin-new-page-row">
-          <button class="fin-new-page-btn" id="fin-exp-newpage-btn">+ New page</button>
+          <button class="fin-new-page-btn" id="fin-exp-newpage-btn" data-i18n="finNewPage">+ New page</button>
         </div>
       </div>
 
@@ -175,17 +175,17 @@
             <input class="fin-form-input fin-form-desc" type="text" id="fin-inc-desc" placeholder="Source…" data-i18n-placeholder="finSourcePlaceholder" />
             <input class="fin-form-input fin-form-amt" type="number" id="fin-inc-amt" placeholder="0.00" min="0" step="0.01" />
             <select class="fin-form-select" id="fin-inc-cat">
-              <option value="Salary">💼 Salary</option>
-              <option value="Freelance">💻 Freelance</option>
-              <option value="Investment">📈 Investment</option>
-              <option value="Gift">🎁 Gift</option>
-              <option value="Other">📦 Other</option>
+              <option value="Salary" data-i18n="finIncSalary">💼 Salary</option>
+              <option value="Freelance" data-i18n="finIncFreelance">💻 Freelance</option>
+              <option value="Investment" data-i18n="finIncInvestment">📈 Investment</option>
+              <option value="Gift" data-i18n="finIncGift">🎁 Gift</option>
+              <option value="Other" data-i18n="finIncOther">📦 Other</option>
             </select>
             <button class="fin-add-btn fin-add-income-btn" id="fin-inc-add-btn" data-i18n="finAddEntry">+ Add</button>
           </div>
         </div>
         <div class="fin-new-page-row">
-          <button class="fin-new-page-btn" id="fin-inc-newpage-btn">+ New page</button>
+          <button class="fin-new-page-btn" id="fin-inc-newpage-btn" data-i18n="finNewPage">+ New page</button>
         </div>
       </div>
 
@@ -215,9 +215,9 @@
         </div>
         <div id="fin-savings-list"></div>
         <div class="fin-savings-add-row">
-          <input class="fin-savings-input" type="text" id="fin-sav-name" placeholder="Goal name…" />
-          <input class="fin-savings-input fin-savings-amt-input" type="number" id="fin-sav-target" placeholder="Target €" min="0" step="1" />
-          <button class="fin-add-btn" id="fin-sav-add-btn">+ Add</button>
+          <input class="fin-savings-input" type="text" id="fin-sav-name" placeholder="Goal name…" data-i18n-placeholder="finSavNamePlaceholder"/>
+          <input class="fin-savings-input fin-savings-amt-input" type="number" id="fin-sav-target" placeholder="Target €" data-i18n-placeholder="finSavTargetPlaceholder" min="0" step="1" />
+          <button class="fin-add-btn" id="fin-sav-add-btn" data-i18n="finAddEntry">+ Add</button>
         </div>
       </div>
 
@@ -257,16 +257,16 @@
 <div id="fin-budget-backdrop" class="hidden"></div>
 <div id="fin-budget-modal" class="hidden">
   <div class="fin-modal-header">
-    <div class="fin-modal-title">🎯 Set Monthly Budget</div>
+    <div class="fin-modal-title" data-i18n="finBudgetModalTitle">🎯 Set Monthly Budget</div>
     <button class="fin-modal-close" id="fin-budget-modal-close">✕</button>
   </div>
   <div class="fin-modal-body">
-    <label class="fin-modal-label">Budget limit (€)</label>
+    <label class="fin-modal-label" data-i18n="finBudgetLabel">Budget limit (€)</label>
     <input class="fin-form-input" type="number" id="fin-budget-input" placeholder="e.g. 1500" min="0" step="1" />
   </div>
   <div class="fin-modal-footer">
-    <button class="fin-modal-cancel" id="fin-budget-modal-cancel">Cancel</button>
-    <button class="fin-modal-save" id="fin-budget-modal-save">💾 Save Budget</button>
+    <button class="fin-modal-cancel" id="fin-budget-modal-cancel" data-i18n="finBudgetCancel">Cancel</button>
+    <button class="fin-modal-save" id="fin-budget-modal-save" data-i18n="finBudgetSave">💾 Save Budget</button>
   </div>
 </div>
 

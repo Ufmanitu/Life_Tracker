@@ -92,6 +92,30 @@ const TRANSLATIONS = {
     cyclePillPackTitle:"💊 Pill Pack", cyclePillPackSetup:"Set your cycle start date to begin",
     cycleStatusTitle:"🌸 Cycle Status",
     cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
+    cycleIntimacyTitle:"💞 Intimacy Log — Today",
+    cycleIntimacyHistoryTitle:"This month",
+    cycleIntimacyTypes:["💋 Kiss","🛡 Protected Sex","🔥 Unprotected Sex","💜 Oral","✨ Other Intimacy"],
+    cycleIntimacyKeys:["kiss","protected","unprotected","oral","other"],
+    cyclePregnancyTitle:"🤰 Pregnancy Possibility",
+    cyclePregnancyNoData:"Set your cycle start date to see pregnancy risk estimates.",
+    cyclePregnancyRiskNone:"Minimal",
+    cyclePregnancyRiskLow:"Low",
+    cyclePregnancyRiskMedium:"Medium",
+    cyclePregnancyRiskHigh:"High",
+    cyclePregnancyRiskVeryHigh:"Very High",
+    cyclePregnancyFactorPhase:"Cycle Phase",
+    cyclePregnancyFactorContact:"Recent Intimacy",
+    cyclePregnancyFactorProtection:"Protection Used",
+    cyclePregnancyFactorPill:"Pill Active",
+    cyclePregnancyDisclaimer:"⚠️ This is an estimate based on cycle phase and logged intimacy only. It is not medical advice. Consult a healthcare professional for accurate assessment.",
+    cyclePregnancyHistoryTitle:"Recent at-risk events",
+    cyclePregnancyHistoryEmpty:"No unprotected intimacy logged this cycle.",
+    cyclePregnancyPhaseLabels:{period:"Menstrual — very low",follicular:"Follicular — low",fertile:"Fertile window — elevated",ovulation:"Ovulation — highest",pms:"Luteal — very low"},
+    cyclePregnancyProtYes:"Yes — reduced",
+    cyclePregnancyProtNo:"No — full risk",
+    cyclePregnancyPillYes:"Yes — very low",
+    cyclePregnancyPillNo:"No",
+    cycleIntimacyDayLabel:"Day",
     cycleHistoryDayPeriod:"day period", cycleHistoryPredicted:"predicted",
     tabGoals:"🎯 Goals", tabTodo:"✅ To-Do",
     goalsDailyTitle:"Daily Goals", goalsDailySub:"Reset every day",
@@ -114,6 +138,27 @@ const TRANSLATIONS = {
     finDescPlaceholder:"Description…", finSourcePlaceholder:"Source…",
     finAddEntry:"+ Add", finBudgetBreakdown:"Budget Breakdown", finTotalSpent:"Total spent",
     finSavingsGoals:"Savings Goals",
+    finCatFood:"🍔 Food", finCatHealth:"💊 Health", finCatTransport:"🚗 Transport",
+    finCatEntertainment:"🎬 Entertainment", finCatUtilities:"⚡ Utilities", finCatHome:"🏠 Home",
+    finCatDevelopment:"📚 Development", finCatInvestment:"📈 Investment", finCatOther:"📦 Other",
+    finIncSalary:"💼 Salary", finIncFreelance:"💻 Freelance", finIncInvestment:"📈 Investment",
+    finIncGift:"🎁 Gift", finIncOther:"📦 Other",
+    finNewPage:"+ New page", finBudgetModalTitle:"🎯 Set Monthly Budget",
+    finBudgetLabel:"Budget limit (€)", finBudgetCancel:"Cancel", finBudgetSave:"💾 Save Budget",
+    finSavNamePlaceholder:"Goal name…", finSavTargetPlaceholder:"Target €",
+    ttTitle:"🗓 Weekly Timetable", ttEventTitle:"Event Title", ttEventPlaceholder:"e.g. Morning run…",
+    ttDay:"Day", ttAllDay:"All Day", ttStart:"Start", ttEnd:"End", ttCategory:"Category",
+    ttAddEvent:"+ Add Event", ttEditBanner:"✎ Editing event —", ttCancelEdit:"✕ Cancel",
+    ttClearAll:"Clear All Events", ttGcalTitle:"Import from Google Calendar",
+    ttGcalSubtitle:"Fetching your events for this week…", ttGcalConnecting:"Connecting to Google Calendar…",
+    ttGcalSelected:"0 selected", ttGcalSelectAll:"Select All", ttGcalImport:"➕ Add to Timetable",
+    ttConfirmTitle:"Clear All Events?",
+    ttConfirmDesc:"This will permanently remove all events from your timetable. This action cannot be undone.",
+    ttConfirmCancel:"Cancel", ttConfirmDelete:"Delete All",
+    ttDayMon:"Monday", ttDayTue:"Tuesday", ttDayWed:"Wednesday", ttDayThu:"Thursday",
+    ttDayFri:"Friday", ttDaySat:"Saturday", ttDaySun:"Sunday",
+    ttCatWork:"Work", ttCatStudy:"Study", ttCatHealth:"Health", ttCatPersonal:"Personal",
+    ttCatSocial:"Social", ttCatOther:"Other",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
@@ -186,6 +231,30 @@ const TRANSLATIONS = {
     cyclePillPackTitle:"💊 Tablettacsomag", cyclePillPackSetup:"Állítsd be a ciklus kezdőnapját",
     cycleStatusTitle:"🌸 Ciklus állapot",
     cyclePillCalLegendActive:"Aktív", cyclePillCalLegendPlacebo:"Placebo",
+    cycleIntimacyTitle:"💞 Intimitás napló — Ma",
+    cycleIntimacyHistoryTitle:"Ezen a hónapban",
+    cycleIntimacyTypes:["💋 Csók","🛡 Védett szex","🔥 Védelem nélküli szex","💜 Orális","✨ Egyéb intimitás"],
+    cycleIntimacyKeys:["kiss","protected","unprotected","oral","other"],
+    cyclePregnancyTitle:"🤰 Terhességi valószínűség",
+    cyclePregnancyNoData:"Állítsd be a ciklus kezdőnapját a becslés megtekintéséhez.",
+    cyclePregnancyRiskNone:"Minimális",
+    cyclePregnancyRiskLow:"Alacsony",
+    cyclePregnancyRiskMedium:"Közepes",
+    cyclePregnancyRiskHigh:"Magas",
+    cyclePregnancyRiskVeryHigh:"Nagyon magas",
+    cyclePregnancyFactorPhase:"Ciklusfázis",
+    cyclePregnancyFactorContact:"Közelmúltbeli intimitás",
+    cyclePregnancyFactorProtection:"Védekezés",
+    cyclePregnancyFactorPill:"Fogamzásgátló aktív",
+    cyclePregnancyDisclaimer:"⚠️ Ez csak a ciklusfázis és a naplózott intimitás alapján becsült érték. Nem orvosi tanács. Pontos felméréshez fordulj egészségügyi szakemberhez.",
+    cyclePregnancyHistoryTitle:"Közelmúltbeli kockázatos események",
+    cyclePregnancyHistoryEmpty:"Nincs védelem nélküli intimitás naplózva ezen a cikluson.",
+    cyclePregnancyPhaseLabels:{period:"Menstruáció — nagyon alacsony",follicular:"Follikuláris — alacsony",fertile:"Termékeny ablak — emelkedett",ovulation:"Ovuláció — legmagasabb",pms:"Luteális — nagyon alacsony"},
+    cyclePregnancyProtYes:"Igen — csökkentett",
+    cyclePregnancyProtNo:"Nem — teljes kockázat",
+    cyclePregnancyPillYes:"Igen — nagyon alacsony",
+    cyclePregnancyPillNo:"Nem",
+    cycleIntimacyDayLabel:"Nap",
     cycleHistoryDayPeriod:"napos periódus", cycleHistoryPredicted:"becsült",
     tabGoals:"🎯 Célok", tabTodo:"✅ Teendők",
     goalsDailyTitle:"Napi célok", goalsDailySub:"Naponta visszaáll",
@@ -208,6 +277,27 @@ const TRANSLATIONS = {
     finDescPlaceholder:"Leírás…", finSourcePlaceholder:"Forrás…",
     finAddEntry:"+ Hozzáad", finBudgetBreakdown:"Keret áttekintés", finTotalSpent:"Összesen elköltve",
     finSavingsGoals:"Megtakarítási célok",
+    finCatFood:"🍔 Étel", finCatHealth:"💊 Egészség", finCatTransport:"🚗 Közlekedés",
+    finCatEntertainment:"🎬 Szórakozás", finCatUtilities:"⚡ Rezsi", finCatHome:"🏠 Otthon",
+    finCatDevelopment:"📚 Fejlődés", finCatInvestment:"📈 Befektetés", finCatOther:"📦 Egyéb",
+    finIncSalary:"💼 Fizetés", finIncFreelance:"💻 Szabadúszó", finIncInvestment:"📈 Befektetés",
+    finIncGift:"🎁 Ajándék", finIncOther:"📦 Egyéb",
+    finNewPage:"+ Új oldal", finBudgetModalTitle:"🎯 Havi keret beállítása",
+    finBudgetLabel:"Keret összege (€)", finBudgetCancel:"Mégsem", finBudgetSave:"💾 Mentés",
+    finSavNamePlaceholder:"Cél neve…", finSavTargetPlaceholder:"Célösszeg €",
+    ttTitle:"🗓 Heti órarend", ttEventTitle:"Esemény neve", ttEventPlaceholder:"pl. Reggeli futás…",
+    ttDay:"Nap", ttAllDay:"Egész nap", ttStart:"Kezdés", ttEnd:"Vége", ttCategory:"Kategória",
+    ttAddEvent:"+ Esemény hozzáadása", ttEditBanner:"✎ Esemény szerkesztése —", ttCancelEdit:"✕ Mégsem",
+    ttClearAll:"Összes esemény törlése", ttGcalTitle:"Importálás Google Naptárból",
+    ttGcalSubtitle:"Az eseményeid lekérése erre a hétre…", ttGcalConnecting:"Kapcsolódás a Google Naptárhoz…",
+    ttGcalSelected:"0 kiválasztva", ttGcalSelectAll:"Összes kijelölése", ttGcalImport:"➕ Hozzáadás az órarendhez",
+    ttConfirmTitle:"Összes esemény törlése?",
+    ttConfirmDesc:"Ez véglegesen eltávolítja az összes eseményt az órarendből. Ez a művelet nem vonható vissza.",
+    ttConfirmCancel:"Mégsem", ttConfirmDelete:"Összes törlése",
+    ttDayMon:"Hétfő", ttDayTue:"Kedd", ttDayWed:"Szerda", ttDayThu:"Csütörtök",
+    ttDayFri:"Péntek", ttDaySat:"Szombat", ttDaySun:"Vasárnap",
+    ttCatWork:"Munka", ttCatStudy:"Tanulás", ttCatHealth:"Egészség", ttCatPersonal:"Személyes",
+    ttCatSocial:"Társasági", ttCatOther:"Egyéb",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
@@ -280,6 +370,30 @@ const TRANSLATIONS = {
     cyclePillPackTitle:"💊 Pillenpack", cyclePillPackSetup:"Lege das Zyklusstartdatum fest",
     cycleStatusTitle:"🌸 Zyklusstatus",
     cyclePillCalLegendActive:"Aktiv", cyclePillCalLegendPlacebo:"Placebo",
+    cycleIntimacyTitle:"💞 Intimität-Tagebuch — Heute",
+    cycleIntimacyHistoryTitle:"Diesen Monat",
+    cycleIntimacyTypes:["💋 Kuss","🛡 Geschützter Sex","🔥 Ungeschützter Sex","💜 Oral","✨ Sonstige Intimität"],
+    cycleIntimacyKeys:["kiss","protected","unprotected","oral","other"],
+    cyclePregnancyTitle:"🤰 Schwangerschaftsmöglichkeit",
+    cyclePregnancyNoData:"Lege dein Zyklusstartdatum fest, um Risikoschätzungen zu sehen.",
+    cyclePregnancyRiskNone:"Minimal",
+    cyclePregnancyRiskLow:"Niedrig",
+    cyclePregnancyRiskMedium:"Mittel",
+    cyclePregnancyRiskHigh:"Hoch",
+    cyclePregnancyRiskVeryHigh:"Sehr hoch",
+    cyclePregnancyFactorPhase:"Zyklusphase",
+    cyclePregnancyFactorContact:"Letzte Intimität",
+    cyclePregnancyFactorProtection:"Verhütung verwendet",
+    cyclePregnancyFactorPill:"Pille aktiv",
+    cyclePregnancyDisclaimer:"⚠️ Dies ist eine Schätzung basierend auf Zyklusphase und protokollierter Intimität. Kein medizinischer Rat. Konsultiere einen Arzt für eine genaue Einschätzung.",
+    cyclePregnancyHistoryTitle:"Jüngste Risiko-Ereignisse",
+    cyclePregnancyHistoryEmpty:"Kein ungeschützter Kontakt in diesem Zyklus protokolliert.",
+    cyclePregnancyPhaseLabels:{period:"Menstruation — sehr niedrig",follicular:"Follikelphase — niedrig",fertile:"Fruchtbares Fenster — erhöht",ovulation:"Eisprung — am höchsten",pms:"Lutealphase — sehr niedrig"},
+    cyclePregnancyProtYes:"Ja — reduziert",
+    cyclePregnancyProtNo:"Nein — volles Risiko",
+    cyclePregnancyPillYes:"Ja — sehr niedrig",
+    cyclePregnancyPillNo:"Nein",
+    cycleIntimacyDayLabel:"Tag",
     cycleHistoryDayPeriod:"Tage Periode", cycleHistoryPredicted:"vorhergesagt",
     tabGoals:"🎯 Ziele", tabTodo:"✅ To-Do",
     goalsDailyTitle:"Tagesziele", goalsDailySub:"Täglich zurückgesetzt",
@@ -302,6 +416,27 @@ const TRANSLATIONS = {
     finDescPlaceholder:"Beschreibung…", finSourcePlaceholder:"Quelle…",
     finAddEntry:"+ Hinzufügen", finBudgetBreakdown:"Budget Übersicht", finTotalSpent:"Gesamt ausgegeben",
     finSavingsGoals:"Sparziele",
+    finCatFood:"🍔 Essen", finCatHealth:"💊 Gesundheit", finCatTransport:"🚗 Transport",
+    finCatEntertainment:"🎬 Unterhaltung", finCatUtilities:"⚡ Nebenkosten", finCatHome:"🏠 Zuhause",
+    finCatDevelopment:"📚 Weiterbildung", finCatInvestment:"📈 Investition", finCatOther:"📦 Sonstiges",
+    finIncSalary:"💼 Gehalt", finIncFreelance:"💻 Freelance", finIncInvestment:"📈 Investition",
+    finIncGift:"🎁 Geschenk", finIncOther:"📦 Sonstiges",
+    finNewPage:"+ Neue Seite", finBudgetModalTitle:"🎯 Monatsbudget festlegen",
+    finBudgetLabel:"Budgetlimit (€)", finBudgetCancel:"Abbrechen", finBudgetSave:"💾 Budget speichern",
+    finSavNamePlaceholder:"Zielname…", finSavTargetPlaceholder:"Zielbetrag €",
+    ttTitle:"🗓 Wöchentlicher Stundenplan", ttEventTitle:"Titel des Ereignisses", ttEventPlaceholder:"z.B. Morgenrunde…",
+    ttDay:"Tag", ttAllDay:"Ganztägig", ttStart:"Beginn", ttEnd:"Ende", ttCategory:"Kategorie",
+    ttAddEvent:"+ Ereignis hinzufügen", ttEditBanner:"✎ Ereignis bearbeiten —", ttCancelEdit:"✕ Abbrechen",
+    ttClearAll:"Alle Ereignisse löschen", ttGcalTitle:"Aus Google Kalender importieren",
+    ttGcalSubtitle:"Deine Ereignisse für diese Woche werden abgerufen…", ttGcalConnecting:"Verbindung zum Google Kalender…",
+    ttGcalSelected:"0 ausgewählt", ttGcalSelectAll:"Alle auswählen", ttGcalImport:"➕ Zum Stundenplan hinzufügen",
+    ttConfirmTitle:"Alle Ereignisse löschen?",
+    ttConfirmDesc:"Hiermit werden alle Ereignisse dauerhaft aus dem Stundenplan entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+    ttConfirmCancel:"Abbrechen", ttConfirmDelete:"Alle löschen",
+    ttDayMon:"Montag", ttDayTue:"Dienstag", ttDayWed:"Mittwoch", ttDayThu:"Donnerstag",
+    ttDayFri:"Freitag", ttDaySat:"Samstag", ttDaySun:"Sonntag",
+    ttCatWork:"Arbeit", ttCatStudy:"Lernen", ttCatHealth:"Gesundheit", ttCatPersonal:"Persönlich",
+    ttCatSocial:"Soziales", ttCatOther:"Sonstiges",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
@@ -374,6 +509,30 @@ const TRANSLATIONS = {
     cyclePillPackTitle:"💊 Blíster", cyclePillPackSetup:"Configura la fecha de inicio del ciclo",
     cycleStatusTitle:"🌸 Estado del ciclo",
     cyclePillCalLegendActive:"Activa", cyclePillCalLegendPlacebo:"Placebo",
+    cycleIntimacyTitle:"💞 Registro de intimidad — Hoy",
+    cycleIntimacyHistoryTitle:"Este mes",
+    cycleIntimacyTypes:["💋 Beso","🛡 Sexo con protección","🔥 Sexo sin protección","💜 Oral","✨ Otra intimidad"],
+    cycleIntimacyKeys:["kiss","protected","unprotected","oral","other"],
+    cyclePregnancyTitle:"🤰 Posibilidad de embarazo",
+    cyclePregnancyNoData:"Establece la fecha de inicio de tu ciclo para ver las estimaciones de riesgo.",
+    cyclePregnancyRiskNone:"Mínimo",
+    cyclePregnancyRiskLow:"Bajo",
+    cyclePregnancyRiskMedium:"Medio",
+    cyclePregnancyRiskHigh:"Alto",
+    cyclePregnancyRiskVeryHigh:"Muy alto",
+    cyclePregnancyFactorPhase:"Fase del ciclo",
+    cyclePregnancyFactorContact:"Intimidad reciente",
+    cyclePregnancyFactorProtection:"Protección usada",
+    cyclePregnancyFactorPill:"Píldora activa",
+    cyclePregnancyDisclaimer:"⚠️ Esta es una estimación basada solo en la fase del ciclo y la intimidad registrada. No es consejo médico. Consulta a un profesional de la salud para una evaluación precisa.",
+    cyclePregnancyHistoryTitle:"Eventos de riesgo recientes",
+    cyclePregnancyHistoryEmpty:"No se ha registrado intimidad sin protección en este ciclo.",
+    cyclePregnancyPhaseLabels:{period:"Menstrual — muy bajo",follicular:"Folicular — bajo",fertile:"Ventana fértil — elevado",ovulation:"Ovulación — máximo",pms:"Lútea — muy bajo"},
+    cyclePregnancyProtYes:"Sí — reducido",
+    cyclePregnancyProtNo:"No — riesgo completo",
+    cyclePregnancyPillYes:"Sí — muy bajo",
+    cyclePregnancyPillNo:"No",
+    cycleIntimacyDayLabel:"Día",
     cycleHistoryDayPeriod:"días de regla", cycleHistoryPredicted:"predicho",
     tabGoals:"🎯 Metas", tabTodo:"✅ Tareas",
     goalsDailyTitle:"Metas diarias", goalsDailySub:"Se reinician cada día",
@@ -396,6 +555,27 @@ const TRANSLATIONS = {
     finDescPlaceholder:"Descripción…", finSourcePlaceholder:"Fuente…",
     finAddEntry:"+ Añadir", finBudgetBreakdown:"Desglose del presupuesto", finTotalSpent:"Total gastado",
     finSavingsGoals:"Metas de ahorro",
+    finCatFood:"🍔 Comida", finCatHealth:"💊 Salud", finCatTransport:"🚗 Transporte",
+    finCatEntertainment:"🎬 Entretenimiento", finCatUtilities:"⚡ Servicios", finCatHome:"🏠 Hogar",
+    finCatDevelopment:"📚 Formación", finCatInvestment:"📈 Inversión", finCatOther:"📦 Otros",
+    finIncSalary:"💼 Salario", finIncFreelance:"💻 Freelance", finIncInvestment:"📈 Inversión",
+    finIncGift:"🎁 Regalo", finIncOther:"📦 Otros",
+    finNewPage:"+ Nueva página", finBudgetModalTitle:"🎯 Establecer presupuesto mensual",
+    finBudgetLabel:"Límite del presupuesto (€)", finBudgetCancel:"Cancelar", finBudgetSave:"💾 Guardar presupuesto",
+    finSavNamePlaceholder:"Nombre del objetivo…", finSavTargetPlaceholder:"Objetivo €",
+    ttTitle:"🗓 Horario semanal", ttEventTitle:"Título del evento", ttEventPlaceholder:"ej. Carrera matutina…",
+    ttDay:"Día", ttAllDay:"Todo el día", ttStart:"Inicio", ttEnd:"Fin", ttCategory:"Categoría",
+    ttAddEvent:"+ Añadir evento", ttEditBanner:"✎ Editando evento —", ttCancelEdit:"✕ Cancelar",
+    ttClearAll:"Borrar todos los eventos", ttGcalTitle:"Importar desde Google Calendar",
+    ttGcalSubtitle:"Obteniendo tus eventos de esta semana…", ttGcalConnecting:"Conectando con Google Calendar…",
+    ttGcalSelected:"0 seleccionados", ttGcalSelectAll:"Seleccionar todo", ttGcalImport:"➕ Añadir al horario",
+    ttConfirmTitle:"¿Borrar todos los eventos?",
+    ttConfirmDesc:"Esto eliminará permanentemente todos los eventos del horario. Esta acción no se puede deshacer.",
+    ttConfirmCancel:"Cancelar", ttConfirmDelete:"Eliminar todo",
+    ttDayMon:"Lunes", ttDayTue:"Martes", ttDayWed:"Miércoles", ttDayThu:"Jueves",
+    ttDayFri:"Viernes", ttDaySat:"Sábado", ttDaySun:"Domingo",
+    ttCatWork:"Trabajo", ttCatStudy:"Estudio", ttCatHealth:"Salud", ttCatPersonal:"Personal",
+    ttCatSocial:"Social", ttCatOther:"Otro",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
@@ -468,6 +648,30 @@ const TRANSLATIONS = {
     cyclePillPackTitle:"💊 Plaquette", cyclePillPackSetup:"Configurez la date de début du cycle",
     cycleStatusTitle:"🌸 Statut du cycle",
     cyclePillCalLegendActive:"Active", cyclePillCalLegendPlacebo:"Placebo",
+    cycleIntimacyTitle:"💞 Journal d'intimité — Aujourd'hui",
+    cycleIntimacyHistoryTitle:"Ce mois-ci",
+    cycleIntimacyTypes:["💋 Bisou","🛡 Rapports protégés","🔥 Rapports non protégés","💜 Oral","✨ Autre intimité"],
+    cycleIntimacyKeys:["kiss","protected","unprotected","oral","other"],
+    cyclePregnancyTitle:"🤰 Probabilité de grossesse",
+    cyclePregnancyNoData:"Définissez la date de début de votre cycle pour voir les estimations de risque.",
+    cyclePregnancyRiskNone:"Minimal",
+    cyclePregnancyRiskLow:"Faible",
+    cyclePregnancyRiskMedium:"Moyen",
+    cyclePregnancyRiskHigh:"Élevé",
+    cyclePregnancyRiskVeryHigh:"Très élevé",
+    cyclePregnancyFactorPhase:"Phase du cycle",
+    cyclePregnancyFactorContact:"Intimité récente",
+    cyclePregnancyFactorProtection:"Protection utilisée",
+    cyclePregnancyFactorPill:"Pilule active",
+    cyclePregnancyDisclaimer:"⚠️ Ceci est une estimation basée uniquement sur la phase du cycle et l'intimité enregistrée. Ce n'est pas un avis médical. Consultez un professionnel de santé pour une évaluation précise.",
+    cyclePregnancyHistoryTitle:"Événements à risque récents",
+    cyclePregnancyHistoryEmpty:"Aucune intimité non protégée enregistrée dans ce cycle.",
+    cyclePregnancyPhaseLabels:{period:"Menstruelle — très faible",follicular:"Folliculaire — faible",fertile:"Fenêtre fertile — élevé",ovulation:"Ovulation — maximum",pms:"Lutéale — très faible"},
+    cyclePregnancyProtYes:"Oui — réduit",
+    cyclePregnancyProtNo:"Non — risque complet",
+    cyclePregnancyPillYes:"Oui — très faible",
+    cyclePregnancyPillNo:"Non",
+    cycleIntimacyDayLabel:"Jour",
     cycleHistoryDayPeriod:"jours de règles", cycleHistoryPredicted:"prédit",
     tabGoals:"🎯 Objectifs", tabTodo:"✅ À faire",
     goalsDailyTitle:"Objectifs quotidiens", goalsDailySub:"Remis à zéro chaque jour",
@@ -490,6 +694,27 @@ const TRANSLATIONS = {
     finDescPlaceholder:"Description…", finSourcePlaceholder:"Source…",
     finAddEntry:"+ Ajouter", finBudgetBreakdown:"Détail du budget", finTotalSpent:"Total dépensé",
     finSavingsGoals:"Objectifs d'épargne",
+    finCatFood:"🍔 Nourriture", finCatHealth:"💊 Santé", finCatTransport:"🚗 Transport",
+    finCatEntertainment:"🎬 Loisirs", finCatUtilities:"⚡ Charges", finCatHome:"🏠 Maison",
+    finCatDevelopment:"📚 Formation", finCatInvestment:"📈 Investissement", finCatOther:"📦 Autre",
+    finIncSalary:"💼 Salaire", finIncFreelance:"💻 Freelance", finIncInvestment:"📈 Investissement",
+    finIncGift:"🎁 Cadeau", finIncOther:"📦 Autre",
+    finNewPage:"+ Nouvelle page", finBudgetModalTitle:"🎯 Définir le budget mensuel",
+    finBudgetLabel:"Limite du budget (€)", finBudgetCancel:"Annuler", finBudgetSave:"💾 Enregistrer le budget",
+    finSavNamePlaceholder:"Nom de l'objectif…", finSavTargetPlaceholder:"Objectif €",
+    ttTitle:"🗓 Emploi du temps hebdomadaire", ttEventTitle:"Titre de l'événement", ttEventPlaceholder:"ex. Course du matin…",
+    ttDay:"Jour", ttAllDay:"Toute la journée", ttStart:"Début", ttEnd:"Fin", ttCategory:"Catégorie",
+    ttAddEvent:"+ Ajouter un événement", ttEditBanner:"✎ Modification de l'événement —", ttCancelEdit:"✕ Annuler",
+    ttClearAll:"Supprimer tous les événements", ttGcalTitle:"Importer depuis Google Agenda",
+    ttGcalSubtitle:"Récupération de vos événements pour cette semaine…", ttGcalConnecting:"Connexion à Google Agenda…",
+    ttGcalSelected:"0 sélectionné", ttGcalSelectAll:"Tout sélectionner", ttGcalImport:"➕ Ajouter à l'emploi du temps",
+    ttConfirmTitle:"Supprimer tous les événements ?",
+    ttConfirmDesc:"Cela supprimera définitivement tous les événements de votre emploi du temps. Cette action est irréversible.",
+    ttConfirmCancel:"Annuler", ttConfirmDelete:"Tout supprimer",
+    ttDayMon:"Lundi", ttDayTue:"Mardi", ttDayWed:"Mercredi", ttDayThu:"Jeudi",
+    ttDayFri:"Vendredi", ttDaySat:"Samedi", ttDaySun:"Dimanche",
+    ttCatWork:"Travail", ttCatStudy:"Études", ttCatHealth:"Santé", ttCatPersonal:"Personnel",
+    ttCatSocial:"Social", ttCatOther:"Autre",
   }
 };
 
@@ -659,6 +884,30 @@ function applyTranslations(){
   if(shopCatSel){
     const catKeys=['shopGrocery','shopHousehold','shopPersonal','shopOther'];
     shopCatSel.querySelectorAll('option').forEach((opt,i)=>{if(tr[catKeys[i]])opt.text=tr[catKeys[i]];});
+  }
+  // Timetable day select options
+  const ttDaySel=document.getElementById('tt-day-select');
+  if(ttDaySel){
+    const dayKeys=['ttDayMon','ttDayTue','ttDayWed','ttDayThu','ttDayFri','ttDaySat','ttDaySun'];
+    ttDaySel.querySelectorAll('option').forEach((opt,i)=>{if(tr[dayKeys[i]])opt.text=tr[dayKeys[i]];});
+  }
+  // Timetable category select options
+  const ttCatSel=document.getElementById('tt-cat-select');
+  if(ttCatSel){
+    const ttCatKeys=['ttCatWork','ttCatStudy','ttCatHealth','ttCatPersonal','ttCatSocial','ttCatOther'];
+    ttCatSel.querySelectorAll('option').forEach((opt,i)=>{if(tr[ttCatKeys[i]])opt.text=tr[ttCatKeys[i]];});
+  }
+  // Finance expense category select options
+  const finExpCat=document.getElementById('fin-exp-cat');
+  if(finExpCat){
+    const expCatKeys=['finCatFood','finCatHealth','finCatTransport','finCatEntertainment','finCatUtilities','finCatHome','finCatDevelopment','finCatInvestment','finCatOther'];
+    finExpCat.querySelectorAll('option').forEach((opt,i)=>{if(tr[expCatKeys[i]])opt.text=tr[expCatKeys[i]];});
+  }
+  // Finance income category select options
+  const finIncCat=document.getElementById('fin-inc-cat');
+  if(finIncCat){
+    const incCatKeys=['finIncSalary','finIncFreelance','finIncInvestment','finIncGift','finIncOther'];
+    finIncCat.querySelectorAll('option').forEach((opt,i)=>{if(tr[incCatKeys[i]])opt.text=tr[incCatKeys[i]];});
   }
   // Re-render shopping/cycle if currently shown
   if(CURRENT_PAGE==='shopping')renderShoppingList();
@@ -1561,9 +1810,12 @@ function renderCycleTracker(){
   const dayData = (state.cycleData.days||{})[tk]||{};
   todaySymptoms = dayData.symptoms||[];
   todayMood = dayData.mood||"";
+  todayIntimacy = [...(dayData.intimacy||[])];
   document.getElementById("cycle-notes-input").value = dayData.notes||"";
   updateSymptomButtons();
   updateMoodButtons();
+  renderIntimacyTracker();
+  renderPregnancyTracker();
 }
 
 function renderPillPack(){
@@ -1703,6 +1955,10 @@ function renderCycleCalendar(){
     const cell=document.createElement("div");
     const dk=dateKey(date);
     cell.className="cycle-cal-day"+(tag?" "+tag:"")+(date.getTime()===todayD.getTime()?" today-cycle":"");
+    // Intimacy dot indicator
+    const dayEntry=(state.cycleData.days||{})[dk]||{};
+    const intArr=dk===todayKey()?todayIntimacy:(dayEntry.intimacy||[]);
+    if(intArr.length) cell.classList.add("has-intimacy");
     cell.textContent=d;
     cell.dataset.date=dk;
     cal.appendChild(cell);
@@ -1811,6 +2067,306 @@ function renderCycleMood(){
 }
 function updateMoodButtons(){document.querySelectorAll(".cycle-mood-btn").forEach(b=>b.classList.toggle("active",todayMood===b.dataset.mood));}
 
+// ── INTIMACY COLOURS (key → css colour) ─────────────────────────
+const INTIMACY_COLORS={kiss:"#f5a623",protected:"#3ecfb2",unprotected:"#ff5a7a",oral:"#b478f0",other:"#4f6ef7"};
+const INTIMACY_CLASS={kiss:"ib-kiss",protected:"ib-prot",unprotected:"ib-unprot",oral:"ib-oral",other:"ib-other"};
+let todayIntimacy = []; // array of keys active today
+
+function renderIntimacyTracker(){
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  const grid=document.getElementById("intimacy-grid");
+  if(!grid)return;
+  grid.innerHTML="";
+
+  const types  = tr.cycleIntimacyTypes  || ["💋 Kiss","🛡 Protected Sex","🔥 Unprotected Sex","💜 Oral","✨ Other Intimacy"];
+  const keys   = tr.cycleIntimacyKeys   || ["kiss","protected","unprotected","oral","other"];
+
+  // Button row
+  const row=document.createElement("div");
+  row.className="intimacy-toggle-row";
+  types.forEach((label,i)=>{
+    const k=keys[i];
+    const btn=document.createElement("button");
+    btn.className="intimacy-btn "+(INTIMACY_CLASS[k]||"")+(todayIntimacy.includes(k)?" active":"");
+    btn.textContent=label; btn.dataset.ikey=k;
+    btn.addEventListener("click",()=>{
+      if(todayIntimacy.includes(k)) todayIntimacy=todayIntimacy.filter(x=>x!==k);
+      else todayIntimacy.push(k);
+      renderIntimacyTracker();
+      renderPregnancyTracker();
+    });
+    row.appendChild(btn);
+  });
+  grid.appendChild(row);
+
+  // Mini calendar for the month
+  renderIntimacyCalendar();
+}
+
+function renderIntimacyCalendar(){
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  const strip=document.getElementById("intimacy-history-strip");
+  if(!strip)return;
+  strip.innerHTML="";
+
+  const title=document.createElement("div");
+  title.className="intimacy-history-title";
+  title.textContent=tr.cycleIntimacyHistoryTitle||"This month";
+  strip.appendChild(title);
+
+  const keys  = tr.cycleIntimacyKeys||["kiss","protected","unprotected","oral","other"];
+  const days  = tr.days||["Mo","Tu","We","Th","Fr","Sa","Su"];
+  const calWrap=document.createElement("div"); calWrap.className="intimacy-calendar-row";
+
+  // Day headers
+  days.forEach(d=>{
+    const h=document.createElement("div"); h.className="intimacy-cal-header"; h.textContent=d; calWrap.appendChild(h);
+  });
+
+  const now=new Date(); now.setHours(0,0,0,0);
+  const y=cycleCalYear, m=cycleCalMonth;
+  const first=new Date(y,m,1);
+  let dow=(first.getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev =new Date(y,m,0).getDate();
+
+  // Leading blanks
+  for(let i=dow-1;i>=0;i--){
+    const c=document.createElement("div"); c.className="intimacy-cal-cell other-month-int"; c.textContent=daysInPrev-i; calWrap.appendChild(c);
+  }
+
+  const intimacyDays=state.cycleData.days||{};
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(y,m,d); date.setHours(0,0,0,0);
+    const dk=dateKey(date);
+    const isToday=date.getTime()===now.getTime();
+    const dayEntry=(intimacyDays[dk])||{};
+    // Use todayIntimacy buffer for today's unsaved state
+    const intimacyArr=isToday ? todayIntimacy : (dayEntry.intimacy||[]);
+    const hasData=intimacyArr.length>0;
+
+    const cell=document.createElement("div");
+    cell.className="intimacy-cal-cell"+(isToday?" today-int":"")+(hasData?" has-data":"");
+    cell.title=dk;
+    cell.textContent=d;
+
+    if(hasData){
+      cell.textContent="";
+      // Show number of day small, then emoji row
+      const dayNum=document.createElement("div"); dayNum.className="int-cell-day"; dayNum.textContent=d; cell.appendChild(dayNum);
+      const emojiRow=document.createElement("div"); emojiRow.className="int-emoji-row";
+      intimacyArr.forEach(k=>{
+        const idx=keys.indexOf(k);
+        const fullLabel=(tr.cycleIntimacyTypes||["💋","🛡","🔥","💜","✨"])[idx]||k;
+        // Extract just the emoji (first grapheme cluster)
+        const emoji=[...fullLabel][0]||"💞";
+        const span=document.createElement("span"); span.className="int-emoji"; span.textContent=emoji;
+        span.title=fullLabel; emojiRow.appendChild(span);
+      });
+      cell.appendChild(emojiRow);
+    }
+    calWrap.appendChild(cell);
+  }
+  strip.appendChild(calWrap);
+
+  // Legend
+  const legend=document.createElement("div"); legend.className="intimacy-legend";
+  const types=tr.cycleIntimacyTypes||["💋 Kiss","🛡 Protected","🔥 Unprotected","💜 Oral","✨ Other"];
+  keys.forEach((k,i)=>{
+    const li=document.createElement("div"); li.className="int-legend-item";
+    li.innerHTML=`<div class="int-legend-dot" style="background:${INTIMACY_COLORS[k]||'#888'}"></div>${types[i]||k}`;
+    legend.appendChild(li);
+  });
+  strip.appendChild(legend);
+}
+
+// ── PREGNANCY POSSIBILITY TRACKER ──────────────────────────────
+function calcPregnancyRisk(){
+  // Returns { score:0-1, level:'none'|'low'|'medium'|'high'|'very_high', factors:[] }
+  const anchor=getAnchor();
+  if(!anchor) return null;
+
+  const cycleLen=state.cycleData.cycleLen||28;
+  const isPill=cycleMode==="pill";
+  const today=new Date(); today.setHours(0,0,0,0);
+  const tag=getNaturalDayTag(today,anchor,cycleLen);
+  const tk=todayKey();
+
+  // Base phase risk score
+  const phaseScore={period:0.02,fertile:0.30,ovulation:0.45,null:0.05,"pms-zone":0.03}[tag]??0.05;
+
+  // Recent intimacy (last 5 days including today)
+  let hasUnprotected=false, hasProtected=false, hasKiss=false, hasOral=false;
+  for(let i=0;i<5;i++){
+    const d=addDays(today,-i); const dk=dateKey(d);
+    const arr=dk===tk ? todayIntimacy : ((state.cycleData.days[dk]||{}).intimacy||[]);
+    if(arr.includes("unprotected")) hasUnprotected=true;
+    if(arr.includes("protected"))   hasProtected=true;
+    if(arr.includes("kiss"))        hasKiss=true;
+    if(arr.includes("oral"))        hasOral=true;
+  }
+
+  // Pill factor
+  let pillActive=false;
+  if(isPill){
+    const base=new Date(anchor.start); base.setHours(0,0,0,0);
+    const daysSince=Math.floor((today-base)/86400000);
+    const packDay=(daysSince%28)+1;
+    pillActive=packDay<=21;
+  }
+
+  // Score computation
+  let score=phaseScore;
+  if(hasUnprotected) score*=1.0;    // full
+  else if(hasProtected) score*=0.15; // ~15% of base
+  else if(hasOral||hasKiss) score*=0.01; // negligible
+  else score=0;                           // no contact
+
+  if(pillActive) score*=0.01; // 99% effective
+
+  // Clamp
+  score=Math.min(1,Math.max(0,score));
+  const level=score<0.005?"none":score<0.05?"low":score<0.15?"medium":score<0.35?"high":"very_high";
+
+  return{
+    score, level, tag,
+    hasUnprotected, hasProtected, hasKiss, hasOral,
+    pillActive, phaseScore
+  };
+}
+
+function renderPregnancyTracker(){
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  const el=document.getElementById("pregnancy-inner");
+  if(!el)return;
+
+  const anchor=getAnchor();
+  if(!anchor){el.innerHTML=`<div class="preg-no-data">${tr.cyclePregnancyNoData||"Set your cycle start date to see pregnancy risk estimates."}</div>`;return;}
+
+  const risk=calcPregnancyRisk();
+  if(!risk){el.innerHTML="";return;}
+
+  const levelMap={none:0,low:1,medium:2,high:3,very_high:4};
+  const n=levelMap[risk.level]||0;
+  const levelLabels=[
+    tr.cyclePregnancyRiskNone||"Minimal",
+    tr.cyclePregnancyRiskLow||"Low",
+    tr.cyclePregnancyRiskMedium||"Medium",
+    tr.cyclePregnancyRiskHigh||"High",
+    tr.cyclePregnancyRiskVeryHigh||"Very High"
+  ];
+  const levelColors=["#3ecfb2","#3ecfb2","#f5a623","#ff7a40","#ff2050"];
+  const color=levelColors[n];
+  const label=levelLabels[n];
+
+  // Gauge arc (semicircle)
+  const pct=Math.min(1,risk.score*2.5+n*0.18); // visual boost for clarity
+  const r=46, cx=60, cy=60;
+  const arcLen=Math.PI*r; // half circumference
+  const filled=pct*arcLen;
+  const dash=`${filled} ${arcLen-filled+0.1}`;
+
+  // Phase label
+  const phaseLabels=tr.cyclePregnancyPhaseLabels||{};
+  const phaseKey={period:"period",fertile:"fertile",ovulation:"ovulation","pms-zone":"pms",null:"follicular"}[risk.tag]??"follicular";
+  const phaseText=phaseLabels[phaseKey]||phaseKey;
+
+  // Protection factor text
+  const protText=risk.pillActive
+    ? (tr.cyclePregnancyPillYes||"Yes — very low")
+    : risk.hasUnprotected ? (tr.cyclePregnancyProtNo||"No — full risk")
+    : risk.hasProtected   ? (tr.cyclePregnancyProtYes||"Yes — reduced")
+    : "—";
+  const protBadge=risk.pillActive||risk.hasProtected ? "preg-badge-low" : risk.hasUnprotected ? "preg-badge-high" : "preg-badge-low";
+
+  const phaseBadge=phaseKey==="ovulation"?"preg-badge-very-high":phaseKey==="fertile"?"preg-badge-high":phaseKey==="follicular"||phaseKey==="period"||phaseKey==="pms"?"preg-badge-low":"preg-badge-med";
+  const overallBadge=["preg-badge-low","preg-badge-low","preg-badge-med","preg-badge-high","preg-badge-very-high"][n];
+
+  const pctDisplay=Math.round(risk.score*100);
+
+  el.innerHTML=`
+    <div class="preg-risk-gauge">
+      <div class="preg-gauge-arc">
+        <svg viewBox="0 0 120 66" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 14 60 A 46 46 0 0 1 106 60" fill="none" stroke="var(--border)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M 14 60 A 46 46 0 0 1 106 60" fill="none" stroke="${color}" stroke-width="11" stroke-linecap="round"
+            stroke-dasharray="${dash}" style="transition:stroke-dasharray .7s cubic-bezier(.4,0,.2,1);"/>
+        </svg>
+      </div>
+      <div class="preg-risk-label preg-risk-hoverable" style="color:${color};" data-pct="${pctDisplay}%">
+        <span class="preg-label-text">${label}</span>
+        <span class="preg-label-pct">${pctDisplay}%</span>
+      </div>
+      <div class="preg-risk-sub">${phaseText}</div>
+    </div>
+    <div class="preg-factors">
+      <div class="preg-factor-row">
+        <div class="preg-factor-icon">🌸</div>
+        <div class="preg-factor-text">${tr.cyclePregnancyFactorPhase||"Cycle Phase"}</div>
+        <div class="preg-factor-badge ${phaseBadge}">${phaseText.split("—")[0].trim()}</div>
+      </div>
+      <div class="preg-factor-row">
+        <div class="preg-factor-icon">💞</div>
+        <div class="preg-factor-text">${tr.cyclePregnancyFactorContact||"Recent Intimacy"}</div>
+        <div class="preg-factor-badge ${risk.hasUnprotected||risk.hasProtected||risk.hasKiss||risk.hasOral?"preg-badge-med":"preg-badge-low"}">${risk.hasUnprotected?"🔥 Yes":risk.hasProtected?"🛡 Yes":risk.hasKiss||risk.hasOral?"💜 Yes":"—"}</div>
+      </div>
+      <div class="preg-factor-row">
+        <div class="preg-factor-icon">🛡</div>
+        <div class="preg-factor-text">${tr.cyclePregnancyFactorProtection||"Protection Used"}</div>
+        <div class="preg-factor-badge ${protBadge}">${protText}</div>
+      </div>
+      ${cycleMode==="pill"?`
+      <div class="preg-factor-row">
+        <div class="preg-factor-icon">💊</div>
+        <div class="preg-factor-text">${tr.cyclePregnancyFactorPill||"Pill Active"}</div>
+        <div class="preg-factor-badge ${risk.pillActive?"preg-badge-low":"preg-badge-med"}">${risk.pillActive?(tr.cyclePregnancyPillYes||"Yes — very low"):(tr.cyclePregnancyPillNo||"No")}</div>
+      </div>`:""}
+    </div>
+    ${renderPregnancyHistory(tr)}
+    <div class="preg-disclaimer">${tr.cyclePregnancyDisclaimer||""}</div>`;
+}
+
+function renderPregnancyHistory(tr){
+  const anchor=getAnchor();
+  if(!anchor) return "";
+  const cycleLen=state.cycleData.cycleLen||28;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const base=new Date(anchor.start); base.setHours(0,0,0,0);
+  const days=state.cycleData.days||{};
+  const types=tr.cycleIntimacyTypes||["💋 Kiss","🛡 Protected","🔥 Unprotected","💜 Oral","✨ Other"];
+  const keys=tr.cycleIntimacyKeys||["kiss","protected","unprotected","oral","other"];
+
+  // Collect unprotected events in current cycle
+  const startOfCycle=new Date(base);
+  const daysSince=Math.floor((today-base)/86400000);
+  const cycleStart=addDays(base,Math.floor(daysSince/cycleLen)*cycleLen);
+
+  const events=[];
+  for(let i=0;i<cycleLen;i++){
+    const d=addDays(cycleStart,i);
+    if(d>today) break;
+    const dk=dateKey(d);
+    const arr=dk===todayKey()?todayIntimacy:((days[dk]||{}).intimacy||[]);
+    if(arr.length){
+      const tag=getNaturalDayTag(d,anchor,cycleLen);
+      const riskLabels={period:tr.cyclePregnancyRiskNone||"Minimal",null:tr.cyclePregnancyRiskLow||"Low",fertile:tr.cyclePregnancyRiskHigh||"High",ovulation:tr.cyclePregnancyRiskVeryHigh||"Very High","pms-zone":tr.cyclePregnancyRiskNone||"Minimal"};
+      const riskColors={period:"#3ecfb2",null:"#3ecfb2",fertile:"#ff7a40",ovulation:"#ff2050","pms-zone":"#3ecfb2"};
+      events.push({dk,arr,tag,riskLabel:riskLabels[tag]??tr.cyclePregnancyRiskLow,riskColor:riskColors[tag]??"#3ecfb2"});
+    }
+  }
+  if(!events.length) return `<div class="preg-history-section"><div class="preg-history-title">${tr.cyclePregnancyHistoryTitle||"Recent events"}</div><div style="font-size:11px;color:var(--text-muted);">${tr.cyclePregnancyHistoryEmpty||"None logged."}</div></div>`;
+
+  const rows=events.slice(-8).reverse().map(e=>{
+    const typeLabels=e.arr.map(k=>{const idx=keys.indexOf(k);return idx>=0?types[idx]:k;}).join(", ");
+    return `<div class="preg-hist-row">
+      <div class="preg-hist-date">${e.dk}</div>
+      <div class="preg-hist-type">${typeLabels}</div>
+      <div class="preg-hist-risk" style="color:${e.riskColor}">${e.riskLabel}</div>
+    </div>`;
+  }).join("");
+  return `<div class="preg-history-section"><div class="preg-history-title">${tr.cyclePregnancyHistoryTitle||"Recent events"}</div><div class="preg-history-table">${rows}</div></div>`;
+}
+
 function renderCycleHistory(){
   const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
   const list=document.getElementById("cycle-history-list");list.innerHTML="";
@@ -1917,8 +2473,15 @@ document.getElementById("cycle-history-list").addEventListener("click",e=>{
 document.getElementById("save-cycle-day-btn").addEventListener("click",()=>{
   const tk=todayKey();
   if(!state.cycleData.days)state.cycleData.days={};
-  state.cycleData.days[tk]={symptoms:[...todaySymptoms],mood:todayMood,notes:document.getElementById("cycle-notes-input").value};
+  state.cycleData.days[tk]={
+    symptoms:[...todaySymptoms],
+    mood:todayMood,
+    notes:document.getElementById("cycle-notes-input").value,
+    intimacy:[...todayIntimacy]
+  };
   saveCycle();
+  renderIntimacyCalendar();
+  renderPregnancyTracker();
   const ind=document.getElementById("save-indicator");ind.classList.add("show");setTimeout(()=>ind.classList.remove("show"),1700);
 });
 

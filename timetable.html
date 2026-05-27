@@ -42,7 +42,7 @@
 <div id="timetable-section" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
   <div class="tt-section-header">
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <div class="tt-title">🗓 Weekly Timetable</div>
+      <div class="tt-title" data-i18n="ttTitle">🗓 Weekly Timetable</div>
       <div class="tt-week-nav">
         <button class="tt-week-btn" id="tt-week-prev-btn" title="Previous week">‹</button>
         <span class="tt-week-label" id="tt-week-label">Week 1</span>
@@ -70,51 +70,51 @@
           <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        Clear All Events
+        <span data-i18n="ttClearAll">Clear All Events</span>
       </button>
     </div>
   </div>
   <div id="tt-grid-wrap"><div class="tt-grid" id="tt-grid"></div></div>
   <div class="tt-add-form" id="tt-add-form">
-    <div class="form-edit-banner" id="tt-edit-banner">✎ Editing event — <button class="form-edit-cancel-btn" id="tt-cancel-edit">✕ Cancel</button></div>
+    <div class="form-edit-banner" id="tt-edit-banner"><span data-i18n="ttEditBanner">✎ Editing event —</span> <button class="form-edit-cancel-btn" id="tt-cancel-edit" data-i18n="ttCancelEdit">✕ Cancel</button></div>
     <div class="form-field" style="flex:1;min-width:150px;">
-      <label class="form-label">Event Title</label>
-      <input class="form-input" id="tt-title-input" placeholder="e.g. Morning run…" style="width:100%;"/>
+      <label class="form-label" data-i18n="ttEventTitle">Event Title</label>
+      <input class="form-input" id="tt-title-input" placeholder="e.g. Morning run…" data-i18n-placeholder="ttEventPlaceholder" style="width:100%;"/>
     </div>
     <div class="form-field">
-      <label class="form-label">Day</label>
+      <label class="form-label" data-i18n="ttDay">Day</label>
       <select class="form-select" id="tt-day-select">
-        <option value="0">Monday</option><option value="1">Tuesday</option>
-        <option value="2">Wednesday</option><option value="3">Thursday</option>
-        <option value="4">Friday</option><option value="5">Saturday</option>
-        <option value="6">Sunday</option>
+        <option value="0" data-i18n="ttDayMon">Monday</option><option value="1" data-i18n="ttDayTue">Tuesday</option>
+        <option value="2" data-i18n="ttDayWed">Wednesday</option><option value="3" data-i18n="ttDayThu">Thursday</option>
+        <option value="4" data-i18n="ttDayFri">Friday</option><option value="5" data-i18n="ttDaySat">Saturday</option>
+        <option value="6" data-i18n="ttDaySun">Sunday</option>
       </select>
     </div>
     <div class="form-field" style="justify-content:flex-end;">
-      <label class="form-label">All Day</label>
+      <label class="form-label" data-i18n="ttAllDay">All Day</label>
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;height:36px;">
         <input type="checkbox" id="tt-allday-check" style="width:16px;height:16px;accent-color:#4f6ef7;cursor:pointer;" onchange="document.getElementById('tt-time-fields').style.display=this.checked?'none':'contents'"/>
       </label>
     </div>
     <div id="tt-time-fields" style="display:contents;">
       <div class="form-field">
-        <label class="form-label">Start</label>
+        <label class="form-label" data-i18n="ttStart">Start</label>
         <input class="form-input" type="time" id="tt-start-input" value="09:00" style="width:100px;"/>
       </div>
       <div class="form-field">
-        <label class="form-label">End</label>
+        <label class="form-label" data-i18n="ttEnd">End</label>
         <input class="form-input" type="time" id="tt-end-input" value="10:00" style="width:100px;"/>
       </div>
     </div>
     <div class="form-field">
-      <label class="form-label">Category</label>
+      <label class="form-label" data-i18n="ttCategory">Category</label>
       <select class="form-select" id="tt-cat-select">
-        <option value="work">Work</option><option value="study">Study</option>
-        <option value="health">Health</option><option value="personal">Personal</option>
-        <option value="social">Social</option><option value="other">Other</option>
+        <option value="work" data-i18n="ttCatWork">Work</option><option value="study" data-i18n="ttCatStudy">Study</option>
+        <option value="health" data-i18n="ttCatHealth">Health</option><option value="personal" data-i18n="ttCatPersonal">Personal</option>
+        <option value="social" data-i18n="ttCatSocial">Social</option><option value="other" data-i18n="ttCatOther">Other</option>
       </select>
     </div>
-    <button class="goal-add-btn" id="tt-add-btn" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Event</button>
+    <button class="goal-add-btn" id="tt-add-btn" data-i18n="ttAddEvent" style="align-self:flex-end;padding:9px 18px;font-size:12px;">+ Add Event</button>
   </div>
 </div>
 </div><!-- #app -->
@@ -125,18 +125,18 @@
   <div class="gcal-modal-header">
     <div class="gcal-modal-icon">📅</div>
     <div class="gcal-modal-title-wrap">
-      <div class="gcal-modal-title">Import from Google Calendar</div>
-      <div class="gcal-modal-subtitle" id="gcal-modal-subtitle">Fetching your events for this week…</div>
+      <div class="gcal-modal-title" data-i18n="ttGcalTitle">Import from Google Calendar</div>
+      <div class="gcal-modal-subtitle" id="gcal-modal-subtitle" data-i18n="ttGcalSubtitle">Fetching your events for this week…</div>
     </div>
     <button class="gcal-modal-close" id="gcal-modal-close">✕</button>
   </div>
   <div class="gcal-modal-body" id="gcal-modal-body">
-    <div class="gcal-loading"><div class="gcal-spinner"></div><div class="gcal-status-text">Connecting to Google Calendar…</div></div>
+    <div class="gcal-loading"><div class="gcal-spinner"></div><div class="gcal-status-text" data-i18n="ttGcalConnecting">Connecting to Google Calendar…</div></div>
   </div>
   <div class="gcal-modal-footer" id="gcal-modal-footer" style="display:none;">
-    <div class="gcal-count-label" id="gcal-count-label">0 selected</div>
-    <button class="gcal-select-all-btn" id="gcal-select-all-btn">Select All</button>
-    <button class="gcal-import-selected-btn" id="gcal-import-selected-btn" disabled>➕ Add to Timetable</button>
+    <div class="gcal-count-label" id="gcal-count-label" data-i18n="ttGcalSelected">0 selected</div>
+    <button class="gcal-select-all-btn" id="gcal-select-all-btn" data-i18n="ttGcalSelectAll">Select All</button>
+    <button class="gcal-import-selected-btn" id="gcal-import-selected-btn" data-i18n="ttGcalImport" disabled>➕ Add to Timetable</button>
   </div>
 </div>
 
@@ -144,11 +144,11 @@
 <div id="tt-confirm-backdrop"></div>
 <div id="tt-confirm-modal">
   <div class="tt-confirm-icon">🗑️</div>
-  <div class="tt-confirm-title">Clear All Events?</div>
-  <div class="tt-confirm-desc">This will permanently remove all events from your timetable. This action cannot be undone.</div>
+  <div class="tt-confirm-title" data-i18n="ttConfirmTitle">Clear All Events?</div>
+  <div class="tt-confirm-desc" data-i18n="ttConfirmDesc">This will permanently remove all events from your timetable. This action cannot be undone.</div>
   <div class="tt-confirm-btns">
-    <button class="tt-confirm-cancel" id="tt-confirm-cancel">Cancel</button>
-    <button class="tt-confirm-delete" id="tt-confirm-delete">Delete All</button>
+    <button class="tt-confirm-cancel" id="tt-confirm-cancel" data-i18n="ttConfirmCancel">Cancel</button>
+    <button class="tt-confirm-delete" id="tt-confirm-delete" data-i18n="ttConfirmDelete">Delete All</button>
   </div>
 </div>
 

@@ -7,6 +7,8 @@ Calendar and timetable with import feature from Google Calendar;
 
 Event tracker with daily, weekly, monthly and yearly scopes;
 
+Finance tracker with income and expenses;
+
 Shopping list;
 
 Pomodoro timer for studying;

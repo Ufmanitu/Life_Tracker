@@ -1,6 +1,37 @@
 // ─── MULTI-PAGE SETUP ────────────────────────────────────────────────────────
 const CURRENT_PAGE = document.body.dataset.page || 'tracker';
 
+// ─── USER PREFERENCES ────────────────────────────────────────────────────────
+const PREFS_KEY = 'ht_user_prefs_v1';
+let userPrefs = { gender: null, setupDone: false };
+
+function loadUserPrefs() {
+  try {
+    const p = JSON.parse(localStorage.getItem(PREFS_KEY) || 'null');
+    if (p) userPrefs = { ...userPrefs, ...p };
+  } catch(e) {}
+}
+
+function saveUserPrefs() {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(userPrefs)); } catch(e) {}
+}
+
+function isCycleUser() {
+  // Show cycle tab if gender is female, or not yet set (default show)
+  return !userPrefs.gender || userPrefs.gender === 'female';
+}
+
+function applyCycleTabVisibility() {
+  const show = isCycleUser();
+  document.querySelectorAll('[data-tab="cycle"]').forEach(btn => {
+    btn.style.display = show ? '' : 'none';
+  });
+  // If currently on cycle page but cycle is hidden, redirect to tracker
+  if (!show && CURRENT_PAGE === 'cycle') {
+    window.location.href = 'tracker.html';
+  }
+}
+
 // ─── SAFE EVENT HELPER ───────────────────────────────────────────────────────
 function on(id, ev, fn) {
   const el = typeof id === 'string' ? document.getElementById(id) : id;
@@ -26,7 +57,11 @@ const TRANSLATIONS = {
     monthShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
     days:["Mo","Tu","We","Th","Fr","Sa","Su"],
     subtitle:"— Life Tracker —",
-    tabTracker:"📊 Tracker", tabDays:"Days", tabTasks:"✅ Tasks", tabAnalysis:"📈 Analysis",
+    tabTracker:"📊 Habit Tracker", tabDays:"Days", tabTasks:"✅ Tasks", tabAnalysis:"📈 Analysis",
+    habitsSubtabHabits:"💪 Habit Tracker", habitsSubtabAnalysis:"📈 Analysis",
+    scopeDaily:"☀️ Daily", scopeWeekly:"📅 Weekly", scopeMonthly:"🗓 Monthly", scopeYearly:"📆 Yearly",
+    pomoSessionsLabel:"Sessions", pomoFocusLabel:"Focus Time", pomoBreaksLabel:"Breaks",
+    pomoHint:"Press Space to start · Esc to close",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habits", statCompleted:"Completed", statProgress:"Progress", statTasksDone:"Tasks Done",
     myHabits:"My Habits",
@@ -159,13 +194,40 @@ const TRANSLATIONS = {
     ttDayFri:"Friday", ttDaySat:"Saturday", ttDaySun:"Sunday",
     ttCatWork:"Work", ttCatStudy:"Study", ttCatHealth:"Health", ttCatPersonal:"Personal",
     ttCatSocial:"Social", ttCatOther:"Other",
+    tabSettings:"⚙️ Settings",
+    // Onboarding
+    onboardingTitle:"Welcome to Life Tracker 🎉",
+    onboardingSubtitle:"Let's set up your experience in seconds.",
+    onboardingStep1:"Choose your language",
+    onboardingStep2:"Who are you?",
+    onboardingStep3:"Pick a theme",
+    onboardingFinish:"Get Started →",
+    genderFemale:"Female", genderMale:"Male",
+    // Settings page
+    settingsTitle:"⚙️ Settings",
+    settingsProfile:"👤 Profile",
+    settingsGenderLabel:"Gender",
+    settingsGenderHint:"The Cycle Tracker tab is only shown for Female users.",
+    settingsLanguageTitle:"🌐 Language",
+    settingsThemeTitle:"🎨 Theme",
+    settingsDangerZone:"⚠️ Danger Zone",
+    settingsClearAllLabel:"Delete All Data",
+    settingsClearAllHint:"This will permanently erase all your habits, tasks, timetable, finance, cycle and shopping data. Cannot be undone.",
+    settingsClearAllBtn:"🗑 Delete All Data",
+    settingsClearModalTitle:"Delete All Data?",
+    settingsClearModalDesc:"This will permanently erase ALL Life Tracker data from this browser. This action cannot be undone.",
+    settingsClearModalConfirm:"Delete Everything",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
     monthShort:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Sze","Okt","Nov","Dec"],
     days:["H","K","Sze","Cs","P","Szo","V"],
     subtitle:"— Életkövető —",
-    tabTracker:"📊 Nyomkövető", tabDays:"Napok", tabTasks:"✅ Feladatok", tabAnalysis:"📈 Elemzés",
+    tabTracker:"📊 Szokáskövető", tabDays:"Napok", tabTasks:"✅ Feladatok", tabAnalysis:"📈 Elemzés",
+    habitsSubtabHabits:"💪 Szokáskövető", habitsSubtabAnalysis:"📈 Elemzés",
+    scopeDaily:"☀️ Napi", scopeWeekly:"📅 Heti", scopeMonthly:"🗓 Havi", scopeYearly:"📆 Éves",
+    pomoSessionsLabel:"Munkamenetek", pomoFocusLabel:"Fókusz idő", pomoBreaksLabel:"Szünetek",
+    pomoHint:"Szóköz: indít · Esc: bezár",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Szokások", statCompleted:"Teljesítve", statProgress:"Haladás", statTasksDone:"Kész feladat",
     myHabits:"Szokásaim",
@@ -298,13 +360,38 @@ const TRANSLATIONS = {
     ttDayFri:"Péntek", ttDaySat:"Szombat", ttDaySun:"Vasárnap",
     ttCatWork:"Munka", ttCatStudy:"Tanulás", ttCatHealth:"Egészség", ttCatPersonal:"Személyes",
     ttCatSocial:"Társasági", ttCatOther:"Egyéb",
+    tabSettings:"⚙️ Beállítások",
+    onboardingTitle:"Üdvözöl a Life Tracker 🎉",
+    onboardingSubtitle:"Állítsuk be a tapasztalatod pár másodperc alatt.",
+    onboardingStep1:"Válassz nyelvet",
+    onboardingStep2:"Ki vagy te?",
+    onboardingStep3:"Válassz témát",
+    onboardingFinish:"Kezdjük →",
+    genderFemale:"Nő", genderMale:"Férfi",
+    settingsTitle:"⚙️ Beállítások",
+    settingsProfile:"👤 Profil",
+    settingsGenderLabel:"Nem",
+    settingsGenderHint:"A Ciklus fül csak Nő felhasználóknak jelenik meg.",
+    settingsLanguageTitle:"🌐 Nyelv",
+    settingsThemeTitle:"🎨 Téma",
+    settingsDangerZone:"⚠️ Veszélyzóna",
+    settingsClearAllLabel:"Összes adat törlése",
+    settingsClearAllHint:"Véglegesen törli az összes szokást, feladatot, órarendet, pénzügyet, ciklust és bevásárlólistát. Nem vonható vissza.",
+    settingsClearAllBtn:"🗑 Összes törlése",
+    settingsClearModalTitle:"Összes adat törlése?",
+    settingsClearModalDesc:"Ez véglegesen törli az összes Life Tracker adatot ebből a böngészőből. Nem vonható vissza.",
+    settingsClearModalConfirm:"Mindent töröl",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
     monthShort:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],
     days:["Mo","Di","Mi","Do","Fr","Sa","So"],
     subtitle:"— Leben Tracker —",
-    tabTracker:"📊 Tracker", tabDays:"Tage", tabTasks:"✅ Aufgaben", tabAnalysis:"📈 Analyse",
+    tabTracker:"📊 Habit Tracker", tabDays:"Tage", tabTasks:"✅ Aufgaben", tabAnalysis:"📈 Analyse",
+    habitsSubtabHabits:"💪 Gewohnheiten", habitsSubtabAnalysis:"📈 Analyse",
+    scopeDaily:"☀️ Täglich", scopeWeekly:"📅 Wöchentlich", scopeMonthly:"🗓 Monatlich", scopeYearly:"📆 Jährlich",
+    pomoSessionsLabel:"Sitzungen", pomoFocusLabel:"Fokuszeit", pomoBreaksLabel:"Pausen",
+    pomoHint:"Leertaste: Start · Esc: Schließen",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Gewohnheiten", statCompleted:"Erledigt", statProgress:"Fortschritt", statTasksDone:"Aufgaben",
     myHabits:"Meine Gewohnheiten",
@@ -437,13 +524,38 @@ const TRANSLATIONS = {
     ttDayFri:"Freitag", ttDaySat:"Samstag", ttDaySun:"Sonntag",
     ttCatWork:"Arbeit", ttCatStudy:"Lernen", ttCatHealth:"Gesundheit", ttCatPersonal:"Persönlich",
     ttCatSocial:"Soziales", ttCatOther:"Sonstiges",
+    tabSettings:"⚙️ Einstellungen",
+    onboardingTitle:"Willkommen beim Life Tracker 🎉",
+    onboardingSubtitle:"Richte dein Erlebnis in Sekunden ein.",
+    onboardingStep1:"Wähle deine Sprache",
+    onboardingStep2:"Wer bist du?",
+    onboardingStep3:"Wähle ein Thema",
+    onboardingFinish:"Los geht's →",
+    genderFemale:"Weiblich", genderMale:"Männlich",
+    settingsTitle:"⚙️ Einstellungen",
+    settingsProfile:"👤 Profil",
+    settingsGenderLabel:"Geschlecht",
+    settingsGenderHint:"Der Zyklus-Tab wird nur für weibliche Nutzer angezeigt.",
+    settingsLanguageTitle:"🌐 Sprache",
+    settingsThemeTitle:"🎨 Design",
+    settingsDangerZone:"⚠️ Gefahrenzone",
+    settingsClearAllLabel:"Alle Daten löschen",
+    settingsClearAllHint:"Löscht dauerhaft alle Gewohnheiten, Aufgaben, Stundenplan, Finanzen, Zyklus und Einkaufsdaten. Nicht rückgängig machbar.",
+    settingsClearAllBtn:"🗑 Alle Daten löschen",
+    settingsClearModalTitle:"Alle Daten löschen?",
+    settingsClearModalDesc:"Hiermit werden ALLE Life Tracker Daten aus diesem Browser dauerhaft gelöscht. Nicht rückgängig machbar.",
+    settingsClearModalConfirm:"Alles löschen",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
     monthShort:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
     days:["Lu","Ma","Mi","Ju","Vi","Sá","Do"],
     subtitle:"— Rastreador de Vida —",
-    tabTracker:"📊 Rastreador", tabDays:"Días", tabTasks:"✅ Tareas", tabAnalysis:"📈 Análisis",
+    tabTracker:"📊 Seguimiento de Hábitos", tabDays:"Días", tabTasks:"✅ Tareas", tabAnalysis:"📈 Análisis",
+    habitsSubtabHabits:"💪 Hábitos", habitsSubtabAnalysis:"📈 Análisis",
+    scopeDaily:"☀️ Diario", scopeWeekly:"📅 Semanal", scopeMonthly:"🗓 Mensual", scopeYearly:"📆 Anual",
+    pomoSessionsLabel:"Sesiones", pomoFocusLabel:"Tiempo enfocado", pomoBreaksLabel:"Pausas",
+    pomoHint:"Espacio: iniciar · Esc: cerrar",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Hábitos", statCompleted:"Completado", statProgress:"Progreso", statTasksDone:"Tareas",
     myHabits:"Mis Hábitos",
@@ -576,13 +688,38 @@ const TRANSLATIONS = {
     ttDayFri:"Viernes", ttDaySat:"Sábado", ttDaySun:"Domingo",
     ttCatWork:"Trabajo", ttCatStudy:"Estudio", ttCatHealth:"Salud", ttCatPersonal:"Personal",
     ttCatSocial:"Social", ttCatOther:"Otro",
+    tabSettings:"⚙️ Ajustes",
+    onboardingTitle:"Bienvenido a Life Tracker 🎉",
+    onboardingSubtitle:"Configura tu experiencia en segundos.",
+    onboardingStep1:"Elige tu idioma",
+    onboardingStep2:"¿Quién eres?",
+    onboardingStep3:"Elige un tema",
+    onboardingFinish:"Empezar →",
+    genderFemale:"Femenino", genderMale:"Masculino",
+    settingsTitle:"⚙️ Ajustes",
+    settingsProfile:"👤 Perfil",
+    settingsGenderLabel:"Género",
+    settingsGenderHint:"La pestaña Ciclo solo se muestra para usuarias femeninas.",
+    settingsLanguageTitle:"🌐 Idioma",
+    settingsThemeTitle:"🎨 Tema",
+    settingsDangerZone:"⚠️ Zona de peligro",
+    settingsClearAllLabel:"Eliminar todos los datos",
+    settingsClearAllHint:"Eliminará permanentemente todos tus hábitos, tareas, horario, finanzas, ciclo y lista de compras. No se puede deshacer.",
+    settingsClearAllBtn:"🗑 Eliminar todo",
+    settingsClearModalTitle:"¿Eliminar todos los datos?",
+    settingsClearModalDesc:"Esto borrará TODOS los datos de Life Tracker de este navegador. No se puede deshacer.",
+    settingsClearModalConfirm:"Eliminar todo",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
     monthShort:["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"],
     days:["Lu","Ma","Me","Je","Ve","Sa","Di"],
     subtitle:"— Suivi de Vie —",
-    tabTracker:"📊 Suivi", tabDays:"Jours", tabTasks:"✅ Tâches", tabAnalysis:"📈 Analyse",
+    tabTracker:"📊 Suivi des Habitudes", tabDays:"Jours", tabTasks:"✅ Tâches", tabAnalysis:"📈 Analyse",
+    habitsSubtabHabits:"💪 Habitudes", habitsSubtabAnalysis:"📈 Analyse",
+    scopeDaily:"☀️ Quotidien", scopeWeekly:"📅 Hebdomadaire", scopeMonthly:"🗓 Mensuel", scopeYearly:"📆 Annuel",
+    pomoSessionsLabel:"Séances", pomoFocusLabel:"Temps de focus", pomoBreaksLabel:"Pauses",
+    pomoHint:"Espace : démarrer · Esc : fermer",
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habitudes", statCompleted:"Complété", statProgress:"Progrès", statTasksDone:"Tâches",
     myHabits:"Mes Habitudes",
@@ -715,6 +852,27 @@ const TRANSLATIONS = {
     ttDayFri:"Vendredi", ttDaySat:"Samedi", ttDaySun:"Dimanche",
     ttCatWork:"Travail", ttCatStudy:"Études", ttCatHealth:"Santé", ttCatPersonal:"Personnel",
     ttCatSocial:"Social", ttCatOther:"Autre",
+    tabSettings:"⚙️ Paramètres",
+    onboardingTitle:"Bienvenue dans Life Tracker 🎉",
+    onboardingSubtitle:"Configurez votre expérience en quelques secondes.",
+    onboardingStep1:"Choisissez votre langue",
+    onboardingStep2:"Qui êtes-vous ?",
+    onboardingStep3:"Choisissez un thème",
+    onboardingFinish:"Commencer →",
+    genderFemale:"Féminin", genderMale:"Masculin",
+    settingsTitle:"⚙️ Paramètres",
+    settingsProfile:"👤 Profil",
+    settingsGenderLabel:"Genre",
+    settingsGenderHint:"L'onglet Cycle n'est visible que pour les utilisatrices féminines.",
+    settingsLanguageTitle:"🌐 Langue",
+    settingsThemeTitle:"🎨 Thème",
+    settingsDangerZone:"⚠️ Zone de danger",
+    settingsClearAllLabel:"Supprimer toutes les données",
+    settingsClearAllHint:"Supprimera définitivement toutes vos habitudes, tâches, emplois du temps, finances, cycle et listes de courses. Irréversible.",
+    settingsClearAllBtn:"🗑 Tout supprimer",
+    settingsClearModalTitle:"Supprimer toutes les données ?",
+    settingsClearModalDesc:"Cela effacera TOUTES les données Life Tracker de ce navigateur. Action irréversible.",
+    settingsClearModalConfirm:"Tout effacer",
   }
 };
 
@@ -831,6 +989,7 @@ function saveAll(){
   flashSaved();
 }
 function loadAll(){
+  loadUserPrefs();
   loadNav();
   try{const l=localStorage.getItem(K.lang());if(l&&TRANSLATIONS[l])state.lang=l;}catch(e){}
   try{const h=localStorage.getItem(K.habits());if(h)state.habits=JSON.parse(h);}catch(e){}
@@ -912,6 +1071,30 @@ function applyTranslations(){
   // Re-render shopping/cycle if currently shown
   if(CURRENT_PAGE==='shopping')renderShoppingList();
   if(CURRENT_PAGE==='cycle')renderCycleTracker();
+  // Habits sub-tab buttons
+  document.querySelectorAll('.habits-subtab-btn').forEach(btn=>{
+    if(btn.dataset.subtab==='habits'&&tr.habitsSubtabHabits)btn.textContent=tr.habitsSubtabHabits;
+    if(btn.dataset.subtab==='analysis'&&tr.habitsSubtabAnalysis)btn.textContent=tr.habitsSubtabAnalysis;
+  });
+  // Tracker scope buttons (Daily/Weekly/Monthly)
+  document.querySelectorAll('.tracker-scope-btn').forEach(btn=>{
+    const map={daily:tr.scopeDaily,weekly:tr.scopeWeekly,monthly:tr.scopeMonthly};
+    if(map[btn.dataset.tscope])btn.textContent=map[btn.dataset.tscope];
+  });
+  // Tasks scope buttons (Daily/Weekly/Monthly/Yearly)
+  document.querySelectorAll('.tasks-scope-btn').forEach(btn=>{
+    const map={daily:tr.scopeDaily,weekly:tr.scopeWeekly,monthly:tr.scopeMonthly,yearly:tr.scopeYearly};
+    if(map[btn.dataset.scope])btn.textContent=map[btn.dataset.scope];
+  });
+  // Pomodoro stat labels
+  const pomoStatLbls=document.querySelectorAll('.pomo-stat-lbl');
+  if(pomoStatLbls.length>=3){
+    if(tr.pomoSessionsLabel)pomoStatLbls[0].textContent=tr.pomoSessionsLabel;
+    if(tr.pomoFocusLabel)pomoStatLbls[1].textContent=tr.pomoFocusLabel;
+    if(tr.pomoBreaksLabel)pomoStatLbls[2].textContent=tr.pomoBreaksLabel;
+  }
+  const pomoHintEl=document.querySelector('.pomo-hint');
+  if(pomoHintEl&&tr.pomoHint)pomoHintEl.textContent=tr.pomoHint;
 }
 
 function getDaysInMonth(y,m){return new Date(y,m+1,0).getDate();}
@@ -1014,7 +1197,7 @@ function render(animate){
   document.getElementById("month-title").textContent=getMonthNames()[state.month];
   document.getElementById("year-label").textContent=state.year;
   // Stats elements only exist on tracker page
-  if(CURRENT_PAGE==="tracker"){
+  if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
     const ph=document.getElementById("stat-habits").textContent;const pd=document.getElementById("stat-done").textContent;
     const pp=document.getElementById("stat-pct").textContent;const pt=document.getElementById("stat-tasks").textContent;
     document.getElementById("stat-habits").textContent=state.habits.length;
@@ -1437,6 +1620,17 @@ function applyTrackerScope(scope){
 
 function switchTab(tab){
   saveNav();
+  if(tab==='analysis'){
+    // Analysis is now a sub-tab inside the habits page
+    if(CURRENT_PAGE==='habits'){
+      setHabitsSubtab('analysis');
+      return;
+    }
+    window.location.href='tracker.html#analysis';
+    return;
+  }
+  if(tab==='tracker'||tab==='habits'){ window.location.href='tracker.html'; return; }
+  if(tab==='settings'){ openSettingsModal(); return; }
   window.location.href = tab + '.html';
 }
 
@@ -2636,6 +2830,8 @@ function togglePomoWidget(){
 }
 
 document.getElementById("pomo-toggle").addEventListener("click",togglePomoWidget);
+const _settingsIconBtn = document.getElementById('settings-icon-btn');
+if (_settingsIconBtn) _settingsIconBtn.addEventListener('click', openSettingsModal);
 document.getElementById("pomo-close-btn").addEventListener("click",()=>{
   document.getElementById("pomo-widget").classList.add("hidden");
   document.getElementById("pomo-backdrop").classList.add("hidden");
@@ -3306,7 +3502,7 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{
 });
 
 // ── TRACKER PAGE ──────────────────────────────────────────────────────────────
-if(CURRENT_PAGE==="tracker"){
+if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   on("tracker-section","click",e=>{
     const cb=e.target.closest(".day-habit-cb");
     if(cb){toggleCheck(+cb.dataset.hi,+cb.dataset.d);return;}
@@ -3420,8 +3616,13 @@ if(CURRENT_PAGE==="tasks"){
   });
 }
 
-// ── ANALYSIS PAGE ─────────────────────────────────────────────────────────────
+// ── ANALYSIS PAGE / SUB-TAB ───────────────────────────────────────────────────
 if(CURRENT_PAGE==="analysis"){
+  // Standalone analysis.html → redirect to habits page with analysis sub-tab active
+  window.location.replace('tracker.html#analysis');
+}
+
+if(CURRENT_PAGE==="habits"){
   on("analysis-section","click",e=>{
     const rem=e.target.closest("[data-rgid]");
     if(rem){state.goals=state.goals.filter(g=>g.id!==+rem.dataset.rgid);saveAll();renderGoals();}
@@ -3528,25 +3729,67 @@ if(CURRENT_PAGE==="timetable"){
   });
 })();
 
+// ─── HABITS SUB-TAB SWITCHER ──────────────────────────────────────────────────
+function setHabitsSubtab(subtab){
+  const trackerSection=document.getElementById('tracker-section');
+  const statsRow=document.getElementById('stats-row');
+  const analysisSection=document.getElementById('analysis-section');
+  const subtabBar=document.getElementById('habits-subtab-bar');
+  if(!subtabBar)return;
+  subtabBar.querySelectorAll('.habits-subtab-btn').forEach(b=>{
+    const isActive=b.dataset.subtab===subtab;
+    b.classList.toggle('active',isActive);
+    b.style.background=isActive?'var(--surface2)':'transparent';
+    b.style.color=isActive?'var(--text)':'var(--text-muted)';
+    b.style.borderColor=isActive?'#4f6ef7':'var(--border)';
+  });
+  if(subtab==='habits'){
+    if(trackerSection)trackerSection.classList.remove('hidden');
+    if(statsRow)statsRow.classList.remove('hidden');
+    if(analysisSection)analysisSection.classList.add('hidden');
+  }else{
+    if(trackerSection)trackerSection.classList.add('hidden');
+    if(statsRow)statsRow.classList.add('hidden');
+    if(analysisSection){
+      analysisSection.classList.remove('hidden');
+      analysisSection.style.animation='fadeSlideUp .45s cubic-bezier(.4,0,.2,1) both';
+      // Render analysis content
+      const{days,total,done,pct}=calcStats();const wg=getWeekGroups();
+      renderAnalysis(days,total,done,pct,calcHabitPcts(),wg,calcWeekTotals(wg),calcDowTotals());
+    }
+  }
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 loadAll();
 applyTranslations();
 updatePomoDisplay();
 
-// Mark active tab link
+// Mark active tab link — habits page is the tracker tab
 document.querySelectorAll('.tab-btn').forEach(b=>{
-  b.classList.toggle('active', b.dataset.tab===CURRENT_PAGE);
+  const effectivePage = CURRENT_PAGE==='habits'?'habits':CURRENT_PAGE;
+  b.classList.toggle('active', b.dataset.tab===effectivePage);
 });
 
+// Apply cycle tab visibility based on gender preference
+applyCycleTabVisibility();
+
 // Page-specific initialisation
-if(CURRENT_PAGE==='tracker'){
+if(CURRENT_PAGE==='tracker'||CURRENT_PAGE==='habits'){
   render(true);
   applyTrackerScope(trackerScope);
+  // Wire up sub-tab buttons
+  document.querySelectorAll('.habits-subtab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>setHabitsSubtab(btn.dataset.subtab));
+  });
+  // Check if loaded with #analysis hash
+  if(window.location.hash==='#analysis'){
+    setHabitsSubtab('analysis');
+  }
 } else if(CURRENT_PAGE==='tasks'){
   renderTasksView();
 } else if(CURRENT_PAGE==='analysis'){
-  const{days,total,done,pct}=calcStats();const wg=getWeekGroups();
-  renderAnalysis(days,total,done,pct,calcHabitPcts(),wg,calcWeekTotals(wg),calcDowTotals());
+  // Redirected — nothing to do here, redirect fires above
 } else if(CURRENT_PAGE==='shopping'){
   renderShoppingList();
 } else if(CURRENT_PAGE==='cycle'){
@@ -3556,6 +3799,13 @@ if(CURRENT_PAGE==='tracker'){
   const mon=ttWeekStart||getTTWeekMonday(new Date());
   document.getElementById('month-title').textContent=getMonthNames()[mon.getMonth()];
   document.getElementById('year-label').textContent=mon.getFullYear();
+} else if(CURRENT_PAGE==='settings'){
+  initSettingsPage();
+}
+
+// Show onboarding modal if first-time user
+if(!userPrefs.setupDone){
+  showOnboardingModal();
 }
 
 // ─── CUSTOM DATE PICKER ────────────────────────────────────────────────────────
@@ -4210,3 +4460,392 @@ renderFinance();
     if (!TRANSLATIONS[lang][tabKey]) TRANSLATIONS[lang][tabKey] = labels[lang]||labels.en;
   });
 })();
+// ─── ONBOARDING MODAL ────────────────────────────────────────────────────────
+function showOnboardingModal() {
+  const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+
+  const THEMES = [
+    {id:'dark',   label:'🌑 Dark'},
+    {id:'light',  label:'☀️ Light'},
+    {id:'forest', label:'🌿 Forest'},
+    {id:'sakura', label:'🌸 Sakura'},
+    {id:'ocean',  label:'🌊 Ocean'},
+    {id:'sunset', label:'🌅 Sunset'},
+    {id:'midnight',label:'🌙 Midnight'},
+    {id:'amoled', label:'🖤 AMOLED'},
+    {id:'paper',  label:'🤍 Paper'},
+    {id:'slate',  label:'🌫️ Slate'},
+  ];
+  const LANGS = [
+    {id:'en', label:'🇬🇧 English'},
+    {id:'hu', label:'🇭🇺 Magyar'},
+    {id:'de', label:'🇩🇪 Deutsch'},
+    {id:'es', label:'🇪🇸 Español'},
+    {id:'fr', label:'🇫🇷 Français'},
+  ];
+
+  let obStep = 1; // 1 = lang, 2 = gender, 3 = theme
+  let obLang = state.lang;
+  let obGender = null;
+  let obTheme = getThemeName();
+
+  // Backdrop
+  const backdrop = document.createElement('div');
+  backdrop.id = 'ob-backdrop';
+
+  // Modal
+  const modal = document.createElement('div');
+  modal.id = 'ob-modal';
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+
+  function renderObModal() {
+    const curTr = TRANSLATIONS[obLang] || TRANSLATIONS.en;
+    const stepTitles = [
+      curTr.onboardingStep1 || 'Choose your language',
+      curTr.onboardingStep2 || 'Who are you?',
+      curTr.onboardingStep3 || 'Pick a theme',
+    ];
+
+    let bodyHTML = '';
+
+    if (obStep === 1) {
+      bodyHTML = `
+        <div class="ob-lang-grid">
+          ${LANGS.map(l => `
+            <button class="ob-lang-btn ${obLang===l.id?'active':''}" data-oblang="${l.id}">${l.label}</button>
+          `).join('')}
+        </div>`;
+    } else if (obStep === 2) {
+      bodyHTML = `
+        <div class="ob-gender-row">
+          <button class="ob-gender-btn ${obGender==='female'?'active':''}" data-obgender="female">
+            <span class="ob-gender-icon">♀️</span>
+            <span class="ob-gender-label">${curTr.genderFemale||'Female'}</span>
+          </button>
+          <button class="ob-gender-btn ${obGender==='male'?'active':''}" data-obgender="male">
+            <span class="ob-gender-icon">♂️</span>
+            <span class="ob-gender-label">${curTr.genderMale||'Male'}</span>
+          </button>
+
+        </div>
+        <div class="ob-hint">${curTr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>`;
+    } else if (obStep === 3) {
+      bodyHTML = `
+        <div class="ob-theme-grid">
+          ${THEMES.map(th => `
+            <button class="ob-theme-btn ${obTheme===th.id?'active':''}" data-obtheme="${th.id}">${th.label}</button>
+          `).join('')}
+        </div>`;
+    }
+
+    const isLast = obStep === 3;
+    const canNext = obStep === 1 ? !!obLang : obStep === 2 ? !!obGender : !!obTheme;
+
+    modal.innerHTML = `
+      <div class="ob-header">
+        <div class="ob-logo">🌟</div>
+        <div class="ob-title">${curTr.onboardingTitle||'Welcome to Life Tracker 🎉'}</div>
+        <div class="ob-subtitle">${curTr.onboardingSubtitle||"Let's set up your experience."}</div>
+      </div>
+      <div class="ob-steps">
+        ${[1,2,3].map(s=>`<div class="ob-step-dot ${s===obStep?'active':s<obStep?'done':''}"></div>`).join('')}
+      </div>
+      <div class="ob-section-title">${stepTitles[obStep-1]}</div>
+      <div class="ob-body">${bodyHTML}</div>
+      <div class="ob-footer">
+        ${obStep > 1 ? `<button class="ob-back-btn" id="ob-back">← Back</button>` : '<span></span>'}
+        <button class="ob-next-btn ${canNext?'':'disabled'}" id="ob-next" ${canNext?'':'disabled'}>
+          ${isLast ? (curTr.onboardingFinish||'Get Started →') : 'Next →'}
+        </button>
+      </div>`;
+
+    // Bind buttons
+    modal.querySelectorAll('[data-oblang]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        obLang = btn.dataset.oblang;
+        renderObModal();
+      });
+    });
+    modal.querySelectorAll('[data-obgender]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        obGender = btn.dataset.obgender;
+        renderObModal();
+      });
+    });
+    modal.querySelectorAll('[data-obtheme]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        obTheme = btn.dataset.obtheme;
+        // Live preview theme
+        document.body.className = document.body.className.replace(/theme-\w+/,'');
+        document.body.classList.add('theme-' + obTheme);
+        renderObModal();
+      });
+    });
+    const nextBtn = modal.querySelector('#ob-next');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (!canNext) return;
+        if (obStep < 3) {
+          obStep++;
+          renderObModal();
+        } else {
+          finishOnboarding();
+        }
+      });
+    }
+    const backBtn = modal.querySelector('#ob-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => { obStep--; renderObModal(); });
+    }
+  }
+
+  function finishOnboarding() {
+    // Save all choices
+    state.lang = obLang;
+    userPrefs.gender = obGender;
+    userPrefs.setupDone = true;
+    saveUserPrefs();
+    try { localStorage.setItem(K.lang(), obLang); } catch(e) {}
+
+    // Apply theme
+    document.body.className = document.body.className.replace(/theme-\w+/g,'');
+    document.body.classList.add('theme-' + obTheme);
+    try { localStorage.setItem('ht_theme_v2', obTheme); } catch(e) {}
+
+    // Remove modal
+    backdrop.remove();
+    modal.remove();
+
+    // Apply translations + cycle visibility
+    applyTranslations();
+    applyCycleTabVisibility();
+  }
+
+  renderObModal();
+}
+
+// ─── SETTINGS MODAL ───────────────────────────────────────────────────────────
+function openSettingsModal() {
+  if (document.getElementById('settings-modal-backdrop')) return;
+  const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+
+  const backdrop = document.createElement('div');
+  backdrop.id = 'settings-modal-backdrop';
+  backdrop.style.cssText = 'position:fixed;inset:0;z-index:8900;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);animation:fadeIn .3s ease;';
+
+  const modal = document.createElement('div');
+  modal.id = 'settings-modal';
+  modal.style.cssText = 'position:fixed;z-index:8901;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,94vw);max-height:85vh;overflow-y:auto;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 28px 24px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:scalePop .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;gap:16px;';
+
+  function refreshBtns() {
+    modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
+    modal.querySelectorAll('.settings-lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === state.lang));
+    const curTheme = getThemeName();
+    modal.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === curTheme));
+  }
+
+  modal.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="font-size:18px;font-weight:800;color:var(--text);" data-i18n="settingsTitle">${tr.settingsTitle||'⚙️ Settings'}</div>
+      <button id="settings-modal-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:4px 8px;border-radius:8px;line-height:1;">✕</button>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">${tr.settingsProfile||'👤 Profile'}</div>
+      <div class="settings-row">
+        <div class="settings-row-label">${tr.settingsGenderLabel||'Gender'}</div>
+        <div class="settings-gender-btns" id="settings-modal-gender-btns">
+          <button class="settings-gender-btn" data-gender="female">♀️ <span>${tr.genderFemale||'Female'}</span></button>
+          <button class="settings-gender-btn" data-gender="male">♂️ <span>${tr.genderMale||'Male'}</span></button>
+        </div>
+      </div>
+      <div class="settings-hint">${tr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">${tr.settingsLanguageTitle||'🌐 Language'}</div>
+      <div class="settings-lang-grid">
+        <button class="settings-lang-btn" data-lang="en">🇬🇧 English</button>
+        <button class="settings-lang-btn" data-lang="hu">🇭🇺 Magyar</button>
+        <button class="settings-lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+        <button class="settings-lang-btn" data-lang="es">🇪🇸 Español</button>
+        <button class="settings-lang-btn" data-lang="fr">🇫🇷 Français</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">${tr.settingsThemeTitle||'🎨 Theme'}</div>
+      <div class="settings-theme-grid">
+        <button class="settings-theme-btn" data-theme="dark">🌑 Dark</button>
+        <button class="settings-theme-btn" data-theme="light">☀️ Light</button>
+        <button class="settings-theme-btn" data-theme="forest">🌿 Forest</button>
+        <button class="settings-theme-btn" data-theme="sakura">🌸 Sakura</button>
+        <button class="settings-theme-btn" data-theme="ocean">🌊 Ocean</button>
+        <button class="settings-theme-btn" data-theme="sunset">🌅 Sunset</button>
+        <button class="settings-theme-btn" data-theme="midnight">🌙 Midnight</button>
+        <button class="settings-theme-btn" data-theme="amoled">🖤 AMOLED</button>
+        <button class="settings-theme-btn" data-theme="paper">🤍 Paper</button>
+        <button class="settings-theme-btn" data-theme="slate">🌫️ Slate</button>
+      </div>
+    </div>
+    <div class="settings-card settings-danger-card">
+      <div class="settings-card-title settings-danger-title">${tr.settingsDangerZone||'⚠️ Danger Zone'}</div>
+      <div class="settings-row" style="flex-wrap:wrap;gap:12px;">
+        <div style="flex:1;min-width:200px;">
+          <div class="settings-row-label">${tr.settingsClearAllLabel||'Delete All Data'}</div>
+          <div class="settings-hint">${tr.settingsClearAllHint||'Permanently erase all data.'}</div>
+        </div>
+        <button class="settings-danger-btn" id="settings-modal-clear-btn">${tr.settingsClearAllBtn||'🗑 Delete All Data'}</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">ℹ️ About</div>
+      <div class="settings-hint" style="font-size:13px;line-height:1.8;"><strong>Life Tracker</strong> — Beta<br>All data stored locally. No account needed. Works offline.</div>
+    </div>
+  `;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+  refreshBtns();
+
+  function closeModal() {
+    backdrop.remove();
+    modal.remove();
+  }
+  backdrop.addEventListener('click', closeModal);
+  modal.querySelector('#settings-modal-close').addEventListener('click', closeModal);
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
+  });
+
+  modal.querySelector('#settings-modal-gender-btns').addEventListener('click', e => {
+    const btn = e.target.closest('[data-gender]');
+    if (!btn) return;
+    userPrefs.gender = btn.dataset.gender;
+    saveUserPrefs();
+    refreshBtns();
+    applyCycleTabVisibility();
+  });
+
+  modal.querySelector('.settings-lang-grid').addEventListener('click', e => {
+    const btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    state.lang = btn.dataset.lang;
+    try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
+    refreshBtns();
+    applyTranslations();
+  });
+
+  modal.querySelector('.settings-theme-grid').addEventListener('click', e => {
+    const btn = e.target.closest('[data-theme]');
+    if (!btn) return;
+    const theme = btn.dataset.theme;
+    document.body.className = document.body.className.replace(/theme-\w+/g,'');
+    document.body.classList.add('theme-' + theme);
+    try { localStorage.setItem('ht_theme_v2', theme); } catch(e2) {}
+    refreshBtns();
+  });
+
+  modal.querySelector('#settings-modal-clear-btn').addEventListener('click', () => {
+    const tr2 = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    if (confirm(tr2.settingsClearModalDesc || 'This will permanently erase ALL Life Tracker data. Cannot be undone.')) {
+      const keysToDelete = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('ht_')) keysToDelete.push(key);
+      }
+      keysToDelete.forEach(k => localStorage.removeItem(k));
+      userPrefs = { gender: null, setupDone: false };
+      closeModal();
+      window.location.href = 'tracker.html';
+    }
+  });
+}
+
+// ─── SETTINGS PAGE ────────────────────────────────────────────────────────────
+function initSettingsPage() {
+  if (CURRENT_PAGE !== 'settings') return;
+
+  // Highlight active gender btn
+  function refreshGenderBtns() {
+    document.querySelectorAll('.settings-gender-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.gender === userPrefs.gender);
+    });
+  }
+  // Highlight active lang btn
+  function refreshLangBtns() {
+    document.querySelectorAll('.settings-lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === state.lang);
+    });
+  }
+  // Highlight active theme btn
+  function refreshThemeBtns() {
+    const cur = getThemeName();
+    document.querySelectorAll('.settings-theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === cur);
+    });
+  }
+
+  refreshGenderBtns();
+  refreshLangBtns();
+  refreshThemeBtns();
+
+  // Gender
+  document.getElementById('settings-gender-btns').addEventListener('click', e => {
+    const btn = e.target.closest('[data-gender]');
+    if (!btn) return;
+    userPrefs.gender = btn.dataset.gender;
+    saveUserPrefs();
+    refreshGenderBtns();
+    applyCycleTabVisibility();
+  });
+
+  // Language
+  document.getElementById('settings-lang-grid').addEventListener('click', e => {
+    const btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    state.lang = btn.dataset.lang;
+    try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
+    refreshLangBtns();
+    applyTranslations();
+  });
+
+  // Theme
+  document.getElementById('settings-theme-grid').addEventListener('click', e => {
+    const btn = e.target.closest('[data-theme]');
+    if (!btn) return;
+    const theme = btn.dataset.theme;
+    document.body.className = document.body.className.replace(/theme-\w+/g,'');
+    document.body.classList.add('theme-' + theme);
+    try { localStorage.setItem('ht_theme_v2', theme); } catch(e2) {}
+    refreshThemeBtns();
+  });
+
+  // Clear all data modal
+  const clearBackdrop = document.getElementById('settings-clear-backdrop');
+  const clearModal = document.getElementById('settings-clear-modal');
+
+  on('settings-clear-all-btn','click',() => {
+    clearBackdrop.classList.remove('hidden');
+    clearModal.classList.remove('hidden');
+  });
+  on('settings-clear-cancel','click',() => {
+    clearBackdrop.classList.add('hidden');
+    clearModal.classList.add('hidden');
+  });
+  if (clearBackdrop) clearBackdrop.addEventListener('click',() => {
+    clearBackdrop.classList.add('hidden');
+    clearModal.classList.add('hidden');
+  });
+  on('settings-clear-confirm','click',() => {
+    // Delete all ht_* keys from localStorage
+    const keysToDelete = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('ht_')) keysToDelete.push(key);
+    }
+    keysToDelete.forEach(k => localStorage.removeItem(k));
+    // Reset prefs
+    userPrefs = { gender: null, setupDone: false };
+    window.location.href = 'tracker.html';
+  });
+}

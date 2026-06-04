@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tracker — Life Tracker</title>
+<title>Habit Tracker — Life Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="tracker">
+<body data-page="habits">
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 <div class="bg-orb bg-orb-3"></div>
@@ -24,10 +24,10 @@
     <button class="nav-btn" id="next-month">&#8250;</button>
   </div>
   <div class="tab-switcher">
-    <button class="tab-btn" data-tab="tracker"><span data-i18n="tabTracker">📊 Tracker</span></button>
+    <button class="tab-btn" data-tab="habits"><span data-i18n="tabTracker">📊 Habit Tracker</span></button>
     <button class="tab-btn" data-tab="timetable"><span data-i18n="tabTimetable">🗓 Timetable</span></button>
     <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">✅ Tasks</span></button>
-    <button class="tab-btn" data-tab="analysis"><span data-i18n="tabAnalysis">📈 Analysis</span></button>
+    
     <button class="tab-btn" data-tab="shopping"><span data-i18n="tabShopping">🛒 Shop</span></button>
     <button class="tab-btn" data-tab="cycle"><span data-i18n="tabCycle">🌸 Cycle</span></button>
     <button class="tab-btn" data-tab="finance"><span data-i18n="tabFinance">💰 Finance</span></button>
@@ -37,7 +37,14 @@
   </div>
   <button id="theme-toggle" title="Change theme">🌙</button>
   <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
+  <button id="settings-icon-btn" class="settings-icon-btn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
+<!-- SUB-TAB SWITCHER (Habits / Analysis) -->
+<div id="habits-subtab-bar" style="display:flex;gap:8px;padding:12px 20px 0;flex-shrink:0;">
+  <button class="habits-subtab-btn active" data-subtab="habits" style="padding:7px 20px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;font-family:inherit;">💪 Habit Tracker</button>
+  <button class="habits-subtab-btn" data-subtab="analysis" style="padding:7px 20px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;font-family:inherit;">📈 Analysis</button>
+</div>
+
 <!-- STATS ROW -->
 <div id="stats-row">
   <div class="stat-card"><div class="stat-label" data-i18n="statHabits">Habits</div><div class="stat-val" id="stat-habits">0</div></div>
@@ -82,7 +89,7 @@
     <div id="monthly-view-wrap">
       <div id="tracker-inner">
         <div id="habit-names-col">
-          <div class="habit-name-header" id="my-habits-header">My Habits</div>
+          <div class="habit-name-header" id="my-habits-header">Habit Tracker</div>
           <div id="habit-names-list"></div>
         </div>
         <div id="weeks-container"></div>
@@ -95,6 +102,63 @@
   </div>
   <div id="tracker-days-view" class="hidden">
     <div id="days-grid"></div>
+  </div>
+</div>
+<!-- ANALYSIS SECTION (sub-tab) -->
+<div id="analysis-section" class="hidden" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
+  <div class="analysis-card full-width">
+    <div class="section-title" data-i18n="dailyConsistency">Daily Consistency</div>
+    <div class="bar-chart-wrap" id="bar-chart-days"></div>
+  </div>
+  <div class="analysis-card full-width">
+    <div class="section-title" id="mindset-tracker-title" data-i18n="mindsetTrackerTitle">Mindset Tracker — Energy · Focus · Motivation</div>
+    <div class="mindset-chart-wrap">
+      <svg id="mindset-chart-svg" width="100%" height="90" viewBox="0 0 700 90" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="mindset-legend">
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#f5a623"></div><span data-i18n="energy">Energy</span></div>
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#4f6ef7"></div><span data-i18n="focus">Focus</span></div>
+      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div><span data-i18n="motivation">Motivation</span></div>
+    </div>
+  </div>
+  <div class="analysis-bottom-row">
+    <div class="analysis-main">
+      <div class="analysis-card">
+        <div class="section-title" data-i18n="habitBreakdown">Habit Breakdown</div>
+        <div id="habit-bars" style="margin-top:4px;display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+      <div class="analysis-card">
+        <div class="section-title" data-i18n="goalsThisMonth">Goals This Month 🎯</div>
+        <div class="goals-add-row">
+          <input class="goal-input" id="goal-input" placeholder="Add a goal for this month…" data-i18n-placeholder="goalPlaceholder"/>
+          <button class="goal-add-btn" id="goal-add-btn" data-i18n="addGoalBtn">+ Add Goal</button>
+        </div>
+        <div class="goal-list" id="goal-list"></div>
+      </div>
+    </div>
+    <div class="analysis-side">
+      <div class="analysis-card">
+        <div class="section-title" data-i18n="weeklyScore">Weekly Score</div>
+        <div class="week-radials" id="week-radials"></div>
+      </div>
+      <div class="analysis-card">
+        <div class="section-title" data-i18n="overallProgress">Overall Progress</div>
+        <div class="overall-row">
+          <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="9"/>
+              <circle id="overall-arc-2" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
+                stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray .7s cubic-bezier(.4,0,.2,1)"/>
+            </svg>
+            <div class="radial-text">
+              <span class="radial-pct" id="overall-pct-text-2">0%</span>
+              <span class="radial-sub" id="overall-sub-text-2">0/0</span>
+            </div>
+          </div>
+          <div class="overall-stats" id="overall-stats"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </div><!-- #app -->

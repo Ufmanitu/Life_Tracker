@@ -4627,6 +4627,34 @@ function showOnboardingModal() {
 }
 
 // ─── SETTINGS MODAL ───────────────────────────────────────────────────────────
+// ─── BACKUP HELPERS (used by modal + settings page) ──────────────────────────
+function buildBackup() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('ht_')) {
+      data[key] = localStorage.getItem(key);
+    }
+  }
+  return { version: '1.0', exportedAt: new Date().toISOString(), appName: 'LifeTracker', data };
+}
+
+function describeBackup(backup) {
+  const d = backup.data || {};
+  const lines = [];
+  const dateStr = new Date(backup.exportedAt).toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  lines.push(`📅 Exported: ${dateStr}`);
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_habits_')); if(k){ const h=JSON.parse(d[k]); lines.push(`💪 Habits: ${h.length}`); } } catch(e){}
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_tasks_')); if(k){ const t=JSON.parse(d[k]); lines.push(`✅ Tasks: ${(t.tasks||[]).length}`); } } catch(e){}
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_finance_')); if(k){ const f=JSON.parse(d[k]); const n=Object.values(f.transactions||{}).reduce((s,a)=>s+(a||[]).length,0); lines.push(`💰 Finance entries: ${n}`); } } catch(e){}
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_shop_')); if(k){ const s=JSON.parse(d[k]); lines.push(`🛒 Shopping items: ${(s.items||[]).length}`); } } catch(e){}
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_timetable_')); if(k){ const tt=JSON.parse(d[k]); lines.push(`🗓 Timetable events: ${(tt.tt||[]).length}`); } } catch(e){}
+  const hasCycle = Object.keys(d).some(k=>k.startsWith('ht_cycle_'));
+  if (hasCycle) lines.push(`🌸 Cycle data: included`);
+  lines.push(`🔑 Total keys: ${Object.keys(d).length}`);
+  return lines.join('\n');
+}
+
 function openSettingsModal() {
   if (document.getElementById('settings-modal-backdrop')) return;
   const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
@@ -4686,6 +4714,22 @@ function openSettingsModal() {
         <button class="settings-theme-btn" data-theme="paper">🤍 Paper</button>
         <button class="settings-theme-btn" data-theme="slate">🌫️ Slate</button>
       </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">🔄 ${tr.settingsSyncTitle||'Export &amp; Import Data'}</div>
+      <div class="settings-hint" style="margin-bottom:14px;">${tr.settingsSyncHint||'Export a backup of all your data as a JSON file, then import it on any other device to sync your Life Tracker.'}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button id="settings-modal-export-btn" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#3ecfb2,#2ba88e);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(62,207,178,.28);transition:opacity .15s;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          ${tr.settingsExportBtn||'Export Backup'}
+        </button>
+        <label id="settings-modal-import-label" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#3a5ce0);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(79,110,247,.28);transition:opacity .15s;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="17"/></svg>
+          ${tr.settingsImportBtn||'Import Backup'}
+          <input type="file" id="settings-modal-import-input" accept=".json" style="display:none;"/>
+        </label>
+      </div>
+      <div id="settings-modal-sync-status" style="display:none;margin-top:10px;font-size:12px;font-weight:600;color:#3ecfb2;"></div>
     </div>
     <div class="settings-card settings-danger-card">
       <div class="settings-card-title settings-danger-title">${tr.settingsDangerZone||'⚠️ Danger Zone'}</div>
@@ -4758,6 +4802,65 @@ function openSettingsModal() {
       closeModal();
       window.location.href = 'tracker.html';
     }
+  });
+
+  // ── Export ──
+  modal.querySelector('#settings-modal-export-btn').addEventListener('click', () => {
+    const backup = buildBackup();
+    const syncStatus = modal.querySelector('#settings-modal-sync-status');
+    if (Object.keys(backup.data).length === 0) {
+      syncStatus.textContent = '⚠️ No data found to export.';
+      syncStatus.style.display = 'block';
+      setTimeout(() => { syncStatus.style.display = 'none'; }, 3000);
+      return;
+    }
+    const json = JSON.stringify(backup, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const dateTag = new Date().toISOString().slice(0, 10);
+    const a = document.createElement('a');
+    a.href = url; a.download = `life-tracker-backup-${dateTag}.json`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    syncStatus.style.color = '#3ecfb2';
+    syncStatus.textContent = `✓ Exported (${Object.keys(backup.data).length} keys, ${(json.length/1024).toFixed(1)} KB)`;
+    syncStatus.style.display = 'block';
+    setTimeout(() => { syncStatus.style.display = 'none'; }, 4000);
+  });
+
+  // ── Import ──
+  modal.querySelector('#settings-modal-import-input').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    this.value = '';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      let backup;
+      try {
+        backup = JSON.parse(ev.target.result);
+        if (!backup.data || backup.appName !== 'LifeTracker') throw new Error('invalid');
+      } catch(e) {
+        alert('⚠️ Invalid file. Please select a Life Tracker JSON backup.');
+        return;
+      }
+      const preview = describeBackup(backup);
+      if (confirm(`Import this backup?\n\n${preview}\n\nThis will overwrite all current data. Cannot be undone.`)) {
+        // Clear existing ht_* keys
+        const existing = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('ht_')) existing.push(k);
+        }
+        existing.forEach(k => localStorage.removeItem(k));
+        // Write backup
+        Object.entries(backup.data).forEach(([key, val]) => {
+          try { localStorage.setItem(key, val); } catch(e) {}
+        });
+        closeModal();
+        window.location.href = 'tracker.html';
+      }
+    };
+    reader.readAsText(file);
   });
 }
 
@@ -4848,4 +4951,900 @@ function initSettingsPage() {
     userPrefs = { gender: null, setupDone: false };
     window.location.href = 'tracker.html';
   });
+
+  // ─── EXPORT / IMPORT (settings.html standalone page) ─────────────────────
+
+  // Export handler
+  on('settings-export-btn', 'click', () => {
+    const backup = buildBackup();
+    const status = document.getElementById('settings-export-status');
+    if (Object.keys(backup.data).length === 0) {
+      if (status) { status.textContent = '⚠️ No data found to export.'; status.style.display = 'block'; setTimeout(()=>{ status.style.display='none'; }, 3000); }
+      return;
+    }
+    const json = JSON.stringify(backup, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const dateTag = new Date().toISOString().slice(0, 10);
+    const a = document.createElement('a');
+    a.href = url; a.download = `life-tracker-backup-${dateTag}.json`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    if (status) { status.textContent = `✓ Exported (${Object.keys(backup.data).length} keys, ${(json.length/1024).toFixed(1)} KB)`; status.style.display = 'block'; setTimeout(()=>{ status.style.display='none'; }, 4000); }
+  });
+
+  // Import handler
+  const importInput = document.getElementById('settings-import-input');
+  if (importInput) {
+    importInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      this.value = '';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        let backup;
+        try {
+          backup = JSON.parse(ev.target.result);
+          if (!backup.data || backup.appName !== 'LifeTracker') throw new Error('invalid');
+        } catch(e) {
+          alert('⚠️ Invalid file. Please select a Life Tracker JSON backup.');
+          return;
+        }
+        if (confirm(`Import this backup?\n\n${describeBackup(backup)}\n\nThis will overwrite all current data. Cannot be undone.`)) {
+          const existing = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith('ht_')) existing.push(k);
+          }
+          existing.forEach(k => localStorage.removeItem(k));
+          Object.entries(backup.data).forEach(([key, val]) => {
+            try { localStorage.setItem(key, val); } catch(e) {}
+          });
+          window.location.href = 'tracker.html';
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
 }
+
+
+// ─── LOCAL ASSISTANT ──────────────────────────────────────────────────────────
+(function() {
+
+const ASST_PAGES = ['tracker','habits','timetable','tasks','shopping','cycle','finance','analysis','settings'];
+
+// ── Predefined Q&A content (Magyar + English) ────────────────────────────────
+function getAsstContent() {
+  const lang = (typeof state !== 'undefined' && state.lang) || 'en';
+  const isHU = lang === 'hu';
+
+  return {
+    greeting: isHU
+      ? '👋 Szia! Én vagyok a Life Tracker Segéded. Miben segíthetek ma?'
+      : '👋 Hi! I\'m your Life Tracker Assistant. What can I help you with today?',
+    backLabel: isHU ? '← Vissza' : '← Back',
+    categories: [
+      {
+        id: 'setup',
+        icon: '⚙️',
+        label: isHU ? 'Beállítás & Konfiguráció' : 'Setup & Configuration',
+        items: [
+          { id: 'setup-habit',     icon: '💪', label: isHU ? 'Szokás hozzáadása'             : 'Add a habit',              wizard: 'habit' },
+          { id: 'setup-task',      icon: '✅', label: isHU ? 'Feladat hozzáadása'             : 'Add a task',               wizard: 'task' },
+          { id: 'setup-event',     icon: '🗓', label: isHU ? 'Órarend esemény hozzáadása'     : 'Add a timetable event',    wizard: 'event' },
+          { id: 'setup-shopping',  icon: '🛒', label: isHU ? 'Bevásárló elem hozzáadása'      : 'Add a shopping item',      wizard: 'shopping' },
+          { id: 'setup-finance',   icon: '💰', label: isHU ? 'Pénzügy beállítása'             : 'Set up finance',           wizard: 'finance' },
+          { id: 'setup-cycle',     icon: '🌸', label: isHU ? 'Ciklus beállítása'              : 'Set up my cycle',          wizard: 'cycle' },
+          { id: 'setup-theme',     icon: '🎨', label: isHU ? 'Téma megváltoztatása'           : 'Change theme',             wizard: 'theme' },
+          { id: 'setup-language',  icon: '🌐', label: isHU ? 'Nyelv megváltoztatása'          : 'Change language',          wizard: 'language' },
+        ]
+      },
+      {
+        id: 'howto',
+        icon: '❓',
+        label: isHU ? 'Hogyan működik?' : 'How does it work?',
+        items: [
+          { id: 'how-tracker',    icon: '📊', label: isHU ? 'Szokáskövetés'        : 'Habit Tracker' },
+          { id: 'how-analysis',   icon: '📈', label: isHU ? 'Elemzés & Statisztika': 'Analysis & Stats' },
+          { id: 'how-tasks',      icon: '✅', label: isHU ? 'Feladatok'             : 'Tasks' },
+          { id: 'how-timetable',  icon: '🗓', label: isHU ? 'Órarend'              : 'Timetable' },
+          { id: 'how-shopping',   icon: '🛒', label: isHU ? 'Bevásárlólista'       : 'Shopping List' },
+          { id: 'how-finance',    icon: '💰', label: isHU ? 'Pénzügy'              : 'Finance' },
+          { id: 'how-cycle',      icon: '🌸', label: isHU ? 'Cikluskövető'         : 'Cycle Tracker' },
+          { id: 'how-pomodoro',   icon: '⏱', label: isHU ? 'Pomodoro'             : 'Pomodoro Timer' },
+          { id: 'how-export',     icon: '🔄', label: isHU ? 'Adatmentés / szinkron': 'Backup & Sync' },
+          { id: 'how-themes',     icon: '🎨', label: isHU ? 'Témák & Megjelenés'   : 'Themes & Appearance' },
+          { id: 'how-language',   icon: '🌐', label: isHU ? 'Nyelvi beállítások'   : 'Language Settings' },
+        ]
+      },
+      {
+        id: 'tips',
+        icon: '💡',
+        label: isHU ? 'Tippek & Trükkök' : 'Tips & Tricks',
+        items: [
+          { id: 'tip-habits',    icon: '💪', label: isHU ? 'Jobb szokások kialakítása'   : 'Building better habits' },
+          { id: 'tip-pomodoro',  icon: '⏱', label: isHU ? 'Hatékony Pomodoro használat' : 'Effective Pomodoro use' },
+          { id: 'tip-finance',   icon: '💰', label: isHU ? 'Pénzügyi tippek'             : 'Finance tips' },
+          { id: 'tip-tasks',     icon: '✅', label: isHU ? 'Produktív feladatkezelés'    : 'Productive task management' },
+          { id: 'tip-cycle',     icon: '🌸', label: isHU ? 'Cikluskövető tippek'        : 'Cycle tracker tips' },
+          { id: 'tip-data',      icon: '🔒', label: isHU ? 'Adatok & Adatvédelem'       : 'Your data & privacy' },
+        ]
+      },
+      {
+        id: 'troubleshoot',
+        icon: '🔧',
+        label: isHU ? 'Hibaelhárítás' : 'Troubleshooting',
+        items: [
+          { id: 'fix-saving',    icon: '💾', label: isHU ? 'Nem ment az adat'           : 'Data not saving' },
+          { id: 'fix-import',    icon: '📥', label: isHU ? 'Import nem sikerül'          : 'Import not working' },
+          { id: 'fix-theme',     icon: '🎨', label: isHU ? 'A téma visszaáll'           : 'Theme keeps resetting' },
+          { id: 'fix-cal',       icon: '🗓', label: isHU ? 'Naptár import probléma'     : 'Calendar import issue' },
+          { id: 'fix-cycle',     icon: '🌸', label: isHU ? 'Ciklus adatok hibásak'      : 'Cycle data looks wrong' },
+          { id: 'fix-clear',     icon: '🗑', label: isHU ? 'Adatok törlése / nulláról'  : 'Reset / clear all data' },
+          { id: 'fix-mobile',    icon: '📱', label: isHU ? 'Mobilon nem jól néz ki'     : 'Looks off on mobile' },
+        ]
+      },
+      {
+        id: 'navigate',
+        icon: '🧭',
+        label: isHU ? 'Ugrás oldalra' : 'Go to page',
+        items: [
+          { id: 'nav-tracker',   icon: '📊', label: isHU ? 'Szokáskövetés'    : 'Habit Tracker',   href: 'tracker.html' },
+          { id: 'nav-timetable', icon: '🗓', label: isHU ? 'Órarend'          : 'Timetable',        href: 'timetable.html' },
+          { id: 'nav-tasks',     icon: '✅', label: isHU ? 'Feladatok'         : 'Tasks',            href: 'tasks.html' },
+          { id: 'nav-shopping',  icon: '🛒', label: isHU ? 'Bevásárlólista'   : 'Shopping List',    href: 'shopping.html' },
+          { id: 'nav-finance',   icon: '💰', label: isHU ? 'Pénzügy'          : 'Finance',          href: 'finance.html' },
+          { id: 'nav-cycle',     icon: '🌸', label: isHU ? 'Cikluskövető'     : 'Cycle Tracker',    href: 'cycle.html' },
+          { id: 'nav-analysis',  icon: '📈', label: isHU ? 'Elemzés'          : 'Analysis',         href: 'tracker.html', action: 'analysis' },
+          { id: 'nav-settings',  icon: '⚙️', label: isHU ? 'Beállítások'      : 'Settings',         href: null, action: 'settings' },
+        ]
+      }
+    ],
+    answers: {
+      // ── HOW-TO answers ─────────────────────────────────────────────────────
+      'how-tracker': isHU
+        ? `📊 <b>Szokáskövetés</b><br><br>A szokáskövetőben napi/heti/havi nézetben láthatod a szokásaidat.<br><br>• <b>Szokás hozzáadása:</b> gépeld be a szokás nevét a beviteli mezőbe, majd kattints a <b>+ Hozzáad</b> gombra.<br>• <b>Bejelölés:</b> kattints a nap mezőjére, hogy megjelöld teljesítettként.<br>• <b>Nézetek:</b> válts a ☀️ Napi / 📅 Heti / 🗓 Havi nézetek között a felső gombsorral.<br>• <b>Szokás törlése:</b> kattints a szokás nevére, majd a megjelenő 🗑 ikonra.<br>• <b>Elemzés:</b> váltj az <b>📈 Elemzés</b> alfülre a részletes statisztikákért.`
+        : `📊 <b>Habit Tracker</b><br><br>Track your daily habits in daily, weekly, or monthly view.<br><br>• <b>Add a habit:</b> type its name in the input field and click <b>+ Add</b>.<br>• <b>Check off:</b> click a day cell to mark it as done.<br>• <b>Views:</b> switch between ☀️ Daily / 📅 Weekly / 🗓 Monthly using the scope bar.<br>• <b>Delete a habit:</b> click the habit name, then the 🗑 icon that appears.<br>• <b>Analysis:</b> switch to the <b>📈 Analysis</b> subtab for detailed statistics.`,
+
+      'how-analysis': isHU
+        ? `📈 <b>Elemzés & Statisztika</b><br><br>Az elemzés fül részletes képet ad a szokásaidról és a haladásodról.<br><br>• <b>Napi konzisztencia:</b> sávdiagram, ami megmutatja hány szokást teljesítettél naponta.<br>• <b>Mindset Tracker:</b> kövesd az energiádat, fókuszodat és motivációdat vonaldiagramon.<br>• <b>Szokás lebontás:</b> minden szokásnál látod a havi teljesítési arányt.<br>• <b>Heti pontszám:</b> sugárdiagramok az egyes hetek százalékos eredményével.<br>• <b>Célok:</b> adj hozzá havi célokat és jelöld őket teljesítettként.<br>• <b>Összesítő:</b> az egész havi haladásod egy gyűrűdiagramon.`
+        : `📈 <b>Analysis & Stats</b><br><br>The Analysis tab gives a detailed view of your habits and progress.<br><br>• <b>Daily Consistency:</b> bar chart showing how many habits you completed each day.<br>• <b>Mindset Tracker:</b> line chart for your energy, focus and motivation scores.<br>• <b>Habit Breakdown:</b> see the monthly completion rate for each individual habit.<br>• <b>Weekly Score:</b> radial charts showing each week's percentage score.<br>• <b>Goals:</b> add monthly goals and mark them as achieved.<br>• <b>Overall Progress:</b> your full month's completion in a ring chart.`,
+
+      'how-tasks': isHU
+        ? `✅ <b>Feladatok</b><br><br>A feladatkezelő napi, heti, havi és éves nézetben szervezi a teendőidet.<br><br>• <b>Új feladat:</b> töltsd ki az alul lévő mezőket és kattints <b>+ Feladat hozzáadása</b>-ra.<br>• <b>Prioritás:</b> 🔴 Magas / ⚡ Közepes / 🔵 Alacsony<br>• <b>Határidő:</b> megadhatsz esedékességi dátumot.<br>• <b>Szűrés:</b> a felső gombokkal szűrhetsz prioritás szerint.<br>• <b>Szerkesztés:</b> kattints a feladaton a ✎ ikonra a szerkesztéshez.<br>• <b>Hatókör:</b> ☀️ Napi / 📅 Heti / 🗓 Havi / 📆 Éves nézetek között válthatsz.`
+        : `✅ <b>Tasks</b><br><br>Organize your to-dos across daily, weekly, monthly, and yearly views.<br><br>• <b>Add a task:</b> fill in the fields at the bottom and click <b>+ Add Task</b>.<br>• <b>Priority:</b> 🔴 High / ⚡ Medium / 🔵 Low<br>• <b>Due date:</b> set a deadline for any task.<br>• <b>Filter:</b> use the top buttons to filter by priority.<br>• <b>Edit:</b> click the ✎ icon on any task to edit it.<br>• <b>Scope:</b> switch between ☀️ Daily / 📅 Weekly / 🗓 Monthly / 📆 Yearly views.`,
+
+      'how-timetable': isHU
+        ? `🗓 <b>Órarend</b><br><br>A heti órarend segít átlátni az ismétlődő eseményeidet.<br><br>• <b>Esemény hozzáadása:</b> töltsd ki a nevet, napot, időpontot és kategóriát, majd kattints <b>+ Esemény</b>-re.<br>• <b>Google Naptár import:</b> kattints az <b>Import .ics</b> gombra és töltsd fel a fájlt.<br>• <b>Egész napos:</b> jelöld be az „Egész nap" opciót időpont nélküli eseményekhez.<br>• <b>Hétváltás:</b> a ‹ › gombokkal léphetsz hetek között.<br>• <b>Kategóriák:</b> Munka / Tanulás / Egészség / Személyes / Szociális / Egyéb<br>• <b>Szerkesztés:</b> kattints az eseményre az órarend rácsban.`
+        : `🗓 <b>Timetable</b><br><br>The weekly timetable helps you visualize recurring events.<br><br>• <b>Add an event:</b> fill in title, day, time, and category, then click <b>+ Add Event</b>.<br>• <b>Google Calendar import:</b> click <b>Import .ics</b> and upload your exported file.<br>• <b>All-day events:</b> tick "All Day" for events without a specific time.<br>• <b>Navigate weeks:</b> use the ‹ › arrows to switch between weeks.<br>• <b>Categories:</b> Work / Study / Health / Personal / Social / Other<br>• <b>Edit:</b> click any event in the grid to edit or delete it.`,
+
+      'how-shopping': isHU
+        ? `🛒 <b>Bevásárlólista</b><br><br>A bevásárlólista kategóriánként csoportosítja az elemeket.<br><br>• <b>Elem hozzáadása:</b> add meg a nevét, mennyiségét és kategóriáját, majd kattints <b>+ Elem hozzáadása</b>-ra.<br>• <b>Kategóriák:</b> 🥦 Élelmiszer / 🏠 Háztartás / 💄 Személyes / 📦 Egyéb<br>• <b>Kész jelölés:</b> kattints az elemre a pipa bejelöléséhez.<br>• <b>Szűrés:</b> a felső gombokkal kategória szerint szűrhetsz.<br>• <b>Teljesítettek törlése:</b> kattints a <b>🗑 Teljesítettek törlése</b> gombra a kész elemek eltávolításához.<br>• <b>Mennyiség módosítás:</b> a + / – gombokkal változtathatod a mennyiséget.`
+        : `🛒 <b>Shopping List</b><br><br>The shopping list groups items by category for easy shopping.<br><br>• <b>Add an item:</b> enter its name, quantity, and category, then click <b>+ Add Item</b>.<br>• <b>Categories:</b> 🥦 Grocery / 🏠 Household / 💄 Personal / 📦 Other<br>• <b>Check off:</b> tap an item to mark it as done.<br>• <b>Filter:</b> use the top category buttons to focus on one group.<br>• <b>Clear checked:</b> click <b>🗑 Clear Checked</b> to remove completed items.<br>• <b>Adjust quantity:</b> use the + / – buttons to change quantities.`,
+
+      'how-finance': isHU
+        ? `💰 <b>Pénzügy</b><br><br>Kövesd nyomon bevételeidet és kiadásaidat hónapról hónapra.<br><br>• <b>Bevétel hozzáadása:</b> kattints a <b>+ Bevétel</b> gombra és add meg a részleteket.<br>• <b>Kiadás hozzáadása:</b> kattints a <b>+ Kiadás</b> gombra.<br>• <b>Kategóriák:</b> Élelmiszer / Lakhatás / Közlekedés / Szórakozás / Egészség / Egyéb<br>• <b>Összesítő kártyák:</b> mutatják az egyenlegedet, bevételedet és kiadásodat.<br>• <b>Hónapok közötti navigáció:</b> a fejléc ‹ › nyilakkal.<br>• <b>Pénznem beállítás:</b> Beállítások → Pénzügy beállítása → pénznem kiválasztás.`
+        : `💰 <b>Finance</b><br><br>Track your income and expenses month by month.<br><br>• <b>Add income:</b> click the <b>+ Income</b> button and fill in the details.<br>• <b>Add expense:</b> click the <b>+ Expense</b> button.<br>• <b>Categories:</b> Food / Housing / Transport / Entertainment / Health / Other<br>• <b>Summary cards:</b> show your balance, total income, and total spending.<br>• <b>Navigate months:</b> use the ‹ › arrows in the header.<br>• <b>Set currency:</b> use the Setup wizard or go to Settings → Set up Finance.`,
+
+      'how-cycle': isHU
+        ? `🌸 <b>Cikluskövető</b><br><br>Kövesd a természetes ciklusodat vagy a fogamzásgátló tabletta bevételét.<br><br>• <b>Módváltás:</b> válts a 🌸 Természetes és 💊 Tabletta módok között a felső gombsorral.<br>• <b>Ciklus beállítása:</b> add meg a legutóbbi menstruáció kezdődátumát, a vérzés hosszát és a ciklus hosszát.<br>• <b>Naptár:</b> a ciklusnaptáron látható a vérzési időszak (piros), az ovulációs ablak (zöld) és az előrejelzések.<br>• <b>Tünetek & Hangulat:</b> napi szinten rögzíthetsz tüneteket és hangulatot.<br>• <b>Tabletta mód:</b> 21 aktív + 7 placebo tabletta vizuális nyomkövetéssel.<br>• <b>Terhességi valószínűség:</b> az oldal alján látható az aktuális esélybecslés.`
+        : `🌸 <b>Cycle Tracker</b><br><br>Track your natural menstrual cycle or birth control pill schedule.<br><br>• <b>Switch modes:</b> toggle between 🌸 Natural Cycle and 💊 Birth Control Pill at the top.<br>• <b>Set up:</b> enter your last period start date, period duration, and cycle length.<br>• <b>Calendar:</b> the cycle calendar shows your period (red), ovulation window (green), and predictions.<br>• <b>Symptoms & Mood:</b> log daily symptoms and mood entries.<br>• <b>Pill mode:</b> visual tracker for 21 active + 7 placebo pills with taken/missed tracking.<br>• <b>Pregnancy possibility:</b> an estimate is shown based on your current cycle phase.`,
+
+      'how-pomodoro': isHU
+        ? `⏱ <b>Pomodoro időzítő</b><br><br>A Pomodoro technika 25 perces fókuszált munkaszakaszokból és rövid szünetekből áll.<br><br>• <b>Megnyitás:</b> kattints az <b>⏱ Pomodoro</b> gombra a fejlécben – bármely oldalon elérhető.<br>• <b>Módok:</b> Pomodoro (25 perc) / Rövid szünet (5 perc) / Hosszú szünet (15 perc)<br>• <b>Indítás/szünet:</b> kattints a <b>▶ Start</b> gombra, vagy nyomd meg a <b>Space</b> billentyűt.<br>• <b>Visszaállítás:</b> <b>↺ Reset</b> gomb.<br>• <b>Bezárás:</b> <b>Esc</b> billentyű vagy az X gomb.<br>• <b>Statisztikák:</b> a widget mutatja az elvégzett meneteket, fókuszidőt és szüneteket.`
+        : `⏱ <b>Pomodoro Timer</b><br><br>The Pomodoro technique uses 25-minute focused work sessions with short breaks.<br><br>• <b>Open it:</b> click the <b>⏱ Pomodoro</b> button in the header — available on every page.<br>• <b>Modes:</b> Pomodoro (25 min) / Short Break (5 min) / Long Break (15 min)<br>• <b>Start/pause:</b> click <b>▶ Start</b> or press the <b>Space</b> key.<br>• <b>Reset:</b> click the <b>↺ Reset</b> button.<br>• <b>Close:</b> press <b>Esc</b> or click the X button.<br>• <b>Stats:</b> the widget tracks your completed sessions, focus time, and breaks.`,
+
+      'how-export': isHU
+        ? `🔄 <b>Adatmentés & szinkron</b><br><br>Az összes adatod a böngésződ helyi tárhelyén (localStorage) van mentve – nincs szükség internetre.<br><br>• <b>Mentés:</b> Beállítások → <b>Export Backup</b> → letölt egy <code>.json</code> fájlt.<br>• <b>Visszaállítás:</b> Beállítások → <b>Import Backup</b> → válaszd ki a fájlt.<br>• <b>Eszközök között:</b> exportáld az egyiken, importáld a másikon (pl. e-mailen keresztül küld át a fájlt).<br>• <b>Figyelem:</b> az importálás felülírja a jelenlegi adatokat – előtte exportálj biztonsági mentést!<br>• <b>Mikor mentsen?</b> Javasolt hetente menteni a fontos adatokról.`
+        : `🔄 <b>Backup & Sync</b><br><br>All your data is stored in your browser's localStorage — no internet needed.<br><br>• <b>Save a backup:</b> Settings → <b>Export Backup</b> → downloads a <code>.json</code> file.<br>• <b>Restore:</b> Settings → <b>Import Backup</b> → pick the file.<br>• <b>Between devices:</b> export on one device, import on the other (send the file via email or cloud).<br>• <b>Warning:</b> importing overwrites current data — export a backup first if needed!<br>• <b>How often?</b> It's good practice to export a backup once a week.`,
+
+      'how-themes': isHU
+        ? `🎨 <b>Témák & Megjelenés</b><br><br>A Life Tracker 10 különböző témával rendelkezik.<br><br>• <b>Témaváltás:</b> kattints a fejlécben a 🌙 gombra, vagy menj a <b>Beállítások</b> oldalra.<br>• <b>Elérhető témák:</b><br>  🌑 Dark · ☀️ Light · 🌿 Forest · 🌸 Sakura · 🌊 Ocean<br>  🌅 Sunset · 🌙 Midnight Purple · 🖤 AMOLED Black · 🤍 Minimal Paper · 🌫️ Slate<br>• <b>Mentés:</b> a választott téma automatikusan elmentődik és az összes oldalon érvényes.<br>• <b>Legsötétebb mód:</b> az AMOLED Black téma szemkímélő sötét szobában.`
+        : `🎨 <b>Themes & Appearance</b><br><br>Life Tracker has 10 different visual themes.<br><br>• <b>Change theme:</b> click the 🌙 button in the header or go to the <b>Settings</b> page.<br>• <b>Available themes:</b><br>  🌑 Dark · ☀️ Light · 🌿 Forest · 🌸 Sakura · 🌊 Ocean<br>  🌅 Sunset · 🌙 Midnight Purple · 🖤 AMOLED Black · 🤍 Minimal Paper · 🌫️ Slate<br>• <b>Auto-saved:</b> your chosen theme is saved automatically and applies across all pages.<br>• <b>Darkest option:</b> AMOLED Black is ideal for OLED screens and dark rooms.`,
+
+      'how-language': isHU
+        ? `🌐 <b>Nyelvi beállítások</b><br><br>A Life Tracker 5 nyelven érhető el.<br><br>• <b>Nyelvváltás:</b> kattints a fejlécben a 🌐 gombra, vagy menj a <b>Beállítások</b> oldalra.<br>• <b>Elérhető nyelvek:</b> 🇬🇧 English / 🇭🇺 Magyar / 🇩🇪 Deutsch / 🇪🇸 Español / 🇫🇷 Français<br>• <b>Mentés:</b> a nyelv automatikusan elmentődik és az összes oldalon érvényes.<br>• <b>Részleges fordítás:</b> egyes dinamikusan generált tartalmak (pl. eseménynevek) az általad begépelt nyelven maradnak.`
+        : `🌐 <b>Language Settings</b><br><br>Life Tracker is available in 5 languages.<br><br>• <b>Change language:</b> click the 🌐 button in the header or go to the <b>Settings</b> page.<br>• <b>Available languages:</b> 🇬🇧 English / 🇭🇺 Magyar / 🇩🇪 Deutsch / 🇪🇸 Español / 🇫🇷 Français<br>• <b>Auto-saved:</b> your language preference is saved and applies across all pages.<br>• <b>Note:</b> user-entered content (habit names, task titles, etc.) stays in whatever language you typed them.`,
+
+      // ── TIPS answers ────────────────────────────────────────────────────────
+      'tip-habits': isHU
+        ? `💪 <b>Jobb szokások kialakítása</b><br><br>Néhány tipp a szokáskövetőhöz:<br><br>• <b>Kis lépések:</b> kezdj 2–3 szokással, ne 10-zel egyszerre – az átterhelés megöli a motivációt.<br>• <b>Kötés:</b> kösd az új szokást egy meglévőhöz (pl. „reggeli kávé után → 5 perc olvasás").<br>• <b>Streak:</b> a heti és havi nézet megmutatja a folyamatos sorozatodat – ne törd meg!<br>• <b>Elemzés használata:</b> nézd meg hetente az 📈 Elemzés fület, hogy lásd, hol csúszik a teljesítmény.<br>• <b>Reális célok:</b> egy szokást akkor tekints sikernek, ha a napok 80%+-án teljesíted.`
+        : `💪 <b>Building better habits</b><br><br>Tips for getting the most from the Habit Tracker:<br><br>• <b>Start small:</b> begin with 2–3 habits, not 10 at once — overloading kills motivation.<br>• <b>Habit stacking:</b> attach a new habit to an existing one (e.g. "after morning coffee → 5 min reading").<br>• <b>Streaks:</b> the weekly and monthly views show your streaks — try not to break the chain!<br>• <b>Review regularly:</b> check the 📈 Analysis tab weekly to see where performance slips.<br>• <b>Realistic targets:</b> consider a habit successful if you complete it on 80%+ of days.`,
+
+      'tip-pomodoro': isHU
+        ? `⏱ <b>Hatékony Pomodoro használat</b><br><br>• <b>Zavaró tényezők kiiktatása:</b> Pomodoro közben kapcsold ki az értesítéseket – az időzítő jelzi, ha kész.<br>• <b>Egy feladat egy menet:</b> minden Pomodoro előtt döntsd el, min dolgozol – ne multitaskingolj.<br>• <b>Szüneteket tarts meg:</b> a szünetek nem luxus – az agy regenerálódáshoz kell.<br>• <b>4 menet után hosszú szünet:</b> a 15 perces hosszú szünet után sokkal produktívabb leszel.<br>• <b>Kapcsold össze a feladatokkal:</b> a Pomodoro gomb bármely oldalon elérhető, még a feladatok nézetben is.`
+        : `⏱ <b>Effective Pomodoro use</b><br><br>• <b>Eliminate distractions:</b> during a Pomodoro, silence notifications — the timer will alert you when done.<br>• <b>One task per session:</b> decide what you're working on before starting — avoid multitasking.<br>• <b>Actually take breaks:</b> breaks aren't a luxury — your brain needs recovery to stay sharp.<br>• <b>Long break after 4 sessions:</b> the 15-minute break after 4 Pomodoros restores deep focus capacity.<br>• <b>Combine with Tasks:</b> the Pomodoro button is available on every page, even while viewing your task list.`,
+
+      'tip-finance': isHU
+        ? `💰 <b>Pénzügyi tippek</b><br><br>• <b>Minden kiadást rögzíts:</b> még a kis összegek is összeadódnak – rögzítsd, amint elköltötted.<br>• <b>Kategóriák:</b> következetes kategorizálással láthatod, mire megy el legtöbb pénzed.<br>• <b>Havi büdzsé:</b> állíts be havi keretet a Pénzügy beállítása varázslóban – a tracker mutatja, mennyit költöttél.<br>• <b>Hónap eleji szokás:</b> minden hónap elején nézd át az előző hónap kiadásait az összesítőben.<br>• <b>Megtakarítás nyomkövetés:</b> adj hozzá havi „Megtakarítás" bevételt, ami jelzi, mennyit sikerült félretenned.`
+        : `💰 <b>Finance tips</b><br><br>• <b>Log everything:</b> even small amounts add up — enter them as soon as you spend.<br>• <b>Use categories consistently:</b> consistent categorization shows exactly where your money goes.<br>• <b>Set a monthly budget:</b> configure it in the Finance Setup wizard to see how much of your budget remains.<br>• <b>Monthly review habit:</b> at the start of each month, review last month's summary cards.<br>• <b>Track savings:</b> add a monthly "Savings" income entry to track how much you've set aside.`,
+
+      'tip-tasks': isHU
+        ? `✅ <b>Produktív feladatkezelés</b><br><br>• <b>Hatókör szerinti szétválasztás:</b> a napi feladatok aznapra valók, a heti és havi célokat ne keverd a napi listába.<br>• <b>Priorizálás:</b> kezd a 🔴 Magas prioritású feladatokkal, mielőtt a 🔵 Alacsonyakhoz érnél.<br>• <b>Határidők:</b> adj minden feladathoz határidőt – ez segít fókuszban maradni.<br>• <b>Heti áttekintés:</b> minden hétfőn ellenőrizd a heti feladatlistát, és mozdítsd át, ami szükséges.<br>• <b>Ne zsúfold túl:</b> napi 3–5 feladat reális, több csak frusztrációhoz vezet.`
+        : `✅ <b>Productive task management</b><br><br>• <b>Use scopes properly:</b> daily tasks are for today only; keep weekly/monthly goals separate.<br>• <b>Prioritize:</b> tackle 🔴 High priority tasks first before moving to 🔵 Low ones.<br>• <b>Set due dates:</b> deadlines on every task help you stay focused and avoid procrastination.<br>• <b>Weekly review:</b> every Monday, scan your weekly list and carry forward anything unfinished.<br>• <b>Don't overload:</b> 3–5 daily tasks is realistic; more leads to frustration and skipped days.`,
+
+      'tip-cycle': isHU
+        ? `🌸 <b>Cikluskövető tippek</b><br><br>• <b>Rendszeres naplózás:</b> napi szinten jelöld be a tüneteket és a hangulatot – minél több adat, annál pontosabb az előrejelzés.<br>• <b>Több hónap:</b> add meg a korábbi cikluskezdési dátumokat is a Ciklus előzmények részben a pontosabb átlaghoz.<br>• <b>Tabletták:</b> a tablettás módban jelöld be minden nap, hogy bevette-e – a rendszer jelzi a kihagyott tablettákat.<br>• <b>Ovuláció jelzés:</b> a zöld csillag a naptáron jelöli a várható ovulációs napot.<br>• <b>Terhességi valószínűség:</b> ez becslés, nem orvosi tanácsadás – fontos döntésekhez keresd fel kezelőorvosodat.`
+        : `🌸 <b>Cycle tracker tips</b><br><br>• <b>Log daily:</b> mark symptoms and mood every day — more data means better predictions.<br>• <b>Add past cycles:</b> enter previous cycle start dates in the History section for a more accurate cycle average.<br>• <b>Pill mode:</b> check off each pill every day — the tracker will highlight any you missed.<br>• <b>Ovulation marker:</b> the green star on the calendar shows the predicted ovulation day.<br>• <b>Pregnancy estimate:</b> this is an estimate, not medical advice — consult your doctor for important decisions.`,
+
+      'tip-data': isHU
+        ? `🔒 <b>Az adataid & adatvédelem</b><br><br>• <b>Tárolás:</b> minden adat kizárólag a te böngésződben van mentve (localStorage). Semmilyen adat nem kerül szerverre.<br>• <b>Offline működés:</b> az alkalmazás internet nélkül is teljesen használható.<br>• <b>Adatbiztonság:</b> exportálj rendszeresen <code>.json</code> biztonsági mentést, ha nem szeretnéd elveszíteni az adataidat.<br>• <b>Böngésző törlés figyelmeztetés:</b> ha törlöd a böngésző localStorage adatait (pl. sütik törlése), a Life Tracker adatai is elvesznek.<br>• <b>Inkognitó mód:</b> inkognító ablakban az adatok bezáráskor törlődnek.`
+        : `🔒 <b>Your data & privacy</b><br><br>• <b>Storage:</b> all data is saved only in your browser (localStorage). Nothing is sent to any server.<br>• <b>Offline:</b> the app works fully without an internet connection.<br>• <b>Data safety:</b> export a <code>.json</code> backup regularly so you never lose your data.<br>• <b>Browser clear warning:</b> if you clear your browser's localStorage (e.g. "clear cookies & data"), all Life Tracker data will be lost.<br>• <b>Incognito mode:</b> in private/incognito windows, data is deleted when you close the window.`,
+
+      // ── TROUBLESHOOT answers ─────────────────────────────────────────────────
+      'fix-saving': isHU
+        ? `💾 <b>Nem ment az adat?</b><br><br>Néhány lehetséges ok és megoldás:<br><br>• <b>Böngésző-tároló tele:</b> a localStorage ~5–10 MB-os korláttal rendelkezik. Próbálj törölni régi adatokat a Beállítások → Adatok törlése menüpontban.<br>• <b>Privát/inkognító mód:</b> privát ablakban az adatok az ablak bezárásakor törlődnek – használj normál böngészési módot.<br>• <b>Böngésző beállítás:</b> egyes böngészők blokkolják a localStorage-t. Ellenőrizd a süti/tároló engedélyeket.<br>• <b>Safari iOS:</b> privát módban a Safari letiltja a localStorage-t.<br><br>Ha a probléma fennáll, exportálj biztonsági mentést, majd próbáld meg az importálást egy másik böngészőben.`
+        : `💾 <b>Data not saving?</b><br><br>Possible causes and fixes:<br><br>• <b>Browser storage full:</b> localStorage has a ~5–10 MB limit. Try clearing old data via Settings → Delete All Data.<br>• <b>Private/incognito mode:</b> data is deleted when you close a private window — use a normal browser window.<br>• <b>Browser setting:</b> some browsers block localStorage. Check your cookie/storage permissions in browser settings.<br>• <b>Safari iOS:</b> private mode disables localStorage on Safari.<br><br>If the issue persists, try exporting a backup and importing it in a different browser.`,
+
+      'fix-import': isHU
+        ? `📥 <b>Import nem sikerül?</b><br><br>• <b>Fájl formátum:</b> csak <code>.json</code> fájl importálható – ellenőrizd, hogy a letöltött backup fájl kiterjesztése <code>.json</code>.<br>• <b>Helyes fájl:</b> csak a Life Tracker által exportált backup fájl kompatibilis.<br>• <b>Fájl sérült:</b> ha a fájl nem nyílik meg, előfordulhat, hogy az export nem fejeződött be – próbáld újra az exportálást.<br>• <b>Importálás megerősítése:</b> az import ablak mutat egy előnézetet – győződj meg, hogy a megfelelő fájlt választottad.<br>• <b>Böngésző kompatibilitás:</b> használj modern böngészőt (Chrome, Firefox, Edge, Safari).`
+        : `📥 <b>Import not working?</b><br><br>• <b>File format:</b> only <code>.json</code> files can be imported — check that the backup file extension is <code>.json</code>.<br>• <b>Correct file:</b> only backup files exported from Life Tracker are compatible.<br>• <b>Corrupted file:</b> if the file won't open, the export may not have completed — try exporting again.<br>• <b>Confirm the import:</b> the import modal shows a preview — make sure you've selected the right file.<br>• <b>Browser compatibility:</b> use a modern browser (Chrome, Firefox, Edge, Safari).`,
+
+      'fix-theme': isHU
+        ? `🎨 <b>A téma visszaáll?</b><br><br>• <b>Normál viselkedés:</b> ha privát/inkognító módot használsz, a téma bezáráskor elvész.<br>• <b>Sütik törlése:</b> ha rendszeresen törlöd a böngésző adatait, a tema-beállítás is törlődik.<br>• <b>Megoldás:</b> exportálj biztonsági mentést – az tartalmazza a témát és az összes beállítást is.<br>• <b>Exportált backup:</b> az import visszaállítja a témát is.`
+        : `🎨 <b>Theme keeps resetting?</b><br><br>• <b>Normal behaviour:</b> if you use private/incognito mode, the theme is lost when you close the window.<br>• <b>Clearing browser data:</b> if you regularly clear browser cookies/storage, the theme preference is wiped too.<br>• <b>Solution:</b> export a backup regularly — it includes your theme and all settings.<br>• <b>After import:</b> importing a backup restores your theme along with all other data.`,
+
+      'fix-cal': isHU
+        ? `🗓 <b>Google Naptár import probléma</b><br><br>• <b>Fájl típusa:</b> csak <code>.ics</code> formátumú fájl importálható – Google Naptárból exportáld.<br>• <b>Google export lépései:</b> Google Naptár → Beállítások → „Exportálás" → tömd ki a ZIP fájlt → válaszd a megfelelő <code>.ics</code> fájlt.<br>• <b>Ismétlődő események:</b> az ismétlődő (RRULE) eseményeket az alkalmazás automatikusan kiszámolja a heti nézetre.<br>• <b>Időzóna:</b> az alkalmazás a helyi böngésző időzónát használja.<br>• <b>Sok esemény:</b> csak az aktuális hétre vonatkozó események kerülnek be az órarendbe.`
+        : `🗓 <b>Calendar import issue</b><br><br>• <b>File type:</b> only <code>.ics</code> files can be imported — export this from Google Calendar.<br>• <b>Google export steps:</b> Google Calendar → Settings → "Export" → unzip the file → choose the right <code>.ics</code> file.<br>• <b>Recurring events:</b> the app automatically calculates recurring (RRULE) events for the weekly view.<br>• <b>Timezone:</b> the app uses your browser's local timezone.<br>• <b>Too many events:</b> only events relevant to the current week are added to the timetable.`,
+
+      'fix-cycle': isHU
+        ? `🌸 <b>Ciklus adatok hibásnak tűnnek?</b><br><br>• <b>Dátum ellenőrzés:</b> a beállított kezdődátum helyes-e? Menj a Cikluskövető oldalra és ellenőrizd a „📅 Ciklus rögzítése" kártyán.<br>• <b>Ciklus hossz:</b> ha szokatlanul hosszú az előre jelzett idő, ellenőrizd a ciklus hosszát (alapértelmezett: 28 nap).<br>• <b>Több ciklus:</b> a pontosabb előrejelzéshez adj hozzá több korábbi ciklust a Ciklus előzmények részben.<br>• <b>Mód váltás:</b> ha természetes ciklusról tablettás módra váltasz (vagy fordítva), a korábbi adatok megmaradnak, de az előrejelzés frissül.<br>• <b>Reset:</b> ha teljesen újra szeretnéd kezdeni, a Beállítások → Adatok törlése menüpont eltávolít mindent.`
+        : `🌸 <b>Cycle data looks wrong?</b><br><br>• <b>Check the date:</b> is your cycle start date correct? Go to Cycle Tracker and review the "📅 Log Cycle Start" card.<br>• <b>Cycle length:</b> if predictions seem too far away, check your cycle length setting (default: 28 days).<br>• <b>Add more cycles:</b> for more accurate predictions, add multiple past cycle start dates in the History section.<br>• <b>Mode switch:</b> switching between Natural and Pill mode keeps your old data but updates predictions.<br>• <b>Full reset:</b> if you want to start fresh, Settings → Delete All Data will remove everything.`,
+
+      'fix-clear': isHU
+        ? `🗑 <b>Adatok törlése / nulláról indulás</b><br><br>• <b>Teljes törlés:</b> Beállítások → <b>⚠️ Veszélyzóna</b> → <b>🗑 Összes adat törlése</b> – ez minden adatot töröl.<br>• <b>Mielőtt törlöd:</b> javasolt előbb biztonsági mentést exportálni, hátha meggondolod magad.<br>• <b>Visszavonhatatlan:</b> a törlés visszavonhatatlan – nincs „visszacsináló" gomb.<br>• <b>Részleges törlés:</b> ha csak egy szekciót szeretnél törölni (pl. csak a pénzügyi adatokat), jelenleg nincs rá külön gomb – az összes törlés oldal ezt elvégzi.`
+        : `🗑 <b>Reset / clear all data</b><br><br>• <b>Full reset:</b> go to Settings → <b>⚠️ Danger Zone</b> → <b>🗑 Delete All Data</b> — this erases everything.<br>• <b>Before you delete:</b> it's recommended to export a backup first in case you change your mind.<br>• <b>Cannot be undone:</b> deletion is permanent — there is no undo button.<br>• <b>Partial deletion:</b> there is no per-section delete option currently — the full reset covers all sections.`,
+
+      'fix-mobile': isHU
+        ? `📱 <b>Mobilon nem jól néz ki?</b><br><br>• <b>Ajánlott eszköz:</b> a Life Tracker laptopra és nagy képernyőre van optimalizálva. Mobilon is működik, de néhány funkció szűkebb képernyőn korlátozottabb.<br>• <b>Fekvő tájolás:</b> mobilon fekvő (landscape) tájolásban sokkal jobban használható a szokástracker és az órarend.<br>• <b>Pinch-to-zoom:</b> ha egy rész túl kicsi, próbálj ráközelíteni.<br>• <b>Legjobb mobilos élmény:</b> Feladatok, Bevásárlólista és Cikluskövető oldalak a legbarátságosabbak kis képernyőn.`
+        : `📱 <b>Looks off on mobile?</b><br><br>• <b>Recommended device:</b> Life Tracker is optimized for laptop and large screens. It works on mobile but some features are limited on small screens.<br>• <b>Landscape mode:</b> rotate to landscape orientation on mobile for a much better experience with the habit tracker and timetable.<br>• <b>Pinch-to-zoom:</b> if something looks too small, try pinching to zoom in.<br>• <b>Best on mobile:</b> the Tasks, Shopping List, and Cycle Tracker pages are the most mobile-friendly.`,
+    }
+  };
+}
+
+// ── Wizard definitions ────────────────────────────────────────────────────────
+function getWizards() {
+  const lang = (typeof state !== 'undefined' && state.lang) || 'en';
+  const isHU = lang === 'hu';
+
+  return {
+    cycle: {
+      title: isHU ? '🌸 Ciklus beállítása' : '🌸 Set Up Cycle',
+      steps: [
+        {
+          id: 'mode',
+          type: 'choice',
+          question: isHU ? 'Melyik módot szeretnéd használni?' : 'Which tracking mode would you like?',
+          choices: [
+            { value: 'natural', label: isHU ? '🌸 Természetes ciklus' : '🌸 Natural Cycle' },
+            { value: 'pill',    label: isHU ? '💊 Fogamzásgátló tabletta' : '💊 Birth Control Pill' },
+          ]
+        },
+        {
+          id: 'start',
+          type: 'date',
+          question: isHU ? 'Mikor kezdődött az utolsó menstruációd? (kezdőnap)' : 'When did your last period start?',
+          placeholder: isHU ? 'Válassz dátumot' : 'Select a date',
+        },
+        {
+          id: 'dur',
+          type: 'number',
+          question: isHU ? 'Hány napig tart általában a vérzés?' : 'How many days does your period usually last?',
+          placeholder: '5',
+          min: 1, max: 14, default: 5,
+          hint: isHU ? 'Jellemzően 3–7 nap' : 'Typically 3–7 days',
+        },
+        {
+          id: 'cycleLen',
+          type: 'number',
+          question: isHU ? 'Hány napos a ciklusod? (az egyik vérzés első napjától a következőig)' : 'How long is your cycle? (first day of one period to the next)',
+          placeholder: '28',
+          min: 21, max: 45, default: 28,
+          hint: isHU ? 'Átlagosan 28 nap' : 'Average is 28 days',
+          skipIf: (answers) => answers.mode === 'pill',
+        },
+      ],
+      finish: isHU ? '✅ Ciklus mentve! Megnyitom a Cikluskövetőt.' : '✅ Cycle saved! Opening Cycle Tracker.',
+      action: function(answers) {
+        if (!state.cycleData) state.cycleData = { periods:[], days:{}, cycleLen:28, mode:'natural', takenPills:{} };
+        const mode = answers.mode || 'natural';
+        const start = answers.start;
+        const dur = parseInt(answers.dur) || 5;
+        const cycleLen = mode === 'pill' ? 28 : (parseInt(answers.cycleLen) || 28);
+        state.cycleData.mode = mode;
+        state.cycleData.cycleLen = cycleLen;
+        if (!state.cycleData.periods) state.cycleData.periods = [];
+        if (start) {
+          state.cycleData.periods = state.cycleData.periods.filter(p => p.start !== start && !p.predicted);
+          state.cycleData.periods.push({ start, dur, predicted: false });
+          state.cycleData.periods.sort((a,b) => new Date(a.start) - new Date(b.start));
+        }
+        try { localStorage.setItem('ht_cycle_v2', JSON.stringify(state.cycleData)); } catch(e){}
+        setTimeout(() => { window.location.href = 'cycle.html'; }, 1200);
+      }
+    },
+
+    habit: {
+      title: isHU ? '💪 Szokás hozzáadása' : '💪 Add a Habit',
+      steps: [
+        {
+          id: 'name',
+          type: 'text',
+          question: isHU ? 'Mi legyen az új szokásod neve?' : 'What should the new habit be called?',
+          placeholder: isHU ? 'pl. Reggeli futás, Olvasás…' : 'e.g. Morning run, Reading…',
+        },
+      ],
+      finish: isHU ? '✅ Szokás hozzáadva! Megnyitom a Szokáskövetőt.' : '✅ Habit added! Opening Habit Tracker.',
+      action: function(answers) {
+        const name = (answers.name || '').trim();
+        if (!name) return;
+        if (!state.habits) state.habits = [];
+        state.habits.push(name);
+        try { localStorage.setItem('ht_habits_v4', JSON.stringify(state.habits)); } catch(e){}
+        setTimeout(() => { window.location.href = 'tracker.html'; }, 1200);
+      }
+    },
+
+    task: {
+      title: isHU ? '✅ Feladat hozzáadása' : '✅ Add a Task',
+      steps: [
+        {
+          id: 'name',
+          type: 'text',
+          question: isHU ? 'Mi a feladat neve?' : 'What is the task name?',
+          placeholder: isHU ? 'pl. Beadandó leadása, Fogászat lefoglalása…' : 'e.g. Submit assignment, Book dentist…',
+        },
+        {
+          id: 'scope',
+          type: 'choice',
+          question: isHU ? 'Milyen hatókörű a feladat?' : 'What scope does this task belong to?',
+          choices: [
+            { value: 'daily',   label: isHU ? '☀️ Napi'   : '☀️ Daily' },
+            { value: 'weekly',  label: isHU ? '📅 Heti'   : '📅 Weekly' },
+            { value: 'monthly', label: isHU ? '🗓 Havi'   : '🗓 Monthly' },
+            { value: 'yearly',  label: isHU ? '📆 Éves'   : '📆 Yearly' },
+          ]
+        },
+        {
+          id: 'priority',
+          type: 'choice',
+          question: isHU ? 'Mekkora a prioritása?' : 'What priority level?',
+          choices: [
+            { value: 'high',   label: isHU ? '🔴 Magas'   : '🔴 High' },
+            { value: 'medium', label: isHU ? '⚡ Közepes' : '⚡ Medium' },
+            { value: 'low',    label: isHU ? '🔵 Alacsony': '🔵 Low' },
+          ]
+        },
+      ],
+      finish: isHU ? '✅ Feladat hozzáadva! Megnyitom a Feladatok oldalt.' : '✅ Task added! Opening Tasks page.',
+      action: function(answers) {
+        const name = (answers.name || '').trim();
+        if (!name) return;
+        const scope = answers.scope || 'daily';
+        const priority = answers.priority || 'medium';
+        const key = 'ht_tasks_v3';
+        let tasks = [];
+        try { tasks = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){}
+        tasks.push({ id: Date.now(), name, scope, priority, status: 'inprogress', due: '', done: false, created: new Date().toISOString() });
+        try { localStorage.setItem(key, JSON.stringify(tasks)); } catch(e){}
+        setTimeout(() => { window.location.href = 'tasks.html'; }, 1200);
+      }
+    },
+
+    event: {
+      title: isHU ? '🗓 Órarend esemény hozzáadása' : '🗓 Add a Timetable Event',
+      steps: [
+        {
+          id: 'title',
+          type: 'text',
+          question: isHU ? 'Mi az esemény neve?' : 'What is the event title?',
+          placeholder: isHU ? 'pl. Matek óra, Edzés, Gyűlés…' : 'e.g. Math class, Gym, Team meeting…',
+        },
+        {
+          id: 'day',
+          type: 'choice',
+          question: isHU ? 'Melyik napon?' : 'Which day?',
+          choices: [
+            { value: '0', label: isHU ? '📅 Hétfő'     : '📅 Monday' },
+            { value: '1', label: isHU ? '📅 Kedd'      : '📅 Tuesday' },
+            { value: '2', label: isHU ? '📅 Szerda'    : '📅 Wednesday' },
+            { value: '3', label: isHU ? '📅 Csütörtök' : '📅 Thursday' },
+            { value: '4', label: isHU ? '📅 Péntek'    : '📅 Friday' },
+            { value: '5', label: isHU ? '📅 Szombat'   : '📅 Saturday' },
+            { value: '6', label: isHU ? '📅 Vasárnap'  : '📅 Sunday' },
+          ]
+        },
+        {
+          id: 'category',
+          type: 'choice',
+          question: isHU ? 'Milyen kategóriájú?' : 'What category?',
+          choices: [
+            { value: 'work',     label: isHU ? '💼 Munka'      : '💼 Work' },
+            { value: 'study',    label: isHU ? '📚 Tanulás'    : '📚 Study' },
+            { value: 'health',   label: isHU ? '💪 Egészség'   : '💪 Health' },
+            { value: 'personal', label: isHU ? '🙂 Személyes'  : '🙂 Personal' },
+            { value: 'social',   label: isHU ? '👥 Szociális'  : '👥 Social' },
+            { value: 'other',    label: isHU ? '📦 Egyéb'      : '📦 Other' },
+          ]
+        },
+      ],
+      finish: isHU ? '✅ Esemény hozzáadva! Megnyitom az Órarend oldalt.' : '✅ Event added! Opening Timetable.',
+      action: function(answers) {
+        const title = (answers.title || '').trim();
+        if (!title) return;
+        const key = 'ht_timetable_v4';
+        let events = [];
+        try { events = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){}
+        events.push({
+          id: Date.now(),
+          title,
+          day: parseInt(answers.day) || 0,
+          start: '09:00',
+          end: '10:00',
+          allDay: false,
+          category: answers.category || 'other',
+          color: null,
+          imported: false,
+        });
+        try { localStorage.setItem(key, JSON.stringify(events)); } catch(e){}
+        setTimeout(() => { window.location.href = 'timetable.html'; }, 1200);
+      }
+    },
+
+    shopping: {
+      title: isHU ? '🛒 Bevásárló elem hozzáadása' : '🛒 Add a Shopping Item',
+      steps: [
+        {
+          id: 'name',
+          type: 'text',
+          question: isHU ? 'Mit kell beleírni a listára?' : 'What item do you need to add?',
+          placeholder: isHU ? 'pl. Tej, Sampon, Mosogatószer…' : 'e.g. Milk, Shampoo, Dish soap…',
+        },
+        {
+          id: 'category',
+          type: 'choice',
+          question: isHU ? 'Melyik kategóriába tartozik?' : 'Which category does it belong to?',
+          choices: [
+            { value: 'grocery',   label: isHU ? '🥦 Élelmiszer'  : '🥦 Grocery' },
+            { value: 'household', label: isHU ? '🏠 Háztartás'   : '🏠 Household' },
+            { value: 'personal',  label: isHU ? '💄 Személyes'   : '💄 Personal' },
+            { value: 'other',     label: isHU ? '📦 Egyéb'       : '📦 Other' },
+          ]
+        },
+      ],
+      finish: isHU ? '✅ Elem hozzáadva! Megnyitom a Bevásárlólistát.' : '✅ Item added! Opening Shopping List.',
+      action: function(answers) {
+        const name = (answers.name || '').trim();
+        if (!name) return;
+        const key = 'ht_shopping_v3';
+        let items = [];
+        try { items = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){}
+        items.push({ id: Date.now(), name, qty: 1, category: answers.category || 'grocery', checked: false });
+        try { localStorage.setItem(key, JSON.stringify(items)); } catch(e){}
+        setTimeout(() => { window.location.href = 'shopping.html'; }, 1200);
+      }
+    },
+
+    finance: {
+      title: isHU ? '💰 Pénzügy beállítása' : '💰 Set Up Finance',
+      steps: [
+        {
+          id: 'currency',
+          type: 'choice',
+          question: isHU ? 'Melyik pénznemet szeretnéd használni?' : 'Which currency would you like to use?',
+          choices: [
+            { value: 'HUF', label: '🇭🇺 HUF – Magyar forint' },
+            { value: 'EUR', label: '🇪🇺 EUR – Euro' },
+            { value: 'USD', label: '🇺🇸 USD – US Dollar' },
+            { value: 'GBP', label: '🇬🇧 GBP – British Pound' },
+            { value: 'other', label: isHU ? '✏️ Egyéb' : '✏️ Other' },
+          ]
+        },
+        {
+          id: 'currency_custom',
+          type: 'text',
+          question: isHU ? 'Add meg a pénznem jelét (pl. CHF, PLN, SEK…)' : 'Enter the currency symbol (e.g. CHF, PLN, SEK…)',
+          placeholder: 'CHF',
+          skipIf: (answers) => answers.currency !== 'other',
+        },
+        {
+          id: 'budget',
+          type: 'number',
+          question: isHU ? 'Mi a havi büdzséd? (hagyd üresen, ha nem szeretnél megadni)' : 'What is your monthly budget? (leave empty to skip)',
+          placeholder: '0',
+          min: 0, max: 9999999, default: '',
+          hint: isHU ? 'Ennyi a tervezett havi keret' : 'Your planned monthly spending limit',
+        },
+      ],
+      finish: isHU ? '✅ Pénzügy beállítva! Megnyitom a Pénzügy oldalt.' : '✅ Finance set up! Opening Finance page.',
+      action: function(answers) {
+        const currency = answers.currency === 'other' ? (answers.currency_custom || '?') : answers.currency;
+        const budget = parseFloat(answers.budget) || 0;
+        try {
+          const raw = JSON.parse(localStorage.getItem('ht_finance_v1') || 'null') || {};
+          raw.currency = currency;
+          if (budget > 0) raw.monthlyBudget = budget;
+          localStorage.setItem('ht_finance_v1', JSON.stringify(raw));
+        } catch(e){}
+        setTimeout(() => { window.location.href = 'finance.html'; }, 1200);
+      }
+    },
+
+    theme: {
+      title: isHU ? '🎨 Téma kiválasztása' : '🎨 Choose a Theme',
+      steps: [
+        {
+          id: 'theme',
+          type: 'choice',
+          question: isHU ? 'Melyik témát szeretnéd?' : 'Which theme would you like?',
+          choices: [
+            { value: 'dark',     label: '🌑 Dark' },
+            { value: 'light',    label: '☀️ Light' },
+            { value: 'forest',   label: '🌿 Forest' },
+            { value: 'sakura',   label: '🌸 Sakura' },
+            { value: 'ocean',    label: '🌊 Ocean' },
+            { value: 'sunset',   label: '🌅 Sunset' },
+            { value: 'midnight', label: '🌙 Midnight Purple' },
+            { value: 'amoled',   label: '🖤 AMOLED Black' },
+            { value: 'paper',    label: '🤍 Minimal Paper' },
+            { value: 'slate',    label: '🌫️ Slate' },
+          ]
+        },
+      ],
+      finish: isHU ? '✅ Téma alkalmazva!' : '✅ Theme applied!',
+      action: function(answers) {
+        const theme = answers.theme;
+        if (!theme) return;
+        document.body.className = document.body.className.replace(/theme-\w+/g, '');
+        document.body.classList.add('theme-' + theme);
+        try { localStorage.setItem('ht_theme_v2', theme); } catch(e){}
+      }
+    },
+
+    language: {
+      title: isHU ? '🌐 Nyelv kiválasztása' : '🌐 Choose Language',
+      steps: [
+        {
+          id: 'lang',
+          type: 'choice',
+          question: isHU ? 'Melyik nyelvet szeretnéd használni?' : 'Which language would you like?',
+          choices: [
+            { value: 'en', label: '🇬🇧 English' },
+            { value: 'hu', label: '🇭🇺 Magyar' },
+            { value: 'de', label: '🇩🇪 Deutsch' },
+            { value: 'es', label: '🇪🇸 Español' },
+            { value: 'fr', label: '🇫🇷 Français' },
+          ]
+        },
+      ],
+      finish: isHU ? '✅ Nyelv beállítva!' : '✅ Language applied!',
+      action: function(answers) {
+        const lang = answers.lang;
+        if (!lang) return;
+        try { localStorage.setItem('ht_lang_v1', lang); } catch(e){}
+        if (typeof setLang === 'function') {
+          setLang(lang);
+        } else {
+          location.reload();
+        }
+      }
+    },
+  };
+}
+
+// ── UI Builder ────────────────────────────────────────────────────────────────
+function buildAsstUI() {
+  document.getElementById('asst-fab')?.remove();
+  document.getElementById('asst-panel')?.remove();
+  document.getElementById('asst-backdrop')?.remove();
+
+  const content = getAsstContent();
+
+  // FAB button
+  const fab = document.createElement('button');
+  fab.id = 'asst-fab';
+  fab.innerHTML = '💬';
+  fab.title = content.greeting;
+  fab.style.cssText = `
+    position:fixed;bottom:28px;right:28px;z-index:7000;
+    width:52px;height:52px;border-radius:50%;border:none;
+    background:linear-gradient(135deg,#4f6ef7,#e05a9a);
+    color:#fff;font-size:22px;cursor:pointer;
+    box-shadow:0 4px 20px rgba(79,110,247,.45);
+    transition:transform .18s,box-shadow .18s;
+    display:flex;align-items:center;justify-content:center;
+  `;
+  fab.onmouseenter = () => { fab.style.transform='scale(1.1)'; fab.style.boxShadow='0 6px 28px rgba(79,110,247,.6)'; };
+  fab.onmouseleave = () => { fab.style.transform=''; fab.style.boxShadow='0 4px 20px rgba(79,110,247,.45)'; };
+
+  // Backdrop
+  const backdrop = document.createElement('div');
+  backdrop.id = 'asst-backdrop';
+  backdrop.style.cssText = 'position:fixed;inset:0;z-index:7001;background:rgba(0,0,0,.4);backdrop-filter:blur(3px);display:none;';
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.id = 'asst-panel';
+  panel.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:7002;
+    width:min(720px,94vw);height:min(80vh,740px);
+    background:var(--surface);border:1.5px solid var(--border);
+    border-radius:24px;box-shadow:0 32px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);
+    display:none;flex-direction:column;overflow:hidden;
+    animation:centeredModalPop .3s cubic-bezier(.4,0,.2,1);
+  `;
+
+  panel.innerHTML = `
+    <div style="padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-shrink:0;background:linear-gradient(135deg,rgba(79,110,247,.12),rgba(224,90,154,.08));">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f6ef7,#e05a9a);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 16px rgba(79,110,247,.35);">💬</div>
+      <div style="flex:1;">
+        <div style="font-weight:800;font-size:16px;color:var(--text);letter-spacing:-.3px;">Life Tracker Assistant</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">● Always here to help</div>
+      </div>
+      <button id="asst-close" style="background:none;border:1.5px solid var(--border);color:var(--text-muted);font-size:15px;cursor:pointer;padding:5px 12px;border-radius:8px;line-height:1;transition:all .15s;" onmouseenter="this.style.borderColor='#e05a9a';this.style.color='#e05a9a';" onmouseleave="this.style.borderColor='';this.style.color='';">✕</button>
+    </div>
+    <div id="asst-messages" style="flex:1;overflow-y:auto;padding:22px 24px 12px;display:flex;flex-direction:column;gap:16px;"></div>
+    <div id="asst-chips" style="padding:14px 20px 20px;display:flex;flex-wrap:wrap;gap:10px;flex-shrink:0;border-top:1px solid var(--border);"></div>
+  `;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(panel);
+  document.body.appendChild(fab);
+
+  let isOpen = false;
+  let wizardState = null;
+
+  function open() {
+    isOpen = true;
+    panel.style.display = 'flex';
+    backdrop.style.display = 'block';
+    fab.innerHTML = '✕';
+    fab.style.background = 'linear-gradient(135deg,#555,#333)';
+    if (!document.getElementById('asst-messages').children.length) {
+      showGreeting();
+    }
+  }
+  function close() {
+    isOpen = false;
+    panel.style.display = 'none';
+    backdrop.style.display = 'none';
+    fab.innerHTML = '💬';
+    fab.style.background = 'linear-gradient(135deg,#4f6ef7,#e05a9a)';
+  }
+
+  fab.addEventListener('click', () => isOpen ? close() : open());
+  backdrop.addEventListener('click', close);
+  panel.querySelector('#asst-close').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) close(); });
+
+  // ── Message helpers ────────────────────────────────────────────────────────
+  const msgBox = panel.querySelector('#asst-messages');
+  const chipsBox = panel.querySelector('#asst-chips');
+
+  function addMsg(html, from = 'bot') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = from === 'bot'
+      ? 'display:flex;gap:8px;align-items:flex-end;'
+      : 'display:flex;justify-content:flex-end;';
+
+    if (from === 'bot') {
+      wrap.innerHTML = `
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4f6ef7,#e05a9a);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 2px 10px rgba(79,110,247,.3);">💬</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px 16px 16px 4px;padding:12px 16px;font-size:14px;line-height:1.65;color:var(--text);max-width:82%;word-break:break-word;">${html}</div>
+      `;
+    } else {
+      wrap.innerHTML = `<div style="background:linear-gradient(135deg,#4f6ef7,#3a5ce0);border-radius:16px 16px 4px 16px;padding:12px 16px;font-size:14px;line-height:1.65;color:#fff;max-width:82%;word-break:break-word;">${html}</div>`;
+    }
+    msgBox.appendChild(wrap);
+    msgBox.scrollTop = msgBox.scrollHeight;
+    return wrap;
+  }
+
+  function setChips(chips) {
+    chipsBox.innerHTML = '';
+    chips.forEach(chip => {
+      const btn = document.createElement('button');
+      btn.innerHTML = chip.label;
+      btn.style.cssText = `
+        padding:9px 18px;border-radius:20px;border:1.5px solid var(--border);
+        background:var(--surface2);color:var(--text);font-family:inherit;
+        font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;
+      `;
+      btn.onmouseenter = () => { btn.style.borderColor='#4f6ef7'; btn.style.color='#4f6ef7'; };
+      btn.onmouseleave = () => { btn.style.borderColor=''; btn.style.color=''; };
+      btn.addEventListener('click', () => chip.onClick());
+      chipsBox.appendChild(btn);
+    });
+  }
+
+  function addInput(cfg) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;gap:6px;align-items:flex-end;padding:2px 0;';
+
+    let inputEl;
+    if (cfg.type === 'date') {
+      inputEl = document.createElement('input');
+      inputEl.type = 'date';
+      inputEl.style.cssText = 'flex:1;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:12px;';
+      const today = new Date();
+      inputEl.max = today.toISOString().slice(0,10);
+      inputEl.value = today.toISOString().slice(0,10);
+    } else {
+      inputEl = document.createElement('input');
+      inputEl.type = cfg.type === 'number' ? 'number' : 'text';
+      inputEl.placeholder = cfg.placeholder || '';
+      if (cfg.min !== undefined) inputEl.min = cfg.min;
+      if (cfg.max !== undefined) inputEl.max = cfg.max;
+      if (cfg.default !== undefined && cfg.default !== '') inputEl.value = cfg.default;
+      inputEl.style.cssText = 'flex:1;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:12px;';
+    }
+
+    const btn = document.createElement('button');
+    btn.textContent = '→';
+    btn.style.cssText = 'padding:8px 14px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#3a5ce0);color:#fff;font-weight:800;cursor:pointer;font-size:14px;flex-shrink:0;';
+
+    if (cfg.hint) {
+      const hintWrap = document.createElement('div');
+      hintWrap.style.cssText = 'width:100%;';
+      const hintEl = document.createElement('div');
+      hintEl.textContent = cfg.hint;
+      hintEl.style.cssText = 'font-size:11px;color:var(--text-muted);margin-bottom:4px;';
+      hintWrap.appendChild(hintEl);
+      hintWrap.appendChild(wrap);
+      wrap.appendChild(inputEl);
+      wrap.appendChild(btn);
+      msgBox.appendChild(hintWrap);
+    } else {
+      wrap.appendChild(inputEl);
+      wrap.appendChild(btn);
+      msgBox.appendChild(wrap);
+    }
+
+    msgBox.scrollTop = msgBox.scrollHeight;
+    inputEl.focus();
+
+    function submit() {
+      const val = inputEl.value.toString().trim();
+      cfg.onSubmit(val);
+    }
+    btn.addEventListener('click', submit);
+    inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  }
+
+  // ── Navigation ─────────────────────────────────────────────────────────────
+  function showGreeting() {
+    const content = getAsstContent();
+    addMsg(content.greeting);
+    showCategories();
+  }
+
+  function showCategories() {
+    const content = getAsstContent();
+    setChips([
+      ...content.categories.map(cat => ({
+        label: `${cat.icon} ${cat.label}`,
+        onClick: () => showCategory(cat)
+      }))
+    ]);
+  }
+
+  function showCategory(cat) {
+    const content = getAsstContent();
+    addMsg(cat.icon + ' ' + cat.label, 'user');
+    setChips([
+      { label: content.backLabel, onClick: () => { addMsg(content.backLabel,'user'); showCategories(); } },
+      ...cat.items.map(item => ({
+        label: `${item.icon} ${item.label}`,
+        onClick: () => handleItem(item)
+      }))
+    ]);
+  }
+
+  function handleItem(item) {
+    const content = getAsstContent();
+    addMsg(`${item.icon} ${item.label}`, 'user');
+    setChips([]);
+
+    // Navigation items with href
+    if (item.href && !item.action) {
+      window.location.href = item.href;
+      return;
+    }
+    // Navigation items with special action
+    if (item.action === 'settings') {
+      close();
+      if (typeof openSettingsModal === 'function') openSettingsModal();
+      return;
+    }
+    if (item.action === 'analysis') {
+      window.location.href = item.href + '#analysis';
+      return;
+    }
+
+    // Wizard items
+    if (item.wizard) {
+      const wizards = getWizards();
+      const wiz = wizards[item.wizard];
+      if (wiz) {
+        addMsg(`<b>${wiz.title}</b>`);
+        wizardState = { wizard: item.wizard, step: 0, answers: {} };
+        runWizardStep();
+        return;
+      }
+    }
+
+    // Plain answer
+    const answer = content.answers[item.id];
+    if (answer) {
+      addMsg(answer);
+      setChips([{ label: content.backLabel, onClick: () => { addMsg(content.backLabel,'user'); showCategories(); } }]);
+    }
+  }
+
+  // ── Wizard engine ──────────────────────────────────────────────────────────
+  function runWizardStep() {
+    const wizards = getWizards();
+    const wiz = wizards[wizardState.wizard];
+    if (!wiz) return;
+    const content = getAsstContent();
+
+    let step = wizardState.step;
+    while (step < wiz.steps.length) {
+      const s = wiz.steps[step];
+      if (s.skipIf && s.skipIf(wizardState.answers)) {
+        step++;
+        wizardState.step = step;
+      } else {
+        break;
+      }
+    }
+
+    if (step >= wiz.steps.length) {
+      addMsg(wiz.finish);
+      wiz.action(wizardState.answers);
+      wizardState = null;
+      setTimeout(() => {
+        setChips([{ label: content.backLabel, onClick: () => { addMsg(content.backLabel,'user'); showCategories(); } }]);
+      }, 1300);
+      return;
+    }
+
+    const stepDef = wiz.steps[step];
+    addMsg(stepDef.question);
+
+    if (stepDef.type === 'choice') {
+      setChips(stepDef.choices.map(ch => ({
+        label: ch.label,
+        onClick: () => {
+          addMsg(ch.label, 'user');
+          wizardState.answers[stepDef.id] = ch.value;
+          wizardState.step = step + 1;
+          runWizardStep();
+        }
+      })));
+    } else {
+      addInput({
+        type: stepDef.type,
+        placeholder: stepDef.placeholder,
+        min: stepDef.min,
+        max: stepDef.max,
+        default: stepDef.default,
+        hint: stepDef.hint,
+        onSubmit: (val) => {
+          const display = val || (stepDef.default !== undefined ? String(stepDef.default) : '-');
+          addMsg(display, 'user');
+          wizardState.answers[stepDef.id] = val || (stepDef.default !== undefined ? String(stepDef.default) : '');
+          wizardState.step = step + 1;
+          runWizardStep();
+        }
+      });
+      setChips([]);
+    }
+  }
+} // end buildAsstUI
+
+buildAsstUI();
+
+})();

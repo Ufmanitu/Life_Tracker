@@ -1,5 +1,4 @@
-# Life_Tracker - Beta Test
-https://ufmanitu.github.io/Life_Tracker/
+# Life_Tracker - Beta Test https://ufmanitu.github.io/Life_Tracker/
 All in one life tracker that saves the changes to your local storage and operates offline. Contains:
 
 Habit tracker with analysis and statistics;

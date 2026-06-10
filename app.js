@@ -222,7 +222,17 @@ const TRANSLATIONS = {
     settingsExportBtn:"Export Backup",
     settingsImportBtn:"Import Backup",
     importModalTitle:"Import Backup?",
-    importModalConfirm:"Overwrite & Import",
+        journalTitle:"📓 Daily Journal",
+    journalMoodLabel:"How was today?",
+    journalPlaceholder:"What happened today? Even 2–3 sentences builds a powerful record over time…",
+    journalSaveBtn:"Save Entry",
+    journalNoEntries:"No journal entries yet. Start writing below!",
+    journalRecentTitle:"Recent Entries",
+    journalToday:"Today",
+    journalYesterday:"Yesterday",
+    journalDaysAgo:(n)=>`${n} days ago`,
+    journalNoNote:"(mood only)",
+    journalNotePlaceholder:"Add a note for today…",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
@@ -392,7 +402,17 @@ const TRANSLATIONS = {
     settingsExportBtn:"Mentés exportálása",
     settingsImportBtn:"Mentés importálása",
     importModalTitle:"Importálás?",
-    importModalConfirm:"Felülírás & Importálás",
+        journalTitle:"📓 Napi napló",
+    journalMoodLabel:"Milyen volt a mai nap?",
+    journalPlaceholder:"Mi történt ma? Már 2–3 mondat is erős visszatekintést teremt idő múltával…",
+    journalSaveBtn:"Bejegyzés mentése",
+    journalNoEntries:"Még nincs naplóbejegyzés. Kezdj el írni!",
+    journalRecentTitle:"Legutóbbi bejegyzések",
+    journalToday:"Ma",
+    journalYesterday:"Tegnap",
+    journalDaysAgo:(n)=>`${n} napja`,
+    journalNoNote:"(csak hangulat)",
+    journalNotePlaceholder:"Adj hozzá egy megjegyzést a mai naphoz…",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
@@ -562,7 +582,17 @@ const TRANSLATIONS = {
     settingsExportBtn:"Backup exportieren",
     settingsImportBtn:"Backup importieren",
     importModalTitle:"Backup importieren?",
-    importModalConfirm:"Überschreiben & Importieren",
+        journalTitle:"📓 Tagesjournal",
+    journalMoodLabel:"Wie war heute?",
+    journalPlaceholder:"Was ist heute passiert? Schon 2–3 Sätze ergeben im Laufe der Zeit ein kraftvolles Tagebuch…",
+    journalSaveBtn:"Eintrag speichern",
+    journalNoEntries:"Noch keine Journaleinträge. Fang jetzt an!",
+    journalRecentTitle:"Letzte Einträge",
+    journalToday:"Heute",
+    journalYesterday:"Gestern",
+    journalDaysAgo:(n)=>`vor ${n} Tagen`,
+    journalNoNote:"(nur Stimmung)",
+    journalNotePlaceholder:"Notiz für heute hinzufügen…",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
@@ -732,7 +762,17 @@ const TRANSLATIONS = {
     settingsExportBtn:"Exportar copia de seguridad",
     settingsImportBtn:"Importar copia de seguridad",
     importModalTitle:"¿Importar copia de seguridad?",
-    importModalConfirm:"Sobrescribir e Importar",
+        journalTitle:"📓 Diario Personal",
+    journalMoodLabel:"¿Cómo fue hoy?",
+    journalPlaceholder:"¿Qué pasó hoy? Con 2–3 frases ya construyes un poderoso registro con el tiempo…",
+    journalSaveBtn:"Guardar entrada",
+    journalNoEntries:"Aún no hay entradas. ¡Empieza a escribir!",
+    journalRecentTitle:"Entradas recientes",
+    journalToday:"Hoy",
+    journalYesterday:"Ayer",
+    journalDaysAgo:(n)=>`Hace ${n} días`,
+    journalNoNote:"(solo ánimo)",
+    journalNotePlaceholder:"Añadir una nota de hoy…",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
@@ -902,7 +942,17 @@ const TRANSLATIONS = {
     settingsExportBtn:"Exporter la sauvegarde",
     settingsImportBtn:"Importer la sauvegarde",
     importModalTitle:"Importer la sauvegarde ?",
-    importModalConfirm:"Écraser & Importer",
+        journalTitle:"📓 Journal Quotidien",
+    journalMoodLabel:"Comment était aujourd'hui ?",
+    journalPlaceholder:"Qu'est-il arrivé aujourd'hui ? Même 2–3 phrases forment un précieux journal sur la durée…",
+    journalSaveBtn:"Enregistrer",
+    journalNoEntries:"Pas encore d'entrées. Commence à écrire !",
+    journalRecentTitle:"Entrées récentes",
+    journalToday:"Aujourd'hui",
+    journalYesterday:"Hier",
+    journalDaysAgo:(n)=>`Il y a ${n} jours`,
+    journalNoNote:"(humeur seulement)",
+    journalNotePlaceholder:"Ajouter une note pour aujourd'hui…",
   }
 };
 
@@ -991,7 +1041,8 @@ let state={
   goalsYearly:[], goalsYearlyCtr:1,
   todos:[], todoCtr:1,
   cycleData:{ periods:[], days:{}, cycleLen:28, mode:"natural", takenPills:{} },
-  timetable:[], ttIdCtr:1
+  timetable:[], ttIdCtr:1,
+  journal:{}
 };
 
 const K={
@@ -1015,6 +1066,7 @@ function saveAll(){
     saveNav();
     localStorage.setItem('ht_goals_ext_v1',JSON.stringify({daily:state.goalsDaily,dCtr:state.goalsDailyCtr,weekly:state.goalsWeekly,wCtr:state.goalsWeeklyCtr,monthly:state.goalsMonthly,mCtr:state.goalsMonthlyCtr,yearly:state.goalsYearly,yCtr:state.goalsYearlyCtr}));
     localStorage.setItem('ht_todos_v1',JSON.stringify({todos:state.todos,ctr:state.todoCtr}));
+    localStorage.setItem('ht_journal_v1',JSON.stringify(state.journal));
   }catch(e){}
   flashSaved();
 }
@@ -1030,6 +1082,7 @@ function loadAll(){
   try{const eg=JSON.parse(localStorage.getItem('ht_goals_ext_v1')||'null');if(eg){state.goalsDaily=eg.daily||[];state.goalsDailyCtr=eg.dCtr||1;state.goalsWeekly=eg.weekly||[];state.goalsWeeklyCtr=eg.wCtr||1;state.goalsMonthly=eg.monthly||[];state.goalsMonthlyCtr=eg.mCtr||1;state.goalsYearly=eg.yearly||[];state.goalsYearlyCtr=eg.yCtr||1;}}catch(e){}
   try{const td=JSON.parse(localStorage.getItem('ht_todos_v1')||'null');if(td){state.todos=td.todos||[];state.todoCtr=td.ctr||1;}}catch(e){}
   try{const ttd=JSON.parse(localStorage.getItem(K.timetable())||'null');if(ttd){state.timetable=ttd.tt||[];state.ttIdCtr=ttd.ctr||1;}}catch(e){}
+  try{const jd=JSON.parse(localStorage.getItem('ht_journal_v1')||'null');if(jd&&typeof jd==='object')state.journal=jd;}catch(e){}
   // Purge legacy events that have no date (they pre-date week-aware storage)
   state.timetable=state.timetable.filter(ev=>!!ev.date);
 }
@@ -1275,7 +1328,7 @@ function render(animate){
     slots.forEach((d,dow)=>{
       const cell=document.createElement("div");cell.className="day-header-cell";
       if(d===null){cell.style.visibility="hidden";cell.innerHTML=`<div class="day-dow">${DAYS_ARR[dow]}</div><div class="day-num">0</div>`;}
-      else{const today=isToday(d);cell.innerHTML=`<div class="day-dow" style="color:${wcolor}">${DAYS_ARR[dow]}</div><div class="day-num ${today?'today-num':''}">${d}</div>`;}
+      else{const today=isToday(d);cell.innerHTML=`<div class="day-dow" style="color:${wcolor}">${DAYS_ARR[dow]}</div><div class="day-num ${today?'today-num':''}">${d}${(()=>{const jk=getJournalKey(state.year,state.month,d);const je=state.journal[jk];return (je&&(je.note||je.mood))?'<span class=\"journal-dot\">◆</span>':''})()}</div>`;}
       dr.appendChild(cell);
     });col.appendChild(dr);
     state.habits.forEach((_,hi)=>{
@@ -1287,7 +1340,7 @@ function render(animate){
           const ck=isChecked(hi,d);if(ck)box.classList.add("done");
           box.style.border=`2.5px solid ${ck?wcolor:"#2a3d6e"}`;
           box.style.background=ck?wcolor+"28":"transparent";
-          box.dataset.hi=hi;box.dataset.d=d;
+          box.dataset.hi=hi;box.dataset.d=d;box.dataset.wcolor=wcolor;
           if(ck)box.innerHTML=`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${wcolor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         }
         row.appendChild(box);
@@ -1312,7 +1365,7 @@ function render(animate){
 function renderDaysView(animate){
   const total=getDaysInMonth(state.year,state.month);
   const grid=document.getElementById("days-grid");grid.innerHTML="";
-  for(let d=total;d>=1;d--){
+  for(let d=1;d<=total;d++){
     const pct=calcDayPct(d);const color=pctColor(pct);
     const today=isToday(d);const future=isFuture(d);
     const card=document.createElement("div");
@@ -1356,11 +1409,28 @@ function renderDaysView(animate){
         <div class="day-card-track"><div class="day-card-fill" style="width:0%;background:${color};"></div></div>
       </div>
       <div class="day-habits-list">${habHTML}</div>
-      ${mHTML}`;
+      ${mHTML}
+      <div class="day-journal-section">
+        <div class="mindset-title">${t('journalTitle')}</div>
+        <div class="day-journal-mood-row" id="day-journal-mood-${d}">
+          ${JOURNAL_MOODS.map((em,i)=>{
+            const jk=getJournalKey(state.year,state.month,d);
+            const jEntry=state.journal[jk]||{mood:0};
+            const act=jEntry.mood===i+1;
+            return `<button class="day-journal-mood-btn${act?' active':''}" data-jd="${jk}" data-jmood="${i+1}" style="${act?`border-color:${JOURNAL_MOOD_COLORS[i]};box-shadow:0 0 0 2px ${JOURNAL_MOOD_COLORS[i]}33;background:${JOURNAL_MOOD_COLORS[i]}18;`:''}">${em}</button>`;
+          }).join('')}
+        </div>
+        <textarea class="day-journal-note" data-jd="${getJournalKey(state.year,state.month,d)}" placeholder="${t('journalNotePlaceholder')}" maxlength="2000">${(state.journal[getJournalKey(state.year,state.month,d)]||{note:''}).note}</textarea>
+      </div>`;
     grid.appendChild(card);
-    const delay=(total-d)*.035;
-    setTimeout(()=>{card.style.animation=`scalePop .38s ${delay}s cubic-bezier(.4,0,.2,1) both`;},10);
-    requestAnimationFrame(()=>{setTimeout(()=>{const fill=card.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";},80+(total-d)*30);});
+    if(animate){
+      const delay=(d-1)*.035;
+      setTimeout(()=>{card.style.animation=`scalePop .38s ${delay}s cubic-bezier(.4,0,.2,1) both`;},10);
+      requestAnimationFrame(()=>{setTimeout(()=>{const fill=card.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";},80+(d-1)*35);});
+    } else {
+      card.style.opacity="1";
+      requestAnimationFrame(()=>{const fill=card.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";});
+    }
   }
 }
 
@@ -1461,7 +1531,7 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
     <div><strong style="color:#fff;font-size:1.1em;">${done}</strong>&nbsp;${t('completedStat')}</div>
     <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong>&nbsp;${t('habitsStat')}</div>
     <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year,state.month)}</strong>&nbsp;${t('daysStat')}</div>`;
-  renderMindsetChart(days);renderGoals();
+  renderMindsetChart(days);renderGoals();renderJournal();
 }
 
 function renderMindsetChart(days){
@@ -1499,6 +1569,127 @@ function renderGoals(){
       <button class="goal-remove-btn" data-rgid="${g.id}">×</button>`;
     gl.appendChild(item);
   });
+}
+
+
+// ─── DAILY JOURNAL ────────────────────────────────────────────────────────────
+let journalSelectedDate = null; // { year, month, day } — null = today
+
+function getJournalKey(year, month, day) {
+  return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+}
+function getJournalEntry(dateKey) {
+  return state.journal[dateKey] || { mood:0, note:'' };
+}
+function saveJournalEntry(dateKey, mood, note) {
+  note = note.trim();
+  if (!note && !mood) { delete state.journal[dateKey]; }
+  else { state.journal[dateKey] = { mood, note }; }
+  localStorage.setItem('ht_journal_v1', JSON.stringify(state.journal));
+  flashSaved();
+}
+function getJournalDateObj() {
+  if (journalSelectedDate) return new Date(journalSelectedDate.year, journalSelectedDate.month, journalSelectedDate.day);
+  return new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+}
+function setJournalDate(d) {
+  const today = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  if (d > today) return; // no future entries
+  journalSelectedDate = { year:d.getFullYear(), month:d.getMonth(), day:d.getDate() };
+}
+
+const JOURNAL_MOODS = ['😢','😕','😐','🙂','😄'];
+const JOURNAL_MOOD_COLORS = ['#e05a9a','#f5a623','#4f6ef7','#3ecfb2','#a78bfa'];
+
+function renderJournal() {
+  const card = document.getElementById('journal-card');
+  if (!card) return;
+  const d = getJournalDateObj();
+  const dateKey = getJournalKey(d.getFullYear(), d.getMonth(), d.getDate());
+  const entry = getJournalEntry(dateKey);
+  const todayKey = getJournalKey(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  const yestD = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() - 1);
+  const yestKey = getJournalKey(yestD.getFullYear(), yestD.getMonth(), yestD.getDate());
+  const isToday = dateKey === todayKey;
+  const isYest = dateKey === yestKey;
+
+  let displayDate;
+  if (isToday) displayDate = t('journalToday');
+  else if (isYest) displayDate = t('journalYesterday');
+  else displayDate = d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+
+  const dateDisplay = document.getElementById('journal-date-display');
+  if (dateDisplay) { dateDisplay.textContent = displayDate; dateDisplay.style.color = isToday ? '#4f6ef7' : 'var(--text)'; }
+
+  // Disable next-day btn if today
+  const nextBtn = document.getElementById('journal-next-day');
+  if (nextBtn) nextBtn.disabled = isToday;
+
+  // Mood picker
+  const moodRow = document.getElementById('journal-mood-row');
+  if (moodRow) {
+    moodRow.innerHTML = `<span class="journal-mood-label">${t('journalMoodLabel')}</span>` +
+      JOURNAL_MOODS.map((em, i) => {
+        const active = entry.mood === i+1;
+        return `<button class="journal-mood-btn${active?' active':''}" data-jmood="${i+1}" title="${i+1}/5" style="${active?`border-color:${JOURNAL_MOOD_COLORS[i]};box-shadow:0 0 0 3px ${JOURNAL_MOOD_COLORS[i]}33;background:${JOURNAL_MOOD_COLORS[i]}18;`:''}">${em}</button>`;
+      }).join('');
+  }
+
+  // Textarea
+  const ta = document.getElementById('journal-textarea');
+  if (ta) { ta.value = entry.note; updateJournalCharCount(); }
+
+  renderJournalHistory(dateKey);
+}
+
+function updateJournalCharCount() {
+  const ta = document.getElementById('journal-textarea');
+  const cc = document.getElementById('journal-char-count');
+  if (!ta || !cc) return;
+  const len = ta.value.length;
+  const max = 2000;
+  cc.textContent = `${len} / ${max}`;
+  cc.style.color = len > max * 0.9 ? '#e05a9a' : 'var(--text-muted)';
+  if (ta.value.length > max) ta.value = ta.value.slice(0, max);
+}
+
+function renderJournalHistory(activeDateKey) {
+  const hist = document.getElementById('journal-history');
+  if (!hist) return;
+  const entries = Object.entries(state.journal)
+    .filter(([,v]) => v && (v.note || v.mood))
+    .sort((a,b) => b[0].localeCompare(a[0]))
+    .slice(0, 12);
+  if (!entries.length) {
+    hist.innerHTML = `<div class="journal-history-title">${t('journalRecentTitle')}</div><div class="journal-empty">${t('journalNoEntries')}</div>`;
+    return;
+  }
+  const todayKey = getJournalKey(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  const yestD = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate()-1);
+  const yestKey = getJournalKey(yestD.getFullYear(), yestD.getMonth(), yestD.getDate());
+  hist.innerHTML = `<div class="journal-history-title">${t('journalRecentTitle')}</div>` +
+    entries.map(([dk, en]) => {
+      let label;
+      if (dk === todayKey) label = t('journalToday');
+      else if (dk === yestKey) label = t('journalYesterday');
+      else {
+        const [y,m,day] = dk.split('-').map(Number);
+        const diff = Math.round((Date.now() - new Date(y,m-1,day).getTime()) / 86400000);
+        label = diff < 30 ? t('journalDaysAgo')(diff) : dk;
+      }
+      const moodEmoji = en.mood ? JOURNAL_MOODS[en.mood-1] : '';
+      const moodColor = en.mood ? JOURNAL_MOOD_COLORS[en.mood-1] : 'transparent';
+      const notePreview = en.note ? en.note.slice(0,100)+(en.note.length>100?'…':'') : `<em class="journal-no-note">${t('journalNoNote')}</em>`;
+      const isActive = dk === activeDateKey;
+      return `<div class="journal-entry-item${isActive?' active':''}" data-jentry="${dk}">
+        <div class="journal-entry-left">
+          <div class="journal-entry-date">${label}</div>
+          ${moodEmoji?`<div class="journal-entry-mood" style="color:${moodColor}">${moodEmoji}</div>`:''}
+        </div>
+        <div class="journal-entry-text">${notePreview}</div>
+        <button class="journal-entry-delete" data-jdel="${dk}" title="Delete">×</button>
+      </div>`;
+    }).join('');
 }
 
 function getCurrentWeekIdx(){
@@ -1591,7 +1782,7 @@ function renderWeeklyView(animate){
         cb.className='weekly-cb'+(ck?' done':'')+(future?' future-day':'');
         cb.style.border=`2.5px solid ${ck?wcolor:'#2a3d6e'}`;
         cb.style.background=ck?wcolor+'28':'transparent';
-        cb.dataset.hi=hi;cb.dataset.d=d;
+        cb.dataset.hi=hi;cb.dataset.d=d;cb.dataset.wcolor=wcolor;
         if(ck)cb.innerHTML=`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${wcolor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         cell.appendChild(cb);
       }
@@ -3535,19 +3726,102 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{
 if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   on("tracker-section","click",e=>{
     const cb=e.target.closest(".day-habit-cb");
-    if(cb){toggleCheck(+cb.dataset.hi,+cb.dataset.d);return;}
+    if(cb){
+      const hi=+cb.dataset.hi,d=+cb.dataset.d;
+      const k=`${hi}_${d}`;
+      state.checked[k]=!state.checked[k];
+      if(!state.checked[k])delete state.checked[k];
+      const nowChecked=!!state.checked[k];
+      // Instant visual update — no full re-render
+      cb.classList.toggle("checked",nowChecked);
+      cb.innerHTML=nowChecked?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:"";
+      const lbl=cb.closest(".day-habit-item")?.querySelector(".day-habit-label");
+      if(lbl)lbl.classList.toggle("done-label",nowChecked);
+      // Update day progress bar and pct
+      const card=cb.closest(".day-card");
+      if(card){
+        const pct=calcDayPct(d);const color=pctColor(pct);
+        const fill=card.querySelector(".day-card-fill");if(fill){fill.style.background=color;fill.style.width=pct+"%";}
+        const pctEl=card.querySelector(".day-card-pct");if(pctEl){pctEl.textContent=pct+"%";pctEl.style.color=color;}
+      }
+      saveAll();
+      return;
+    }
     const star=e.target.closest(".mindset-star[data-d]");
     if(star){
       const d=+star.dataset.d,type=star.dataset.type,val=+star.dataset.val;
       const cur=getMindset(d,type);setMindset(d,type,cur===val?0:val);renderDaysView(false);
       return;
     }
+    // Day card journal mood
+    const jmb=e.target.closest(".day-journal-mood-btn[data-jd]");
+    if(jmb){
+      const jk=jmb.dataset.jd;
+      const wasActive=jmb.classList.contains('active');
+      jmb.closest('.day-journal-mood-row')?.querySelectorAll('.day-journal-mood-btn').forEach((b,i)=>{
+        b.classList.remove('active'); b.style.borderColor=''; b.style.boxShadow=''; b.style.background='';
+      });
+      const newMood=wasActive?0:parseInt(jmb.dataset.jmood);
+      if(!wasActive){
+        jmb.classList.add('active');
+        const ci=parseInt(jmb.dataset.jmood)-1;
+        jmb.style.borderColor=JOURNAL_MOOD_COLORS[ci];
+        jmb.style.boxShadow=`0 0 0 2px ${JOURNAL_MOOD_COLORS[ci]}33`;
+        jmb.style.background=`${JOURNAL_MOOD_COLORS[ci]}18`;
+      }
+      const existing=state.journal[jk]||{mood:0,note:''};
+      saveJournalEntry(jk,newMood,existing.note||'');
+      return;
+    }
     const wcb=e.target.closest(".weekly-cb[data-hi]");
-    if(wcb){wcb.classList.add("checking");setTimeout(()=>wcb.classList.remove("checking"),320);toggleCheck(+wcb.dataset.hi,+wcb.dataset.d);return;}
+    if(wcb){
+      const hi=+wcb.dataset.hi,d=+wcb.dataset.d,wcolor=wcb.dataset.wcolor||'#3ecfb2';
+      const k=`${hi}_${d}`;state.checked[k]=!state.checked[k];
+      if(!state.checked[k])delete state.checked[k];
+      const nowChecked=!!state.checked[k];
+      wcb.classList.toggle('done',nowChecked);
+      wcb.style.border=`2.5px solid ${nowChecked?wcolor:'#2a3d6e'}`;
+      wcb.style.background=nowChecked?wcolor+'28':'transparent';
+      wcb.innerHTML=nowChecked?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${wcolor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
+      // Update footer pct for this day column
+      const col=wcb.closest('.weekly-day-col');
+      if(col){const foot=col.querySelector('.weekly-day-footer');if(foot){const dpct=calcDayPct(d);foot.textContent=dpct+'%';foot.style.color=pctColor(dpct);}}
+      // Update week score badge
+      const wg=getWeekGroups();const wt=calcWeekTotals(wg);const ws=wt[currentWeekIdx];
+      const badge=document.getElementById('weekly-score-badge');if(badge){badge.textContent=ws+'%';badge.style.color=pctColor(ws);badge.style.borderColor=pctColor(ws)+'44';}
+      // Update top stats
+      const{done,total,pct}=calcStats();
+      document.getElementById('stat-done').textContent=done;
+      document.getElementById('stat-pct').textContent=Math.round(pct)+'%';
+      updateArc('overall-arc',pct);
+      document.getElementById('overall-pct-text').textContent=Math.round(pct)+'%';
+      document.getElementById('overall-sub-text').textContent=`${done}/${total}`;
+      saveAll();return;
+    }
     const scopeBtn=e.target.closest(".tracker-scope-btn");
     if(scopeBtn){applyTrackerScope(scopeBtn.dataset.tscope);return;}
     const box=e.target.closest(".checkbox:not(.invisible)");
-    if(box){box.classList.add("checking");setTimeout(()=>box.classList.remove("checking"),320);toggleCheck(+box.dataset.hi,+box.dataset.d);return;}
+    if(box){
+      const hi=+box.dataset.hi,d=+box.dataset.d,wcolor=box.dataset.wcolor||'#3ecfb2';
+      const k=`${hi}_${d}`;state.checked[k]=!state.checked[k];
+      if(!state.checked[k])delete state.checked[k];
+      const nowChecked=!!state.checked[k];
+      box.classList.toggle('done',nowChecked);
+      box.style.border=`2.5px solid ${nowChecked?wcolor:'#2a3d6e'}`;
+      box.style.background=nowChecked?wcolor+'28':'transparent';
+      box.innerHTML=nowChecked?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${wcolor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:'';
+      // Update week footer pct
+      const col=box.closest('.week-col');
+      if(col){const wg=getWeekGroups();const wt=calcWeekTotals(wg);const wi=Array.from(col.parentNode.children).indexOf(col);const foot=col.querySelector('.week-footer');if(foot&&wi>=0)foot.textContent=wt[wi]+'%';}
+      // Update top stats
+      const{done,total,pct}=calcStats();
+      document.getElementById('stat-done').textContent=done;
+      document.getElementById('stat-pct').textContent=Math.round(pct)+'%';
+      updateArc('overall-arc',pct);
+      document.getElementById('overall-pct-text').textContent=Math.round(pct)+'%';
+      document.getElementById('overall-sub-text').textContent=`${done}/${total}`;
+      saveAll();return;
+    }
     const rem=e.target.closest(".habit-remove-btn[data-hi]");
     if(rem&&editingHabit===null){
       const hi=+rem.dataset.hi;const nc={};
@@ -3646,6 +3920,22 @@ if(CURRENT_PAGE==="tasks"){
   });
 }
 
+// Day card journal note: auto-save on input (debounced)
+if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
+  let _jNoteTimer=null;
+  document.addEventListener('input',e=>{
+    const jta=e.target.closest(".day-journal-note[data-jd]");
+    if(!jta)return;
+    if(jta.value.length>2000)jta.value=jta.value.slice(0,2000);
+    clearTimeout(_jNoteTimer);
+    _jNoteTimer=setTimeout(()=>{
+      const jk=jta.dataset.jd;
+      const existing=state.journal[jk]||{mood:0,note:''};
+      saveJournalEntry(jk,existing.mood||0,jta.value);
+    },600);
+  });
+}
+
 // ── ANALYSIS PAGE / SUB-TAB ───────────────────────────────────────────────────
 if(CURRENT_PAGE==="analysis"){
   // Standalone analysis.html → redirect to habits page with analysis sub-tab active
@@ -3667,6 +3957,73 @@ if(CURRENT_PAGE==="habits"){
     document.getElementById("goal-input").value="";saveAll();renderGoals();
   });
   on("goal-input","keydown",e=>{if(e.key==="Enter")document.getElementById("goal-add-btn").click();});
+}
+
+
+// ── JOURNAL EVENT HANDLERS ────────────────────────────────────────────────────
+if(CURRENT_PAGE==="habits"){
+  on('journal-prev-day','click',()=>{
+    const d=getJournalDateObj(); d.setDate(d.getDate()-1); setJournalDate(d); renderJournal();
+  });
+  on('journal-next-day','click',()=>{
+    const d=getJournalDateObj(); d.setDate(d.getDate()+1); setJournalDate(d); renderJournal();
+  });
+  on('journal-save-btn','click',()=>{
+    const d=getJournalDateObj();
+    const dateKey=getJournalKey(d.getFullYear(),d.getMonth(),d.getDate());
+    const ta=document.getElementById('journal-textarea');
+    const activeBtn=document.querySelector('.journal-mood-btn.active');
+    const mood=activeBtn?parseInt(activeBtn.dataset.jmood):0;
+    saveJournalEntry(dateKey,mood,ta?ta.value:'');
+    // Show dot on monthly/weekly cell if exists
+    render(false);
+    // Re-render history
+    renderJournalHistory(dateKey);
+    // Button feedback
+    const btn=document.getElementById('journal-save-btn');
+    if(btn){const orig=btn.innerHTML;btn.innerHTML='✓ Saved!';btn.style.background='linear-gradient(135deg,#3ecfb2,#2aa894)';setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';},1600);}
+  });
+  on('journal-textarea','input',updateJournalCharCount);
+  on('journal-textarea','keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))document.getElementById('journal-save-btn')?.click();});
+  on('journal-card','click',e=>{
+    // Mood button
+    const mb=e.target.closest('.journal-mood-btn[data-jmood]');
+    if(mb){
+      const wasActive=mb.classList.contains('active');
+      document.querySelectorAll('.journal-mood-btn').forEach((b,i)=>{
+        b.classList.remove('active');
+        b.style.borderColor=''; b.style.boxShadow=''; b.style.background='';
+      });
+      if(!wasActive){
+        mb.classList.add('active');
+        const idx=parseInt(mb.dataset.jmood)-1;
+        mb.style.borderColor=JOURNAL_MOOD_COLORS[idx];
+        mb.style.boxShadow=`0 0 0 3px ${JOURNAL_MOOD_COLORS[idx]}33`;
+        mb.style.background=`${JOURNAL_MOOD_COLORS[idx]}18`;
+      }
+      return;
+    }
+    // Delete entry
+    const del=e.target.closest('.journal-entry-delete[data-jdel]');
+    if(del){
+      delete state.journal[del.dataset.jdel];
+      localStorage.setItem('ht_journal_v1',JSON.stringify(state.journal));
+      render(false);
+      renderJournal();
+      return;
+    }
+    // Click history entry to navigate
+    const item=e.target.closest('.journal-entry-item[data-jentry]');
+    if(item&&!e.target.closest('[data-jdel]')){
+      const dk=item.dataset.jentry;
+      const[y,m,day]=dk.split('-').map(Number);
+      setJournalDate(new Date(y,m-1,day));
+      renderJournal();
+      // Scroll to top of journal card
+      document.getElementById('journal-card')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+      return;
+    }
+  });
 }
 
 // ── TIMETABLE PAGE ────────────────────────────────────────────────────────────

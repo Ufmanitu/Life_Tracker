@@ -53,6 +53,7 @@
   width: min(480px, 92vw);
   box-shadow: 0 20px 60px rgba(0,0,0,.4);
   text-align: center;
+  animation: centeredModalPop .28s cubic-bezier(.4,0,.2,1);
 }
 </style>
 </head>
@@ -133,6 +134,15 @@
       <button class="settings-theme-btn" data-theme="paper">🤍 Paper</button>
       <button class="settings-theme-btn" data-theme="slate">🌫️ Slate</button>
     </div>
+  </div>
+
+  <!-- GUIDED TOUR -->
+  <div class="settings-card">
+    <div class="settings-card-title">🗺️ Guided Tour</div>
+    <div class="settings-hint" style="margin-bottom:16px;">New here or want a refresher? The tour walks you through every feature — step by step, right on the page.</div>
+    <button id="settings-page-tour-btn" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#f5a623,#e08a10);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(245,166,35,.35);transition:opacity .15s;" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'">
+      🗺️ Take the Tour
+    </button>
   </div>
 
   <!-- EXPORT / IMPORT -->

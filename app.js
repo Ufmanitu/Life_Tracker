@@ -217,6 +217,12 @@ const TRANSLATIONS = {
     settingsClearModalTitle:"Delete All Data?",
     settingsClearModalDesc:"This will permanently erase ALL Life Tracker data from this browser. This action cannot be undone.",
     settingsClearModalConfirm:"Delete Everything",
+    settingsSyncTitle:"🔄 Export & Import Data",
+    settingsSyncHint:"Export a backup of all your data as a JSON file, then import it on any other device to sync your Life Tracker.",
+    settingsExportBtn:"Export Backup",
+    settingsImportBtn:"Import Backup",
+    importModalTitle:"Import Backup?",
+    importModalConfirm:"Overwrite & Import",
   },
   hu: {
     monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],
@@ -381,6 +387,12 @@ const TRANSLATIONS = {
     settingsClearModalTitle:"Összes adat törlése?",
     settingsClearModalDesc:"Ez véglegesen törli az összes Life Tracker adatot ebből a böngészőből. Nem vonható vissza.",
     settingsClearModalConfirm:"Mindent töröl",
+    settingsSyncTitle:"🔄 Exportálás & Importálás",
+    settingsSyncHint:"Exportáld az adataidat JSON fájlként, majd importáld bármely más eszközön a szinkronizáláshoz.",
+    settingsExportBtn:"Mentés exportálása",
+    settingsImportBtn:"Mentés importálása",
+    importModalTitle:"Importálás?",
+    importModalConfirm:"Felülírás & Importálás",
   },
   de: {
     monthNames:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
@@ -545,6 +557,12 @@ const TRANSLATIONS = {
     settingsClearModalTitle:"Alle Daten löschen?",
     settingsClearModalDesc:"Hiermit werden ALLE Life Tracker Daten aus diesem Browser dauerhaft gelöscht. Nicht rückgängig machbar.",
     settingsClearModalConfirm:"Alles löschen",
+    settingsSyncTitle:"🔄 Exportieren & Importieren",
+    settingsSyncHint:"Exportiere deine Daten als JSON-Datei und importiere sie auf einem anderen Gerät, um Life Tracker zu synchronisieren.",
+    settingsExportBtn:"Backup exportieren",
+    settingsImportBtn:"Backup importieren",
+    importModalTitle:"Backup importieren?",
+    importModalConfirm:"Überschreiben & Importieren",
   },
   es: {
     monthNames:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
@@ -709,6 +727,12 @@ const TRANSLATIONS = {
     settingsClearModalTitle:"¿Eliminar todos los datos?",
     settingsClearModalDesc:"Esto borrará TODOS los datos de Life Tracker de este navegador. No se puede deshacer.",
     settingsClearModalConfirm:"Eliminar todo",
+    settingsSyncTitle:"🔄 Exportar e Importar",
+    settingsSyncHint:"Exporta una copia de seguridad de tus datos como archivo JSON e impórtala en otro dispositivo para sincronizar Life Tracker.",
+    settingsExportBtn:"Exportar copia de seguridad",
+    settingsImportBtn:"Importar copia de seguridad",
+    importModalTitle:"¿Importar copia de seguridad?",
+    importModalConfirm:"Sobrescribir e Importar",
   },
   fr: {
     monthNames:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
@@ -873,6 +897,12 @@ const TRANSLATIONS = {
     settingsClearModalTitle:"Supprimer toutes les données ?",
     settingsClearModalDesc:"Cela effacera TOUTES les données Life Tracker de ce navigateur. Action irréversible.",
     settingsClearModalConfirm:"Tout effacer",
+    settingsSyncTitle:"🔄 Exporter & Importer",
+    settingsSyncHint:"Exportez une sauvegarde de vos données en JSON, puis importez-la sur n'importe quel appareil pour synchroniser Life Tracker.",
+    settingsExportBtn:"Exporter la sauvegarde",
+    settingsImportBtn:"Importer la sauvegarde",
+    importModalTitle:"Importer la sauvegarde ?",
+    importModalConfirm:"Écraser & Importer",
   }
 };
 
@@ -4621,6 +4651,9 @@ function showOnboardingModal() {
     // Apply translations + cycle visibility
     applyTranslations();
     applyCycleTabVisibility();
+
+    // Launch the guided tour for first-time users
+    setTimeout(() => window.startTour && window.startTour(true), 400);
   }
 
   renderObModal();
@@ -4665,7 +4698,7 @@ function openSettingsModal() {
 
   const modal = document.createElement('div');
   modal.id = 'settings-modal';
-  modal.style.cssText = 'position:fixed;z-index:8901;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,94vw);max-height:85vh;overflow-y:auto;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 28px 24px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:scalePop .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;gap:16px;';
+  modal.style.cssText = 'position:fixed;z-index:8901;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,94vw);max-height:85vh;overflow-y:auto;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 28px 24px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:centeredModalPop .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;gap:16px;';
 
   function refreshBtns() {
     modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
@@ -4742,6 +4775,13 @@ function openSettingsModal() {
       </div>
     </div>
     <div class="settings-card">
+      <div class="settings-card-title">🗺️ Guided Tour</div>
+      <div class="settings-hint" style="margin-bottom:14px;">New here or want a refresher? The tour walks you through every feature step by step.</div>
+      <button id="settings-modal-tour-btn" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#f5a623,#e08a10);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(245,166,35,.35);transition:opacity .15s;">
+        🗺️ Take the Tour
+      </button>
+    </div>
+    <div class="settings-card">
       <div class="settings-card-title">ℹ️ About</div>
       <div class="settings-hint" style="font-size:13px;line-height:1.8;"><strong>Life Tracker</strong> — Beta<br>All data stored locally. No account needed. Works offline.</div>
     </div>
@@ -4759,6 +4799,11 @@ function openSettingsModal() {
   modal.querySelector('#settings-modal-close').addEventListener('click', closeModal);
   document.addEventListener('keydown', function escHandler(e) {
     if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
+  });
+
+  modal.querySelector('#settings-modal-tour-btn').addEventListener('click', () => {
+    closeModal();
+    setTimeout(() => window.startTour && window.startTour(true), 200);
   });
 
   modal.querySelector('#settings-modal-gender-btns').addEventListener('click', e => {
@@ -5006,6 +5051,11 @@ function initSettingsPage() {
       reader.readAsText(file);
     });
   }
+
+  // Tour button on standalone settings page
+  on('settings-page-tour-btn', 'click', () => {
+    window.startTour && window.startTour(true);
+  });
 }
 
 
@@ -5025,6 +5075,14 @@ function getAsstContent() {
       : '👋 Hi! I\'m your Life Tracker Assistant. What can I help you with today?',
     backLabel: isHU ? '← Vissza' : '← Back',
     categories: [
+      {
+        id: 'tour',
+        icon: '🗺️',
+        label: isHU ? 'Ismerkedés a funkciókal' : 'Take a Tour',
+        items: [
+          { id: 'tour-start', icon: '🗺️', label: isHU ? '🗺️ Indíts interaktív túrát' : '🗺️ Start interactive tour', action: 'tour' },
+        ]
+      },
       {
         id: 'setup',
         icon: '⚙️',
@@ -5758,6 +5816,11 @@ function buildAsstUI() {
       if (typeof openSettingsModal === 'function') openSettingsModal();
       return;
     }
+    if (item.action === 'tour') {
+      close();
+      setTimeout(() => window.startTour && window.startTour(true), 200);
+      return;
+    }
     if (item.action === 'analysis') {
       window.location.href = item.href + '#analysis';
       return;
@@ -5845,6 +5908,665 @@ function buildAsstUI() {
   }
 } // end buildAsstUI
 
-buildAsstUI();
+// Initialise the assistant on every page listed in ASST_PAGES
+if (ASST_PAGES.includes(CURRENT_PAGE)) {
+  buildAsstUI();
+}
+const TOUR_KEY = 'ht_tour_v1';
+
+// Each step: { page, selector, titleKey, descKey, position }
+// position: 'bottom' | 'top' | 'left' | 'right' | 'center'
+const TOUR_STEPS = [
+  // ── Tracker page ──────────────────────────────────────────────────
+  { page: 'habits',    selector: '#header .tab-switcher',    position: 'bottom', titleKey: 'tourTabsTitle',      descKey: 'tourTabsDesc' },
+  { page: 'habits',    selector: '#habits-subtab-bar',       position: 'bottom', titleKey: 'tourSubtabTitle',    descKey: 'tourSubtabDesc' },
+  { page: 'habits',    selector: '#tracker-section .tracker-scope-bar', position: 'bottom', titleKey: 'tourScopeTitle', descKey: 'tourScopeDesc' },
+  { page: 'habits',    selector: '#monthly-view-wrap',       position: 'top',    titleKey: 'tourGridTitle',      descKey: 'tourGridDesc' },
+  { page: 'habits',    selector: '#add-habit-row',           position: 'top',    titleKey: 'tourAddHabitTitle',  descKey: 'tourAddHabitDesc' },
+  { page: 'habits',    selector: '#stats-row',               position: 'bottom', titleKey: 'tourStatsTitle',     descKey: 'tourStatsDesc' },
+  // ── Timetable page ─────────────────────────────────────────────────
+  { page: 'timetable', selector: '#tt-grid-wrap',            position: 'bottom', titleKey: 'tourTTGridTitle',    descKey: 'tourTTGridDesc' },
+  { page: 'timetable', selector: '.tt-add-form',             position: 'top',    titleKey: 'tourTTFormTitle',    descKey: 'tourTTFormDesc' },
+  { page: 'timetable', selector: '#gcal-import-btn',         position: 'bottom', titleKey: 'tourGcalTitle',      descKey: 'tourGcalDesc' },
+  // ── Tasks page ─────────────────────────────────────────────────────
+  { page: 'tasks',     selector: '.tasks-scope-bar',         position: 'bottom', titleKey: 'tourTaskScopeTitle', descKey: 'tourTaskScopeDesc' },
+  { page: 'tasks',     selector: '#tasks-list',              position: 'bottom', titleKey: 'tourTaskListTitle',  descKey: 'tourTaskListDesc' },
+  { page: 'tasks',     selector: '#add-task-form',           position: 'top',    titleKey: 'tourTaskFormTitle',  descKey: 'tourTaskFormDesc' },
+  // ── Finance page ────────────────────────────────────────────────────
+  { page: 'finance',   selector: '.fin-summary-cards',       position: 'bottom', titleKey: 'tourFinSummaryTitle',descKey: 'tourFinSummaryDesc' },
+  { page: 'finance',   selector: '.fin-add-row, .fin-btn-row, #fin-add-expense-btn', position: 'top', titleKey: 'tourFinAddTitle', descKey: 'tourFinAddDesc' },
+  // ── Shopping page ──────────────────────────────────────────────────
+  { page: 'shopping',  selector: '#shop-lists',              position: 'bottom', titleKey: 'tourShopListTitle',  descKey: 'tourShopListDesc' },
+  { page: 'shopping',  selector: '.add-task-form',           position: 'top',    titleKey: 'tourShopFormTitle',  descKey: 'tourShopFormDesc' },
+  // ── Cycle page (female users only) ────────────────────────────────
+  { page: 'cycle', female: true, selector: '.cycle-mode-toggle',    position: 'bottom', titleKey: 'tourCycleModeTitle',    descKey: 'tourCycleModeDesc' },
+  { page: 'cycle', female: true, selector: '#pill-setup-card',      position: 'top',    titleKey: 'tourCycleSetupTitle',   descKey: 'tourCycleSetupDesc' },
+  { page: 'cycle', female: true, selector: '#cycle-cal-card',       position: 'left',   titleKey: 'tourCycleCalTitle',     descKey: 'tourCycleCalDesc' },
+  { page: 'cycle', female: true, selector: '#symptom-grid',         position: 'top',    titleKey: 'tourCycleSympTitle',    descKey: 'tourCycleSympDesc' },
+  { page: 'cycle', female: true, selector: '#cycle-insights',       position: 'top',    titleKey: 'tourCycleInsightsTitle',descKey: 'tourCycleInsightsDesc' },
+  // ── Pomodoro (any page) ────────────────────────────────────────────
+  { page: null,        selector: '#pomo-toggle',             position: 'bottom', titleKey: 'tourPomoTitle',      descKey: 'tourPomoDesc' },
+  // ── Assistant FAB ──────────────────────────────────────────────────
+  { page: null,        selector: '#asst-fab',                position: 'top',    titleKey: 'tourAsstTitle',      descKey: 'tourAsstDesc' },
+];
+
+const TOUR_I18N = {
+  en: {
+    tourNext: 'Next →', tourPrev: '← Back', tourSkip: 'Skip tour', tourFinish: '🎉 Let\'s go!',
+    tourProgress: (n, t) => `Step ${n} of ${t}`,
+    tourTabsTitle:       '🗂 Navigation Tabs',
+    tourTabsDesc:        'Switch between all the major sections of Life Tracker using these tabs — Habit Tracker, Timetable, Tasks, Shopping, Cycle, and Finance.',
+    tourSubtabTitle:     '📊 Habit Tracker & Analysis',
+    tourSubtabDesc:      'Within the Habit Tracker you have two sub-views: the main tracker grid and the Analysis tab with detailed statistics and charts.',
+    tourScopeTitle:      '☀️ Daily · Weekly · Monthly Views',
+    tourScopeDesc:       'Switch how you see your habits. Daily gives you a simple checkbox per habit. Weekly shows the current 7-day window. Monthly shows the full calendar grid.',
+    tourGridTitle:       '✅ The Habit Grid',
+    tourGridDesc:        'Each row is a habit. Each column is a day. Click any cell to mark that day as completed — it lights up. Click again to unmark it.',
+    tourAddHabitTitle:   '➕ Add a Habit',
+    tourAddHabitDesc:    'Type a habit name here and press Enter or click + Add. Your new habit appears instantly at the top of the grid.',
+    tourStatsTitle:      '📈 Stats at a Glance',
+    tourStatsDesc:       'These cards always show your daily progress: total habits, how many you\'ve completed today, your completion percentage, and task count.',
+    tourTTGridTitle:     '🗓 Your Weekly Timetable',
+    tourTTGridDesc:      'A visual grid of your week. Time runs down, days across. Events appear as colored blocks — each category has its own colour.',
+    tourTTFormTitle:     '➕ Add an Event',
+    tourTTFormDesc:      'Fill in the event title, day, start & end time, and category, then click + Add Event. You can also click any existing event in the grid to edit or delete it.',
+    tourGcalTitle:       '📅 Import from Google Calendar',
+    tourGcalDesc:        'Already use Google Calendar? Export your calendar as an .ics file and import it here — all your events appear in the timetable instantly.',
+    tourTaskScopeTitle:  '📋 Task Scopes',
+    tourTaskScopeDesc:   'Organise tasks by time horizon: Daily (today only), Weekly (this week), Monthly (this month), or Yearly (big-picture goals). Each scope is a separate list.',
+    tourTaskListTitle:   '✅ Your Task List',
+    tourTaskListDesc:    'Tasks are colour-coded by priority: 🔴 High, ⚡ Medium, 🔵 Low. Tap the checkbox to complete, the ✎ icon to edit, or the 🗑 icon to delete.',
+    tourTaskFormTitle:   '➕ Add a Task',
+    tourTaskFormDesc:    'Fill in the name, choose priority and optional due date, then click + Add Task. Due dates glow red when overdue.',
+    tourFinSummaryTitle: '💰 Finance Summary',
+    tourFinSummaryDesc:  'These cards show your total income, total expenses, and current balance for the selected month. Use the ‹ › arrows in the header to browse months.',
+    tourFinAddTitle:     '➕ Log Income & Expenses',
+    tourFinAddDesc:      'Add income or expense entries here. Each entry has a description, amount, category, and date. Everything is grouped by category in the breakdown chart below.',
+    tourShopListTitle:   '🛒 Shopping Lists',
+    tourShopListDesc:    'Items are grouped by category into cards. Tap any item to check it off as purchased. Use the filter buttons at the top to focus on one category.',
+    tourShopFormTitle:   '➕ Add a Shopping Item',
+    tourShopFormDesc:    'Enter the item name, quantity, and category then click + Add Item. Use 🗑 Clear Checked to remove everything you\'ve already bought.',
+    tourPomoTitle:       '⏱ Pomodoro Timer',
+    tourPomoDesc:        'The Pomodoro timer is available on every page. Click it to open a focus timer: 25 min work → 5 min break → repeat. Press Space to start, Esc to close.',
+    tourAsstTitle:       '💬 Your Assistant',
+    tourAsstDesc:        'This is your Life Tracker Assistant — available on every page. Ask it how features work, use it to add habits, tasks, or events, or get tips. Click it anytime!',
+    tourCycleModeTitle:  '🌸 Natural Cycle & Pill Mode',
+    tourCycleModeDesc:   'Choose between two tracking modes: Natural Cycle (track your period and ovulation) or Birth Control Pill (track your daily pill pack with active and placebo pills).',
+    tourCycleSetupTitle: '📅 Log Your Cycle Start',
+    tourCycleSetupDesc:  'Enter the start date of your last period, how long your period lasts, and your average cycle length. The app will calculate your phases and predict your next period automatically.',
+    tourCycleCalTitle:   '🗓 Cycle Calendar',
+    tourCycleCalDesc:    'Each day is colour-coded by phase: 🔴 Period · 🟠 Fertile window · 🟡 Ovulation · 🟣 PMS/Luteal. Hover over any day to see what phase you are in.',
+    tourCycleSympTitle:  '💊 Log Symptoms & Mood',
+    tourCycleSympDesc:   'Tap any symptom you are experiencing today — cramps, fatigue, cravings, and more. Then pick a mood emoji and add a personal note. Hit 💾 Save Today to record it.',
+    tourCycleInsightsTitle: '📊 Cycle Insights',
+    tourCycleInsightsDesc:  'Your personal cycle stats live here: current cycle day, days until next period, estimated ovulation date, and your full cycle history. Everything updates automatically.',
+  },
+  hu: {
+    tourNext: 'Következő →', tourPrev: '← Vissza', tourSkip: 'Átugorja', tourFinish: '🎉 Kezdjük!',
+    tourProgress: (n, t) => `${n}. lépés / ${t}`,
+    tourTabsTitle:       '🗂 Navigációs fülek',
+    tourTabsDesc:        'A Life Tracker főbb részei közötti váltáshoz használd ezeket a füleket: Szokáskövető, Órarend, Feladatok, Bevásárlólista, Ciklus, Pénzügy.',
+    tourSubtabTitle:     '📊 Szokáskövető & Elemzés',
+    tourSubtabDesc:      'A Szokáskövetőn belül két nézet áll rendelkezésre: a fő nyomkövetési rács, és az Elemzés fül részletes statisztikákkal és diagramokkal.',
+    tourScopeTitle:      '☀️ Napi · Heti · Havi nézetek',
+    tourScopeDesc:       'Válaszd meg, hogyan szeretnéd látni a szokásaidat. Napi nézet egyszerű jelölőnégyzeteket mutat. Heti a jelenlegi 7 napot. Havi a teljes naptárrácsot.',
+    tourGridTitle:       '✅ A szokásrács',
+    tourGridDesc:        'Minden sor egy szokás, minden oszlop egy nap. Kattints egy cellára, hogy aznapi elvégzettként jelöld meg — kiszínesedik. Újra kattintva megszüntetheted.',
+    tourAddHabitTitle:   '➕ Szokás hozzáadása',
+    tourAddHabitDesc:    'Írd be a szokás nevét ide, és nyomd meg az Enter billentyűt vagy kattints a + Hozzáad gombra. Az új szokás azonnal megjelenik a rács tetején.',
+    tourStatsTitle:      '📈 Gyors statisztikák',
+    tourStatsDesc:       'Ezek a kártyák mindig mutatják a napi haladást: összes szokás, hány teljesült ma, teljesítési arány, és a feladatok száma.',
+    tourTTGridTitle:     '🗓 Heti órarend',
+    tourTTGridDesc:      'A hét vizuális rácsában az idő lefelé halad, a napok vízszintesen. Az eseményeket színes blokkok jelölik — minden kategóriának saját színe van.',
+    tourTTFormTitle:     '➕ Esemény hozzáadása',
+    tourTTFormDesc:      'Add meg az esemény nevét, napját, kezdési és befejezési idejét, majd kattints a + Esemény gombra. Meglévő eseményre kattintva szerkesztheted vagy törölheted.',
+    tourGcalTitle:       '📅 Importálás Google Naptárból',
+    tourGcalDesc:        'Már használsz Google Naptárt? Exportáld .ics fájlként, majd importáld ide — az összes esemény azonnal megjelenik az órarendben.',
+    tourTaskScopeTitle:  '📋 Feladat hatókörök',
+    tourTaskScopeDesc:   'Rendezd a feladatokat időhorizont szerint: Napi (csak ma), Heti (ezen a héten), Havi (ebben a hónapban), Éves (nagy célok). Minden hatókör külön lista.',
+    tourTaskListTitle:   '✅ Feladatlista',
+    tourTaskListDesc:    'A feladatok prioritás szerint színkódoltak: 🔴 Magas, ⚡ Közepes, 🔵 Alacsony. Kattints a jelölőre a kész jelöléshez, ✎-re a szerkesztéshez, 🗑-ra a törléshez.',
+    tourTaskFormTitle:   '➕ Feladat hozzáadása',
+    tourTaskFormDesc:    'Add meg a nevet, válassz prioritást és opcionális határidőt, majd kattints a + Feladat hozzáadása gombra. A lejárt határidők pirosan jelöltek.',
+    tourFinSummaryTitle: '💰 Pénzügyi összesítő',
+    tourFinSummaryDesc:  'Ezek a kártyák mutatják a kiválasztott hónap összes bevételét, kiadását és egyenlegét. Hónapok között a fejlécben lévő ‹ › nyilakkal navigálhatsz.',
+    tourFinAddTitle:     '➕ Bevételek & kiadások rögzítése',
+    tourFinAddDesc:      'Ide viheted fel a bevételeket és kiadásokat. Minden bejegyzéshez megadható a leírás, összeg, kategória és dátum. Az összesítő diagram kategóriánként csoportosítja ezeket.',
+    tourShopListTitle:   '🛒 Bevásárlólisták',
+    tourShopListDesc:    'A termékek kategóriánként csoportosított kártyákon jelennek meg. Kattints egy elemre, hogy megvettként jelöld. A szűrőgombokkal egy kategóriára fókuszálhatsz.',
+    tourShopFormTitle:   '➕ Termék hozzáadása',
+    tourShopFormDesc:    'Add meg a termék nevét, mennyiségét és kategóriáját, majd kattints a + Elem hozzáadása gombra. A 🗑 Teljesítettek törlése gombbal eltávolíthatod a megvett elemeket.',
+    tourPomoTitle:       '⏱ Pomodoro időzítő',
+    tourPomoDesc:        'A Pomodoro időzítő minden oldalon elérhető. Kattints rá egy fókuszidőzítő megnyitásához: 25 perc munka → 5 perc szünet → ismétlés. Space = indítás, Esc = bezárás.',
+    tourAsstTitle:       '💬 A segéded',
+    tourAsstDesc:        'Ez a Life Tracker Segéded — minden oldalon elérhető. Kérdezz tőle a funkciókkal kapcsolatban, add hozzá szokásaidat, feladataidat vagy eseményeidet, és kérj tippeket. Kattints bármikor!',
+    tourCycleModeTitle:  '🌸 Természetes ciklus & Fogamzásgátló mód',
+    tourCycleModeDesc:   'Két követési mód közül választhatsz: Természetes ciklus (menstruáció és ovuláció követése) vagy Fogamzásgátló tabletta (napi tablettaszedés követése aktív és placebo tablettákkal).',
+    tourCycleSetupTitle: '📅 Ciklus beállítása',
+    tourCycleSetupDesc:  'Add meg az utolsó menstruációd kezdő dátumát, a menstruáció hosszát és az átlagos ciklushosszt. Az alkalmazás automatikusan kiszámolja a fázisokat és a következő menstruáció várható idejét.',
+    tourCycleCalTitle:   '🗓 Ciklus naptár',
+    tourCycleCalDesc:    'Minden nap szín szerint jelzi a fázist: 🔴 Menstruáció · 🟠 Termékeny ablak · 🟡 Ovuláció · 🟣 PMS/Luteális. Vidd az egeret egy napra, hogy lásd, melyik fázisban vagy.',
+    tourCycleSympTitle:  '💊 Tünetek & Hangulat naplózása',
+    tourCycleSympDesc:   'Jelöld be a mai tüneteidet — görcsök, fáradtság, sóvárgás és egyebek. Ezután válassz hangulat emojit és adj hozzá személyes megjegyzést. Nyomd meg a 💾 Mentés gombra.',
+    tourCycleInsightsTitle: '📊 Ciklus statisztikák',
+    tourCycleInsightsDesc:  'Személyes ciklus adataid: aktuális ciklusnap, napok a következő menstruációig, becsült ovulációs dátum és teljes ciklustörténet. Minden automatikusan frissül.',
+  },
+  de: {
+    tourNext: 'Weiter →', tourPrev: '← Zurück', tourSkip: 'Tour überspringen', tourFinish: '🎉 Los geht\'s!',
+    tourProgress: (n, t) => `Schritt ${n} von ${t}`,
+    tourTabsTitle:       '🗂 Navigations-Tabs',
+    tourTabsDesc:        'Wechsle mit diesen Tabs zwischen den Hauptbereichen von Life Tracker: Gewohnheits-Tracker, Stundenplan, Aufgaben, Einkaufsliste, Zyklus und Finanzen.',
+    tourSubtabTitle:     '📊 Tracker & Analyse',
+    tourSubtabDesc:      'Im Gewohnheits-Tracker gibt es zwei Unteransichten: das Tracking-Raster und den Analyse-Tab mit detaillierten Statistiken und Diagrammen.',
+    tourScopeTitle:      '☀️ Täglich · Wöchentlich · Monatlich',
+    tourScopeDesc:       'Wähle, wie du deine Gewohnheiten siehst. Täglich zeigt einfache Checkboxen. Wöchentlich das aktuelle 7-Tage-Fenster. Monatlich das vollständige Kalenderraster.',
+    tourGridTitle:       '✅ Das Gewohnheitsraster',
+    tourGridDesc:        'Jede Zeile ist eine Gewohnheit, jede Spalte ein Tag. Klicke auf eine Zelle, um diesen Tag als erledigt zu markieren — sie leuchtet auf. Erneut klicken zum Aufheben.',
+    tourAddHabitTitle:   '➕ Gewohnheit hinzufügen',
+    tourAddHabitDesc:    'Gib einen Namen ein und drücke Enter oder klicke + Hinzufügen. Die neue Gewohnheit erscheint sofort oben im Raster.',
+    tourStatsTitle:      '📈 Statistik-Übersicht',
+    tourStatsDesc:       'Diese Karten zeigen deinen täglichen Fortschritt: Gesamtanzahl der Gewohnheiten, heute erledigte, Abschlussquote und Aufgabenanzahl.',
+    tourTTGridTitle:     '🗓 Wöchentlicher Stundenplan',
+    tourTTGridDesc:      'Ein visuelles Wochenraster. Die Zeit verläuft nach unten, die Tage quer. Ereignisse erscheinen als farbige Blöcke — jede Kategorie hat ihre eigene Farbe.',
+    tourTTFormTitle:     '➕ Ereignis hinzufügen',
+    tourTTFormDesc:      'Titel, Tag, Start- und Endzeit sowie Kategorie ausfüllen, dann + Ereignis hinzufügen klicken. Auf ein bestehendes Ereignis klicken, um es zu bearbeiten oder zu löschen.',
+    tourGcalTitle:       '📅 Import aus Google Calendar',
+    tourGcalDesc:        'Nutzt du bereits Google Calendar? Exportiere deinen Kalender als .ics-Datei und importiere sie hier — alle Ereignisse erscheinen sofort im Stundenplan.',
+    tourTaskScopeTitle:  '📋 Aufgaben-Bereiche',
+    tourTaskScopeDesc:   'Organisiere Aufgaben nach Zeithorizont: Täglich, Wöchentlich, Monatlich oder Jährlich (große Ziele). Jeder Bereich ist eine eigene Liste.',
+    tourTaskListTitle:   '✅ Deine Aufgabenliste',
+    tourTaskListDesc:    'Aufgaben sind nach Priorität farbcodiert: 🔴 Hoch, ⚡ Mittel, 🔵 Niedrig. Checkbox für erledigt, ✎ zum Bearbeiten, 🗑 zum Löschen.',
+    tourTaskFormTitle:   '➕ Aufgabe hinzufügen',
+    tourTaskFormDesc:    'Name eingeben, Priorität und optionales Fälligkeitsdatum wählen, dann + Aufgabe hinzufügen klicken. Überfällige Aufgaben leuchten rot.',
+    tourFinSummaryTitle: '💰 Finanz-Übersicht',
+    tourFinSummaryDesc:  'Diese Karten zeigen Gesamteinnahmen, Gesamtausgaben und aktuelles Saldo für den gewählten Monat. Mit den ‹ › Pfeilen in der Kopfzeile zwischen Monaten wechseln.',
+    tourFinAddTitle:     '➕ Einnahmen & Ausgaben erfassen',
+    tourFinAddDesc:      'Hier Einnahmen und Ausgaben hinzufügen. Jeder Eintrag hat Beschreibung, Betrag, Kategorie und Datum. Im Aufschlussdiagramm wird alles nach Kategorie gruppiert.',
+    tourShopListTitle:   '🛒 Einkaufslisten',
+    tourShopListDesc:    'Artikel sind nach Kategorie in Karten gruppiert. Artikel antippen, um sie als gekauft abzuhaken. Filterknöpfe oben zum Fokussieren auf eine Kategorie.',
+    tourShopFormTitle:   '➕ Artikel hinzufügen',
+    tourShopFormDesc:    'Name, Menge und Kategorie eingeben, dann + Artikel hinzufügen klicken. Mit 🗑 Erledigte löschen bereits gekaufte Artikel entfernen.',
+    tourPomoTitle:       '⏱ Pomodoro-Timer',
+    tourPomoDesc:        'Der Pomodoro-Timer ist auf jeder Seite verfügbar. Klicken, um einen Fokus-Timer zu öffnen: 25 Min. Arbeit → 5 Min. Pause → wiederholen. Leertaste = Start, Esc = Schließen.',
+    tourAsstTitle:       '💬 Dein Assistent',
+    tourAsstDesc:        'Dies ist dein Life Tracker Assistent — auf jeder Seite verfügbar. Frag ihn, wie Funktionen funktionieren, füge Gewohnheiten, Aufgaben oder Ereignisse hinzu oder lass dir Tipps geben.',
+    tourCycleModeTitle:  '🌸 Natürlicher Zyklus & Pillen-Modus',
+    tourCycleModeDesc:   'Wähle zwischen zwei Tracking-Modi: Natürlicher Zyklus (Periode und Eisprung verfolgen) oder Antibabypille (tägliche Pilleneinnahme mit aktiven und Placebopillen verfolgen).',
+    tourCycleSetupTitle: '📅 Zyklusbeginn eintragen',
+    tourCycleSetupDesc:  'Gib das Startdatum deiner letzten Periode, die Periodendauer und deine durchschnittliche Zykluslänge ein. Die App berechnet automatisch deine Phasen und sagt die nächste Periode voraus.',
+    tourCycleCalTitle:   '🗓 Zyklus-Kalender',
+    tourCycleCalDesc:    'Jeder Tag ist nach Phase farbcodiert: 🔴 Periode · 🟠 Fruchtbares Fenster · 🟡 Eisprung · 🟣 PMS/Lutealphase. Fahre mit der Maus über einen Tag, um die Phase zu sehen.',
+    tourCycleSympTitle:  '💊 Symptome & Stimmung erfassen',
+    tourCycleSympDesc:   'Tippe auf aktuelle Symptome — Krämpfe, Müdigkeit, Heißhunger und mehr. Wähle dann ein Stimmungs-Emoji und füge eine persönliche Notiz hinzu. Mit 💾 Heute speichern bestätigen.',
+    tourCycleInsightsTitle: '📊 Zyklus-Statistiken',
+    tourCycleInsightsDesc:  'Deine persönlichen Zyklusdaten: aktueller Zyklustag, Tage bis zur nächsten Periode, geschätztes Eisprungdatum und vollständige Zyklushistorie. Alles wird automatisch aktualisiert.',
+  },
+  es: {
+    tourNext: 'Siguiente →', tourPrev: '← Atrás', tourSkip: 'Saltar tour', tourFinish: '🎉 ¡Vamos!',
+    tourProgress: (n, t) => `Paso ${n} de ${t}`,
+    tourTabsTitle:       '🗂 Pestañas de navegación',
+    tourTabsDesc:        'Usa estas pestañas para moverte entre las secciones principales de Life Tracker: Seguimiento de hábitos, Horario, Tareas, Lista de compras, Ciclo y Finanzas.',
+    tourSubtabTitle:     '📊 Tracker y Análisis',
+    tourSubtabDesc:      'Dentro del Seguimiento de hábitos tienes dos sub-vistas: la cuadrícula principal y la pestaña Análisis con estadísticas detalladas y gráficos.',
+    tourScopeTitle:      '☀️ Vistas Diaria · Semanal · Mensual',
+    tourScopeDesc:       'Elige cómo ver tus hábitos. Diario muestra casillas simples. Semanal muestra los 7 días actuales. Mensual muestra la cuadrícula completa del calendario.',
+    tourGridTitle:       '✅ La cuadrícula de hábitos',
+    tourGridDesc:        'Cada fila es un hábito, cada columna es un día. Haz clic en una celda para marcarla como completada — se ilumina. Haz clic de nuevo para desmarcarla.',
+    tourAddHabitTitle:   '➕ Añadir un hábito',
+    tourAddHabitDesc:    'Escribe el nombre del hábito aquí y presiona Enter o haz clic en + Añadir. Tu nuevo hábito aparece al instante en la parte superior de la cuadrícula.',
+    tourStatsTitle:      '📈 Estadísticas rápidas',
+    tourStatsDesc:       'Estas tarjetas siempre muestran tu progreso diario: total de hábitos, cuántos has completado hoy, tu porcentaje de completado y recuento de tareas.',
+    tourTTGridTitle:     '🗓 Tu horario semanal',
+    tourTTGridDesc:      'Una cuadrícula visual de tu semana. El tiempo baja, los días van de izquierda a derecha. Los eventos aparecen como bloques de colores según su categoría.',
+    tourTTFormTitle:     '➕ Añadir un evento',
+    tourTTFormDesc:      'Rellena el título, día, hora de inicio y fin, y categoría, luego haz clic en + Añadir evento. Haz clic en cualquier evento existente para editarlo o eliminarlo.',
+    tourGcalTitle:       '📅 Importar de Google Calendar',
+    tourGcalDesc:        '¿Ya usas Google Calendar? Exporta tu calendario como .ics e impórtalo aquí — todos tus eventos aparecen instantáneamente en el horario.',
+    tourTaskScopeTitle:  '📋 Alcances de tareas',
+    tourTaskScopeDesc:   'Organiza tareas por horizonte temporal: Diario (solo hoy), Semanal (esta semana), Mensual (este mes) o Anual (grandes metas). Cada alcance es una lista separada.',
+    tourTaskListTitle:   '✅ Tu lista de tareas',
+    tourTaskListDesc:    'Las tareas tienen código de color por prioridad: 🔴 Alta, ⚡ Media, 🔵 Baja. Casilla para completar, ✎ para editar, 🗑 para eliminar.',
+    tourTaskFormTitle:   '➕ Añadir una tarea',
+    tourTaskFormDesc:    'Rellena el nombre, elige prioridad y fecha límite opcional, luego haz clic en + Añadir tarea. Las fechas vencidas se iluminan en rojo.',
+    tourFinSummaryTitle: '💰 Resumen financiero',
+    tourFinSummaryDesc:  'Estas tarjetas muestran tus ingresos totales, gastos totales y saldo actual del mes seleccionado. Usa las flechas ‹ › del encabezado para cambiar de mes.',
+    tourFinAddTitle:     '➕ Registrar ingresos y gastos',
+    tourFinAddDesc:      'Añade aquí entradas de ingresos o gastos. Cada entrada tiene descripción, importe, categoría y fecha. Todo se agrupa por categoría en el gráfico de desglose.',
+    tourShopListTitle:   '🛒 Listas de compras',
+    tourShopListDesc:    'Los artículos están agrupados en tarjetas por categoría. Toca un artículo para marcarlo como comprado. Usa los filtros de arriba para enfocarte en una categoría.',
+    tourShopFormTitle:   '➕ Añadir un artículo',
+    tourShopFormDesc:    'Introduce el nombre, cantidad y categoría y haz clic en + Añadir artículo. Usa 🗑 Limpiar marcados para eliminar todo lo que ya hayas comprado.',
+    tourPomoTitle:       '⏱ Temporizador Pomodoro',
+    tourPomoDesc:        'El temporizador Pomodoro está disponible en todas las páginas. Haz clic para abrir un temporizador de enfoque: 25 min trabajo → 5 min descanso → repetir. Espacio = iniciar, Esc = cerrar.',
+    tourAsstTitle:       '💬 Tu asistente',
+    tourAsstDesc:        'Este es tu Asistente de Life Tracker — disponible en cada página. Pregúntale cómo funcionan las funciones, úsalo para añadir hábitos, tareas o eventos, u obtén consejos.',
+    tourCycleModeTitle:  '🌸 Ciclo Natural y Modo Pastilla',
+    tourCycleModeDesc:   'Elige entre dos modos de seguimiento: Ciclo Natural (seguimiento de menstruación y ovulación) o Pastilla Anticonceptiva (seguimiento diario del blíster con pastillas activas y placebo).',
+    tourCycleSetupTitle: '📅 Registrar el inicio del ciclo',
+    tourCycleSetupDesc:  'Introduce la fecha de inicio de tu último período, cuánto dura la menstruación y la duración media de tu ciclo. La app calculará tus fases y predecirá el próximo período automáticamente.',
+    tourCycleCalTitle:   '🗓 Calendario del ciclo',
+    tourCycleCalDesc:    'Cada día está codificado por color según la fase: 🔴 Período · 🟠 Ventana fértil · 🟡 Ovulación · 🟣 SPM/Lútea. Pasa el cursor sobre cualquier día para ver en qué fase estás.',
+    tourCycleSympTitle:  '💊 Registrar síntomas y estado de ánimo',
+    tourCycleSympDesc:   'Toca los síntomas que estés experimentando hoy — calambres, fatiga, antojos y más. Luego elige un emoji de estado de ánimo y añade una nota personal. Pulsa 💾 Guardar hoy.',
+    tourCycleInsightsTitle: '📊 Estadísticas del ciclo',
+    tourCycleInsightsDesc:  'Tus estadísticas personales: día actual del ciclo, días hasta el próximo período, fecha estimada de ovulación e historial completo del ciclo. Todo se actualiza automáticamente.',
+  },
+  fr: {
+    tourNext: 'Suivant →', tourPrev: '← Précédent', tourSkip: 'Passer la visite', tourFinish: '🎉 C\'est parti !',
+    tourProgress: (n, t) => `Étape ${n} sur ${t}`,
+    tourTabsTitle:       '🗂 Onglets de navigation',
+    tourTabsDesc:        'Utilisez ces onglets pour passer entre les sections principales de Life Tracker : Suivi des habitudes, Emploi du temps, Tâches, Liste de courses, Cycle et Finances.',
+    tourSubtabTitle:     '📊 Tracker & Analyse',
+    tourSubtabDesc:      'Dans le Suivi des habitudes, vous avez deux sous-vues : la grille de suivi principale et l\'onglet Analyse avec des statistiques détaillées et des graphiques.',
+    tourScopeTitle:      '☀️ Vues Quotidienne · Hebdomadaire · Mensuelle',
+    tourScopeDesc:       'Choisissez comment voir vos habitudes. Quotidien affiche des cases simples. Hebdomadaire montre les 7 jours actuels. Mensuel affiche la grille complète du calendrier.',
+    tourGridTitle:       '✅ La grille des habitudes',
+    tourGridDesc:        'Chaque ligne est une habitude, chaque colonne un jour. Cliquez sur une cellule pour la marquer comme complète — elle s\'illumine. Cliquez à nouveau pour la démarquer.',
+    tourAddHabitTitle:   '➕ Ajouter une habitude',
+    tourAddHabitDesc:    'Saisissez le nom d\'une habitude ici et appuyez sur Entrée ou cliquez sur + Ajouter. Votre nouvelle habitude apparaît instantanément en haut de la grille.',
+    tourStatsTitle:      '📈 Statistiques rapides',
+    tourStatsDesc:       'Ces cartes affichent toujours votre progression quotidienne : total des habitudes, combien vous en avez complété aujourd\'hui, votre pourcentage de réalisation et le nombre de tâches.',
+    tourTTGridTitle:     '🗓 Votre emploi du temps hebdomadaire',
+    tourTTGridDesc:      'Une grille visuelle de votre semaine. Le temps défile vers le bas, les jours s\'étendent horizontalement. Les événements apparaissent comme des blocs colorés par catégorie.',
+    tourTTFormTitle:     '➕ Ajouter un événement',
+    tourTTFormDesc:      'Remplissez le titre, le jour, l\'heure de début et de fin, puis cliquez sur + Ajouter un événement. Cliquez sur un événement existant pour le modifier ou le supprimer.',
+    tourGcalTitle:       '📅 Importer depuis Google Calendar',
+    tourGcalDesc:        'Vous utilisez déjà Google Calendar ? Exportez votre agenda en .ics et importez-le ici — tous vos événements apparaissent instantanément dans l\'emploi du temps.',
+    tourTaskScopeTitle:  '📋 Portées des tâches',
+    tourTaskScopeDesc:   'Organisez les tâches par horizon temporel : Quotidien, Hebdomadaire, Mensuel ou Annuel (grands objectifs). Chaque portée est une liste séparée.',
+    tourTaskListTitle:   '✅ Votre liste de tâches',
+    tourTaskListDesc:    'Les tâches sont codées par couleur selon la priorité : 🔴 Élevée, ⚡ Moyenne, 🔵 Faible. Case à cocher pour terminer, ✎ pour modifier, 🗑 pour supprimer.',
+    tourTaskFormTitle:   '➕ Ajouter une tâche',
+    tourTaskFormDesc:    'Remplissez le nom, choisissez la priorité et une date limite facultative, puis cliquez sur + Ajouter une tâche. Les échéances dépassées s\'illuminent en rouge.',
+    tourFinSummaryTitle: '💰 Résumé financier',
+    tourFinSummaryDesc:  'Ces cartes affichent vos revenus totaux, dépenses totales et solde actuel pour le mois sélectionné. Utilisez les flèches ‹ › dans l\'en-tête pour changer de mois.',
+    tourFinAddTitle:     '➕ Enregistrer revenus & dépenses',
+    tourFinAddDesc:      'Ajoutez ici des entrées de revenus ou de dépenses. Chaque entrée a une description, un montant, une catégorie et une date. Tout est regroupé par catégorie dans le graphique.',
+    tourShopListTitle:   '🛒 Listes de courses',
+    tourShopListDesc:    'Les articles sont regroupés en cartes par catégorie. Touchez un article pour le cocher comme acheté. Utilisez les filtres en haut pour vous concentrer sur une catégorie.',
+    tourShopFormTitle:   '➕ Ajouter un article',
+    tourShopFormDesc:    'Saisissez le nom, la quantité et la catégorie puis cliquez sur + Ajouter un article. Utilisez 🗑 Effacer cochés pour supprimer tout ce que vous avez déjà acheté.',
+    tourPomoTitle:       '⏱ Minuteur Pomodoro',
+    tourPomoDesc:        'Le minuteur Pomodoro est disponible sur chaque page. Cliquez pour ouvrir un minuteur de concentration : 25 min travail → 5 min pause → répéter. Espace = démarrer, Échap = fermer.',
+    tourAsstTitle:       '💬 Votre assistant',
+    tourAsstDesc:        'Voici votre Assistant Life Tracker — disponible sur chaque page. Demandez-lui comment fonctionnent les fonctionnalités, ajoutez des habitudes, tâches ou événements, ou obtenez des conseils.',
+    tourCycleModeTitle:  '🌸 Cycle Naturel & Mode Pilule',
+    tourCycleModeDesc:   'Choisissez entre deux modes de suivi : Cycle Naturel (suivre les règles et l\'ovulation) ou Pilule Contraceptive (suivi quotidien de la plaquette avec pilules actives et placebo).',
+    tourCycleSetupTitle: '📅 Enregistrer le début du cycle',
+    tourCycleSetupDesc:  'Entrez la date de début de vos dernières règles, la durée des règles et la longueur moyenne de votre cycle. L\'app calculera vos phases et prédira les prochaines règles automatiquement.',
+    tourCycleCalTitle:   '🗓 Calendrier du cycle',
+    tourCycleCalDesc:    'Chaque jour est coloré selon la phase : 🔴 Règles · 🟠 Fenêtre fertile · 🟡 Ovulation · 🟣 SPM/Phase lutéale. Survolez n\'importe quel jour pour voir dans quelle phase vous êtes.',
+    tourCycleSympTitle:  '💊 Journaliser symptômes & humeur',
+    tourCycleSympDesc:   'Touchez les symptômes que vous ressentez aujourd\'hui — crampes, fatigue, envies et plus encore. Choisissez ensuite un emoji d\'humeur et ajoutez une note personnelle. Cliquez sur 💾 Enregistrer.',
+    tourCycleInsightsTitle: '📊 Statistiques du cycle',
+    tourCycleInsightsDesc:  'Vos statistiques personnelles : jour actuel du cycle, jours avant les prochaines règles, date d\'ovulation estimée et historique complet du cycle. Tout se met à jour automatiquement.',
+  },
+};
+
+// Pages that have a tour, in order. Cycle page added dynamically for female users.
+const TOUR_PAGES_BASE = ['habits', 'timetable', 'tasks', 'finance', 'shopping'];
+const TOUR_PAGES_FEMALE = ['habits', 'timetable', 'tasks', 'finance', 'shopping', 'cycle'];
+
+function getActiveTourPages() {
+  return isCycleUser() && userPrefs.gender === 'female' ? TOUR_PAGES_FEMALE : TOUR_PAGES_BASE;
+}
+
+function getActiveTourSteps() {
+  const isFemale = isCycleUser() && userPrefs.gender === 'female';
+  return TOUR_STEPS.filter(s => !s.female || isFemale);
+}
+
+function getTourStepsForPage(page) {
+  return getActiveTourSteps().filter(s => s.page === page || s.page === null);
+}
+
+function getTourLang() {
+  return (typeof state !== 'undefined' && state.lang) || 'en';
+}
+
+function getTourTr() {
+  const lang = getTourLang();
+  return TOUR_I18N[lang] || TOUR_I18N.en;
+}
+
+// Save/load tour state
+function loadTourState() {
+  try { return JSON.parse(localStorage.getItem(TOUR_KEY) || 'null'); } catch(e) { return null; }
+}
+function saveTourState(s) {
+  try { localStorage.setItem(TOUR_KEY, JSON.stringify(s)); } catch(e) {}
+}
+function clearTourState() {
+  try { localStorage.removeItem(TOUR_KEY); } catch(e) {}
+}
+
+// Compute which global tour step we're on across all pages
+function buildGlobalStepMap() {
+  const map = [];
+  getActiveTourSteps().forEach((step, idx) => {
+    map.push({ globalIdx: idx, step });
+  });
+  return map;
+}
+
+function countTotalSteps() {
+  return getActiveTourSteps().length;
+}
+
+// Start tour: either fresh (step 0) or resuming from localStorage
+// Exposed globally so finishOnboarding, settings modal and settings page can call it
+window.startTour = function startTour(fromBeginning) {
+  let tourState = fromBeginning ? null : loadTourState();
+
+  if (!tourState || fromBeginning) {
+    tourState = { globalStep: 0, totalSteps: getActiveTourSteps().length };
+    saveTourState(tourState);
+    // If we're not on habits page, navigate there
+    if (CURRENT_PAGE !== 'habits') {
+      window.location.href = 'tracker.html?tour=1';
+      return;
+    }
+  }
+
+  // Close assistant panel if open
+  const panel = document.getElementById('asst-panel');
+  if (panel) panel.style.display = 'none';
+  const backdrop = document.getElementById('asst-backdrop');
+  if (backdrop) backdrop.style.display = 'none';
+  const fab = document.getElementById('asst-fab');
+  if (fab) { fab.innerHTML = '💬'; fab.style.background = 'linear-gradient(135deg,#4f6ef7,#e05a9a)'; }
+
+  showTourStep(tourState.globalStep);
+}
+
+function showTourStep(globalStep) {
+  // Clean up any existing tour UI
+  document.getElementById('tour-overlay')?.remove();
+  document.getElementById('tour-tooltip')?.remove();
+  document.getElementById('tour-highlight-box')?.remove();
+
+  const tr = getTourTr();
+  const activeSteps = getActiveTourSteps();
+  const total = activeSteps.length;
+
+  if (globalStep >= total) {
+    clearTourState();
+    showTourFinale();
+    return;
+  }
+
+  const stepDef = activeSteps[globalStep];
+
+  // If this step belongs to a different page, navigate there
+  if (stepDef.page && stepDef.page !== CURRENT_PAGE) {
+    saveTourState({ globalStep, totalSteps: total });
+    // Map page name to file
+    const pageMap = { habits: 'tracker.html', timetable: 'timetable.html', tasks: 'tasks.html', finance: 'finance.html', shopping: 'shopping.html', cycle: 'cycle.html', analysis: 'tracker.html' };
+    window.location.href = (pageMap[stepDef.page] || 'tracker.html') + '?tour=1';
+    return;
+  }
+
+  saveTourState({ globalStep, totalSteps: total });
+
+  // Find element
+  let targetEl = null;
+  if (stepDef.selector) {
+    try { targetEl = document.querySelector(stepDef.selector); } catch(e) {}
+  }
+
+  renderTourUI(globalStep, total, stepDef, targetEl, tr);
+}
+
+function renderTourUI(globalStep, total, stepDef, targetEl, tr) {
+  const isCycleStep = stepDef.page === 'cycle';
+  const accentColor = isCycleStep ? '#e05a9a' : '#4f6ef7';
+  const accentDark  = isCycleStep ? '#c84080' : '#3a5ce0';
+  const accentGlow  = isCycleStep ? 'rgba(224,90,154,.45)' : 'rgba(79,110,247,.45)';
+  const accentBorder= isCycleStep ? 'rgba(224,90,154,.2)'  : 'rgba(79,110,247,.2)';
+  const stepIcon    = isCycleStep ? '🌸' : '🗺️';
+
+  // Dark overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'tour-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9100;pointer-events:all;';
+
+  // Highlight box (cut-out effect via box-shadow)
+  const hlBox = document.createElement('div');
+  hlBox.id = 'tour-highlight-box';
+  hlBox.style.cssText = `
+    position:fixed;z-index:9101;pointer-events:none;
+    border-radius:12px;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.68);
+    border:2.5px solid ${accentColor};
+    transition:all .35s cubic-bezier(.4,0,.2,1);
+  `;
+
+  // Tooltip
+  const tip = document.createElement('div');
+  tip.id = 'tour-tooltip';
+  tip.style.cssText = `
+    position:fixed;z-index:9102;
+    width:min(460px,92vw);
+    box-sizing:border-box;
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:20px;
+    padding:0;
+    box-shadow:0 24px 70px rgba(0,0,0,.6),0 0 0 1px ${accentBorder};
+    font-family:inherit;
+    animation:scalePop .28s cubic-bezier(.4,0,.2,1);
+    overflow:hidden;
+  `;
+
+  const titleText = tr[stepDef.titleKey] || stepDef.titleKey;
+  const descText  = tr[stepDef.descKey]  || stepDef.descKey;
+  const isLast    = globalStep === total - 1;
+  const isFirst   = globalStep === 0;
+
+  // Compact dot row
+  const visibleDots = Math.min(total, 18);
+  const dotScale = total > 18 ? Math.floor((globalStep / total) * visibleDots) : globalStep;
+  const dotHTML = Array.from({length: visibleDots}, (_, i) =>
+    `<div style="flex-shrink:0;width:${i===dotScale?'20px':'7px'};height:7px;border-radius:4px;background:${i===dotScale ? accentColor : 'var(--border)'};transition:all .28s cubic-bezier(.4,0,.2,1);"></div>`
+  ).join('');
+
+  tip.innerHTML = `
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(${isCycleStep?'224,90,154':'79,110,247'},.08),rgba(${isCycleStep?'79,110,247':'224,90,154'},.04));">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,${accentColor},${accentDark});display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px ${accentGlow};">${stepIcon}</div>
+          <span style="font-size:11px;font-weight:700;color:${accentColor};letter-spacing:.8px;text-transform:uppercase;">${tr.tourProgress(globalStep + 1, total)}</span>
+        </div>
+        <button id="tour-skip-btn" style="background:none;border:1px solid var(--border);font-size:11px;color:var(--text-muted);cursor:pointer;font-family:inherit;padding:4px 10px;border-radius:8px;transition:all .15s;white-space:nowrap;" onmouseenter="this.style.borderColor='${accentColor}';this.style.color='${accentColor}';" onmouseleave="this.style.borderColor='';this.style.color=''">${tr.tourSkip}</button>
+      </div>
+      <div style="font-size:17px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:8px;">${titleText}</div>
+      <div style="font-size:13.5px;color:var(--text-muted);line-height:1.7;">${descText}</div>
+    </div>
+    <div style="padding:14px 24px 16px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:4px;min-height:7px;">
+        ${dotHTML}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        ${!isFirst
+          ? `<button id="tour-prev-btn" style="flex-shrink:0;padding:9px 20px;border-radius:11px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseenter="this.style.borderColor='var(--text-muted)';this.style.color='var(--text)';" onmouseleave="this.style.borderColor='';this.style.color=''">${tr.tourPrev}</button>`
+          : `<span style="flex-shrink:0;"></span>`}
+        <button id="tour-next-btn" style="flex:1;padding:10px 24px;border-radius:11px;border:none;background:linear-gradient(135deg,${accentColor},${accentDark});color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px ${accentGlow};transition:all .15s;white-space:nowrap;" onmouseenter="this.style.transform='translateY(-1px)';" onmouseleave="this.style.transform='';">${isLast ? tr.tourFinish : tr.tourNext}</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(hlBox);
+  document.body.appendChild(tip);
+
+  // Position highlight and tooltip
+  function positionTour() {
+    let rect;
+    if (targetEl) {
+      // Scroll element into view instantly (synchronous) so getBoundingClientRect
+      // always reads the final post-scroll position, not a mid-animation one.
+      targetEl.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+      rect = targetEl.getBoundingClientRect();
+      const PAD = 8;
+      hlBox.style.left   = (rect.left - PAD) + 'px';
+      hlBox.style.top    = (rect.top - PAD) + 'px';
+      hlBox.style.width  = (rect.width + PAD*2) + 'px';
+      hlBox.style.height = (rect.height + PAD*2) + 'px';
+      hlBox.style.display = 'block';
+    } else {
+      // No target: center highlight as a small ring
+      hlBox.style.display = 'none';
+    }
+
+    // Position tooltip using its actual rendered size
+    const tipRect = tip.getBoundingClientRect();
+    const tipW = tipRect.width || Math.min(460, window.innerWidth * 0.92);
+    const tipH = tipRect.height || 200;
+    const vW = window.innerWidth;
+    const vH = window.innerHeight;
+    const MARGIN = 14;
+    const pos = stepDef.position || 'bottom';
+
+    let left, top;
+    if (!targetEl || stepDef.position === 'center') {
+      left = (vW - tipW) / 2;
+      top  = (vH - tipH) / 2;
+    } else {
+      const cx = rect.left + rect.width / 2;
+      if (pos === 'bottom') {
+        left = Math.max(MARGIN, Math.min(cx - tipW/2, vW - tipW - MARGIN));
+        top  = rect.bottom + 16;
+        // Flip to top if it would clip bottom
+        if (top + tipH > vH - MARGIN) top = Math.max(MARGIN, rect.top - tipH - 16);
+      } else if (pos === 'top') {
+        left = Math.max(MARGIN, Math.min(cx - tipW/2, vW - tipW - MARGIN));
+        top  = rect.top - tipH - 16;
+        if (top < MARGIN) top = rect.bottom + 16;
+      } else if (pos === 'left') {
+        left = Math.max(MARGIN, rect.left - tipW - 16);
+        top  = Math.max(MARGIN, Math.min(rect.top + rect.height/2 - tipH/2, vH - tipH - MARGIN));
+      } else { // right
+        left = Math.min(rect.right + 16, vW - tipW - MARGIN);
+        top  = Math.max(MARGIN, Math.min(rect.top + rect.height/2 - tipH/2, vH - tipH - MARGIN));
+      }
+      // Final clamp to viewport
+      top  = Math.max(MARGIN, Math.min(top,  vH - tipH - MARGIN));
+      left = Math.max(MARGIN, Math.min(left, vW - tipW - MARGIN));
+    }
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+  }
+
+  // Two-pass: render off-screen first so browser can measure the tooltip height,
+  // then snap into position in the next paint frame.
+  tip.style.visibility = 'hidden';
+  requestAnimationFrame(() => {
+    tip.style.visibility = '';
+    positionTour();
+  });
+  window.addEventListener('resize', positionTour);
+
+  // Click overlay to advance (except on the tooltip itself)
+  overlay.addEventListener('click', (e) => {
+    // Only advance if clicking clearly outside the highlight area
+    if (targetEl) {
+      const rect = targetEl.getBoundingClientRect();
+      if (e.clientX >= rect.left - 8 && e.clientX <= rect.right + 8 &&
+          e.clientY >= rect.top - 8  && e.clientY <= rect.bottom + 8) {
+        return; // let the real element handle it
+      }
+    }
+  });
+
+  // Button handlers
+  tip.querySelector('#tour-next-btn').addEventListener('click', () => {
+    window.removeEventListener('resize', positionTour);
+    showTourStep(globalStep + 1);
+  });
+  const prevBtn = tip.querySelector('#tour-prev-btn');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      window.removeEventListener('resize', positionTour);
+      showTourStep(globalStep - 1);
+    });
+  }
+  tip.querySelector('#tour-skip-btn').addEventListener('click', () => {
+    window.removeEventListener('resize', positionTour);
+    clearTourState();
+    overlay.remove(); hlBox.remove(); tip.remove();
+  });
+
+  // Keyboard navigation
+  function keyHandler(e) {
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      document.removeEventListener('keydown', keyHandler);
+      window.removeEventListener('resize', positionTour);
+      showTourStep(globalStep + 1);
+    } else if (e.key === 'ArrowLeft' && !isFirst) {
+      document.removeEventListener('keydown', keyHandler);
+      window.removeEventListener('resize', positionTour);
+      showTourStep(globalStep - 1);
+    } else if (e.key === 'Escape') {
+      document.removeEventListener('keydown', keyHandler);
+      window.removeEventListener('resize', positionTour);
+      clearTourState();
+      overlay.remove(); hlBox.remove(); tip.remove();
+    }
+  }
+  document.addEventListener('keydown', keyHandler);
+}
+
+function showTourFinale() {
+  const tr = getTourTr();
+  const overlay = document.createElement('div');
+  overlay.id = 'tour-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease;';
+
+  const card = document.createElement('div');
+  card.style.cssText = 'background:var(--surface);border:1.5px solid var(--border);border-radius:22px;padding:36px 40px;text-align:center;max-width:min(420px,90vw);box-shadow:0 24px 80px rgba(0,0,0,.55);animation:scalePop .35s cubic-bezier(.4,0,.2,1);';
+
+  const lang = getTourLang();
+  const confetti = ['🎉','🌟','✨','🎊','💪'];
+  const finMsgs = {
+    en: `You're all set! You now know the essentials of Life Tracker.<br><br>Explore freely — your <b>💬 Assistant</b> is always here if you have questions.`,
+    hu: `Mindennel tisztában vagy! Megismerted a Life Tracker legfontosabb funkcióit.<br><br>Fedezz fel szabadon — a <b>💬 Segéded</b> mindig elérhető, ha kérdésed van.`,
+    de: `Du bist startklar! Du kennst jetzt die wichtigsten Funktionen von Life Tracker.<br><br>Erkunde frei — dein <b>💬 Assistent</b> steht dir bei Fragen jederzeit zur Verfügung.`,
+    es: `¡Todo listo! Ya conoces los aspectos esenciales de Life Tracker.<br><br>Explora libremente — tu <b>💬 Asistente</b> siempre está aquí si tienes preguntas.`,
+    fr: `Tout est prêt ! Vous connaissez maintenant l'essentiel de Life Tracker.<br><br>Explorez librement — votre <b>💬 Assistant</b> est toujours là si vous avez des questions.`,
+  };
+  const btnLabels = { en:'Start tracking!', hu:'Kezdjük el!', de:'Jetzt loslegen!', es:'¡Empezar!', fr:'C\'est parti !' };
+
+  card.innerHTML = `
+    <div style="font-size:48px;margin-bottom:12px;">${confetti.join(' ')}</div>
+    <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:12px;">
+      ${tr.tourFinish}
+    </div>
+    <div style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:24px;">
+      ${finMsgs[lang] || finMsgs.en}
+    </div>
+    <button id="tour-done-btn" style="padding:12px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#4f6ef7,#e05a9a);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(79,110,247,.45);transition:transform .15s;" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform=''">
+      ${btnLabels[lang] || btnLabels.en}
+    </button>
+  `;
+
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  overlay.querySelector('#tour-done-btn').addEventListener('click', () => overlay.remove());
+}
+
+// Resume tour if we navigated between pages during a tour
+(function checkResumeTour() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasTourParam = urlParams.has('tour');
+  const tourState = loadTourState();
+  if (hasTourParam && tourState) {
+    // Clean up URL param without reload
+    const url = new URL(window.location.href);
+    url.searchParams.delete('tour');
+    window.history.replaceState({}, '', url.toString());
+    // Resume after page is ready
+    setTimeout(() => showTourStep(tourState.globalStep), 600);
+  }
+})();
 
 })();

@@ -1055,6 +1055,7 @@ const K={
   timetable:()=>"ht_timetable_v1"
 };
 function saveAll(){
+  invalidateStreakCache();
   try{
     localStorage.setItem(K.habits(),JSON.stringify(state.habits));
     localStorage.setItem(K.checked(),JSON.stringify(state.checked));
@@ -1185,6 +1186,44 @@ function getFirstDayOffset(y,m){const d=new Date(y,m,1).getDay();return d===0?6:
 function getDow(y,m,d){const w=new Date(y,m,d).getDay();return w===0?6:w-1;}
 function getWeekIdx(d,offset){return Math.floor((d-1+offset)/7);}
 function isChecked(hi,d){return!!state.checked[`${hi}_${d}`];}
+
+// ─── STREAK TRACKING ─────────────────────────────────────────────────────────
+const _streakCheckedCache={};
+function _getCheckedForMonth(y,m){
+  const k=`ht_checked_v4_${y}_${m}`;
+  if(y===state.year&&m===state.month)return state.checked; // live data
+  if(_streakCheckedCache[k]!==undefined)return _streakCheckedCache[k];
+  try{const raw=localStorage.getItem(k);_streakCheckedCache[k]=raw?JSON.parse(raw):{};}
+  catch(e){_streakCheckedCache[k]={};}
+  return _streakCheckedCache[k];
+}
+function _isCheckedAny(hi,y,m,d){return!!(_getCheckedForMonth(y,m)[`${hi}_${d}`]);}
+function calcStreak(hi){
+  const now=new Date();
+  let y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+  // If today isn't checked the streak still "lives" from yesterday (don't kill it mid-day)
+  if(!_isCheckedAny(hi,y,m,d)){
+    d--;
+    if(d<1){m--;if(m<0){m=11;y--;}d=getDaysInMonth(y,m);}
+    if(!_isCheckedAny(hi,y,m,d))return 0; // yesterday not checked either → no streak
+  }
+  let streak=0,safety=0;
+  while(safety++<1200){
+    if(_isCheckedAny(hi,y,m,d)){streak++;d--;if(d<1){m--;if(m<0){m=11;y--;}d=getDaysInMonth(y,m);}}
+    else break;
+  }
+  return streak;
+}
+function invalidateStreakCache(){for(const k in _streakCheckedCache)delete _streakCheckedCache[k];}
+function streakBadgeHTML(streak,habitName){
+  if(streak<1)return'';
+  const fire=streak>=7?'🔥':streak>=3?'🔥':'🔥';
+  const glow=streak>=30?'#ff6b35':streak>=14?'#ff8c42':streak>=7?'#f5a623':'#ffbe4a';
+  const hn=habitName?(` data-habit="${habitName.replace(/"/g,'&quot;')}"`):'';
+  return `<span class="streak-badge" style="--streak-color:${glow}" title="${streak}-day streak"${hn} data-streak="${streak}">${fire}<span class="streak-count">${streak}</span></span>`;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function isToday(d){return state.year===NOW.getFullYear()&&state.month===NOW.getMonth()&&d===NOW.getDate();}
 function isFuture(d){return new Date(state.year,state.month,d)>NOW;}
 function getMindset(d,type){return state.mindset[`${d}_${type}`]||0;}
@@ -1308,7 +1347,8 @@ function render(animate){
       const inp=row.querySelector(".habit-name-input");
       requestAnimationFrame(()=>{inp.focus();inp.select();});
     }else{
-      row.innerHTML=`<span class="habit-name-text">${h}</span>
+      const s=calcStreak(hi);
+      row.innerHTML=`<span class="habit-name-text">${h}</span>${streakBadgeHTML(s,h)}
         <button class="habit-edit-btn" data-edithi="${hi}">✎</button>
         <button class="habit-remove-btn" data-hi="${hi}">×</button>`;
       nl.appendChild(row);
@@ -1745,7 +1785,8 @@ function renderWeeklyView(animate){
       namesCol.appendChild(row);
       requestAnimationFrame(()=>{const inp=row.querySelector('.habit-name-input');if(inp){inp.focus();inp.select();}});
     }else{
-      row.innerHTML=`<span class="weekly-habit-name-text">${h}</span>
+      const sw=calcStreak(hi);
+      row.innerHTML=`<span class="weekly-habit-name-text">${h}</span>${streakBadgeHTML(sw,h)}
         <button class="habit-edit-btn" data-edithi="${hi}">✎</button>
         <button class="habit-remove-btn" data-hi="${hi}">×</button>`;
       namesCol.appendChild(row);
@@ -6925,5 +6966,87 @@ function showTourFinale() {
     setTimeout(() => showTourStep(tourState.globalStep), 600);
   }
 })();
+
+// ── STREAK CELEBRATION MODAL ─────────────────────────────────────────────────
+(function initStreakModal() {
+  // Inject modal HTML once
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <div id="streak-modal-backdrop"></div>
+    <div id="streak-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="streak-modal-title">
+      <button id="streak-modal-close" title="Close">✕</button>
+      <div class="streak-modal-fire-wrap">
+        <span class="streak-modal-fire-big">🔥</span>
+        <div class="streak-modal-rings">
+          <div class="streak-modal-ring r1"></div>
+          <div class="streak-modal-ring r2"></div>
+          <div class="streak-modal-ring r3"></div>
+        </div>
+      </div>
+      <div class="streak-modal-count" id="streak-modal-count">0</div>
+      <div class="streak-modal-label" id="streak-modal-label">day streak</div>
+      <div class="streak-modal-title" id="streak-modal-title"></div>
+      <div class="streak-modal-msg" id="streak-modal-msg"></div>
+      <button class="streak-modal-cta" id="streak-modal-cta">Keep it up! 💪</button>
+    </div>`;
+  document.body.appendChild(el.children[0]); // backdrop
+  document.body.appendChild(el.children[0]); // modal
+
+  const backdrop = document.getElementById('streak-modal-backdrop');
+  const modal    = document.getElementById('streak-modal');
+  const closeBtn = document.getElementById('streak-modal-close');
+  const ctaBtn   = document.getElementById('streak-modal-cta');
+
+  function openStreakModal(habitName, streak) {
+    const msgs = [
+      ["You're unstoppable!", "Day after day, you show up. That's what real progress looks like."],
+      ["Consistency is your superpower!", "Most people quit. You didn't. That says everything."],
+      ["Look at you go!", "Building a habit takes grit — and you've clearly got it."],
+      ["On a roll!", "Every check mark is a vote for the person you're becoming."],
+      ["The streak speaks for itself!", "Don't stop now — tomorrow's check mark is already waiting for you."],
+    ];
+    const milestones = streak >= 100 ? "🏆 100+ days — legendary!" :
+                       streak >= 30  ? "🥇 30-day milestone — incredible!" :
+                       streak >= 14  ? "🎯 Two weeks straight — amazing!" :
+                       streak >= 7   ? "⚡ One whole week — fantastic!" :
+                       streak >= 3   ? "✨ Three days strong — great start!" : null;
+
+    const pick = msgs[Math.floor(Math.random() * msgs.length)];
+    document.getElementById('streak-modal-count').textContent = streak;
+    document.getElementById('streak-modal-label').textContent = streak === 1 ? 'day streak' : 'day streak';
+    document.getElementById('streak-modal-title').textContent = `"${habitName}"`;
+    document.getElementById('streak-modal-msg').innerHTML =
+      (milestones ? `<span class="streak-modal-milestone">${milestones}</span><br><br>` : '') +
+      `<b>${pick[0]}</b><br>${pick[1]}`;
+
+    backdrop.classList.add('open');
+    modal.classList.remove('hidden');
+    // Small delay so CSS transition fires
+    requestAnimationFrame(() => modal.classList.add('open'));
+  }
+
+  function closeStreakModal() {
+    modal.classList.remove('open');
+    backdrop.classList.remove('open');
+    setTimeout(() => modal.classList.add('hidden'), 280);
+  }
+
+  closeBtn.addEventListener('click', closeStreakModal);
+  ctaBtn.addEventListener('click', closeStreakModal);
+  backdrop.addEventListener('click', closeStreakModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeStreakModal();
+  });
+
+  // Delegated click — catch any .streak-badge click anywhere on the page
+  document.addEventListener('click', function(e) {
+    const badge = e.target.closest('.streak-badge');
+    if (!badge) return;
+    const habit  = badge.dataset.habit  || 'this habit';
+    const streak = parseInt(badge.dataset.streak, 10) || 1;
+    openStreakModal(habit, streak);
+  });
+})();
+
 
 })();

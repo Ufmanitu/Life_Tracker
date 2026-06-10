@@ -11,7 +11,7 @@
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 <div class="bg-orb bg-orb-3"></div>
-<div id="app">
+<div id="app">V
 <!-- HEADER -->
 <div id="header">
   <div style="min-width:clamp(160px,18vw,320px);flex-shrink:0;">
@@ -84,6 +84,10 @@
       <div class="weekly-add-habit-row">
         <input type="text" id="new-habit-input" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"/>
         <button id="add-habit-btn" data-i18n="addHabitBtn">+ Add</button>
+        <button id="habit-packs-btn-weekly" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
+          📦 Quick-Start Habit Packs
+          <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+        </button>
       </div>
     </div>
     <div id="monthly-view-wrap">
@@ -97,10 +101,24 @@
       <div id="add-habit-row">
         <input type="text" id="new-habit-input-monthly" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"/>
         <button id="add-habit-btn-monthly" data-i18n="addHabitBtn">+ Add</button>
+        <button id="habit-packs-btn" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
+          📦 Quick-Start Habit Packs
+          <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+        </button>
       </div>
     </div>
   </div>
   <div id="tracker-days-view" class="hidden">
+    <div id="daily-add-habit-row" style="margin:0 clamp(16px,4vw,48px) clamp(14px,1.8vw,20px);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <input type="text" id="new-habit-input-daily" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"
+        style="flex:1;min-width:160px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:clamp(10px,1.5vw,14px) clamp(14px,2vw,20px);color:var(--text);font-size:clamp(13px,1.5vw,16px);font-family:'Montserrat',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;"/>
+      <button id="add-habit-btn-daily" data-i18n="addHabitBtn"
+        style="background:linear-gradient(135deg,#4f6ef7,#6a85fa);border:none;border-radius:10px;color:#fff;padding:clamp(10px,1.5vw,14px) clamp(18px,2.5vw,28px);font-size:clamp(13px,1.5vw,16px);font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;transition:transform .12s,box-shadow .2s,filter .2s;box-shadow:0 4px 16px rgba(79,110,247,.3);">+ Add</button>
+      <button id="habit-packs-btn-daily" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
+        📦 Quick-Start Habit Packs
+        <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+      </button>
+    </div>
     <div id="days-grid"></div>
   </div>
 </div>

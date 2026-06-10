@@ -41,6 +41,62 @@
   backdrop-filter: blur(3px);
   z-index: 3000;
 }
+/* ── Selective Delete Modal – only new UI styles; positioning/z-index come from style.css ── */
+#settings-clear-modal {
+  width: min(520px, 94vw); /* wider to fit the 2-col checkbox grid */
+}
+#delete-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 12px;
+  margin: 14px 0 10px;
+  text-align: left;
+}
+.delete-section-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  transition: border-color .15s, background .15s;
+  background: var(--surface2);
+  user-select: none;
+}
+.delete-section-item:hover { border-color: #e05a9a; }
+.delete-section-item:has(input:checked) {
+  border-color: #e05a9a;
+  background: rgba(224,90,154,.08);
+}
+.delete-section-item input[type="checkbox"] {
+  width: 15px; height: 15px;
+  accent-color: #e05a9a;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.delete-toggle-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.delete-toggle-btn {
+  padding: 5px 14px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+}
+.delete-toggle-btn:hover { border-color: var(--accent); color: var(--text); }
 #import-modal {
   position: fixed;
   top: 50%; left: 50%;
@@ -186,7 +242,10 @@
         <div class="settings-row-label" data-i18n="settingsClearAllLabel">Delete All Data</div>
         <div class="settings-hint" data-i18n="settingsClearAllHint">This will permanently erase all your habits, tasks, timetable, finance, cycle and shopping data. Cannot be undone.</div>
       </div>
-      <button class="settings-danger-btn" id="settings-clear-all-btn" data-i18n="settingsClearAllBtn">🗑 Delete All Data</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="settings-danger-btn" id="settings-clear-all-btn" data-i18n="settingsClearAllBtn">🗑 Delete All Data</button>
+        <button class="settings-danger-btn" id="settings-clear-section-btn" style="background:linear-gradient(135deg,#b85af0,#8a3abf);box-shadow:0 3px 12px rgba(184,90,240,.28);" title="Choose which sections to delete">☑ Delete by Section</button>
+      </div>
     </div>
   </div>
 
@@ -202,15 +261,53 @@
 </div>
 </div><!-- #app -->
 
-<!-- CLEAR ALL CONFIRM MODAL -->
+<!-- SELECTIVE DELETE MODAL -->
 <div id="settings-clear-backdrop" class="hidden"></div>
 <div id="settings-clear-modal" class="hidden">
   <div class="tt-confirm-icon">🗑️</div>
-  <div class="tt-confirm-title" data-i18n="settingsClearModalTitle">Delete All Data?</div>
-  <div class="tt-confirm-desc" data-i18n="settingsClearModalDesc">This will permanently erase ALL Life Tracker data from this browser. This action cannot be undone.</div>
+  <div class="tt-confirm-title">Select Data to Delete</div>
+  <div class="tt-confirm-desc" style="margin-bottom:4px;">Tick the sections you want to erase. Unticked sections stay safe.</div>
+  <div id="delete-sections-grid">
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="habits" checked/>
+      <span>📊 Habit Tracker</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="timetable" checked/>
+      <span>🗓 Timetable</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="tasks" checked/>
+      <span>✅ Tasks</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="shopping" checked/>
+      <span>🛒 Shopping</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="cycle" checked/>
+      <span>🌸 Cycle</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="finance" checked/>
+      <span>💰 Finance</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="journal" checked/>
+      <span>📓 Journal</span>
+    </label>
+    <label class="delete-section-item">
+      <input type="checkbox" class="delete-section-cb" data-section="settings" checked/>
+      <span>⚙️ Settings &amp; Prefs</span>
+    </label>
+  </div>
+  <div class="delete-toggle-row">
+    <button class="delete-toggle-btn" id="delete-select-all">☑ Select All</button>
+    <button class="delete-toggle-btn" id="delete-select-none">☐ Select None</button>
+  </div>
   <div class="tt-confirm-btns">
-    <button class="tt-confirm-cancel" id="settings-clear-cancel" data-i18n="ttConfirmCancel">Cancel</button>
-    <button class="tt-confirm-delete" id="settings-clear-confirm" data-i18n="settingsClearModalConfirm">Delete Everything</button>
+    <button class="tt-confirm-cancel" id="settings-clear-cancel">Cancel</button>
+    <button class="tt-confirm-delete" id="settings-clear-confirm">🗑 Delete Selected</button>
   </div>
 </div>
 

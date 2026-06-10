@@ -1018,22 +1018,11 @@ const NOW=new Date();
 
 let state={
   year:NOW.getFullYear(), month:NOW.getMonth(), lang:"en",
-  habits:["Wake up at 05:00 ⏰","Gym 💪","Work on Side Hustle 🌿","Day Planning 📋","Budget Tracking 💰","Project Work 🎯","No Alcohol 🚫","Social Media Detox 🌱","Goal Journaling 📓","Cold Shower ❄️"],
+  habits:[],
   checked:{}, mindset:{},
-  tasks:[
-    {id:1,name:"Call Jack with idea",priority:"high",due:"",status:"inprogress",done:false,scope:"daily"},
-    {id:2,name:"Look for new platforms",priority:"high",due:"",status:"inprogress",done:false,scope:"weekly"},
-    {id:3,name:"Prepare necessary docs",priority:"medium",due:"",status:"notstarted",done:false,scope:"weekly"},
-    {id:4,name:"Weekly review & log progress",priority:"medium",due:"",status:"inprogress",done:false,scope:"weekly"},
-    {id:5,name:"Clean workspace",priority:"low",due:"",status:"notstarted",done:false,scope:"daily"},
-  ],
-  goals:[
-    {id:1,name:"Complete all tasks ✅",progress:60},
-    {id:2,name:"Gym 5x per week 💪",progress:80},
-    {id:3,name:"Read 2 books 📚",progress:40},
-    {id:4,name:"Save €500 💰",progress:25},
-  ],
-  tab:CURRENT_PAGE, taskIdCtr:6, goalIdCtr:5,
+  tasks:[],
+  goals:[],
+  tab:CURRENT_PAGE, taskIdCtr:1, goalIdCtr:1,
   shopItems:[], shopIdCtr:1,
   goalsDaily:[], goalsDailyCtr:1,
   goalsWeekly:[], goalsWeeklyCtr:1,
@@ -1396,8 +1385,9 @@ function render(animate){
     document.querySelectorAll(".week-col").forEach(col=>{col.style.opacity="1";col.style.animation="none";});
   }
 
-  if(state.tab==="tracker"&&trackerScope==="daily")renderDaysView(animate);
-  else if(state.tab==="tracker"&&trackerScope==="weekly")renderWeeklyView(animate);
+  const onTrackerPage=(state.tab==="tracker"||state.tab==="habits"||CURRENT_PAGE==="habits");
+  if(onTrackerPage&&trackerScope==="daily")renderDaysView(animate);
+  else if(onTrackerPage&&trackerScope==="weekly")renderWeeklyView(animate);
   else if(state.tab==="tasks")renderTasksView();
   else if(state.tab==="analysis")renderAnalysis(days,total,done,pct,hp,wg,wt,dt);
 }
@@ -2411,11 +2401,19 @@ function renderCycleCalendar(){
     const cell=document.createElement("div");
     const dk=dateKey(date);
     cell.className="cycle-cal-day"+(tag?" "+tag:"")+(date.getTime()===todayD.getTime()?" today-cycle":"");
-    // Intimacy dot indicator
+    // Intimacy icon indicator
     const dayEntry=(state.cycleData.days||{})[dk]||{};
     const intArr=dk===todayKey()?todayIntimacy:(dayEntry.intimacy||[]);
-    if(intArr.length) cell.classList.add("has-intimacy");
-    cell.textContent=d;
+    if(intArr.length){
+      cell.classList.add("has-intimacy");
+      const CYEMOJI={kiss:"💋",protected:"🛡️",unprotected:"🔥",oral:"💜",other:"✨"};
+      const dn=document.createElement("span"); dn.className="cy-day-num"; dn.textContent=d; cell.appendChild(dn);
+      const eiw=document.createElement("div"); eiw.className="cy-int-icons";
+      intArr.forEach(k=>{const s=document.createElement("span");s.textContent=CYEMOJI[k]||"💞";eiw.appendChild(s);});
+      cell.appendChild(eiw);
+    } else {
+      cell.textContent=d;
+    }
     cell.dataset.date=dk;
     cal.appendChild(cell);
   }
@@ -2630,7 +2628,14 @@ function renderIntimacyCalendar(){
   const types=tr.cycleIntimacyTypes||["💋 Kiss","🛡 Protected","🔥 Unprotected","💜 Oral","✨ Other"];
   keys.forEach((k,i)=>{
     const li=document.createElement("div"); li.className="int-legend-item";
-    li.innerHTML=`<div class="int-legend-dot" style="background:${INTIMACY_COLORS[k]||'#888'}"></div>${types[i]||k}`;
+    const fullLabel=types[i]||k;
+    const chars=[...fullLabel];
+    // grab leading emoji chars (can be multi-codepoint)
+    let emojiEnd=0;
+    if(chars.length&&chars[0].match(/\p{Emoji}/u)){emojiEnd=1;if(chars[1]&&chars[1]==='\uFE0F')emojiEnd=2;}
+    const icon=chars.slice(0,emojiEnd||1).join('');
+    const label=fullLabel.slice(icon.length).trim();
+    li.innerHTML=`<span class="int-legend-icon">${icon}</span>${label||k}`;
     legend.appendChild(li);
   });
   strip.appendChild(legend);
@@ -3003,6 +3008,7 @@ langDropdown.querySelectorAll('.lang-option').forEach(function(opt){
     }
     else if(CURRENT_PAGE==="shopping")renderShoppingList();
     else if(CURRENT_PAGE==="cycle")renderCycleTracker();
+    else if(CURRENT_PAGE==="finance")renderFinance();
     try{localStorage.setItem(K.lang(),lang);}catch(e){}
   });
 });
@@ -3765,6 +3771,13 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{
 
 // ── TRACKER PAGE ──────────────────────────────────────────────────────────────
 if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
+  // Inject packs button styles immediately so button is visible before modal is opened
+  if(!document.getElementById("hpm-btn-styles")){
+    const _bst=document.createElement("style");
+    _bst.id="hpm-btn-styles";
+    _bst.textContent=`.habit-packs-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:22px;border:2.5px solid #4f6ef7;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap;box-shadow:0 4px 18px rgba(79,110,247,.5);letter-spacing:.3px;}.habit-packs-btn:hover{background:linear-gradient(135deg,#6b84ff,#9b59f7);box-shadow:0 6px 24px rgba(79,110,247,.7);transform:translateY(-2px);}.habit-packs-btn:active{transform:translateY(0) scale(.97);}`.replace(/\n\s*/g,'');
+    document.head.appendChild(_bst);
+  }
   on("tracker-section","click",e=>{
     const cb=e.target.closest(".day-habit-cb");
     if(cb){
@@ -3896,6 +3909,239 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
     addBtn.addEventListener("click",()=>{const v=addInput.value.trim();if(!v)return;state.habits.push(v);addInput.value="";saveAll();render(true);});
     addInput.addEventListener("keydown",e=>{if(e.key==="Enter")addBtn.click();});
   }
+
+  // ── HABIT PACKS ─────────────────────────────────────────────────────────────
+  const HABIT_PACKS = [
+    {
+      id:"morning", emoji:"🌅", label:"Morning Routine",
+      color:"linear-gradient(135deg,#f5a623,#e87c1e)",
+      shadow:"rgba(245,166,35,.35)",
+      habits:["🌅 Wake up early","🛏 Make the bed","💧 Drink a glass of water","📓 Journal 5 min","🧘 Meditate","🤸 Stretch / yoga","🥗 Eat a healthy breakfast"]
+    },
+    {
+      id:"fitness", emoji:"💪", label:"Fitness",
+      color:"linear-gradient(135deg,#3ecfb2,#1fa88e)",
+      shadow:"rgba(62,207,178,.35)",
+      habits:["🏋️ Workout","🚶 10 000 steps","💧 Drink 2 L water","🚫 No sugar today","🤸 Stretch after workout","😴 Sleep 8 hours"]
+    },
+    {
+      id:"study", emoji:"📚", label:"Study",
+      color:"linear-gradient(135deg,#4f6ef7,#2d4edc)",
+      shadow:"rgba(79,110,247,.35)",
+      habits:["📖 Study 2 hours","📚 Read 30 minutes","📝 Review notes","📵 No phone during study","🗓 Plan tomorrow","☕ Morning focus session"]
+    },
+    {
+      id:"mental", emoji:"🧠", label:"Mental Health",
+      color:"linear-gradient(135deg,#e05a9a,#c84080)",
+      shadow:"rgba(224,90,154,.35)",
+      habits:["🧘 Meditate","📓 Journal","🙏 Write 3 gratitudes","🌿 Nature walk","📵 Screen-free hour","😴 Sleep 8 hours","🫂 Connect with someone"]
+    },
+    {
+      id:"finance", emoji:"💰", label:"Finance",
+      color:"linear-gradient(135deg,#f7c948,#d4a017)",
+      shadow:"rgba(247,201,72,.35)",
+      habits:["📊 Track spending","🚫 No impulse buying","💰 Transfer to savings","📋 Review budget","🧾 Log every expense"]
+    },
+    {
+      id:"health", emoji:"🍏", label:"Healthy Living",
+      color:"linear-gradient(135deg,#5cdb5c,#3aa83a)",
+      shadow:"rgba(92,219,92,.35)",
+      habits:["💧 Drink 8 glasses of water","🥦 Eat vegetables","🚫 No junk food","😴 Sleep 8 hours","🏃 Exercise 30 min","🚭 No alcohol"]
+    }
+  ];
+
+  function openPacksModal(){
+    let modal=document.getElementById("habit-packs-modal");
+    if(!modal){
+      modal=document.createElement("div");
+      modal.id="habit-packs-modal";
+      modal.innerHTML=`
+        <div class="hpm-backdrop" id="hpm-backdrop"></div>
+        <div class="hpm-dialog" id="hpm-dialog">
+          <div class="hpm-header">
+            <div class="hpm-title">📦 Quick-Start Habit Packs</div>
+            <div class="hpm-subtitle">Pick a pack — habits will be added instantly. Skip any you don't need.</div>
+            <button class="hpm-close" id="hpm-close">✕</button>
+          </div>
+          <div class="hpm-body">
+            <div class="hpm-packs-grid" id="hpm-packs-grid"></div>
+            <div class="hpm-preview" id="hpm-preview" style="display:none;">
+              <div class="hpm-preview-header">
+                <div class="hpm-preview-title" id="hpm-preview-title"></div>
+                <button class="hpm-back-btn" id="hpm-back-btn">← Back</button>
+              </div>
+              <div class="hpm-habits-list" id="hpm-habits-list"></div>
+              <div class="hpm-preview-footer">
+                <button class="hpm-add-all-btn" id="hpm-add-all-btn">✅ Add All Habits</button>
+                <button class="hpm-add-selected-btn" id="hpm-add-selected-btn">+ Add Selected</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+
+      // Style injection
+      if(!document.getElementById("hpm-styles")){
+        const st=document.createElement("style");
+        st.id="hpm-styles";
+        st.textContent=`
+          #habit-packs-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;}
+          .hpm-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);}
+          .hpm-dialog{position:relative;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;width:min(680px,94vw);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.45);overflow:hidden;animation:hpmIn .22s cubic-bezier(.4,0,.2,1);}
+          @keyframes hpmIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+          .hpm-header{padding:20px 22px 14px;border-bottom:1px solid var(--border);flex-shrink:0;position:relative;}
+          .hpm-title{font-size:16px;font-weight:800;color:var(--text);letter-spacing:.3px;}
+          .hpm-subtitle{font-size:12px;color:var(--text-muted);margin-top:3px;}
+          .hpm-close{position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;}
+          .hpm-close:hover{background:var(--surface2);color:var(--text);}
+          .hpm-body{flex:1;overflow-y:auto;padding:18px 22px 22px;}
+          .hpm-packs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+          .hpm-pack-card{border-radius:14px;padding:16px 14px 14px;cursor:pointer;position:relative;overflow:hidden;border:1.5px solid transparent;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:6px;}
+          .hpm-pack-card:hover{transform:translateY(-2px);}
+          .hpm-pack-emoji{font-size:26px;line-height:1;}
+          .hpm-pack-label{font-size:13px;font-weight:800;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+          .hpm-pack-count{font-size:11px;color:rgba(255,255,255,.8);}
+          .hpm-pack-added-badge{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.25);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;color:#fff;display:none;}
+          .hpm-pack-card.pack-added .hpm-pack-added-badge{display:block;}
+          .hpm-preview{display:flex;flex-direction:column;gap:10px;}
+          .hpm-preview-header{display:flex;align-items:center;justify-content:space-between;}
+          .hpm-preview-title{font-size:15px;font-weight:800;color:var(--text);}
+          .hpm-back-btn{background:transparent;border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:background .15s;}
+          .hpm-back-btn:hover{background:var(--surface2);}
+          .hpm-habits-list{display:flex;flex-direction:column;gap:7px;margin:4px 0;}
+          .hpm-habit-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+          .hpm-habit-row.selected{border-color:var(--accent,#4f6ef7);background:var(--surface);}
+          .hpm-habit-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:background .15s,border-color .15s;}
+          .hpm-habit-row.selected .hpm-habit-check{background:var(--accent,#4f6ef7);border-color:var(--accent,#4f6ef7);color:#fff;}
+          .hpm-habit-row.already-added{opacity:.45;cursor:default;}
+          .hpm-habit-row.already-added .hpm-habit-check{background:var(--border);}
+          .hpm-habit-name{font-size:13px;font-weight:600;color:var(--text);}
+          .hpm-already-lbl{font-size:10px;color:var(--text-muted);margin-left:auto;flex-shrink:0;}
+          .hpm-preview-footer{display:flex;gap:10px;flex-wrap:wrap;}
+          .hpm-add-all-btn{flex:1;padding:10px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#2d4edc);color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+          .hpm-add-all-btn:hover{opacity:.88;}
+          .hpm-add-selected-btn{flex:1;padding:10px 18px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s;}
+          .hpm-add-selected-btn:hover{background:var(--surface);}
+        `;
+        document.head.appendChild(st);
+      }
+
+      // Backdrop / close
+      on("hpm-backdrop","click",closePacksModal);
+      on("hpm-close","click",closePacksModal);
+      document.addEventListener("keydown",e=>{if(e.key==="Escape")closePacksModal();},{once:false});
+
+      // Render pack cards
+      const grid=document.getElementById("hpm-packs-grid");
+      HABIT_PACKS.forEach(pack=>{
+        const card=document.createElement("div");
+        card.className="hpm-pack-card";
+        card.dataset.packId=pack.id;
+        card.style.background=pack.color;
+        card.style.boxShadow=`0 6px 20px ${pack.shadow}`;
+        card.innerHTML=`<div class="hpm-pack-emoji">${pack.emoji}</div>
+          <div class="hpm-pack-label">${pack.label}</div>
+          <div class="hpm-pack-count">${pack.habits.length} habits</div>
+          <div class="hpm-pack-added-badge">✓ Added</div>`;
+        card.addEventListener("click",()=>openPackPreview(pack));
+        grid.appendChild(card);
+      });
+      refreshPackAddedBadges();
+
+      // Back button
+      on("hpm-back-btn","click",()=>{
+        document.getElementById("hpm-packs-grid").style.display="";
+        document.getElementById("hpm-preview").style.display="none";
+      });
+
+      // Add All
+      on("hpm-add-all-btn","click",()=>{
+        const pack=HABIT_PACKS.find(p=>p.id===currentPreviewPackId);
+        if(!pack)return;
+        let added=0;
+        pack.habits.forEach(h=>{
+          if(!state.habits.includes(h)){state.habits.push(h);added++;}
+        });
+        closePacksModal();
+        if(added>0){saveAll();render(true);}
+        else{refreshPackAddedBadges();}
+      });
+
+      // Add Selected
+      on("hpm-add-selected-btn","click",()=>{
+        const pack=HABIT_PACKS.find(p=>p.id===currentPreviewPackId);
+        if(!pack)return;
+        let added=0;
+        document.querySelectorAll(".hpm-habit-row.selected:not(.already-added)").forEach(row=>{
+          const h=row.dataset.habit;
+          if(h&&!state.habits.includes(h)){state.habits.push(h);added++;}
+        });
+        closePacksModal();
+        if(added>0){saveAll();render(true);}
+        else{refreshPackAddedBadges();}
+      });
+    }
+
+    modal.style.display="flex";
+    document.getElementById("hpm-packs-grid").style.display="";
+    document.getElementById("hpm-preview").style.display="none";
+    refreshPackAddedBadges();
+  }
+
+  let currentPreviewPackId=null;
+
+  function openPackPreview(pack){
+    currentPreviewPackId=pack.id;
+    document.getElementById("hpm-packs-grid").style.display="none";
+    const preview=document.getElementById("hpm-preview");
+    preview.style.display="flex";
+    document.getElementById("hpm-preview-title").textContent=`${pack.emoji} ${pack.label}`;
+    refreshPreviewList(pack);
+  }
+
+  function refreshPreviewList(pack){
+    const list=document.getElementById("hpm-habits-list");
+    if(!list)return;
+    list.innerHTML="";
+    pack.habits.forEach(h=>{
+      const alreadyAdded=state.habits.includes(h);
+      const row=document.createElement("div");
+      row.className="hpm-habit-row"+(alreadyAdded?" already-added":" selected");
+      row.dataset.habit=h;
+      row.innerHTML=`<div class="hpm-habit-check">${alreadyAdded?"✓":"✓"}</div>
+        <div class="hpm-habit-name">${h}</div>
+        ${alreadyAdded?'<div class="hpm-already-lbl">already added</div>':''}`;
+      if(!alreadyAdded){
+        row.addEventListener("click",()=>{row.classList.toggle("selected");});
+      }
+      list.appendChild(row);
+    });
+  }
+
+  function refreshPackAddedBadges(){
+    HABIT_PACKS.forEach(pack=>{
+      const card=document.querySelector(`.hpm-pack-card[data-pack-id="${pack.id}"]`);
+      if(!card)return;
+      const allAdded=pack.habits.every(h=>state.habits.includes(h));
+      card.classList.toggle("pack-added",allAdded);
+    });
+  }
+
+  function closePacksModal(){
+    const modal=document.getElementById("habit-packs-modal");
+    if(modal)modal.style.display="none";
+  }
+
+  on("habit-packs-btn","click",openPacksModal);
+  on("habit-packs-btn-weekly","click",openPacksModal);
+  on("habit-packs-btn-daily","click",openPacksModal);
+  // Daily add-habit
+  on("add-habit-btn-daily","click",()=>{
+    const inp=document.getElementById("new-habit-input-daily");
+    if(!inp)return;const v=inp.value.trim();if(!v)return;
+    state.habits.push(v);inp.value="";saveAll();render(true);
+  });
+  on("new-habit-input-daily","keydown",e=>{if(e.key==="Enter")document.getElementById("add-habit-btn-daily").click();});
 }
 
 // ── TASKS PAGE ────────────────────────────────────────────────────────────────
@@ -4480,6 +4726,10 @@ const FIN_I18N = {
         finSourcePlaceholder:'Source…', finAddEntry:'+ Add', finToday:'Today',
         finThisWeek:'This week', finThisMonth:'This month', finAll:'All',
         finBudgetBreakdown:'Budget Breakdown', finTotalSpent:'Total spent',
+        finBudgetEnvelopes:'Budget Envelopes', finEnvelopeHint:'Click ✎ to set a monthly limit per category',
+        finNoDataMonth:'No data this month.', finSavingsEmpty:'No savings goals yet.',
+        finOverBudget:'over budget', finLeftMonth:'left this month',
+        finNoLimit:'No limit', finSetLimit:'Set one',
         finSavingsGoals:'Savings Goals' },
   hu: { tabFinance:'💰 Pénzügy', finTotalExpenses:'Összes kiadás', finTotalIncome:'Összes bevétel',
         finBalance:'Egyenleg', finMonthlyBudget:'Havi keret', finExpenses:'Kiadások',
@@ -4489,6 +4739,10 @@ const FIN_I18N = {
         finSourcePlaceholder:'Forrás…', finAddEntry:'+ Hozzáad', finToday:'Ma',
         finThisWeek:'Ez a hét', finThisMonth:'Ez a hónap', finAll:'Mind',
         finBudgetBreakdown:'Kategóriák', finTotalSpent:'Összesen',
+        finBudgetEnvelopes:'Keret borítékok', finEnvelopeHint:'✎ gombra kattintva havi keretet állíthatsz',
+        finNoDataMonth:'Még nincs adat erre a hónapra.', finSavingsEmpty:'Még nincs megtakarítási cél.',
+        finOverBudget:'túllépés', finLeftMonth:'maradt erre a hónapra',
+        finNoLimit:'Nincs limit', finSetLimit:'Beállítás',
         finSavingsGoals:'Megtakarítási célok' },
   de: { tabFinance:'💰 Finanzen', finTotalExpenses:'Gesamtausgaben', finTotalIncome:'Gesamteinnahmen',
         finBalance:'Saldo', finMonthlyBudget:'Monatsbudget', finExpenses:'Ausgaben',
@@ -4496,6 +4750,10 @@ const FIN_I18N = {
         finDescPlaceholder:'Beschreibung…', finSourcePlaceholder:'Quelle…', finAddEntry:'+ Hinzufügen',
         finToday:'Heute', finThisWeek:'Diese Woche', finThisMonth:'Dieser Monat', finAll:'Alle',
         finBudgetBreakdown:'Ausgaben nach Kategorie', finTotalSpent:'Gesamt ausgegeben',
+        finBudgetEnvelopes:'Budget-Umschläge', finEnvelopeHint:'✎ klicken um monatliches Limit zu setzen',
+        finNoDataMonth:'Keine Daten diesen Monat.', finSavingsEmpty:'Noch keine Sparziele.',
+        finOverBudget:'über Budget', finLeftMonth:'noch übrig diesen Monat',
+        finNoLimit:'Kein Limit', finSetLimit:'Festlegen',
         finSavingsGoals:'Sparziele' },
   es: { tabFinance:'💰 Finanzas', finTotalExpenses:'Total gastos', finTotalIncome:'Total ingresos',
         finBalance:'Balance', finMonthlyBudget:'Presupuesto mensual', finExpenses:'Gastos',
@@ -4503,6 +4761,10 @@ const FIN_I18N = {
         finDescPlaceholder:'Descripción…', finSourcePlaceholder:'Fuente…', finAddEntry:'+ Añadir',
         finToday:'Hoy', finThisWeek:'Esta semana', finThisMonth:'Este mes', finAll:'Todo',
         finBudgetBreakdown:'Desglose', finTotalSpent:'Total gastado',
+        finBudgetEnvelopes:'Sobres de presupuesto', finEnvelopeHint:'Haz clic en ✎ para establecer un límite mensual',
+        finNoDataMonth:'Sin datos este mes.', finSavingsEmpty:'Todavía no hay metas de ahorro.',
+        finOverBudget:'sobre presupuesto', finLeftMonth:'restante este mes',
+        finNoLimit:'Sin límite', finSetLimit:'Establecer',
         finSavingsGoals:'Metas de ahorro' },
   fr: { tabFinance:'💰 Finances', finTotalExpenses:'Total dépenses', finTotalIncome:'Total revenus',
         finBalance:'Solde', finMonthlyBudget:'Budget mensuel', finExpenses:'Dépenses',
@@ -4510,6 +4772,10 @@ const FIN_I18N = {
         finDescPlaceholder:'Description…', finSourcePlaceholder:'Source…', finAddEntry:'+ Ajouter',
         finToday:"Aujourd'hui", finThisWeek:'Cette semaine', finThisMonth:'Ce mois', finAll:'Tout',
         finBudgetBreakdown:'Répartition', finTotalSpent:'Total dépensé',
+        finBudgetEnvelopes:'Enveloppes budgétaires', finEnvelopeHint:'Cliquez ✎ pour définir une limite mensuelle',
+        finNoDataMonth:'Aucune donnée ce mois.', finSavingsEmpty:"Aucun objectif d'épargne.",
+        finOverBudget:'au-dessus du budget', finLeftMonth:'restant ce mois',
+        finNoLimit:'Sans limite', finSetLimit:'Définir',
         finSavingsGoals:"Objectifs d'épargne" },
 };
 // Merge fin translations into main TRANSLATIONS
@@ -4522,6 +4788,7 @@ const FIN_KEY = 'ht_finance_v1';
 let finState = {
   expenses: [], incomes: [], idCtr: 1,
   monthlyBudget: 0,
+  categoryBudgets: {},
   savings: [], savIdCtr: 1,
 };
 function loadFinance() {
@@ -4535,23 +4802,6 @@ function saveFinance() {
   flashSaved();
 }
 
-// Sample data if empty
-function maybeAddSampleData() {
-  if (finState.expenses.length > 0 || finState.incomes.length > 0) return;
-  const today = fmtDate(new Date());
-  finState.expenses = [
-    {id:finState.idCtr++,emoji:'💊',desc:'Pharmacy',amount:39,category:'Health',date:today},
-    {id:finState.idCtr++,emoji:'📗',desc:'Books',amount:13,category:'Entertainment',date:today},
-    {id:finState.idCtr++,emoji:'⛽',desc:'Fuel',amount:80,category:'Transport',date:today},
-    {id:finState.idCtr++,emoji:'🥪',desc:'Lunch cafe',amount:37.65,category:'Food',date:today},
-    {id:finState.idCtr++,emoji:'🚻',desc:'Park toilet',amount:0.79,category:'Utilities',date:today},
-    {id:finState.idCtr++,emoji:'📒',desc:'New book',amount:25.99,category:'Development',date:today},
-    {id:finState.idCtr++,emoji:'🥤',desc:'Cola + snacks',amount:3.74,category:'Food',date:today},
-    {id:finState.idCtr++,emoji:'🥇',desc:'1 gram of Gold',amount:127,category:'Investment',date:today},
-  ];
-  saveFinance();
-}
-
 // ── HELPERS ───────────────────────────────────────────────────────
 const CAT_COLORS = {
   Food:'#f5a623',Health:'#3ecfb2',Transport:'#7090f9',Entertainment:'#a78bfa',
@@ -4563,6 +4813,20 @@ function catClass(cat) {
     Utilities:'utilities',Home:'home',Development:'development',Investment:'investment',
     Salary:'salary',Freelance:'freelance',Gift:'gift',Other:'other'};
   return 'fin-cat-'+(map[cat]||'other');
+}
+// Maps canonical English key → i18n translation key
+const CAT_I18N_KEY = {
+  Food:'finCatFood', Health:'finCatHealth', Transport:'finCatTransport',
+  Entertainment:'finCatEntertainment', Utilities:'finCatUtilities', Home:'finCatHome',
+  Development:'finCatDevelopment', Investment:'finCatInvestment', Other:'finCatOther',
+  Salary:'finIncSalary', Freelance:'finIncFreelance', Gift:'finIncGift',
+};
+function catLabel(cat) {
+  const key = CAT_I18N_KEY[cat];
+  if (!key) return cat;
+  const full = t(key) || cat;
+  // Strip leading emoji + space ("🍔 Étel" → "Étel")
+  return full.replace(/^.{1,2}\s/, '').trim() || cat;
 }
 function fmtAmt(n) { return '€'+Number(n).toFixed(2); }
 
@@ -4645,7 +4909,7 @@ function renderExpenseList() {
         <div class="fin-entry-date">${exp.date}</div>
       </div>
       <div class="fin-entry-amt">${fmtAmt(exp.amount)}</div>
-      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(exp.category)}">${exp.category}</span></div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(exp.category)}">${catLabel(exp.category)}</span></div>
       <div class="fin-entry-actions">
         <button class="fin-entry-del-btn" data-del-exp="${exp.id}" title="Delete">×</button>
       </div>`;
@@ -4674,7 +4938,7 @@ function renderIncomeList() {
         <div class="fin-entry-date">${inc.date}</div>
       </div>
       <div class="fin-entry-amt">${fmtAmt(inc.amount)}</div>
-      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(inc.category)}">${inc.category}</span></div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(inc.category)}">${catLabel(inc.category)}</span></div>
       <div class="fin-entry-actions">
         <button class="fin-entry-del-btn" data-del-inc="${inc.id}" title="Delete">×</button>
       </div>`;
@@ -4682,37 +4946,142 @@ function renderIncomeList() {
   });
 }
 
-function renderBreakdown() {
+function renderEnvelopes() {
   const el = document.getElementById('fin-breakdown-list');
   const totalEl = document.getElementById('fin-breakdown-total');
   const monthExp = finState.expenses.filter(e => inScope(e.date,'month'));
   const totals = {};
   monthExp.forEach(e => { totals[e.category] = (totals[e.category]||0)+Number(e.amount); });
   const total = Object.values(totals).reduce((s,v)=>s+v,0);
-  totalEl.textContent = fmtAmt(total);
-  const sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-  if (!sorted.length) { el.innerHTML = '<div class="fin-empty-msg" style="font-size:12px;">No data this month.</div>'; return; }
+  if(totalEl) totalEl.textContent = fmtAmt(total);
+
+  // Merge categories: those with spending + those with a budget set but no spending yet
+  const budgets = finState.categoryBudgets || {};
+  const allCats = [...new Set([...Object.keys(totals), ...Object.keys(budgets)])];
+  // Sort: categories with a limit first (by spent desc), then no-limit by spent desc
+  allCats.sort((a,b) => {
+    const aHas = !!budgets[a], bHas = !!budgets[b];
+    if (aHas !== bHas) return aHas ? -1 : 1;
+    return (totals[b]||0) - (totals[a]||0);
+  });
+
+  if (!allCats.length) {
+    el.innerHTML = `<div class="fin-empty-msg" style="font-size:12px;">${t('finNoDataMonth')||'No data this month.'}</div>`;
+    return;
+  }
   el.innerHTML = '';
-  sorted.forEach(([cat, amt]) => {
-    const pct = total > 0 ? Math.round(amt/total*100) : 0;
-    const color = CAT_COLORS[cat]||'#8898aa';
+
+  allCats.forEach((cat, idx) => {
+    const spent = totals[cat] || 0;
+    const limit = budgets[cat] || 0;
+    const hasLimit = limit > 0;
+    const color = CAT_COLORS[cat] || '#8898aa';
+
+    // Bar fill percentage
+    let barPct, barColor;
+    if (hasLimit) {
+      barPct = Math.min(100, (spent / limit) * 100);
+      const ratio = spent / limit;
+      barColor = ratio >= 1 ? '#ef4444' : ratio >= 0.8 ? '#f5a623' : color;
+    } else {
+      barPct = total > 0 ? (spent / total) * 100 : 0;
+      barColor = color;
+    }
+
+    const remaining = limit - spent;
+    const over = hasLimit && remaining < 0;
+    const nearLimit = hasLimit && !over && remaining / limit < 0.2;
+
     const item = document.createElement('div');
-    item.className = 'fin-breakdown-item';
+    item.className = 'fin-envelope-item';
+    item.dataset.cat = cat;
+
     item.innerHTML = `
-      <div class="fin-breakdown-dot" style="background:${color}"></div>
-      <div class="fin-breakdown-label">${cat}</div>
-      <div class="fin-breakdown-bar-wrap"><div class="fin-breakdown-bar-fill" style="width:0%;background:${color}"></div></div>
-      <div class="fin-breakdown-pct">${pct}%</div>
-      <div class="fin-breakdown-amt">${fmtAmt(amt)}</div>`;
+      <div class="fin-envelope-top">
+        <div class="fin-envelope-left">
+          <div class="fin-breakdown-dot" style="background:${color}"></div>
+          <span class="fin-envelope-name">${catLabel(cat)}</span>
+        </div>
+        <div class="fin-envelope-right">
+          <span class="fin-envelope-spent">${fmtAmt(spent)}</span>
+          ${hasLimit ? `<span class="fin-envelope-sep">/</span><span class="fin-envelope-limit">€${limit}</span>` : ''}
+          <div class="fin-envelope-edit-wrap">
+            <button class="fin-envelope-edit-btn" data-editcat="${cat}" title="Set budget limit">✎</button>
+            <div class="fin-envelope-input-pop hidden" data-pop="${cat}">
+              <input class="fin-envelope-input" type="number" placeholder="limit €" min="0" step="1" value="${limit||''}"/>
+              <button class="fin-envelope-save-btn">✓</button>
+              <button class="fin-envelope-clear-btn" title="Remove limit">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fin-envelope-bar-track">
+        <div class="fin-envelope-bar-fill" style="width:0%;background:${barColor}"></div>
+      </div>
+      ${hasLimit
+        ? `<div class="fin-envelope-status ${over?'over':nearLimit?'warn':'ok'}">
+             ${over
+               ? `⚠️ €${Math.abs(remaining).toFixed(2)} ${t('finOverBudget')||'over budget'}`
+               : `✓ €${remaining.toFixed(2)} ${t('finLeftMonth')||'left this month'}`}
+           </div>`
+        : `<div class="fin-envelope-nolimit">${t('finNoLimit')||'No limit'} — <span class="fin-envelope-setlink" data-setlink="${cat}">${t('finSetLimit')||'Set one'}</span></div>`
+      }`;
+
     el.appendChild(item);
-    requestAnimationFrame(()=>setTimeout(()=>{ const f=item.querySelector('.fin-breakdown-bar-fill');if(f)f.style.width=pct+'%'; },80));
+
+    // Animate bar
+    requestAnimationFrame(() => setTimeout(() => {
+      const f = item.querySelector('.fin-envelope-bar-fill');
+      if (f) { f.style.transition = 'width .65s cubic-bezier(.4,0,.2,1),background .3s'; f.style.width = barPct + '%'; }
+    }, 60 + idx * 30));
+
+    // Toggle input pop
+    const openPop = () => {
+      const pop = item.querySelector('.fin-envelope-input-pop');
+      pop.classList.remove('hidden');
+      const inp = pop.querySelector('.fin-envelope-input');
+      inp.focus(); inp.select();
+    };
+    item.querySelector('[data-editcat]').addEventListener('click', e => { e.stopPropagation(); openPop(); });
+    const setLink = item.querySelector('[data-setlink]');
+    if (setLink) setLink.addEventListener('click', e => { e.stopPropagation(); openPop(); });
+
+    // Save helper
+    const saveEnvelopeLimit = (val) => {
+      if (!finState.categoryBudgets) finState.categoryBudgets = {};
+      if (!isNaN(val) && val > 0) {
+        finState.categoryBudgets[cat] = val;
+      } else {
+        delete finState.categoryBudgets[cat];
+      }
+      saveFinance(); renderFinance();
+    };
+
+    const pop = item.querySelector('.fin-envelope-input-pop');
+    const inp = pop.querySelector('.fin-envelope-input');
+    pop.querySelector('.fin-envelope-save-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      saveEnvelopeLimit(parseFloat(inp.value));
+    });
+    pop.querySelector('.fin-envelope-clear-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      saveEnvelopeLimit(0);
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveEnvelopeLimit(parseFloat(inp.value));
+      if (e.key === 'Escape') pop.classList.add('hidden');
+      e.stopPropagation();
+    });
+    // Close pop on outside click
+    document.addEventListener('click', () => pop.classList.add('hidden'), { once: false });
+    pop.addEventListener('click', e => e.stopPropagation());
   });
 }
 
 function renderSavings() {
   const el = document.getElementById('fin-savings-list');
   if (!finState.savings.length) {
-    el.innerHTML = '<div class="fin-empty-msg" style="font-size:12px;">No savings goals yet.</div>';
+    el.innerHTML = `<div class="fin-empty-msg" style="font-size:12px;">${t('finSavingsEmpty')||'No savings goals yet.'}</div>`;
     return;
   }
   el.innerHTML = '';
@@ -4744,7 +5113,7 @@ function renderFinance() {
   renderFinanceStats();
   renderExpenseList();
   renderIncomeList();
-  renderBreakdown();
+  renderEnvelopes();
   renderSavings();
   applyTranslations();
 }
@@ -4875,7 +5244,6 @@ on('next-month','click',()=>{
 
 // ── INIT ─────────────────────────────────────────────────────────
 loadFinance();
-maybeAddSampleData();
 renderFinance();
 
 } // end if(CURRENT_PAGE === 'finance')
@@ -5088,223 +5456,321 @@ function describeBackup(backup) {
 
 function openSettingsModal() {
   if (document.getElementById('settings-modal-backdrop')) return;
-  const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
 
+  // ── Full-page overlay — stays in DOM; only content re-renders on lang change ──
   const backdrop = document.createElement('div');
   backdrop.id = 'settings-modal-backdrop';
-  backdrop.style.cssText = 'position:fixed;inset:0;z-index:8900;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);animation:fadeIn .3s ease;';
+  backdrop.style.cssText = 'position:fixed;inset:0;z-index:8900;background:var(--bg);overflow-y:auto;animation:fadeSlideUp .35s cubic-bezier(.4,0,.2,1);';
+  backdrop.innerHTML = `
+    <div class="bg-orb bg-orb-1" style="pointer-events:none;"></div>
+    <div class="bg-orb bg-orb-2" style="pointer-events:none;"></div>
+    <div class="bg-orb bg-orb-3" style="pointer-events:none;"></div>`;
 
   const modal = document.createElement('div');
   modal.id = 'settings-modal';
-  modal.style.cssText = 'position:fixed;z-index:8901;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,94vw);max-height:85vh;overflow-y:auto;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 28px 24px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:centeredModalPop .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;gap:16px;';
+  modal.style.cssText = 'position:relative;z-index:1;max-width:860px;margin:0 auto;padding:clamp(16px,2.5vw,32px) clamp(16px,4vw,48px) 60px;display:flex;flex-direction:column;gap:20px;';
 
-  function refreshBtns() {
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
+
+  function closeModal() { backdrop.remove(); }
+
+  // Escape key handler (attached once, removed on close)
+  function escHandler(e) { if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); } }
+  document.addEventListener('keydown', escHandler);
+
+  // ── Section → localStorage key mapping ──
+  const SECTION_KEY_MAP = {
+    habits:    { exact: ['ht_habits_v4','ht_goals_ext_v1','ht_todos_v1'], prefix: ['ht_habits_'] },
+    timetable: { exact: ['ht_timetable_v4'], prefix: ['ht_timetable_'] },
+    tasks:     { exact: ['ht_tasks_v3'], prefix: ['ht_tasks_'] },
+    shopping:  { exact: ['ht_shopping_v3'], prefix: ['ht_shop_'] },
+    cycle:     { exact: ['ht_cycle_v2'], prefix: ['ht_cycle_'] },
+    finance:   { exact: ['ht_finance_v1'], prefix: ['ht_finance_'] },
+    journal:   { exact: ['ht_journal_v1'], prefix: [] },
+    settings:  { exact: ['ht_lang_v1','ht_theme_v2','ht_nav_v1','ht_tour_v1','ht_user_prefs_v1'], prefix: [] },
+  };
+
+  function openDeletePopup(preCheckAll) {
+    document.getElementById('del-popup-bd')?.remove();
+    document.getElementById('del-popup-modal')?.remove();
+    const SECTIONS = [
+      { key:'habits',    label:'📊 Habit Tracker' },
+      { key:'timetable', label:'🗓 Timetable' },
+      { key:'tasks',     label:'✅ Tasks' },
+      { key:'shopping',  label:'🛒 Shopping' },
+      { key:'cycle',     label:'🌸 Cycle' },
+      { key:'finance',   label:'💰 Finance' },
+      { key:'journal',   label:'📓 Journal' },
+      { key:'settings',  label:'⚙️ Settings &amp; Prefs' },
+    ];
+    const bd = document.createElement('div');
+    bd.id = 'del-popup-bd';
+    bd.style.cssText = 'position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);animation:fadeIn .2s ease;';
+    const rows = SECTIONS.map(s => `
+      <label class="del-sec-row" data-key="${s.key}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:border-color .15s,background .15s;font-size:13px;font-weight:600;color:var(--text);user-select:none;">
+        <input type="checkbox" data-section="${s.key}" ${preCheckAll?'checked':''}
+          style="width:16px;height:16px;accent-color:#e05a9a;cursor:pointer;flex-shrink:0;"/>
+        ${s.label}
+      </label>`).join('');
+    const pm = document.createElement('div');
+    pm.id = 'del-popup-modal';
+    pm.style.cssText = 'position:fixed;z-index:9201;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,92vw);background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:centeredModalPop .28s cubic-bezier(.4,0,.2,1);';
+    pm.innerHTML = `
+      <div style="text-align:center;font-size:30px;margin-bottom:8px;">🗑️</div>
+      <div style="text-align:center;font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;">Select Data to Delete</div>
+      <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">Tick the sections you want to erase.<br>Anything left unticked stays safe.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">${rows}</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
+        <button id="del-sel-all" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☑ Select All</button>
+        <button id="del-sel-none" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☐ Select None</button>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button id="del-cancel" style="padding:10px 22px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button>
+        <button id="del-confirm" style="padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#e05a9a,#c84080);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(224,90,154,.4);">🗑 Delete Selected</button>
+      </div>`;
+    document.body.appendChild(bd);
+    document.body.appendChild(pm);
+    pm.querySelectorAll('.del-sec-row').forEach(row => {
+      const cb = row.querySelector('input');
+      function sync() { row.style.borderColor = cb.checked ? '#e05a9a' : ''; row.style.background = cb.checked ? 'rgba(224,90,154,.1)' : ''; }
+      cb.addEventListener('change', sync); sync();
+    });
+    function closePop() { bd.remove(); pm.remove(); }
+    bd.addEventListener('click', closePop);
+    pm.querySelector('#del-cancel').addEventListener('click', closePop);
+    pm.querySelector('#del-sel-all').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = true; cb.dispatchEvent(new Event('change')); }); });
+    pm.querySelector('#del-sel-none').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = false; cb.dispatchEvent(new Event('change')); }); });
+    pm.querySelector('#del-confirm').addEventListener('click', () => {
+      const checked = Array.from(pm.querySelectorAll('input[data-section]:checked')).map(cb => cb.dataset.section);
+      if (checked.length === 0) { closePop(); return; }
+      const exactSet = new Set(); const prefixList = [];
+      checked.forEach(sec => { const map = SECTION_KEY_MAP[sec]; if (!map) return; map.exact.forEach(k => exactSet.add(k)); map.prefix.forEach(p => prefixList.push(p)); });
+      const toDelete = [];
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (exactSet.has(k) || prefixList.some(p => k.startsWith(p)))) toDelete.push(k); }
+      toDelete.forEach(k => localStorage.removeItem(k));
+      if (checked.includes('settings')) userPrefs = { gender: null, setupDone: false };
+      closePop(); closeModal(); window.location.href = 'tracker.html';
+    });
+  }
+
+  // ── render(): builds modal HTML + wires all listeners; safe to call again ──
+  function render() {
+    const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    const scrollY = backdrop.scrollTop;
+
+    modal.innerHTML = `
+      <!-- PAGE HEADER -->
+      <div style="display:flex;align-items:center;gap:14px;padding:clamp(10px,1.5vw,18px) 0 4px;">
+        <button id="settings-modal-close" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;">
+          ← Back
+        </button>
+        <div>
+          <div style="font-size:clamp(18px,2.2vw,26px);font-weight:900;color:var(--text);letter-spacing:-.5px;">${tr.settingsTitle||'⚙️ Settings'}</div>
+          <div style="font-size:12px;color:var(--text-muted);font-weight:500;margin-top:1px;">Manage your preferences and data</div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="settings-card">
+        <div class="settings-card-title">${tr.settingsProfile||'👤 Profile'}</div>
+        <div class="settings-row">
+          <div class="settings-row-label">${tr.settingsGenderLabel||'Gender'}</div>
+          <div class="settings-gender-btns" id="settings-modal-gender-btns">
+            <button class="settings-gender-btn" data-gender="female">♀️ <span>${tr.genderFemale||'Female'}</span></button>
+            <button class="settings-gender-btn" data-gender="male">♂️ <span>${tr.genderMale||'Male'}</span></button>
+          </div>
+        </div>
+        <div class="settings-hint">${tr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>
+      </div>
+
+      <!-- LANGUAGE -->
+      <div class="settings-card">
+        <div class="settings-card-title">${tr.settingsLanguageTitle||'🌐 Language'}</div>
+        <div class="settings-lang-grid">
+          <button class="settings-lang-btn" data-lang="en">🇬🇧 English</button>
+          <button class="settings-lang-btn" data-lang="hu">🇭🇺 Magyar</button>
+          <button class="settings-lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+          <button class="settings-lang-btn" data-lang="es">🇪🇸 Español</button>
+          <button class="settings-lang-btn" data-lang="fr">🇫🇷 Français</button>
+        </div>
+      </div>
+
+      <!-- THEME -->
+      <div class="settings-card">
+        <div class="settings-card-title">${tr.settingsThemeTitle||'🎨 Theme'}</div>
+        <div class="settings-theme-grid">
+          <button class="settings-theme-btn" data-theme="dark">🌑 Dark</button>
+          <button class="settings-theme-btn" data-theme="light">☀️ Light</button>
+          <button class="settings-theme-btn" data-theme="forest">🌿 Forest</button>
+          <button class="settings-theme-btn" data-theme="sakura">🌸 Sakura</button>
+          <button class="settings-theme-btn" data-theme="ocean">🌊 Ocean</button>
+          <button class="settings-theme-btn" data-theme="sunset">🌅 Sunset</button>
+          <button class="settings-theme-btn" data-theme="midnight">🌙 Midnight</button>
+          <button class="settings-theme-btn" data-theme="amoled">🖤 AMOLED</button>
+          <button class="settings-theme-btn" data-theme="paper">🤍 Paper</button>
+          <button class="settings-theme-btn" data-theme="slate">🌫️ Slate</button>
+        </div>
+      </div>
+
+      <!-- EXPORT / IMPORT -->
+      <div class="settings-card">
+        <div class="settings-card-title">🔄 ${tr.settingsSyncTitle||'Export &amp; Import Data'}</div>
+        <div class="settings-hint" style="margin-bottom:14px;">${tr.settingsSyncHint||'Export a backup of all your data as a JSON file, then import it on any other device.'}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="settings-modal-export-btn" style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#3ecfb2,#2ba88e);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(62,207,178,.28);transition:opacity .15s;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            ${tr.settingsExportBtn||'Export Backup'}
+          </button>
+          <label style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#3a5ce0);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(79,110,247,.28);transition:opacity .15s;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="17"/></svg>
+            ${tr.settingsImportBtn||'Import Backup'}
+            <input type="file" id="settings-modal-import-input" accept=".json" style="display:none;"/>
+          </label>
+        </div>
+        <div id="settings-modal-sync-status" style="display:none;margin-top:12px;font-size:12px;font-weight:600;color:#3ecfb2;"></div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div class="settings-card settings-danger-card">
+        <div class="settings-card-title settings-danger-title">${tr.settingsDangerZone||'⚠️ Danger Zone'}</div>
+        <div class="settings-hint" style="margin-bottom:16px;">${tr.settingsClearAllHint||'Permanently erase data. This cannot be undone.'}</div>
+        <!-- Delete by Section -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(200,150,40,.25);background:rgba(200,150,40,.05);margin-bottom:12px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">☑ Delete by Section</div>
+            <div class="settings-hint" style="margin:0;">Choose exactly which pages to wipe. Everything else stays safe.</div>
+          </div>
+          <button class="settings-danger-btn" id="settings-modal-clear-section-btn" style="background:rgba(180,130,30,.1);color:#b89030;border-color:rgba(180,130,30,.4);flex-shrink:0;">☑ Choose &amp; Delete</button>
+        </div>
+        <!-- Delete All -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(180,40,40,.35);background:rgba(160,30,30,.07);">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">🗑 Delete All Data</div>
+            <div class="settings-hint" style="margin:0;">Wipe everything — habits, tasks, finance, cycle, timetable, settings.</div>
+          </div>
+          <button class="settings-danger-btn" id="settings-modal-clear-btn" style="background:linear-gradient(135deg,#8b1a1a,#6b1212);color:#ffb3b3;border-color:rgba(180,40,40,.6);flex-shrink:0;">${tr.settingsClearAllBtn||'🗑 Delete All'}</button>
+        </div>
+      </div>
+
+      <!-- GUIDED TOUR -->
+      <div class="settings-card">
+        <div class="settings-card-title">🗺️ Guided Tour</div>
+        <div class="settings-hint" style="margin-bottom:14px;">New here or want a refresher? The tour walks you through every feature step by step.</div>
+        <button id="settings-modal-tour-btn" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#f5a623,#e08a10);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(245,166,35,.35);transition:opacity .15s;">
+          🗺️ Take the Tour
+        </button>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="settings-card">
+        <div class="settings-card-title">ℹ️ About</div>
+        <div class="settings-hint" style="font-size:13px;line-height:1.9;"><strong>Life Tracker</strong> — Beta<br>All data is stored locally in your browser. No account needed. Works offline.</div>
+      </div>`;
+
+    // Restore scroll position after re-render
+    backdrop.scrollTop = scrollY;
+
+    // Highlight active buttons
     modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
     modal.querySelectorAll('.settings-lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === state.lang));
     const curTheme = getThemeName();
     modal.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === curTheme));
-  }
 
-  modal.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-      <div style="font-size:18px;font-weight:800;color:var(--text);" data-i18n="settingsTitle">${tr.settingsTitle||'⚙️ Settings'}</div>
-      <button id="settings-modal-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:4px 8px;border-radius:8px;line-height:1;">✕</button>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">${tr.settingsProfile||'👤 Profile'}</div>
-      <div class="settings-row">
-        <div class="settings-row-label">${tr.settingsGenderLabel||'Gender'}</div>
-        <div class="settings-gender-btns" id="settings-modal-gender-btns">
-          <button class="settings-gender-btn" data-gender="female">♀️ <span>${tr.genderFemale||'Female'}</span></button>
-          <button class="settings-gender-btn" data-gender="male">♂️ <span>${tr.genderMale||'Male'}</span></button>
-        </div>
-      </div>
-      <div class="settings-hint">${tr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">${tr.settingsLanguageTitle||'🌐 Language'}</div>
-      <div class="settings-lang-grid">
-        <button class="settings-lang-btn" data-lang="en">🇬🇧 English</button>
-        <button class="settings-lang-btn" data-lang="hu">🇭🇺 Magyar</button>
-        <button class="settings-lang-btn" data-lang="de">🇩🇪 Deutsch</button>
-        <button class="settings-lang-btn" data-lang="es">🇪🇸 Español</button>
-        <button class="settings-lang-btn" data-lang="fr">🇫🇷 Français</button>
-      </div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">${tr.settingsThemeTitle||'🎨 Theme'}</div>
-      <div class="settings-theme-grid">
-        <button class="settings-theme-btn" data-theme="dark">🌑 Dark</button>
-        <button class="settings-theme-btn" data-theme="light">☀️ Light</button>
-        <button class="settings-theme-btn" data-theme="forest">🌿 Forest</button>
-        <button class="settings-theme-btn" data-theme="sakura">🌸 Sakura</button>
-        <button class="settings-theme-btn" data-theme="ocean">🌊 Ocean</button>
-        <button class="settings-theme-btn" data-theme="sunset">🌅 Sunset</button>
-        <button class="settings-theme-btn" data-theme="midnight">🌙 Midnight</button>
-        <button class="settings-theme-btn" data-theme="amoled">🖤 AMOLED</button>
-        <button class="settings-theme-btn" data-theme="paper">🤍 Paper</button>
-        <button class="settings-theme-btn" data-theme="slate">🌫️ Slate</button>
-      </div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">🔄 ${tr.settingsSyncTitle||'Export &amp; Import Data'}</div>
-      <div class="settings-hint" style="margin-bottom:14px;">${tr.settingsSyncHint||'Export a backup of all your data as a JSON file, then import it on any other device to sync your Life Tracker.'}</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button id="settings-modal-export-btn" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#3ecfb2,#2ba88e);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(62,207,178,.28);transition:opacity .15s;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          ${tr.settingsExportBtn||'Export Backup'}
-        </button>
-        <label id="settings-modal-import-label" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#3a5ce0);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(79,110,247,.28);transition:opacity .15s;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="17"/></svg>
-          ${tr.settingsImportBtn||'Import Backup'}
-          <input type="file" id="settings-modal-import-input" accept=".json" style="display:none;"/>
-        </label>
-      </div>
-      <div id="settings-modal-sync-status" style="display:none;margin-top:10px;font-size:12px;font-weight:600;color:#3ecfb2;"></div>
-    </div>
-    <div class="settings-card settings-danger-card">
-      <div class="settings-card-title settings-danger-title">${tr.settingsDangerZone||'⚠️ Danger Zone'}</div>
-      <div class="settings-row" style="flex-wrap:wrap;gap:12px;">
-        <div style="flex:1;min-width:200px;">
-          <div class="settings-row-label">${tr.settingsClearAllLabel||'Delete All Data'}</div>
-          <div class="settings-hint">${tr.settingsClearAllHint||'Permanently erase all data.'}</div>
-        </div>
-        <button class="settings-danger-btn" id="settings-modal-clear-btn">${tr.settingsClearAllBtn||'🗑 Delete All Data'}</button>
-      </div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">🗺️ Guided Tour</div>
-      <div class="settings-hint" style="margin-bottom:14px;">New here or want a refresher? The tour walks you through every feature step by step.</div>
-      <button id="settings-modal-tour-btn" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#f5a623,#e08a10);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(245,166,35,.35);transition:opacity .15s;">
-        🗺️ Take the Tour
-      </button>
-    </div>
-    <div class="settings-card">
-      <div class="settings-card-title">ℹ️ About</div>
-      <div class="settings-hint" style="font-size:13px;line-height:1.8;"><strong>Life Tracker</strong> — Beta<br>All data stored locally. No account needed. Works offline.</div>
-    </div>
-  `;
+    // ── Wire listeners ──
+    modal.querySelector('#settings-modal-close').addEventListener('click', closeModal);
 
-  document.body.appendChild(backdrop);
-  document.body.appendChild(modal);
-  refreshBtns();
+    modal.querySelector('#settings-modal-gender-btns').addEventListener('click', e => {
+      const btn = e.target.closest('[data-gender]');
+      if (!btn) return;
+      userPrefs.gender = btn.dataset.gender;
+      saveUserPrefs();
+      modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
+      applyCycleTabVisibility();
+    });
 
-  function closeModal() {
-    backdrop.remove();
-    modal.remove();
-  }
-  backdrop.addEventListener('click', closeModal);
-  modal.querySelector('#settings-modal-close').addEventListener('click', closeModal);
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
-  });
+    modal.querySelector('.settings-lang-grid').addEventListener('click', e => {
+      const btn = e.target.closest('[data-lang]');
+      if (!btn) return;
+      state.lang = btn.dataset.lang;
+      try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
+      applyTranslations();
+      if (CURRENT_PAGE === 'finance') renderFinance();
+      render(); // re-render settings in new language, no flash
+    });
 
-  modal.querySelector('#settings-modal-tour-btn').addEventListener('click', () => {
-    closeModal();
-    setTimeout(() => window.startTour && window.startTour(true), 200);
-  });
+    modal.querySelector('.settings-theme-grid').addEventListener('click', e => {
+      const btn = e.target.closest('[data-theme]');
+      if (!btn) return;
+      const theme = btn.dataset.theme;
+      document.body.className = document.body.className.replace(/theme-\w+/g,'');
+      document.body.classList.add('theme-' + theme);
+      try { localStorage.setItem('ht_theme_v2', theme); } catch(e2) {}
+      modal.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+    });
 
-  modal.querySelector('#settings-modal-gender-btns').addEventListener('click', e => {
-    const btn = e.target.closest('[data-gender]');
-    if (!btn) return;
-    userPrefs.gender = btn.dataset.gender;
-    saveUserPrefs();
-    refreshBtns();
-    applyCycleTabVisibility();
-  });
+    modal.querySelector('#settings-modal-clear-section-btn').addEventListener('click', () => openDeletePopup(false));
+    modal.querySelector('#settings-modal-clear-btn').addEventListener('click', () => openDeletePopup(true));
 
-  modal.querySelector('.settings-lang-grid').addEventListener('click', e => {
-    const btn = e.target.closest('[data-lang]');
-    if (!btn) return;
-    state.lang = btn.dataset.lang;
-    try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
-    refreshBtns();
-    applyTranslations();
-  });
-
-  modal.querySelector('.settings-theme-grid').addEventListener('click', e => {
-    const btn = e.target.closest('[data-theme]');
-    if (!btn) return;
-    const theme = btn.dataset.theme;
-    document.body.className = document.body.className.replace(/theme-\w+/g,'');
-    document.body.classList.add('theme-' + theme);
-    try { localStorage.setItem('ht_theme_v2', theme); } catch(e2) {}
-    refreshBtns();
-  });
-
-  modal.querySelector('#settings-modal-clear-btn').addEventListener('click', () => {
-    const tr2 = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
-    if (confirm(tr2.settingsClearModalDesc || 'This will permanently erase ALL Life Tracker data. Cannot be undone.')) {
-      const keysToDelete = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('ht_')) keysToDelete.push(key);
-      }
-      keysToDelete.forEach(k => localStorage.removeItem(k));
-      userPrefs = { gender: null, setupDone: false };
+    modal.querySelector('#settings-modal-tour-btn').addEventListener('click', () => {
       closeModal();
-      window.location.href = 'tracker.html';
-    }
-  });
+      setTimeout(() => window.startTour && window.startTour(true), 200);
+    });
 
-  // ── Export ──
-  modal.querySelector('#settings-modal-export-btn').addEventListener('click', () => {
-    const backup = buildBackup();
-    const syncStatus = modal.querySelector('#settings-modal-sync-status');
-    if (Object.keys(backup.data).length === 0) {
-      syncStatus.textContent = '⚠️ No data found to export.';
-      syncStatus.style.display = 'block';
-      setTimeout(() => { syncStatus.style.display = 'none'; }, 3000);
-      return;
-    }
-    const json = JSON.stringify(backup, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const dateTag = new Date().toISOString().slice(0, 10);
-    const a = document.createElement('a');
-    a.href = url; a.download = `life-tracker-backup-${dateTag}.json`;
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-    syncStatus.style.color = '#3ecfb2';
-    syncStatus.textContent = `✓ Exported (${Object.keys(backup.data).length} keys, ${(json.length/1024).toFixed(1)} KB)`;
-    syncStatus.style.display = 'block';
-    setTimeout(() => { syncStatus.style.display = 'none'; }, 4000);
-  });
-
-  // ── Import ──
-  modal.querySelector('#settings-modal-import-input').addEventListener('change', function() {
-    const file = this.files[0];
-    if (!file) return;
-    this.value = '';
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      let backup;
-      try {
-        backup = JSON.parse(ev.target.result);
-        if (!backup.data || backup.appName !== 'LifeTracker') throw new Error('invalid');
-      } catch(e) {
-        alert('⚠️ Invalid file. Please select a Life Tracker JSON backup.');
+    // Export
+    modal.querySelector('#settings-modal-export-btn').addEventListener('click', () => {
+      const backup = buildBackup();
+      const syncStatus = modal.querySelector('#settings-modal-sync-status');
+      if (Object.keys(backup.data).length === 0) {
+        syncStatus.textContent = '⚠️ No data found to export.';
+        syncStatus.style.display = 'block';
+        setTimeout(() => { syncStatus.style.display = 'none'; }, 3000);
         return;
       }
-      const preview = describeBackup(backup);
-      if (confirm(`Import this backup?\n\n${preview}\n\nThis will overwrite all current data. Cannot be undone.`)) {
-        // Clear existing ht_* keys
-        const existing = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i);
-          if (k && k.startsWith('ht_')) existing.push(k);
+      const json = JSON.stringify(backup, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const dateTag = new Date().toISOString().slice(0, 10);
+      const a = document.createElement('a');
+      a.href = url; a.download = `life-tracker-backup-${dateTag}.json`;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+      syncStatus.style.color = '#3ecfb2';
+      syncStatus.textContent = `✓ Exported (${Object.keys(backup.data).length} keys, ${(json.length/1024).toFixed(1)} KB)`;
+      syncStatus.style.display = 'block';
+      setTimeout(() => { syncStatus.style.display = 'none'; }, 4000);
+    });
+
+    // Import
+    modal.querySelector('#settings-modal-import-input').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      this.value = '';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        let backup;
+        try {
+          backup = JSON.parse(ev.target.result);
+          if (!backup.data || backup.appName !== 'LifeTracker') throw new Error('invalid');
+        } catch(e) {
+          alert('⚠️ Invalid file. Please select a Life Tracker JSON backup.');
+          return;
         }
-        existing.forEach(k => localStorage.removeItem(k));
-        // Write backup
-        Object.entries(backup.data).forEach(([key, val]) => {
-          try { localStorage.setItem(key, val); } catch(e) {}
-        });
-        closeModal();
-        window.location.href = 'tracker.html';
-      }
-    };
-    reader.readAsText(file);
-  });
+        const preview = describeBackup(backup);
+        if (confirm(`Import this backup?\n\n${preview}\n\nThis will overwrite all current data. Cannot be undone.`)) {
+          const existing = [];
+          for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('ht_')) existing.push(k); }
+          existing.forEach(k => localStorage.removeItem(k));
+          Object.entries(backup.data).forEach(([key, val]) => { try { localStorage.setItem(key, val); } catch(e) {} });
+          closeModal();
+          window.location.href = 'tracker.html';
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  render(); // initial render
 }
 
 // ─── SETTINGS PAGE ────────────────────────────────────────────────────────────
@@ -5353,6 +5819,7 @@ function initSettingsPage() {
     try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
     refreshLangBtns();
     applyTranslations();
+    if(CURRENT_PAGE==='finance')renderFinance();
   });
 
   // Theme

@@ -5695,8 +5695,17 @@ function openSettingsModal() {
       state.lang = btn.dataset.lang;
       try { localStorage.setItem(K.lang(), state.lang); } catch(e2) {}
       applyTranslations();
-      if (CURRENT_PAGE === 'finance') renderFinance();
-      render(); // re-render settings in new language, no flash
+      // Re-render whichever page is currently open so it updates immediately
+      switch (CURRENT_PAGE) {
+        case 'tracker':  case 'habits': render(false); break;
+        case 'timetable': renderTimetable(); break;
+        case 'tasks':    renderTasksView(); break;
+        case 'shopping': renderShoppingList(); break;
+        case 'cycle':    renderCycleTracker(); break;
+        case 'finance':  renderFinance(); break;
+        case 'analysis': render(false); break;
+      }
+      render(); // re-render settings panel itself in new language
     });
 
     modal.querySelector('.settings-theme-grid').addEventListener('click', e => {

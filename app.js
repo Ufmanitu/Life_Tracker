@@ -5555,7 +5555,7 @@ function openSettingsModal() {
   }
 
   // ── render(): builds modal HTML + wires all listeners; safe to call again ──
-  function render() {
+  function renderSettingsContent() {
     const tr = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
     const scrollY = backdrop.scrollTop;
 
@@ -5705,7 +5705,7 @@ function openSettingsModal() {
         case 'finance':  renderFinance(); break;
         case 'analysis': render(false); break;
       }
-      render(); // re-render settings panel itself in new language
+      renderSettingsContent(); // re-render settings panel in new language
     });
 
     modal.querySelector('.settings-theme-grid').addEventListener('click', e => {
@@ -5779,7 +5779,7 @@ function openSettingsModal() {
     });
   }
 
-  render(); // initial render
+  renderSettingsContent(); // initial render
 }
 
 // ─── SETTINGS PAGE ────────────────────────────────────────────────────────────

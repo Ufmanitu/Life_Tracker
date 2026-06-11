@@ -26,6 +26,9 @@ function applyCycleTabVisibility() {
   document.querySelectorAll('[data-tab="cycle"]').forEach(btn => {
     btn.style.display = show ? '' : 'none';
   });
+  // Also hide/show sidebar cycle item
+  const sbCycle = document.getElementById('sb-cycle-item');
+  if(sbCycle) sbCycle.style.display = show ? '' : 'none';
   // If currently on cycle page but cycle is hidden, redirect to tracker
   if (!show && CURRENT_PAGE === 'cycle') {
     window.location.href = 'tracker.html';
@@ -995,7 +998,7 @@ function getWeekBg(){ return THEME_WEEK_BG[getThemeName()]||THEME_WEEK_BG.dark; 
 const CIRC=2*Math.PI*42;
 const POMO_CIRC=2*Math.PI*52;
 
-let saveTimer=null,editingHabit=null,taskFilter="all",taskScope="daily",trackerScope="weekly",currentWeekIdx=null,ttWeekIdx=null;
+let saveTimer=null,editingHabit=null,taskFilter="all",taskScope="daily",trackerScope="weekly",currentWeekIdx=null,ttWeekIdx=null,dailyDayView=null;
 // ttWeekStart: a Date (Monday 00:00:00) for the timetable's currently displayed week.
 // Null means "use the week containing today".
 let ttWeekStart=null;
@@ -1144,6 +1147,21 @@ function applyTranslations(){
   // Re-render shopping/cycle if currently shown
   if(CURRENT_PAGE==='shopping')renderShoppingList();
   if(CURRENT_PAGE==='cycle')renderCycleTracker();
+  // Update sidebar nav labels when language changes
+  const sbLabelMap = {
+    'tracker.html': tr.tabTracker,
+    'analysis.html': tr.tabAnalysis,
+    'timetable.html': tr.tabTimetable,
+    'tasks.html': tr.tabTasks,
+    'shopping.html': tr.tabShopping,
+    'finance.html': tr.tabFinance,
+    'cycle.html': tr.tabCycle,
+  };
+  const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖]+\s*/gu, '').trim();
+  document.querySelectorAll('#sidebar .sb-item[href]').forEach(a => {
+    const lbl = sbLabelMap[a.getAttribute('href')];
+    if(lbl){ const sp=a.querySelector('.sb-label'); if(sp) sp.textContent=_stripEmoji(lbl); }
+  });
   // Habits sub-tab buttons
   document.querySelectorAll('.habits-subtab-btn').forEach(btn=>{
     if(btn.dataset.subtab==='habits'&&tr.habitsSubtabHabits)btn.textContent=tr.habitsSubtabHabits;
@@ -1395,73 +1413,106 @@ function render(animate){
 function renderDaysView(animate){
   const total=getDaysInMonth(state.year,state.month);
   const grid=document.getElementById("days-grid");grid.innerHTML="";
-  for(let d=1;d<=total;d++){
-    const pct=calcDayPct(d);const color=pctColor(pct);
-    const today=isToday(d);const future=isFuture(d);
-    const card=document.createElement("div");
-    card.className="day-card"+(today?" is-today":"")+(future?" future":"");
-    let habHTML="";
-    state.habits.forEach((h,hi)=>{
-      const ck=isChecked(hi,d);
-      habHTML+=`<div class="day-habit-item">
-        <div class="day-habit-cb ${ck?'checked':''}" data-hi="${hi}" data-d="${d}">
-          ${ck?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}
-        </div>
-        <span class="day-habit-label ${ck?'done-label':''}">${h}</span>
-      </div>`;
-    });
-    const mtypes=[
-      {key:"energy",label:t('energy'),icon:"⚡",cols:["#2a3d5e","#f5a62388","#f5a623bb","#f5a623","#ffbe4a"]},
-      {key:"focus",label:t('focus'),icon:"🎯",cols:["#2a3d5e","#4f6ef788","#4f6ef7bb","#4f6ef7","#7090f9"]},
-      {key:"motivation",label:t('mood'),icon:"🔥",cols:["#2a3d5e","#e05a9a88","#e05a9abb","#e05a9a","#f07ab0"]},
-    ];
-    let mHTML=`<div class="mindset-section"><div class="mindset-title">${t('mindsetTitle')}</div>`;
-    mtypes.forEach(mt=>{
-      const val=getMindset(d,mt.key);
-      mHTML+=`<div class="mindset-row"><span class="mindset-icon">${mt.icon}</span><span class="mindset-label">${mt.label}</span><div class="mindset-stars">`;
-      for(let s=1;s<=5;s++){
-        const act=s<=val;
-        mHTML+=`<div class="mindset-star ${act?'active':''}" style="background:${act?mt.cols[s-1]:'transparent'};border-color:${act?'transparent':'#1e3060'};" data-d="${d}" data-type="${mt.key}" data-val="${s}">●</div>`;
-      }
-      const textColor=val>0?mt.cols[Math.min(val-1,4)]:"#2a4060";
-      mHTML+=`</div><span class="mindset-val" style="color:${textColor}">${val||""}</span></div>`;
-    });
-    mHTML+=`</div>`;
-    const ms=getMonthShort();
-    card.innerHTML=`
-      <div class="day-card-top">
-        <span class="day-card-label">${t('thisDay')}</span>
-        ${today?`<span class="day-card-today-badge">${t('todayBadge')}</span>`:""}
+
+  // Default to today if same month, else day 1
+  if(dailyDayView===null||dailyDayView<1||dailyDayView>total){
+    dailyDayView=(state.year===NOW.getFullYear()&&state.month===NOW.getMonth())?NOW.getDate():1;
+  }
+  const d=dailyDayView;
+  const pct=calcDayPct(d);const color=pctColor(pct);
+  const today=isToday(d);const future=isFuture(d);
+  const ms=getMonthShort();
+
+  // Habit list
+  let habHTML="";
+  state.habits.forEach((h,hi)=>{
+    const ck=isChecked(hi,d);
+    habHTML+=`<div class="day-habit-item">
+      <div class="day-habit-cb ${ck?'checked':''}" data-hi="${hi}" data-d="${d}">
+        ${ck?`<svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3ecfb2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}
       </div>
-      <div class="day-card-date">${ms[state.month]} ${d}</div>
+      <span class="day-habit-label ${ck?'done-label':''}">${h}</span>
+    </div>`;
+  });
+
+  // Mindset
+  const mtypes=[
+    {key:"energy",label:t('energy'),icon:"⚡",cols:["#2a3d5e","#f5a62388","#f5a623bb","#f5a623","#ffbe4a"]},
+    {key:"focus",label:t('focus'),icon:"🎯",cols:["#2a3d5e","#4f6ef788","#4f6ef7bb","#4f6ef7","#7090f9"]},
+    {key:"motivation",label:t('mood'),icon:"🔥",cols:["#2a3d5e","#e05a9a88","#e05a9abb","#e05a9a","#f07ab0"]},
+  ];
+  let mHTML=`<div class="mindset-section"><div class="mindset-title">${t('mindsetTitle')}</div>`;
+  mtypes.forEach(mt=>{
+    const val=getMindset(d,mt.key);
+    mHTML+=`<div class="mindset-row"><span class="mindset-icon">${mt.icon}</span><span class="mindset-label">${mt.label}</span><div class="mindset-stars">`;
+    for(let s=1;s<=5;s++){
+      const act=s<=val;
+      mHTML+=`<div class="mindset-star ${act?'active':''}" style="background:${act?mt.cols[s-1]:'transparent'};border-color:${act?'transparent':'#1e3060'};" data-d="${d}" data-type="${mt.key}" data-val="${s}">●</div>`;
+    }
+    const textColor=val>0?mt.cols[Math.min(val-1,4)]:"#2a4060";
+    mHTML+=`</div><span class="mindset-val" style="color:${textColor}">${val||""}</span></div>`;
+  });
+  mHTML+=`</div>`;
+
+  // Journal
+  const jk=getJournalKey(state.year,state.month,d);
+  const jEntry=state.journal[jk]||{mood:0,note:''};
+  const journalHTML=`<div class="day-journal-section">
+    <div class="mindset-title">${t('journalTitle')}</div>
+    <div class="day-journal-mood-row" id="day-journal-mood-${d}">
+      ${JOURNAL_MOODS.map((em,i)=>{
+        const act=jEntry.mood===i+1;
+        return `<button class="day-journal-mood-btn${act?' active':''}" data-jd="${jk}" data-jmood="${i+1}" style="${act?`border-color:${JOURNAL_MOOD_COLORS[i]};box-shadow:0 0 0 2px ${JOURNAL_MOOD_COLORS[i]}33;background:${JOURNAL_MOOD_COLORS[i]}18;`:''}">${em}</button>`;
+      }).join('')}
+    </div>
+    <textarea class="day-journal-note" data-jd="${jk}" placeholder="${t('journalNotePlaceholder')}" maxlength="2000">${jEntry.note}</textarea>
+  </div>`;
+
+  // Month dots strip
+  const dotsHTML=Array.from({length:total},(_,i)=>{
+    const dd=i+1,isTd=isToday(dd),isFt=isFuture(dd),isSel=dd===d;
+    const dp=calcDayPct(dd);
+    const bg=isSel?'#4f6ef7':isTd?'#4f6ef755':isFt?'var(--border2)':dp>=80?'#3ecfb2':dp>=40?'#f5a623':'#e05a5a44';
+    return `<div class="ddv-dot${isSel?' ddv-dot-sel':''}${isTd&&!isSel?' ddv-dot-today':''}" data-dd="${dd}" style="background:${bg}" title="${ms[state.month]} ${dd}${isTd?' — Today':''}"></div>`;
+  }).join('');
+
+  // Build the wrapper
+  const wrapper=document.createElement("div");wrapper.className="ddv-wrap";
+  wrapper.innerHTML=`
+    <div class="ddv-nav">
+      <button class="ddv-arrow" id="ddv-prev"${d<=1?' disabled':''}>‹</button>
+      <div class="ddv-date-block">
+        <span class="ddv-date-big">${ms[state.month]} ${d}</span>
+        ${today?`<span class="day-card-today-badge" style="font-size:10px;">${t('todayBadge')}</span>`:''}
+        ${!today?`<button class="ddv-jump-today" id="ddv-jump">${t('todayBadge')||'Today'} →</button>`:''}
+      </div>
+      <button class="ddv-arrow" id="ddv-next"${d>=total?' disabled':''}>›</button>
+    </div>
+    <div class="ddv-dots-strip">${dotsHTML}</div>
+    <div class="day-card${today?' is-today':''}${future?' future':''} ddv-card">
       <div class="day-card-progress-row">
         <span class="day-card-pct" style="color:${color}">${pct}%</span>
         <div class="day-card-track"><div class="day-card-fill" style="width:0%;background:${color};"></div></div>
       </div>
-      <div class="day-habits-list">${habHTML}</div>
+      <div class="day-habits-list">${habHTML||`<div style="color:var(--text-dim);font-size:13px;font-weight:600;padding:8px 0;">No habits yet — add one above.</div>`}</div>
       ${mHTML}
-      <div class="day-journal-section">
-        <div class="mindset-title">${t('journalTitle')}</div>
-        <div class="day-journal-mood-row" id="day-journal-mood-${d}">
-          ${JOURNAL_MOODS.map((em,i)=>{
-            const jk=getJournalKey(state.year,state.month,d);
-            const jEntry=state.journal[jk]||{mood:0};
-            const act=jEntry.mood===i+1;
-            return `<button class="day-journal-mood-btn${act?' active':''}" data-jd="${jk}" data-jmood="${i+1}" style="${act?`border-color:${JOURNAL_MOOD_COLORS[i]};box-shadow:0 0 0 2px ${JOURNAL_MOOD_COLORS[i]}33;background:${JOURNAL_MOOD_COLORS[i]}18;`:''}">${em}</button>`;
-          }).join('')}
-        </div>
-        <textarea class="day-journal-note" data-jd="${getJournalKey(state.year,state.month,d)}" placeholder="${t('journalNotePlaceholder')}" maxlength="2000">${(state.journal[getJournalKey(state.year,state.month,d)]||{note:''}).note}</textarea>
-      </div>`;
-    grid.appendChild(card);
-    if(animate){
-      const delay=(d-1)*.035;
-      setTimeout(()=>{card.style.animation=`scalePop .38s ${delay}s cubic-bezier(.4,0,.2,1) both`;},10);
-      requestAnimationFrame(()=>{setTimeout(()=>{const fill=card.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";},80+(d-1)*35);});
-    } else {
-      card.style.opacity="1";
-      requestAnimationFrame(()=>{const fill=card.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";});
-    }
+      ${journalHTML}
+    </div>`;
+
+  grid.appendChild(wrapper);
+
+  // Wire navigation
+  document.getElementById("ddv-prev")?.addEventListener("click",()=>{dailyDayView=d-1;renderDaysView(false);});
+  document.getElementById("ddv-next")?.addEventListener("click",()=>{dailyDayView=d+1;renderDaysView(false);});
+  document.getElementById("ddv-jump")?.addEventListener("click",()=>{dailyDayView=null;renderDaysView(false);});
+  grid.querySelectorAll(".ddv-dot").forEach(dot=>dot.addEventListener("click",()=>{dailyDayView=+dot.dataset.dd;renderDaysView(false);}));
+
+  if(animate){
+    requestAnimationFrame(()=>{wrapper.style.animation=`fadeSlideUp .4s cubic-bezier(.4,0,.2,1) both`;});
+  }else{
+    wrapper.style.opacity="1";
   }
+  requestAnimationFrame(()=>{const fill=wrapper.querySelector(".day-card-fill");if(fill)fill.style.width=pct+"%";});
 }
 
 function renderTasksView(){
@@ -1851,6 +1902,7 @@ function applyTrackerScope(scope){
   if(scope==='daily'){
     gridView.classList.add('hidden');
     daysView.classList.remove('hidden');
+    dailyDayView=null;
     renderDaysView(true);
   } else if(scope==='weekly'){
     gridView.classList.remove('hidden');
@@ -3746,7 +3798,10 @@ on("prev-month","click",()=>{
       ttWeekStart=getTTWeekMonday(new Date(state.year,state.month,1));
       renderTimetable();
     } else {
-      ttWeekIdx=null;ttWeekStart=null;loadMonthData();render(true);applyTranslations();
+      ttWeekIdx=null;ttWeekStart=null;loadMonthData();
+      if(CURRENT_PAGE==='analysis'){
+        _renderAnalysisPage();
+      } else { render(true);applyTranslations(); }
     }
   }
 });
@@ -3761,7 +3816,10 @@ on("next-month","click",()=>{
       ttWeekStart=getTTWeekMonday(new Date(state.year,state.month,1));
       renderTimetable();
     } else {
-      ttWeekIdx=null;ttWeekStart=null;loadMonthData();render(true);applyTranslations();
+      ttWeekIdx=null;ttWeekStart=null;loadMonthData();
+      if(CURRENT_PAGE==='analysis'){
+        _renderAnalysisPage();
+      } else { render(true);applyTranslations(); }
     }
   }
 });
@@ -4223,10 +4281,38 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   });
 }
 
-// ── ANALYSIS PAGE / SUB-TAB ───────────────────────────────────────────────────
+// ── ANALYSIS PAGE — standalone render (no redirect) ──────────────────────────
 if(CURRENT_PAGE==="analysis"){
-  // Standalone analysis.html → redirect to habits page with analysis sub-tab active
-  window.location.replace('tracker.html#analysis');
+  function _renderAnalysisPage(){
+    const days=getDaysInMonth(state.year,state.month);
+    const total=state.habits.length*days;
+    let done=0;
+    for(let hi=0;hi<state.habits.length;hi++)
+      for(let d=1;d<=days;d++)if(isChecked(hi,d))done++;
+    const pct=total>0?(done/total)*100:0;
+    document.getElementById("month-title").textContent=getMonthNames()[state.month];
+    document.getElementById("year-label").textContent=state.year;
+    renderAnalysis(days,total,done,pct,calcHabitPcts(),getWeekGroups(),calcWeekTotals(getWeekGroups()),calcDowTotals());
+  }
+  _renderAnalysisPage();
+  on("analysis-section","click",e=>{
+    const rem=e.target.closest("[data-rgid]");
+    if(rem){state.goals=state.goals.filter(g=>g.id!==+rem.dataset.rgid);saveAll();_renderAnalysisPage();}
+  });
+  on("analysis-section","change",e=>{
+    const inp=e.target.closest(".goal-prog-input[data-gid]");
+    if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){g.progress=Math.max(0,Math.min(100,+inp.value||0));}saveAll();_renderAnalysisPage();}
+  });
+  on("goal-add-btn","click",()=>{
+    const name=document.getElementById("goal-input").value.trim();if(!name)return;
+    state.goals.push({id:state.goalIdCtr++,name,progress:0});
+    document.getElementById("goal-input").value="";saveAll();_renderAnalysisPage();
+  });
+  on("goal-input","keydown",e=>{
+    if(e.key==="Enter"){const name=document.getElementById("goal-input").value.trim();if(!name)return;
+      state.goals.push({id:state.goalIdCtr++,name,progress:0});
+      document.getElementById("goal-input").value="";saveAll();_renderAnalysisPage();}
+  });
 }
 
 if(CURRENT_PAGE==="habits"){
@@ -4434,13 +4520,176 @@ function setHabitsSubtab(subtab){
   }
 }
 
+// ─── SIDEBAR ─────────────────────────────────────────────────────────────────
+const SB_PREF_KEY = 'lt_sidebar_v1';
+
+function initSidebar() {
+  document.body.classList.add('has-sidebar');
+
+  // Load collapse preference
+  let collapsed = false;
+  try { const p = JSON.parse(localStorage.getItem(SB_PREF_KEY)||'null'); if(p) collapsed = !!p.collapsed; } catch(e){}
+  if(collapsed) document.body.classList.add('sb-collapsed');
+
+  const showCycle = isCycleUser();
+  const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+
+  // Nav definition
+  const sections = [
+    { label: 'Track', items: [
+      { page:'habits',    href:'tracker.html',  icon:'📊', label: tr.tabTracker||'Habits' },
+      { page:'analysis',  href:'analysis.html', icon:'📈', label: tr.tabAnalysis||'Analysis' },
+    ]},
+    { label: 'Schedule', items: [
+      { page:'timetable', href:'timetable.html', icon:'🗓', label: tr.tabTimetable||'Timetable' },
+      { page:'tasks',     href:'tasks.html',     icon:'✅', label: tr.tabTasks||'Tasks' },
+    ]},
+    { label: 'Health', items: [
+      { page:'calories',  href:'calories.html',  icon:'🍎', label:'Calories',  soon:true },
+      { page:'workout',   href:'workout.html',   icon:'🏋️', label:'Workout',   soon:true },
+      ...(showCycle ? [{ page:'cycle', href:'cycle.html', icon:'🌸', label: tr.tabCycle||'Cycle', id:'sb-cycle-item' }] : []),
+    ]},
+    { label: 'Lifestyle', items: [
+      { page:'shopping', href:'shopping.html', icon:'🛒', label: tr.tabShopping||'Shopping' },
+      { page:'finance',  href:'finance.html',  icon:'💰', label: tr.tabFinance||'Finance' },
+      { page:'recipes',  href:'recipes.html',  icon:'📖', label:'Recipes', soon:true },
+    ]},
+  ];
+
+  // Strip leading emoji/symbol characters from a label so the sidebar
+  // icon (sb-icon) and the text label (sb-label) are never duplicated.
+  const stripLeadEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱💬🍎🏋️📖]+\s*/gu, '').trim();
+
+  let navHTML = '';
+  sections.forEach(sec => {
+    navHTML += `<div class="sb-group"><div class="sb-group-label">${sec.label}</div>`;
+    sec.items.forEach(item => {
+      const isActive = CURRENT_PAGE === item.page || (item.page==='habits' && (CURRENT_PAGE==='tracker'||CURRENT_PAGE==='habits'));
+      const cls = ['sb-item', isActive?'active':'', item.soon?'sb-soon':''].filter(Boolean).join(' ');
+      const idAttr = item.id ? `id="${item.id}"` : '';
+      const soonBadge = item.soon ? `<span class="sb-soon-badge">SOON</span>` : '';
+      const cleanLabel = stripLeadEmoji(item.label);
+      navHTML += `<a class="${cls}" ${idAttr} href="${item.soon?'#':item.href}" title="${cleanLabel}">
+        <span class="sb-icon">${item.icon}</span>
+        <span class="sb-label">${cleanLabel}${soonBadge}</span>
+      </a>`;
+    });
+    navHTML += `</div>`;
+  });
+
+  // Build sidebar element
+  const sidebar = document.createElement('aside');
+  sidebar.id = 'sidebar';
+  if(collapsed) sidebar.classList.add('sb-collapsed');
+  sidebar.innerHTML = `
+    <div class="sb-head">
+      <div class="sb-logo">
+        <span class="sb-logo-icon">✦</span>
+        <span class="sb-logo-text">Life Tracker</span>
+      </div>
+      <button class="sb-col-btn" id="sb-col-btn" title="Collapse sidebar">‹</button>
+    </div>
+    <nav class="sb-nav">${navHTML}</nav>
+    <div class="sb-foot">
+      <div class="sb-divider"></div>
+      <button class="sb-item" id="sb-pomo-btn" title="Pomodoro Timer">
+        <span class="sb-icon">⏱</span><span class="sb-label">Pomodoro</span>
+      </button>
+      <button class="sb-item" id="sb-theme-btn" title="Change Theme">
+        <span class="sb-icon">🎨</span><span class="sb-label">Theme</span>
+      </button>
+      <button class="sb-item" id="sb-lang-btn" title="Language">
+        <span class="sb-icon">🌐</span><span class="sb-label">Language</span>
+      </button>
+      <button class="sb-item" id="sb-settings-btn" title="Settings">
+        <span class="sb-icon">⚙️</span><span class="sb-label">Settings</span>
+      </button>
+    </div>`;
+
+  // Mobile overlay + hamburger
+  const overlay = document.createElement('div');
+  overlay.id = 'sb-overlay';
+
+  const hamburger = document.createElement('button');
+  hamburger.id = 'sb-hamburger';
+  hamburger.title = 'Open menu';
+  hamburger.textContent = '☰';
+
+  // Inject into DOM
+  document.body.insertBefore(sidebar, document.body.firstChild);
+  document.body.appendChild(overlay);
+  const header = document.getElementById('header');
+  if(header) header.insertBefore(hamburger, header.firstChild);
+
+  // ── Collapse toggle ──
+  document.getElementById('sb-col-btn').addEventListener('click', () => {
+    const isCol = sidebar.classList.toggle('sb-collapsed');
+    document.body.classList.toggle('sb-collapsed', isCol);
+    try { localStorage.setItem(SB_PREF_KEY, JSON.stringify({collapsed:isCol})); } catch(e){}
+  });
+
+  // ── Mobile hamburger ──
+  hamburger.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('sb-mobile-open');
+    overlay.classList.toggle('open', open);
+  });
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('sb-mobile-open');
+    overlay.classList.remove('open');
+  });
+
+  // ── Footer button wiring ──
+  document.getElementById('sb-pomo-btn').addEventListener('click', () => {
+    const orig = document.getElementById('pomo-toggle');
+    if(orig) orig.click();
+    // mirror active style
+    const sbBtn = document.getElementById('sb-pomo-btn');
+    setTimeout(()=>{
+      if(sbBtn) sbBtn.classList.toggle('sb-pomo-active', orig && orig.classList.contains('active'));
+    }, 50);
+  });
+
+  document.getElementById('sb-theme-btn').addEventListener('click', (e) => {
+    const orig = document.getElementById('theme-toggle');
+    if(orig) orig.click();
+  });
+
+  document.getElementById('sb-lang-btn').addEventListener('click', (e) => {
+    const orig = document.getElementById('lang-btn');
+    if(orig) orig.click();
+  });
+
+  document.getElementById('sb-settings-btn').addEventListener('click', () => {
+    // Use the existing switchTab settings logic
+    switchTab('settings');
+  });
+
+  // ── Close sidebar on nav item click (mobile) ──
+  sidebar.querySelectorAll('a.sb-item:not(.sb-soon)').forEach(a => {
+    a.addEventListener('click', () => {
+      sidebar.classList.remove('sb-mobile-open');
+      overlay.classList.remove('open');
+    });
+  });
+
+  // ── Keep cycle item in sync with gender prefs ──
+  function syncCycleItem() {
+    const show = isCycleUser();
+    const item = document.getElementById('sb-cycle-item');
+    if(item) item.closest('.sb-group') && (item.style.display = show ? '' : 'none');
+  }
+  syncCycleItem();
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 loadAll();
 applyTranslations();
 updatePomoDisplay();
+initSidebar();
 
-// Mark active tab link — habits page is the tracker tab
+// Mark active tab link — habits page is the tracker tab; analysis has no top tab
 document.querySelectorAll('.tab-btn').forEach(b=>{
+  if(CURRENT_PAGE==='analysis'){ b.classList.remove('active'); return; }
   const effectivePage = CURRENT_PAGE==='habits'?'habits':CURRENT_PAGE;
   b.classList.toggle('active', b.dataset.tab===effectivePage);
 });
@@ -4463,7 +4712,7 @@ if(CURRENT_PAGE==='tracker'||CURRENT_PAGE==='habits'){
 } else if(CURRENT_PAGE==='tasks'){
   renderTasksView();
 } else if(CURRENT_PAGE==='analysis'){
-  // Redirected — nothing to do here, redirect fires above
+  // Initialised above in the CURRENT_PAGE==="analysis" block
 } else if(CURRENT_PAGE==='shopping'){
   renderShoppingList();
 } else if(CURRENT_PAGE==='cycle'){
@@ -6792,7 +7041,7 @@ const TOUR_KEY = 'ht_tour_v1';
 // position: 'bottom' | 'top' | 'left' | 'right' | 'center'
 const TOUR_STEPS = [
   // ── Tracker page ──────────────────────────────────────────────────
-  { page: 'habits',    selector: '#header .tab-switcher',    position: 'bottom', titleKey: 'tourTabsTitle',      descKey: 'tourTabsDesc' },
+  { page: 'habits',    selector: '#sidebar .sb-nav',         position: 'right',  titleKey: 'tourTabsTitle',      descKey: 'tourTabsDesc' },
   { page: 'habits',    selector: '#habits-subtab-bar',       position: 'bottom', titleKey: 'tourSubtabTitle',    descKey: 'tourSubtabDesc' },
   { page: 'habits',    selector: '#tracker-section .tracker-scope-bar', position: 'bottom', titleKey: 'tourScopeTitle', descKey: 'tourScopeDesc' },
   { page: 'habits',    selector: '#monthly-view-wrap',       position: 'top',    titleKey: 'tourGridTitle',      descKey: 'tourGridDesc' },
@@ -6819,7 +7068,7 @@ const TOUR_STEPS = [
   { page: 'cycle', female: true, selector: '#symptom-grid',         position: 'top',    titleKey: 'tourCycleSympTitle',    descKey: 'tourCycleSympDesc' },
   { page: 'cycle', female: true, selector: '#cycle-insights',       position: 'top',    titleKey: 'tourCycleInsightsTitle',descKey: 'tourCycleInsightsDesc' },
   // ── Pomodoro (any page) ────────────────────────────────────────────
-  { page: null,        selector: '#pomo-toggle',             position: 'bottom', titleKey: 'tourPomoTitle',      descKey: 'tourPomoDesc' },
+  { page: null,        selector: '#sb-pomo-btn',             position: 'right',  titleKey: 'tourPomoTitle',      descKey: 'tourPomoDesc' },
   // ── Assistant FAB ──────────────────────────────────────────────────
   { page: null,        selector: '#asst-fab',                position: 'top',    titleKey: 'tourAsstTitle',      descKey: 'tourAsstDesc' },
 ];

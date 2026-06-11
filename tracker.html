@@ -14,13 +14,15 @@
 <div id="app">
 <!-- HEADER -->
 <div id="header">
-  <div style="min-width:clamp(160px,18vw,320px);flex-shrink:0;">
-    <div id="month-title">Life Tracker</div>
-    <div id="month-sub" data-i18n="subtitle">— Life Tracker —</div>
+  <div class="header-brand">
+    <div class="header-brand-title">Life Tracker</div>
   </div>
   <div class="nav-row">
     <button class="nav-btn" id="prev-month">&#8249;</button>
-    <span id="year-label"></span>
+    <div class="nav-date-stack">
+      <span id="year-label"></span>
+      <span id="month-title"></span>
+    </div>
     <button class="nav-btn" id="next-month">&#8250;</button>
   </div>
   <div class="tab-switcher">
@@ -39,11 +41,7 @@
   <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
   <button id="settings-icon-btn" class="settings-icon-btn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
-<!-- SUB-TAB SWITCHER (Habits / Analysis) -->
-<div id="habits-subtab-bar" style="display:flex;gap:8px;padding:12px 20px 0;flex-shrink:0;">
-  <button class="habits-subtab-btn active" data-subtab="habits" style="padding:7px 20px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;font-family:inherit;">💪 Habit Tracker</button>
-  <button class="habits-subtab-btn" data-subtab="analysis" style="padding:7px 20px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;font-family:inherit;">📈 Analysis</button>
-</div>
+
 
 <!-- STATS ROW -->
 <div id="stats-row">

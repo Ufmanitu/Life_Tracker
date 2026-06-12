@@ -2782,8 +2782,8 @@ function calcPregnancyRisk(){
   const tag=getNaturalDayTag(today,anchor,cycleLen);
   const tk=todayKey();
 
-  // Base phase risk score
-  const phaseScore={period:0.02,fertile:0.30,ovulation:0.45,null:0.05,"pms-zone":0.03}[tag]??0.05;
+  // Base phase risk score (realistic daily unprotected risk by cycle phase)
+  const phaseScore={period:0.02,fertile:0.15,ovulation:0.33,null:0.04,"pms-zone":0.02}[tag]??0.04;
 
   // Recent intimacy (last 5 days including today)
   let hasUnprotected=false, hasProtected=false, hasKiss=false, hasOral=false;
@@ -2805,18 +2805,19 @@ function calcPregnancyRisk(){
     pillActive=packDay<=21;
   }
 
-  // Score computation
+  // Score computation — kiss and oral have NO pregnancy risk
   let score=phaseScore;
-  if(hasUnprotected) score*=1.0;    // full
-  else if(hasProtected) score*=0.15; // ~15% of base
-  else if(hasOral||hasKiss) score*=0.01; // negligible
-  else score=0;                           // no contact
+  if(hasUnprotected) score*=1.0;     // full phase risk
+  else if(hasProtected) score*=0.02; // ~98% effective barrier
+  else score=0; // no pregnancy-risk intimacy logged → genuinely 0
 
-  if(pillActive) score*=0.01; // 99% effective
+  if(pillActive) score*=0.01; // ~99% effective
 
-  // Clamp
-  score=Math.min(1,Math.max(0,score));
-  const level=score<0.005?"none":score<0.05?"low":score<0.15?"medium":score<0.35?"high":"very_high";
+  // Clamp. Only enforce a tiny non-zero floor when some contact was logged —
+  // if nothing was logged, 0% is the correct answer.
+  if(score>0) score=Math.max(0.00002,score);
+  score=Math.min(1,score);
+  const level=score<0.005?"none":score<0.05?"low":score<0.12?"medium":score<0.25?"high":"very_high";
 
   return{
     score, level, tag,
@@ -2872,7 +2873,8 @@ function renderPregnancyTracker(){
   const phaseBadge=phaseKey==="ovulation"?"preg-badge-very-high":phaseKey==="fertile"?"preg-badge-high":phaseKey==="follicular"||phaseKey==="period"||phaseKey==="pms"?"preg-badge-low":"preg-badge-med";
   const overallBadge=["preg-badge-low","preg-badge-low","preg-badge-med","preg-badge-high","preg-badge-very-high"][n];
 
-  const pctDisplay=Math.round(risk.score*100);
+  const pctRaw=risk.score*100;
+  const pctDisplay=pctRaw===0 ? '0%' : pctRaw>=1 ? Math.round(pctRaw)+'%' : (pctRaw>=0.1 ? pctRaw.toFixed(2) : pctRaw.toFixed(3))+'%';
 
   el.innerHTML=`
     <div class="preg-risk-gauge">
@@ -2883,9 +2885,9 @@ function renderPregnancyTracker(){
             stroke-dasharray="${dash}" style="transition:stroke-dasharray .7s cubic-bezier(.4,0,.2,1);"/>
         </svg>
       </div>
-      <div class="preg-risk-label preg-risk-hoverable" style="color:${color};" data-pct="${pctDisplay}%">
+      <div class="preg-risk-label preg-risk-hoverable" style="color:${color};" data-pct="${pctDisplay}">
         <span class="preg-label-text">${label}</span>
-        <span class="preg-label-pct">${pctDisplay}%</span>
+        <span class="preg-label-pct">${pctDisplay}</span>
       </div>
       <div class="preg-risk-sub">${phaseText}</div>
     </div>
@@ -2898,7 +2900,7 @@ function renderPregnancyTracker(){
       <div class="preg-factor-row">
         <div class="preg-factor-icon">💞</div>
         <div class="preg-factor-text">${tr.cyclePregnancyFactorContact||"Recent Intimacy"}</div>
-        <div class="preg-factor-badge ${risk.hasUnprotected||risk.hasProtected||risk.hasKiss||risk.hasOral?"preg-badge-med":"preg-badge-low"}">${risk.hasUnprotected?"🔥 Yes":risk.hasProtected?"🛡 Yes":risk.hasKiss||risk.hasOral?"💜 Yes":"—"}</div>
+        <div class="preg-factor-badge ${risk.hasUnprotected?"preg-badge-high":risk.hasProtected?"preg-badge-med":"preg-badge-low"}">${risk.hasUnprotected?"🔥 Yes":risk.hasProtected?"🛡 Yes":"—"}</div>
       </div>
       <div class="preg-factor-row">
         <div class="preg-factor-icon">🛡</div>
@@ -3114,7 +3116,8 @@ langBtn.addEventListener('click',function(e){
 
 // Close on outside click
 document.addEventListener('click',function(e){
-  if(langDropOpen && !langDropdown.contains(e.target) && e.target!==langBtn){
+  const sbLangBtn = document.getElementById('sb-lang-btn');
+  if(langDropOpen && !langDropdown.contains(e.target) && e.target!==langBtn && e.target!==sbLangBtn){
     closeLangDrop();
   }
 });
@@ -4727,13 +4730,44 @@ function initSidebar() {
   });
 
   document.getElementById('sb-theme-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Position dropdown relative to sidebar button (header button is hidden)
+    const dropdown = document.getElementById('theme-dropdown');
+    const sbBtn = document.getElementById('sb-theme-btn');
+    if (!dropdown || !sbBtn) return;
+    const rect = sbBtn.getBoundingClientRect();
+    const dw = dropdown.offsetWidth || 192;
+    dropdown.style.top = (rect.top - 8) + 'px';
+    dropdown.style.left = (rect.right + 8) + 'px';
+    dropdown.style.right = 'auto';
+    // Toggle open state by delegating to theme-toggle if visible, else manually
     const orig = document.getElementById('theme-toggle');
-    if(orig) orig.click();
+    if (orig && orig.offsetParent !== null) { orig.click(); }
+    else {
+      const isOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('#theme-dropdown, #lang-dropdown').forEach(d => d.classList.remove('open'));
+      if (!isOpen) dropdown.classList.add('open');
+    }
   });
 
   document.getElementById('sb-lang-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Position dropdown relative to sidebar button (header button is hidden)
+    const dropdown = document.getElementById('lang-dropdown');
+    const sbBtn = document.getElementById('sb-lang-btn');
+    if (!dropdown || !sbBtn) return;
+    const rect = sbBtn.getBoundingClientRect();
+    dropdown.style.top = (rect.top - 8) + 'px';
+    dropdown.style.left = (rect.right + 8) + 'px';
+    dropdown.style.right = 'auto';
+    // Toggle open state by delegating to lang-btn if visible, else manually
     const orig = document.getElementById('lang-btn');
-    if(orig) orig.click();
+    if (orig && orig.offsetParent !== null) { orig.click(); }
+    else {
+      const isOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('#theme-dropdown, #lang-dropdown').forEach(d => d.classList.remove('open'));
+      if (!isOpen) dropdown.classList.add('open');
+    }
   });
 
   document.getElementById('sb-settings-btn').addEventListener('click', () => {
@@ -4849,7 +4883,24 @@ class DatePicker {
 
   _attachTriggerEvent() {
     this.trigger.addEventListener('click', e => { e.stopPropagation(); this.toggleOpen(); });
-    this.popup.addEventListener('click', e => e.stopPropagation());
+    // Single persistent handler for all popup interactions (prev/next/day/etc)
+    this.popup.addEventListener('click', e => {
+      e.stopPropagation();
+      if (this.mode === 'years') {
+        if (e.target.closest('[data-act="back"]')) { this.mode='days'; this._render(); return; }
+        const yi = e.target.closest('.dp-year-item');
+        if (yi) { this.viewYear=+yi.dataset.year; this.mode='days'; this._render(); }
+        return;
+      }
+      const act = e.target.closest('[data-act]')?.dataset?.act;
+      if (act === 'prev') { this.viewMonth--; if (this.viewMonth<0){this.viewMonth=11;this.viewYear--;} this._render(); return; }
+      if (act === 'next') { this.viewMonth++; if (this.viewMonth>11){this.viewMonth=0;this.viewYear++;} this._render(); return; }
+      if (act === 'years') { this.mode='years'; this._render(); return; }
+      if (act === 'today') { const t=new Date(); this._pick(t.getFullYear(), t.getMonth(), t.getDate()); return; }
+      if (act === 'clear') { this.setValue(''); this.input.dispatchEvent(new Event('change',{bubbles:true})); this.closePopup(); return; }
+      const day = e.target.closest('.dp-day');
+      if (day) { this._pick(+day.dataset.y, +day.dataset.m, +day.dataset.d); }
+    });
   }
 
   _interceptValue() {
@@ -4973,18 +5024,6 @@ class DatePicker {
         <button type="button" class="dp-clear-btn" data-act="clear">Clear</button>
       </div>`;
 
-    this.popup.addEventListener('click', e => {
-      const act = e.target.closest('[data-act]')?.dataset?.act;
-      if (act === 'prev') { this.viewMonth--; if (this.viewMonth<0){this.viewMonth=11;this.viewYear--;} this._render(); return; }
-      if (act === 'next') { this.viewMonth++; if (this.viewMonth>11){this.viewMonth=0;this.viewYear++;} this._render(); return; }
-      if (act === 'years') { this.mode='years'; this._render(); return; }
-      if (act === 'today') {
-        const t=new Date(); this._pick(t.getFullYear(), t.getMonth(), t.getDate()); return;
-      }
-      if (act === 'clear') { this.setValue(''); this.input.dispatchEvent(new Event('change',{bubbles:true})); this.closePopup(); return; }
-      const day = e.target.closest('.dp-day');
-      if (day) { this._pick(+day.dataset.y, +day.dataset.m, +day.dataset.d); }
-    }, { once: true });
   }
 
   _renderYears() {
@@ -5001,11 +5040,6 @@ class DatePicker {
       <div class="dp-year-grid">${items}</div>`;
     const sel = this.popup.querySelector('.dp-year-sel');
     if (sel) setTimeout(()=>sel.scrollIntoView({block:'center'}),0);
-    this.popup.addEventListener('click', e => {
-      if (e.target.closest('[data-act="back"]')) { this.mode='days'; this._render(); return; }
-      const yi = e.target.closest('.dp-year-item');
-      if (yi) { this.viewYear=+yi.dataset.year; this.mode='days'; this._render(); }
-    }, { once: true });
   }
 
   _pick(y, m, d) {
@@ -8459,6 +8493,7 @@ function calRenderGoalInputs() {
 function calRenderCyclePhase() {
   const card = document.getElementById('cal-cycle-card');
   if (!card) return;
+  if (!isCycleUser()) { card.style.display = 'none'; return; }
   const cd = state.cycleData || {};
   const anchor = (cd.periods||[]).slice().sort((a,b)=>new Date(a.start)-new Date(b.start)).pop();
   const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;

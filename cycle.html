@@ -97,6 +97,16 @@
           <div class="section-title" data-i18n="cycleHistoryTitleCard">🗓 History</div>
           <div id="cycle-history-list" style="margin-top:10px;display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;"></div>
         </div>
+        <div class="analysis-card">
+          <div class="section-title" data-i18n="cycleSymptomsTitle">💊 Today's Symptoms</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;" id="symptom-grid"></div>
+        </div>
+        <div class="analysis-card">
+          <div class="section-title" data-i18n="cycleMoodTitle">💭 Mood &amp; Notes</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;" id="cycle-mood-row"></div>
+          <textarea id="cycle-notes-input" class="cycle-notes-area" placeholder="Any notes for today…" data-i18n-placeholder="cycleNotesPlaceholder"></textarea>
+          <button class="goal-add-btn" id="save-cycle-day-btn" data-i18n="cycleSaveDay" style="margin-top:10px;background:linear-gradient(135deg,#e05a9a,#c84080);box-shadow:0 3px 10px rgba(224,90,154,.3);padding:9px 18px;font-size:12px;">💾 Save Today</button>
+        </div>
       </div>
       <div id="cycle-right-col">
         <div id="cycle-cal-card">
@@ -110,16 +120,6 @@
           <div class="cycle-cal-grid" id="cycle-calendar"></div>
           <div id="cycle-hovered-date" style="min-height:20px;margin-top:10px;font-size:12px;color:#e05a9a;font-weight:700;letter-spacing:.5px;text-align:center;transition:opacity .2s;opacity:0;"></div>
           <div class="cycle-legend" id="cycle-legend"></div>
-        </div>
-        <div class="analysis-card">
-          <div class="section-title" data-i18n="cycleSymptomsTitle">💊 Today's Symptoms</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;" id="symptom-grid"></div>
-        </div>
-        <div class="analysis-card">
-          <div class="section-title" data-i18n="cycleMoodTitle">💭 Mood &amp; Notes</div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;" id="cycle-mood-row"></div>
-          <textarea id="cycle-notes-input" class="cycle-notes-area" placeholder="Any notes for today…" data-i18n-placeholder="cycleNotesPlaceholder"></textarea>
-          <button class="goal-add-btn" id="save-cycle-day-btn" data-i18n="cycleSaveDay" style="margin-top:10px;background:linear-gradient(135deg,#e05a9a,#c84080);box-shadow:0 3px 10px rgba(224,90,154,.3);padding:9px 18px;font-size:12px;">💾 Save Today</button>
         </div>
 
         <!-- INTIMACY TRACKER -->

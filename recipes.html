@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recipes — Life Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="recipes">
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div id="app">
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-brand">
+    <div class="header-brand-title">Life Tracker</div>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-month">&#8249;</button>
+    <div class="nav-date-stack">
+      <span id="year-label"></span>
+      <span id="month-title"></span>
+    </div>
+    <button class="nav-btn" id="next-month">&#8250;</button>
+  </div>
+  <div class="tab-switcher">
+    <button class="tab-btn" data-tab="tracker"><span data-i18n="tabTracker">📊 Habit Tracker</span></button>
+    <button class="tab-btn" data-tab="timetable"><span data-i18n="tabTimetable">🗓 Timetable</span></button>
+    <button class="tab-btn" data-tab="tasks"><span data-i18n="tabTasks">✅ Tasks</span></button>
+    <button class="tab-btn" data-tab="shopping"><span data-i18n="tabShopping">🛒 Shop</span></button>
+    <button class="tab-btn" data-tab="cycle"><span data-i18n="tabCycle">🌸 Cycle</span></button>
+    <button class="tab-btn" data-tab="finance"><span data-i18n="tabFinance">💰 Finance</span></button>
+  </div>
+  <div class="lang-selector">
+    <button id="lang-btn">🌐 EN 🇬🇧 ▾</button>
+  </div>
+  <button id="theme-toggle" title="Change theme">🌙</button>
+  <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
+  <button id="settings-icon-btn" class="settings-icon-btn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+</div>
+
+<!-- RECIPES PAGE -->
+<div id="rec-page" style="animation:fadeSlideUp .5s .08s cubic-bezier(.4,0,.2,1) both;">
+
+  <!-- TOP BAR -->
+  <div id="rec-top-bar">
+    <div id="rec-title" data-i18n="recTitle">📖 Recipe Book</div>
+    <div id="rec-controls">
+      <input class="form-input" id="rec-search-input" placeholder="Search recipes…" data-i18n-placeholder="recSearchPh" style="width:200px;"/>
+      <button class="goal-add-btn" id="rec-new-btn" data-i18n="recNewBtn" style="padding:9px 16px;font-size:12px;">+ New Recipe</button>
+    </div>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div id="rec-filter-row">
+    <button class="task-filter-btn active" data-rectag="all" data-i18n="recFilterAll">All</button>
+    <button class="task-filter-btn" data-rectag="breakfast" data-i18n="recFilterBreakfast">🌅 Breakfast</button>
+    <button class="task-filter-btn" data-rectag="lunch" data-i18n="recFilterLunch">☀️ Lunch</button>
+    <button class="task-filter-btn" data-rectag="dinner" data-i18n="recFilterDinner">🌙 Dinner</button>
+    <button class="task-filter-btn" data-rectag="snack" data-i18n="recFilterSnack">🍎 Snack</button>
+    <button class="task-filter-btn" data-rectag="mealprep" data-i18n="recFilterMealPrep">📦 Meal Prep</button>
+  </div>
+
+  <!-- RECIPE GRID -->
+  <div id="rec-grid"></div>
+
+</div><!-- /rec-page -->
+
+</div><!-- #app -->
+
+<!-- RECIPE ADD/EDIT MODAL -->
+<div id="rec-modal-backdrop" class="hidden"></div>
+<div id="rec-recipe-modal" class="hidden">
+  <div class="cal-modal-header">
+    <div class="cal-modal-title" id="rec-modal-title" data-i18n="recModalTitleNew">New Recipe</div>
+    <button class="cal-modal-close" id="rec-modal-close">✕</button>
+  </div>
+  <div class="cal-modal-body">
+    <div class="cal-form-grid">
+      <div class="form-field" style="grid-column:1/-1;">
+        <label class="form-label" data-i18n="recNameLabel">Recipe Name</label>
+        <input class="form-input" id="rec-name-input" placeholder="e.g. Veggie Stir Fry…" data-i18n-placeholder="recNamePh" style="width:100%;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="recTagLabel">Category</label>
+        <select class="form-select" id="rec-tag-select">
+          <option value="breakfast" data-i18n="recFilterBreakfast">🌅 Breakfast</option>
+          <option value="lunch" data-i18n="recFilterLunch">☀️ Lunch</option>
+          <option value="dinner" data-i18n="recFilterDinner">🌙 Dinner</option>
+          <option value="snack" data-i18n="recFilterSnack">🍎 Snack</option>
+          <option value="mealprep" data-i18n="recFilterMealPrep">📦 Meal Prep</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="recServingsLabel">Servings</label>
+        <input class="form-input" type="number" id="rec-servings-input" min="1" max="50" value="1" style="width:100%;"/>
+      </div>
+    </div>
+
+    <div class="rec-section-title" data-i18n="recMacrosTitle">🔥 Macros per serving</div>
+    <div class="cal-form-grid">
+      <div class="form-field">
+        <label class="form-label" data-i18n="calKcalLabel">Calories (kcal)</label>
+        <input class="form-input" type="number" id="rec-kcal-input" min="0" max="9999" step="1" placeholder="0" style="width:100%;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="calProteinLabel">Protein (g)</label>
+        <input class="form-input" type="number" id="rec-protein-input" min="0" max="999" step="0.1" placeholder="0" style="width:100%;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="calCarbsLabel">Carbs (g)</label>
+        <input class="form-input" type="number" id="rec-carbs-input" min="0" max="999" step="0.1" placeholder="0" style="width:100%;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="calFatLabel">Fat (g)</label>
+        <input class="form-input" type="number" id="rec-fat-input" min="0" max="999" step="0.1" placeholder="0" style="width:100%;"/>
+      </div>
+    </div>
+
+    <div class="rec-section-title" data-i18n="recIngredientsTitle">🧺 Ingredients</div>
+    <div id="rec-ingredients-list"></div>
+    <button class="goal-add-btn" id="rec-add-ingredient-btn" data-i18n="recAddIngredient" style="margin-top:8px;padding:7px 14px;font-size:11px;">+ Add Ingredient</button>
+
+    <div class="rec-section-title" data-i18n="recNotesLabel">📝 Notes</div>
+    <textarea id="rec-notes-input" class="cycle-notes-area" placeholder="Optional notes, prep steps…" data-i18n-placeholder="recNotesPh" style="min-height:70px;"></textarea>
+  </div>
+  <div class="cal-modal-footer">
+    <button class="tt-confirm-cancel" id="rec-modal-cancel" data-i18n="calCancel">Cancel</button>
+    <button class="goal-add-btn" id="rec-modal-save" data-i18n="recSave" style="padding:9px 22px;">💾 Save Recipe</button>
+  </div>
+</div>
+
+<!-- LOG MEAL MODAL -->
+<div id="rec-log-modal-backdrop" class="hidden"></div>
+<div id="rec-log-modal" class="hidden">
+  <div class="cal-modal-header">
+    <div class="cal-modal-title" id="rec-log-modal-title" data-i18n="recLogModalTitle">Log Meal</div>
+    <button class="cal-modal-close" id="rec-log-modal-close">✕</button>
+  </div>
+  <div class="cal-modal-body">
+    <div class="cal-form-grid">
+      <div class="form-field">
+        <label class="form-label" data-i18n="recLogDateLabel">Date</label>
+        <select class="form-select" id="rec-log-date-select">
+          <option value="today" data-i18n="calTodayBtn">Today</option>
+          <option value="yesterday" data-i18n="dueYesterday">Yesterday</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label" data-i18n="recLogMealLabel">Meal</label>
+        <select class="form-select" id="rec-log-meal-select">
+          <option value="breakfast" data-i18n="calBreakfast">Breakfast</option>
+          <option value="lunch" data-i18n="calLunch">Lunch</option>
+          <option value="dinner" data-i18n="calDinner">Dinner</option>
+          <option value="snacks" data-i18n="calSnacks">Snacks</option>
+        </select>
+      </div>
+      <div class="form-field" style="grid-column:1/-1;">
+        <label class="form-label" data-i18n="recLogServingsLabel">Servings</label>
+        <input class="form-input" type="number" id="rec-log-servings-input" min="0.1" max="20" step="0.5" value="1" style="width:100%;"/>
+      </div>
+    </div>
+    <div class="cal-kcal-preview" id="rec-log-preview">
+      <span id="rec-log-preview-val">0</span> <span data-i18n="calKcal">kcal</span>
+      <span class="cal-preview-macros" id="rec-log-preview-macros">P: 0g · C: 0g · F: 0g</span>
+    </div>
+  </div>
+  <div class="cal-modal-footer">
+    <button class="tt-confirm-cancel" id="rec-log-modal-cancel" data-i18n="calCancel">Cancel</button>
+    <button class="goal-add-btn" id="rec-log-modal-confirm" data-i18n="recLogConfirm" style="padding:9px 22px;">🍽 Log Meal</button>
+  </div>
+</div>
+
+<!-- LANGUAGE DROPDOWN -->
+<div id="lang-dropdown">
+  <div class="lang-option active" data-lang="en"><span class="lang-flag">🇬🇧</span> English</div>
+  <div class="lang-option" data-lang="hu"><span class="lang-flag">🇭🇺</span> Magyar</div>
+  <div class="lang-divider"></div>
+  <div class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch</div>
+  <div class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span> Español</div>
+  <div class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français</div>
+</div>
+
+<!-- THEME DROPDOWN -->
+<div id="theme-dropdown">
+  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="forest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-divider"></div>
+  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+</div>
+
+<!-- POMODORO BACKDROP -->
+<div id="pomo-backdrop" class="hidden"></div>
+
+<!-- POMODORO WIDGET -->
+<div id="pomo-widget" class="hidden">
+  <div class="pomo-header">
+    <div class="pomo-header-title">⏱ Pomodoro Timer</div>
+    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+  </div>
+  <div class="pomo-mode-btns">
+    <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>
+    <button class="pomo-mode-btn break-mode" data-mode="break" data-time="300" data-i18n="shortBreak">Short Break</button>
+    <button class="pomo-mode-btn long-mode" data-mode="long" data-time="900" data-i18n="longBreak">Long Break</button>
+  </div>
+  <div class="pomo-ring-wrap">
+    <svg id="pomo-ring-svg" viewBox="0 0 220 220" style="position:absolute;inset:0;">
+      <circle cx="110" cy="110" r="96" fill="none" stroke="var(--border)" stroke-width="10"/>
+      <circle id="pomo-arc" cx="110" cy="110" r="96" fill="none" stroke="#e05a9a" stroke-width="10"
+        stroke-dasharray="603.19 603.19" stroke-linecap="round"
+        style="transform:rotate(-90deg);transform-origin:110px 110px;transition:stroke-dasharray 1s linear,stroke .3s;"/>
+    </svg>
+    <div id="pomo-display-inner">
+      <div class="pomo-time-big" id="pomo-display">25:00</div>
+      <div class="pomo-sessions-lbl" id="pomo-session-lbl">Session 1</div>
+    </div>
+  </div>
+  <div id="pomo-label">Focus Time</div>
+  <div class="pomo-session-dots" id="pomo-dots"></div>
+  <div class="pomo-stats-strip">
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-sessions">0</div><div class="pomo-stat-lbl">Sessions</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-focus">0m</div><div class="pomo-stat-lbl">Focus Time</div></div>
+    <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-stat-breaks">0</div><div class="pomo-stat-lbl">Breaks</div></div>
+  </div>
+  <div class="pomo-ctrl-btns">
+    <button class="pomo-ctrl-btn" id="pomo-start">▶ Start</button>
+    <button class="pomo-ctrl-btn secondary" id="pomo-reset">↺ Reset</button>
+  </div>
+  <div class="pomo-hint">Press Space to start · Esc to close</div>
+</div>
+
+<div id="save-indicator" data-i18n="saved">✓ Saved</div>
+<script src="app.js"></script>
+</body>
+</html>

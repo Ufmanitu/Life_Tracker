@@ -2148,3 +2148,320 @@ body.has-sidebar #lang-dropdown{
   #cal-side-col { display: flex; flex-direction: column; }
   .cal-form-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WORKOUT TRACKER — append to style.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Page wrapper ──────────────────────────────────────────────────────────── */
+#wkt-page {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px,2vw,24px);
+  padding: clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);
+  min-height: 0;
+}
+
+/* ── Stats row ─────────────────────────────────────────────────────────────── */
+#wkt-stats-row {
+  display: flex;
+  gap: clamp(10px,1.5vw,16px);
+  flex-wrap: wrap;
+}
+.wkt-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 18px;
+  flex: 1;
+  min-width: 140px;
+  transition: box-shadow .2s;
+}
+.wkt-stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+.wkt-stat-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.wkt-stat-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wkt-stat-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.wkt-stat-val { font-size: clamp(14px,1.6vw,18px); font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wkt-stat-unit { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
+/* ── Body layout ───────────────────────────────────────────────────────────── */
+#wkt-body {
+  display: grid;
+  grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+  gap: clamp(14px,2vw,22px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  #wkt-body { grid-template-columns: 1fr; }
+}
+
+/* ── Left col ──────────────────────────────────────────────────────────────── */
+#wkt-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#wkt-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Sessions list ─────────────────────────────────────────────────────────── */
+.wkt-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wkt-empty-day {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.wkt-session-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: box-shadow .2s;
+}
+.wkt-session-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,.1); }
+.wkt-session-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.wkt-session-cats { display: flex; gap: 5px; flex-wrap: wrap; flex: 1; }
+.wkt-cat-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.wkt-session-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.wkt-meta-chip {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.wkt-session-del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.wkt-session-del:hover { color: #e05a9a; background: rgba(224,90,154,.1); }
+.wkt-ex-list { display: flex; flex-direction: column; gap: 5px; }
+.wkt-ex-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.wkt-ex-row:hover { background: var(--surface2); }
+.wkt-ex-icon { font-size: 14px; flex-shrink: 0; }
+.wkt-ex-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--text); }
+.wkt-ex-metric { font-size: 12px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.wkt-ex-del {
+  background: none; border: none; cursor: pointer;
+  font-size: 12px; color: var(--text-muted); padding: 3px 5px; border-radius: 5px;
+  opacity: 0; transition: opacity .15s, color .15s;
+}
+.wkt-ex-row:hover .wkt-ex-del { opacity: 1; }
+.wkt-ex-del:hover { color: #e05a9a; }
+.wkt-linked-habit {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  background: rgba(62,207,178,.08);
+  border-radius: 6px;
+  border: 1px solid rgba(62,207,178,.2);
+}
+
+/* ── Add exercise card ─────────────────────────────────────────────────────── */
+.wkt-add-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+.wkt-add-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.wkt-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+.wkt-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.wkt-preview {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Bar chart ─────────────────────────────────────────────────────────────── */
+.wkt-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+}
+.wkt-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 3px;
+}
+.wkt-bar-col.wkt-bar-today .wkt-bar-day { color: #4f6ef7; font-weight: 800; }
+.wkt-bar-val { font-size: 11px; font-weight: 700; color: var(--text-muted); min-height: 14px; }
+.wkt-bar-outer {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.wkt-bar-inner {
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+  transition: height .5s cubic-bezier(.4,0,.2,1);
+  min-height: 0;
+}
+.wkt-bar-day { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+.wkt-bar-day.wkt-bar-day-today { color: #4f6ef7; }
+.wkt-cat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.wkt-leg-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.wkt-leg-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Monthly heatmap ───────────────────────────────────────────────────────── */
+.wkt-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.wkt-hm-header {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2px 0;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.wkt-hm-cell {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s;
+  cursor: default;
+  position: relative;
+}
+.wkt-hm-cell:hover { transform: scale(1.1); }
+.wkt-hm-cell.wkt-hm-today { outline: 2px solid #4f6ef7; outline-offset: 1px; }
+.wkt-hm-cell.wkt-hm-empty { background: transparent !important; }
+.wkt-hm-num { font-size: 9px; font-weight: 800; color: #fff; }
+.wkt-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.wkt-hm-grad {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--border), rgba(79,110,247,.35), rgba(79,110,247,.65), rgba(79,110,247,1));
+}
+
+/* ── Personal records ──────────────────────────────────────────────────────── */
+.wkt-pr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.wkt-pr-row:hover { background: var(--surface2); }
+.wkt-pr-icon { font-size: 16px; flex-shrink: 0; }
+.wkt-pr-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--text); }
+.wkt-pr-val { font-size: 11px; font-weight: 700; color: var(--text-muted); text-align: right; }
+
+/* ── Templates ─────────────────────────────────────────────────────────────── */
+.wkt-tpl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 9px;
+  background: var(--surface2);
+  transition: background .15s;
+}
+.wkt-tpl-row:hover { background: var(--border); }
+.wkt-tpl-info { flex: 1; min-width: 0; }
+.wkt-tpl-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.wkt-tpl-meta { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.wkt-tpl-del {
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; color: var(--text-muted); padding: 4px 6px; border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.wkt-tpl-del:hover { color: #e05a9a; background: rgba(224,90,154,.1); }
+.wkt-no-templates { font-size: 12px; color: var(--text-muted); font-weight: 600; padding: 6px 0; text-align: center; }

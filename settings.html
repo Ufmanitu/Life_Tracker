@@ -192,6 +192,62 @@
     </div>
   </div>
 
+  <!-- DAILY MACRO GOALS -->
+  <div class="settings-card">
+    <div class="settings-card-title" data-i18n="settingsGoalsTitle">🎯 Daily Macro Goals</div>
+    <div class="settings-hint" data-i18n="settingsGoalsHint" style="margin-bottom:14px;">Set your daily calorie &amp; macro targets. These power the goal bars on the Calories page and the Analysis cross-stats.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:360px;">
+      <div class="cal-goal-row">
+        <label class="cal-goal-lbl" data-i18n="calKcal">Calories</label>
+        <div class="cal-goal-input-wrap">
+          <input type="number" class="form-input cal-goal-inp" id="settings-goal-inp-kcal" min="500" max="9999" step="50" value="2000"/>
+          <span class="cal-goal-unit">kcal</span>
+        </div>
+      </div>
+      <div class="cal-goal-row">
+        <label class="cal-goal-lbl" data-i18n="calProtein">Protein</label>
+        <div class="cal-goal-input-wrap">
+          <input type="number" class="form-input cal-goal-inp" id="settings-goal-inp-protein" min="10" max="500" step="5" value="150"/>
+          <span class="cal-goal-unit">g</span>
+        </div>
+      </div>
+      <div class="cal-goal-row">
+        <label class="cal-goal-lbl" data-i18n="calCarbs">Carbs</label>
+        <div class="cal-goal-input-wrap">
+          <input type="number" class="form-input cal-goal-inp" id="settings-goal-inp-carbs" min="10" max="800" step="5" value="250"/>
+          <span class="cal-goal-unit">g</span>
+        </div>
+      </div>
+      <div class="cal-goal-row">
+        <label class="cal-goal-lbl" data-i18n="calFat">Fat</label>
+        <div class="cal-goal-input-wrap">
+          <input type="number" class="form-input cal-goal-inp" id="settings-goal-inp-fat" min="10" max="300" step="5" value="65"/>
+          <span class="cal-goal-unit">g</span>
+        </div>
+      </div>
+      <div class="cal-goal-row">
+        <label class="cal-goal-lbl" data-i18n="calWater">Water</label>
+        <div class="cal-goal-input-wrap">
+          <input type="number" class="form-input cal-goal-inp" id="settings-goal-inp-water" min="1" max="20" step="1" value="8"/>
+          <span class="cal-goal-unit" data-i18n="calWaterGlasses">glasses</span>
+        </div>
+      </div>
+    </div>
+    <button class="goal-add-btn" id="settings-goals-save-btn" data-i18n="settingsGoalsSaveBtn" style="margin-top:14px;padding:9px 18px;font-size:12px;">💾 Save Goals</button>
+  </div>
+
+  <!-- HABIT LINKING -->
+  <div class="settings-card">
+    <div class="settings-card-title" data-i18n="settingsWorkoutLinkTitle">🏋️ Habit Linking</div>
+    <div class="settings-hint" data-i18n="settingsWorkoutLinkHint" style="margin-bottom:14px;">Pick a habit that gets automatically pre-selected and checked off whenever you log a workout.</div>
+    <div class="form-field" style="max-width:320px;">
+      <label class="form-label" data-i18n="settingsDefaultHabitLabel">Default linked habit</label>
+      <select class="form-select" id="settings-default-habit-select" style="width:100%;">
+        <option value="" data-i18n="settingsDefaultHabitNone">— none —</option>
+      </select>
+    </div>
+  </div>
+
   <!-- GUIDED TOUR -->
   <div class="settings-card">
     <div class="settings-card-title">🗺️ Guided Tour</div>

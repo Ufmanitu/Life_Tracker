@@ -83,6 +83,7 @@ const TRANSLATIONS = {
     habitBreakdown:"Habit Breakdown",
     goalsThisMonth:"Goals This Month 🎯", goalPlaceholder:"Add a goal for this month…", addGoalBtn:"+ Add Goal",
     weeklyScore:"Weekly Score", overallProgress:"Overall Progress",
+    crossStatsTitle:"🔗 Cross-Tracker Stats", calGoalToday:"Calorie Goal Today", workoutStreak:"🔥 Workout Streak", daysUnit:"days",
     weekPrefix:"Week", weekShort:"Wk",
     session:"Session", focusTime:"Focus Time",
     pomodoroMode:"Pomodoro", shortBreak:"Short Break", longBreak:"Long Break",
@@ -213,6 +214,13 @@ const TRANSLATIONS = {
     settingsGenderHint:"The Cycle Tracker tab is only shown for Female users.",
     settingsLanguageTitle:"🌐 Language",
     settingsThemeTitle:"🎨 Theme",
+    settingsGoalsTitle:"🎯 Daily Macro Goals",
+    settingsGoalsHint:"Set your daily calorie & macro targets. These power the goal bars on the Calories page and the Analysis cross-stats.",
+    settingsGoalsSaveBtn:"💾 Save Goals",
+    settingsWorkoutLinkTitle:"🏋️ Habit Linking",
+    settingsWorkoutLinkHint:"Pick a habit that gets automatically pre-selected and checked off whenever you log a workout.",
+    settingsDefaultHabitLabel:"Default linked habit",
+    settingsDefaultHabitNone:"— none —",
     settingsDangerZone:"⚠️ Danger Zone",
     settingsClearAllLabel:"Delete All Data",
     settingsClearAllHint:"This will permanently erase all your habits, tasks, timetable, finance, cycle and shopping data. Cannot be undone.",
@@ -265,6 +273,7 @@ const TRANSLATIONS = {
     habitBreakdown:"Szokások részletezése",
     goalsThisMonth:"Havi célok 🎯", goalPlaceholder:"Havi cél hozzáadása…", addGoalBtn:"+ Cél hozzáadása",
     weeklyScore:"Heti eredmény", overallProgress:"Összesített haladás",
+    crossStatsTitle:"🔗 Összekötött statisztikák", calGoalToday:"Mai kalóriacél", workoutStreak:"🔥 Edzés sorozat", daysUnit:"nap",
     weekPrefix:"Hét", weekShort:"Hét",
     session:"Munkamenet", focusTime:"Fókusz idő",
     pomodoroMode:"Pomodoro", shortBreak:"Rövid szünet", longBreak:"Hosszú szünet",
@@ -393,6 +402,13 @@ const TRANSLATIONS = {
     settingsGenderHint:"A Ciklus fül csak Nő felhasználóknak jelenik meg.",
     settingsLanguageTitle:"🌐 Nyelv",
     settingsThemeTitle:"🎨 Téma",
+    settingsGoalsTitle:"🎯 Napi makró célok",
+    settingsGoalsHint:"Állítsd be a napi kalória- és makró céljaidat. Ezek vezérlik a Kalória oldal célsávjait és az Analízis kereszt-statisztikáit.",
+    settingsGoalsSaveBtn:"💾 Célok mentése",
+    settingsWorkoutLinkTitle:"🏋️ Szokás összekapcsolás",
+    settingsWorkoutLinkHint:"Válassz egy szokást, amely automatikusan kiválasztott és bejelölt lesz, amikor edzést rögzítesz.",
+    settingsDefaultHabitLabel:"Alapértelmezett összekapcsolt szokás",
+    settingsDefaultHabitNone:"— nincs —",
     settingsDangerZone:"⚠️ Veszélyzóna",
     settingsClearAllLabel:"Összes adat törlése",
     settingsClearAllHint:"Véglegesen törli az összes szokást, feladatot, órarendet, pénzügyet, ciklust és bevásárlólistát. Nem vonható vissza.",
@@ -445,6 +461,7 @@ const TRANSLATIONS = {
     habitBreakdown:"Gewohnheiten Übersicht",
     goalsThisMonth:"Monatsziele 🎯", goalPlaceholder:"Monatsziel hinzufügen…", addGoalBtn:"+ Ziel hinzufügen",
     weeklyScore:"Wochenpunktzahl", overallProgress:"Gesamtfortschritt",
+    crossStatsTitle:"🔗 Verknüpfte Statistiken", calGoalToday:"Kalorienziel Heute", workoutStreak:"🔥 Trainings-Serie", daysUnit:"Tage",
     weekPrefix:"Woche", weekShort:"Wo",
     session:"Sitzung", focusTime:"Fokuszeit",
     pomodoroMode:"Pomodoro", shortBreak:"Kurze Pause", longBreak:"Lange Pause",
@@ -625,6 +642,7 @@ const TRANSLATIONS = {
     habitBreakdown:"Desglose de Hábitos",
     goalsThisMonth:"Metas del Mes 🎯", goalPlaceholder:"Añadir meta mensual…", addGoalBtn:"+ Añadir Meta",
     weeklyScore:"Puntuación Semanal", overallProgress:"Progreso Total",
+    crossStatsTitle:"🔗 Estadísticas Cruzadas", calGoalToday:"Meta de Calorías de Hoy", workoutStreak:"🔥 Racha de Entrenamiento", daysUnit:"días",
     weekPrefix:"Semana", weekShort:"Sem",
     session:"Sesión", focusTime:"Tiempo de Enfoque",
     pomodoroMode:"Pomodoro", shortBreak:"Descanso Corto", longBreak:"Descanso Largo",
@@ -805,6 +823,7 @@ const TRANSLATIONS = {
     habitBreakdown:"Détail des Habitudes",
     goalsThisMonth:"Objectifs du Mois 🎯", goalPlaceholder:"Ajouter un objectif mensuel…", addGoalBtn:"+ Ajouter Objectif",
     weeklyScore:"Score Hebdomadaire", overallProgress:"Progrès Global",
+    crossStatsTitle:"🔗 Statistiques Croisées", calGoalToday:"Objectif Calories Aujourd'hui", workoutStreak:"🔥 Série d'Entraînement", daysUnit:"jours",
     weekPrefix:"Semaine", weekShort:"Sem",
     session:"Séance", focusTime:"Temps de Focus",
     pomodoroMode:"Pomodoro", shortBreak:"Courte Pause", longBreak:"Longue Pause",
@@ -1591,6 +1610,46 @@ function renderTasksView(){
   });
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── CROSS-TRACKER HELPERS (global, available on every page) ────────────────
+// Calorie data is stored by calories.html / recipes.html under "ht_calories_YYYY-MM"
+// Workout data is stored by workout.html under "lt_workouts_YYYY_MM"
+// ═══════════════════════════════════════════════════════════════════════════════
+function xCalMonthKey(d){ return `ht_calories_${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+function xDateKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function xWktMonthKey(d){ return `lt_workouts_${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}`; }
+
+// Today's calorie intake vs goal (reads ht_cal_goals_v1 + ht_calories_YYYY-MM)
+function getCalorieProgressToday(){
+  let goal=2000;
+  try{ const g=JSON.parse(localStorage.getItem('ht_cal_goals_v1')||'null'); if(g&&g.kcal) goal=g.kcal; }catch(e){}
+  const d=new Date();
+  let val=0;
+  try{
+    const raw=JSON.parse(localStorage.getItem(xCalMonthKey(d))||'null');
+    const day=raw&&raw.days&&raw.days[xDateKey(d)];
+    if(day){
+      ['breakfast','lunch','dinner','snacks'].forEach(m=>{(day.meals?.[m]||[]).forEach(f=>{val+=(f.kcal||0)*(f.qty||1);});});
+    }
+  }catch(e){}
+  return { val:Math.round(val), goal, pct: goal>0?Math.min(100,Math.round(val/goal*100)):0 };
+}
+
+// Current workout streak (consecutive days with at least one session), scans up to 90 days back
+function getWorkoutStreakGlobal(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  let streak=0;
+  for(let i=0;i<90;i++){
+    const d=new Date(today); d.setDate(d.getDate()-i);
+    let sessions=[];
+    try{ const raw=JSON.parse(localStorage.getItem(xWktMonthKey(d))||'null'); if(raw) sessions=raw.sessions||[]; }catch(e){}
+    const dk=xDateKey(d);
+    if(sessions.some(s=>s.date===dk)) streak++;
+    else if(i>0) break;
+  }
+  return streak;
+}
+
 function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
   const maxH=72;const DAYS_ARR=getDays();
   document.getElementById("bar-chart-days").innerHTML=DAYS_ARR.map((dl,i)=>{
@@ -1620,7 +1679,17 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
     <div><strong style="color:#fff;font-size:1.1em;">${done}</strong>&nbsp;${t('completedStat')}</div>
     <div><strong style="color:#fff;font-size:1.1em;">${state.habits.length}</strong>&nbsp;${t('habitsStat')}</div>
     <div><strong style="color:#fff;font-size:1.1em;">${getDaysInMonth(state.year,state.month)}</strong>&nbsp;${t('daysStat')}</div>`;
-  renderMindsetChart(days);renderGoals();renderJournal();
+  renderMindsetChart(days);renderGoals();renderJournal();renderCrossStats();
+}
+
+function renderCrossStats(){
+  const calProg=getCalorieProgressToday();
+  const fillEl=document.getElementById('cross-cal-fill');
+  if(fillEl) fillEl.style.width=calProg.pct+'%';
+  const pctEl=document.getElementById('cross-cal-pct');
+  if(pctEl) pctEl.textContent=`${calProg.val}/${calProg.goal} kcal (${calProg.pct}%)`;
+  const streakEl=document.getElementById('cross-wkt-streak');
+  if(streakEl) streakEl.textContent=`${getWorkoutStreakGlobal()} ${t('daysUnit')}`;
 }
 
 function renderMindsetChart(days){
@@ -6187,6 +6256,47 @@ function initSettingsPage() {
   on('settings-page-tour-btn', 'click', () => {
     window.startTour && window.startTour(true);
   });
+
+  // ─── DAILY MACRO GOALS ─────────────────────────────────────────────────
+  if (typeof calLoadGoals === 'function') calLoadGoals();
+  ['kcal','protein','carbs','fat','water'].forEach(k => {
+    const el = document.getElementById(`settings-goal-inp-${k}`);
+    if (el && typeof calGoals !== 'undefined' && calGoals[k] != null) el.value = calGoals[k];
+  });
+  on('settings-goals-save-btn','click', () => {
+    if (typeof calGoals === 'undefined') return;
+    calGoals.kcal    = +(document.getElementById('settings-goal-inp-kcal')?.value)||2000;
+    calGoals.protein = +(document.getElementById('settings-goal-inp-protein')?.value)||150;
+    calGoals.carbs   = +(document.getElementById('settings-goal-inp-carbs')?.value)||250;
+    calGoals.fat     = +(document.getElementById('settings-goal-inp-fat')?.value)||65;
+    calGoals.water   = +(document.getElementById('settings-goal-inp-water')?.value)||8;
+    if (typeof calSaveGoals === 'function') calSaveGoals();
+    const btn = document.getElementById('settings-goals-save-btn');
+    if (btn) {
+      const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+      btn.textContent = '✓ Saved!';
+      setTimeout(()=>{ btn.textContent = tr.settingsGoalsSaveBtn||'💾 Save Goals'; }, 1500);
+    }
+  });
+
+  // ─── DEFAULT WORKOUT HABIT LINK ────────────────────────────────────────
+  const defHabitSel = document.getElementById('settings-default-habit-select');
+  if (defHabitSel) {
+    const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+    defHabitSel.innerHTML = `<option value="">${tr.settingsDefaultHabitNone||'— none —'}</option>`;
+    (state.habits||[]).forEach((h,i) => {
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = h;
+      defHabitSel.appendChild(opt);
+    });
+    if (userPrefs.defaultWorkoutHabit !== undefined && userPrefs.defaultWorkoutHabit !== null) {
+      defHabitSel.value = userPrefs.defaultWorkoutHabit;
+    }
+    defHabitSel.addEventListener('change', () => {
+      userPrefs.defaultWorkoutHabit = defHabitSel.value;
+      saveUserPrefs();
+    });
+  }
 }
 
 
@@ -7797,6 +7907,14 @@ const CAL_I18N = {
     calBreakfast:'Breakfast', calLunch:'Lunch', calDinner:'Dinner', calSnacks:'Snacks',
     calGoalsTitle:'🎯 Daily Goals', calSaveGoals:'💾 Save Goals',
     calWeeklyTitle:'📅 This Week', calGoalLine:'Goal',
+    calCyclePhaseTitle:'🌸 Cycle-Phase Nutrition',
+    calPhasePeriod:'Menstrual Phase', calPhaseFollicular:'Follicular Phase', calPhaseFertile:'Fertile Window', calPhaseOvulation:'Ovulation', calPhasePms:'Luteal Phase',
+    calPhaseTipPeriod:'Focus on iron-rich foods (red meat, spinach, lentils) and magnesium to ease cramps. Warm, comforting meals help too.',
+    calPhaseTipFollicular:'Energy is rising — lean proteins, fresh veggies and healthy carbs support rising estrogen and workouts.',
+    calPhaseTipFertile:'Light, energizing meals with antioxidants (berries, leafy greens) and healthy fats work well during this active phase.',
+    calPhaseTipOvulation:'Energy peaks — fuel with balanced protein, complex carbs and zinc-rich foods (nuts, seeds) to support this high.',
+    calPhaseTipPms:'Cravings rise — favor complex carbs, magnesium (dark chocolate, nuts) and reduce salt/sugar to ease bloating and mood swings.',
+    calPhaseTipDefault:'Set up your cycle on the Cycle tab to get personalized nutrition tips for each phase.',
     calMacroDist:'🥧 Macro Split',
     calTodayBtn:'Today',
     calAddFood:'Add Food', calQuickAdd:'⚡ Quick Add',
@@ -7822,6 +7940,14 @@ const CAL_I18N = {
     calBreakfast:'Reggeli', calLunch:'Ebéd', calDinner:'Vacsora', calSnacks:'Snack',
     calGoalsTitle:'🎯 Napi célok', calSaveGoals:'💾 Célok mentése',
     calWeeklyTitle:'📅 Ez a hét', calGoalLine:'Cél',
+    calCyclePhaseTitle:'🌸 Ciklusfázis-táplálkozás',
+    calPhasePeriod:'Menstruációs fázis', calPhaseFollicular:'Follikuláris fázis', calPhaseFertile:'Termékeny ablak', calPhaseOvulation:'Ovuláció', calPhasePms:'Luteális fázis',
+    calPhaseTipPeriod:'Fókuszálj vasban gazdag ételekre (vörös hús, spenót, lencse) és magnéziumra a görcsök ellen. A meleg, megnyugtató ételek is segítenek.',
+    calPhaseTipFollicular:'Az energiaszint emelkedik — sovány fehérjék, friss zöldségek és egészséges szénhidrátok támogatják az ösztrogénszint emelkedését és az edzéseket.',
+    calPhaseTipFertile:'Könnyű, energizáló ételek antioxidánsokkal (bogyós gyümölcsök, leveles zöldek) és egészséges zsírokkal jól illenek ehhez az aktív fázishoz.',
+    calPhaseTipOvulation:'Az energiaszint a csúcson van — táplálkozz kiegyensúlyozott fehérjével, összetett szénhidráttal és cinkben gazdag ételekkel (dió, magvak).',
+    calPhaseTipPms:'A vágyak fokozódnak — válassz összetett szénhidrátokat, magnéziumot (étcsokoládé, dió) és csökkentsd a só/cukor bevitelt a puffadás és hangulatingadozás ellen.',
+    calPhaseTipDefault:'Állítsd be a ciklusod a Ciklus fülön, hogy személyre szabott táplálkozási tippeket kapj minden fázishoz.',
     calMacroDist:'🥧 Makró arány',
     calTodayBtn:'Ma',
     calAddFood:'Étel hozzáadása', calQuickAdd:'⚡ Gyors bevitel',
@@ -8329,6 +8455,34 @@ function calRenderGoalInputs() {
   });
 }
 
+// ── RENDER: cycle-phase nutrition tip ───────────────────────────────
+function calRenderCyclePhase() {
+  const card = document.getElementById('cal-cycle-card');
+  if (!card) return;
+  const cd = state.cycleData || {};
+  const anchor = (cd.periods||[]).slice().sort((a,b)=>new Date(a.start)-new Date(b.start)).pop();
+  const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  if (!anchor || (cd.mode||'natural')!=='natural') {
+    card.style.display = 'block';
+    document.getElementById('cal-cycle-phase-label').textContent = '';
+    document.getElementById('cal-cycle-phase-tip').textContent = tr.calPhaseTipDefault||'Set up your cycle on the Cycle tab to get personalized nutrition tips for each phase.';
+    return;
+  }
+  const cycleLen = cd.cycleLen||28;
+  const tag = getNaturalDayTag(calViewDate, anchor, cycleLen) || 'follicular';
+  const map = {
+    period:     { label: tr.calPhasePeriod,     tip: tr.calPhaseTipPeriod,     emoji:'🩸' },
+    fertile:    { label: tr.calPhaseFertile,    tip: tr.calPhaseTipFertile,    emoji:'🌿' },
+    ovulation:  { label: tr.calPhaseOvulation,  tip: tr.calPhaseTipOvulation,  emoji:'✨' },
+    'pms-zone': { label: tr.calPhasePms,        tip: tr.calPhaseTipPms,        emoji:'🍫' },
+    follicular: { label: tr.calPhaseFollicular, tip: tr.calPhaseTipFollicular, emoji:'🌱' },
+  };
+  const info = map[tag]||map.follicular;
+  card.style.display = 'block';
+  document.getElementById('cal-cycle-phase-label').textContent = `${info.emoji} ${info.label}`;
+  document.getElementById('cal-cycle-phase-tip').textContent = info.tip;
+}
+
 // ── RENDER ALL ─────────────────────────────────────────────────────
 function calRenderAll() {
   calRenderDateNav();
@@ -8337,6 +8491,7 @@ function calRenderAll() {
   calRenderWater();
   calRenderWeeklyChart();
   calRenderMacroDist();
+  calRenderCyclePhase();
   applyTranslations();
 }
 
@@ -8609,12 +8764,12 @@ function wktGetDaySessions(d) {
 // ── Net calories cross-link ─────────────────────────────────────────────────
 function wktGetNetCals(d) {
   // Reads from calorie tracker localStorage for the same date
-  const mk = `lt_calories_${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}`;
+  const mk = xCalMonthKey(d);
   try {
     const raw = JSON.parse(localStorage.getItem(mk) || 'null');
     if (!raw) return null;
     const dk = wktDateKey(d);
-    const day = raw[dk];
+    const day = raw.days ? raw.days[dk] : raw[dk];
     if (!day) return null;
     // Sum all meals
     let totalKcal = 0;
@@ -8716,6 +8871,12 @@ function wktPopulateHabits() {
     opt.textContent = h;
     sel.appendChild(opt);
   });
+  // Pre-select the user's configured default linked habit (Settings → Habit Linking)
+  if (typeof userPrefs !== 'undefined' && userPrefs.defaultWorkoutHabit !== undefined && userPrefs.defaultWorkoutHabit !== null && userPrefs.defaultWorkoutHabit !== '') {
+    if ((state.habits||[])[+userPrefs.defaultWorkoutHabit] !== undefined) {
+      sel.value = userPrefs.defaultWorkoutHabit;
+    }
+  }
 }
 
 // ── Render sessions list for viewed date ───────────────────────────────────
@@ -8824,9 +8985,10 @@ function wktRenderWeeklyChart() {
     const h = sessions.length ? Math.max(8, Math.round((sessions.length/maxSess)*80)) : 0;
     const cats = sessions.length ? [...new Set(sessions.flatMap(s=>s.exercises.map(e=>e.cat)))] : [];
     const barColor = cats.length ? WKT_CAT_COLORS[cats[0]] : '#4f6ef7';
+    const icons = cats.length ? cats.map(c => WKT_CAT_ICONS[c]||'💪').join('') : '';
     const dayName = dayNames[(d.getDay()+6)%7];
     return `<div class="wkt-bar-col${isToday?' wkt-bar-today':''}">
-      <div class="wkt-bar-val" style="color:${sessions.length?barColor:'var(--text-muted)'}">${sessions.length||''}</div>
+      <div class="wkt-bar-val" style="color:${sessions.length?barColor:'var(--text-muted)'}">${icons}</div>
       <div class="wkt-bar-outer">
         <div class="wkt-bar-inner" style="height:${h}px;background:${sessions.length?barColor:'var(--border)'};opacity:${sessions.length?'1':'.4'}"></div>
       </div>
@@ -8836,9 +8998,9 @@ function wktRenderWeeklyChart() {
 
   wrap.innerHTML = `<div class="wkt-bar-chart">${barsHTML}</div>`;
 
-  // Legend
+  // Legend — category icon instead of a colored dot
   legendWrap.innerHTML = Object.entries(WKT_CAT_COLORS).map(([cat,col]) =>
-    `<span class="wkt-leg-item"><span class="wkt-leg-dot" style="background:${col}"></span>${WKT_CAT_ICONS[cat]} ${cat}</span>`
+    `<span class="wkt-leg-item" style="color:${col}">${WKT_CAT_ICONS[cat]} ${cat}</span>`
   ).join('');
 }
 

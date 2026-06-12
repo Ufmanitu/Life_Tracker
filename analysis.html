@@ -78,6 +78,22 @@
         <div class="week-radials" id="week-radials"></div>
       </div>
       <div class="analysis-card">
+        <div class="section-title" data-i18n="crossStatsTitle">🔗 Cross-Tracker Stats</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
+              <span data-i18n="calGoalToday">Calorie Goal Today</span>
+              <span id="cross-cal-pct">0/2000 kcal (0%)</span>
+            </div>
+            <div class="goal-prog-track"><div class="goal-prog-fill" id="cross-cal-fill" style="width:0%;background:#4f6ef7;"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--text-muted);" data-i18n="workoutStreak">🔥 Workout Streak</span>
+            <span id="cross-wkt-streak" style="font-weight:800;font-size:14px;color:var(--text);">0 days</span>
+          </div>
+        </div>
+      </div>
+      <div class="analysis-card">
         <div class="section-title" data-i18n="overallProgress">Overall Progress</div>
         <div class="overall-row">
           <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">

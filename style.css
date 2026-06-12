@@ -390,7 +390,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 /* ── DAILY SINGLE-DAY VIEW ──────────────────────────────────────────────────── */
 #days-grid{display:block;}
 .ddv-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:0 0 20px;}
-.ddv-nav{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:620px;gap:12px;}
+.ddv-nav{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:900px;gap:12px;}
 .ddv-arrow{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;color:var(--header-text);width:clamp(38px,4vw,48px);height:clamp(38px,4vw,48px);font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;transition:all .15s;flex-shrink:0;line-height:1;}
 .ddv-arrow:hover:not(:disabled){border-color:#4f6ef7;color:#fff;background:rgba(79,110,247,.12);}
 .ddv-arrow:active:not(:disabled){transform:scale(.9);}
@@ -399,12 +399,20 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .ddv-date-big{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-1px;background:linear-gradient(120deg,var(--text) 40%,#7090c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .ddv-jump-today{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;letter-spacing:.5px;}
 .ddv-jump-today:hover{border-color:#4f6ef7;color:#4f6ef7;}
-.ddv-dots-strip{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:620px;padding:2px 0;}
+.ddv-dots-strip{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:900px;padding:2px 0;}
 .ddv-dot{width:10px;height:10px;border-radius:50%;cursor:pointer;transition:all .18s;flex-shrink:0;opacity:.7;}
 .ddv-dot:hover{transform:scale(1.35);opacity:1;}
 .ddv-dot-sel{transform:scale(1.5)!important;opacity:1!important;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px #4f6ef7;}
 .ddv-dot-today{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px #4f6ef755;}
-.ddv-card{width:100%;max-width:620px;}
+.ddv-card{width:100%;max-width:900px;}
+/* Two-column daily layout */
+.ddv-card-body{display:flex;gap:clamp(12px,2vw,22px);align-items:flex-start;margin-top:clamp(10px,1.5vw,16px);}
+.ddv-habits-col{flex:1;min-width:0;}
+.ddv-side-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:0;}
+.ddv-side-block{margin-top:0!important;padding-top:0!important;border-top:none!important;}
+.ddv-side-col .ddv-side-block+.ddv-side-block{margin-top:14px!important;padding-top:12px!important;border-top:1px solid var(--border2)!important;}
+@media(max-width:640px){.ddv-card-body{flex-direction:column;}.ddv-nav,.ddv-dots-strip,.ddv-card{max-width:100%;}}
+
 .day-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .day-card-label{font-size:clamp(10px,1.2vw,12px);color:var(--text-muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
 .day-card-today-badge{background:linear-gradient(135deg,#4f6ef7,#6a85fa);color:#fff;font-size:clamp(9px,1vw,11px);font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;animation:todayPulse 2.5s ease-in-out infinite;}

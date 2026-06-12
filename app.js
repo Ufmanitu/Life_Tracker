@@ -1441,7 +1441,7 @@ function renderDaysView(animate){
     {key:"focus",label:t('focus'),icon:"🎯",cols:["#2a3d5e","#4f6ef788","#4f6ef7bb","#4f6ef7","#7090f9"]},
     {key:"motivation",label:t('mood'),icon:"🔥",cols:["#2a3d5e","#e05a9a88","#e05a9abb","#e05a9a","#f07ab0"]},
   ];
-  let mHTML=`<div class="mindset-section"><div class="mindset-title">${t('mindsetTitle')}</div>`;
+  let mHTML=`<div class="mindset-section ddv-side-block"><div class="mindset-title">${t('mindsetTitle')}</div>`;
   mtypes.forEach(mt=>{
     const val=getMindset(d,mt.key);
     mHTML+=`<div class="mindset-row"><span class="mindset-icon">${mt.icon}</span><span class="mindset-label">${mt.label}</span><div class="mindset-stars">`;
@@ -1457,7 +1457,7 @@ function renderDaysView(animate){
   // Journal
   const jk=getJournalKey(state.year,state.month,d);
   const jEntry=state.journal[jk]||{mood:0,note:''};
-  const journalHTML=`<div class="day-journal-section">
+  const journalHTML=`<div class="day-journal-section ddv-side-block">
     <div class="mindset-title">${t('journalTitle')}</div>
     <div class="day-journal-mood-row" id="day-journal-mood-${d}">
       ${JOURNAL_MOODS.map((em,i)=>{
@@ -1494,9 +1494,15 @@ function renderDaysView(animate){
         <span class="day-card-pct" style="color:${color}">${pct}%</span>
         <div class="day-card-track"><div class="day-card-fill" style="width:0%;background:${color};"></div></div>
       </div>
-      <div class="day-habits-list">${habHTML||`<div style="color:var(--text-dim);font-size:13px;font-weight:600;padding:8px 0;">No habits yet — add one above.</div>`}</div>
-      ${mHTML}
-      ${journalHTML}
+      <div class="ddv-card-body">
+        <div class="ddv-habits-col">
+          <div class="day-habits-list">${habHTML||`<div style="color:var(--text-dim);font-size:13px;font-weight:600;padding:8px 0;">No habits yet — add one above.</div>`}</div>
+        </div>
+        <div class="ddv-side-col">
+          ${mHTML}
+          ${journalHTML}
+        </div>
+      </div>
     </div>`;
 
   grid.appendChild(wrapper);

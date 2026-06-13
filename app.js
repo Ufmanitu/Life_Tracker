@@ -3117,8 +3117,11 @@ langBtn.addEventListener('click',function(e){
 // Close on outside click
 document.addEventListener('click',function(e){
   const sbLangBtn = document.getElementById('sb-lang-btn');
-  if(langDropOpen && !langDropdown.contains(e.target) && e.target!==langBtn && e.target!==sbLangBtn){
-    closeLangDrop();
+  const isOpen = langDropOpen || langDropdown.classList.contains('open');
+  if(isOpen && !langDropdown.contains(e.target) && e.target!==langBtn && e.target!==sbLangBtn){
+    langDropdown.classList.remove('open');
+    langBtn.classList.remove('open');
+    langDropOpen=false;
   }
 });
 
@@ -3226,7 +3229,11 @@ function togglePomoWidget(){
   const isHidden=w.classList.contains("hidden");
   w.classList.toggle("hidden");
   bd.classList.toggle("hidden",!isHidden?true:false);
-  b.classList.toggle("active",!w.classList.contains("hidden"));
+  const nowOpen=!w.classList.contains("hidden");
+  b.classList.toggle("active",nowOpen);
+  // Sync sidebar pomo button active state
+  const sbPomoBtn=document.getElementById("sb-pomo-btn");
+  if(sbPomoBtn) sbPomoBtn.classList.toggle("sb-pomo-active",nowOpen);
 }
 
 document.getElementById("pomo-toggle").addEventListener("click",togglePomoWidget);
@@ -3236,12 +3243,14 @@ document.getElementById("pomo-close-btn").addEventListener("click",()=>{
   document.getElementById("pomo-widget").classList.add("hidden");
   document.getElementById("pomo-backdrop").classList.add("hidden");
   document.getElementById("pomo-toggle").classList.remove("active");
+  const sbPomoBtn=document.getElementById('sb-pomo-btn');if(sbPomoBtn)sbPomoBtn.classList.remove('sb-pomo-active');
 });
 // Click backdrop to close
 document.getElementById("pomo-backdrop").addEventListener("click",()=>{
   document.getElementById("pomo-widget").classList.add("hidden");
   document.getElementById("pomo-backdrop").classList.add("hidden");
   document.getElementById("pomo-toggle").classList.remove("active");
+  const sbPomoBtn=document.getElementById('sb-pomo-btn');if(sbPomoBtn)sbPomoBtn.classList.remove('sb-pomo-active');
 });
 document.querySelectorAll(".pomo-mode-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
@@ -3262,6 +3271,7 @@ document.addEventListener("keydown",e=>{
     w.classList.add("hidden");
     document.getElementById("pomo-backdrop").classList.add("hidden");
     document.getElementById("pomo-toggle").classList.remove("active");
+  const sbPomoBtn=document.getElementById('sb-pomo-btn');if(sbPomoBtn)sbPomoBtn.classList.remove('sb-pomo-active');
     return;
   }
   if(e.code==="Space"&&!w.classList.contains("hidden")&&e.target.tagName!=="INPUT"&&e.target.tagName!=="TEXTAREA"&&e.target.tagName!=="BUTTON"){
@@ -4563,7 +4573,11 @@ if(CURRENT_PAGE==="timetable"){
   applyTheme(current);
 
   btn.addEventListener('click',e=>{e.stopPropagation();open?closeDrop():openDrop();});
-  document.addEventListener('click',e=>{if(open&&!dropdown.contains(e.target)&&e.target!==btn)closeDrop();});
+  document.addEventListener('click',e=>{
+    const sbThemeBtn = document.getElementById('sb-theme-btn');
+    const isOpen = open || dropdown.classList.contains('open');
+    if(isOpen&&!dropdown.contains(e.target)&&e.target!==btn&&e.target!==sbThemeBtn)closeDrop();
+  });
   dropdown.querySelectorAll('.theme-option').forEach(opt=>{
     opt.addEventListener('click',e=>{e.stopPropagation();applyTheme(opt.dataset.theme);closeDrop();});
   });
@@ -4729,45 +4743,41 @@ function initSidebar() {
     }, 50);
   });
 
+  function openSbDropdown(dropId, sbBtnId, fallbackId) {
+    const dropdown = document.getElementById(dropId);
+    const sbBtn = document.getElementById(sbBtnId);
+    if (!dropdown || !sbBtn) return;
+    const isOpen = dropdown.classList.contains('open');
+    // Close all dropdowns first
+    document.querySelectorAll('#theme-dropdown, #lang-dropdown').forEach(d => d.classList.remove('open'));
+    if (isOpen) return; // was open → just close
+    // Position: open to the right of sidebar button, clamped to viewport
+    const rect = sbBtn.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    dropdown.style.display = 'block'; // briefly show to measure
+    const dw = dropdown.offsetWidth || 200;
+    const dh = dropdown.offsetHeight || 300;
+    dropdown.style.display = '';
+    // Try right of sidebar; if it overflows, try above button; last resort: center above
+    let left = rect.right + 8;
+    if (left + dw > vw - 8) left = Math.max(8, vw - dw - 8);
+    let top = rect.top;
+    if (top + dh > vh - 8) top = Math.max(8, vh - dh - 8);
+    dropdown.style.left = left + 'px';
+    dropdown.style.top = top + 'px';
+    dropdown.style.right = 'auto';
+    dropdown.classList.add('open');
+  }
+
   document.getElementById('sb-theme-btn').addEventListener('click', (e) => {
     e.stopPropagation();
-    // Position dropdown relative to sidebar button (header button is hidden)
-    const dropdown = document.getElementById('theme-dropdown');
-    const sbBtn = document.getElementById('sb-theme-btn');
-    if (!dropdown || !sbBtn) return;
-    const rect = sbBtn.getBoundingClientRect();
-    const dw = dropdown.offsetWidth || 192;
-    dropdown.style.top = (rect.top - 8) + 'px';
-    dropdown.style.left = (rect.right + 8) + 'px';
-    dropdown.style.right = 'auto';
-    // Toggle open state by delegating to theme-toggle if visible, else manually
-    const orig = document.getElementById('theme-toggle');
-    if (orig && orig.offsetParent !== null) { orig.click(); }
-    else {
-      const isOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('#theme-dropdown, #lang-dropdown').forEach(d => d.classList.remove('open'));
-      if (!isOpen) dropdown.classList.add('open');
-    }
+    openSbDropdown('theme-dropdown', 'sb-theme-btn', 'theme-toggle');
   });
 
   document.getElementById('sb-lang-btn').addEventListener('click', (e) => {
     e.stopPropagation();
-    // Position dropdown relative to sidebar button (header button is hidden)
-    const dropdown = document.getElementById('lang-dropdown');
-    const sbBtn = document.getElementById('sb-lang-btn');
-    if (!dropdown || !sbBtn) return;
-    const rect = sbBtn.getBoundingClientRect();
-    dropdown.style.top = (rect.top - 8) + 'px';
-    dropdown.style.left = (rect.right + 8) + 'px';
-    dropdown.style.right = 'auto';
-    // Toggle open state by delegating to lang-btn if visible, else manually
-    const orig = document.getElementById('lang-btn');
-    if (orig && orig.offsetParent !== null) { orig.click(); }
-    else {
-      const isOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('#theme-dropdown, #lang-dropdown').forEach(d => d.classList.remove('open'));
-      if (!isOpen) dropdown.classList.add('open');
-    }
+    openSbDropdown('lang-dropdown', 'sb-lang-btn', 'lang-btn');
   });
 
   document.getElementById('sb-settings-btn').addEventListener('click', () => {

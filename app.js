@@ -68,6 +68,46 @@ const TRANSLATIONS = {
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habits", statCompleted:"Completed", statProgress:"Progress", statTasksDone:"Tasks Done",
     myHabits:"My Habits",
+    habitPacksModalTitle:"📦 Quick-Start Habit Packs",
+    habitPacksModalSubtitle:"Pick a pack — habits will be added instantly. Skip any you don't need.",
+    habitPacksBackBtn:"← Back",
+    habitPacksAddAllBtn:"✅ Add All Habits",
+    habitPacksAddSelectedBtn:"+ Add Selected",
+    habitPacksAlreadyAdded:"already added",
+    habitPacksAddedBadge:"✓ Added",
+    habitPacksCountUnit:"habits",
+    habitPacksBtnLabel:"📦 Quick-Start Habit Packs",
+    habitPacksBtnSubtitle:"— pick a theme, add habits instantly",
+    habitPacksBtnTitle:"Quick-start habit packs — add a curated set of habits in one click",
+    calAddFoodTitle:"Add food", finSetBudgetTitle:"Set budget", finPickEmojiTitle:"Pick emoji",
+    settingsChooseSectionsTitle:"Choose which sections to delete",
+    ttPrevWeekTitle:"Previous week", ttNextWeekTitle:"Next week",
+    ttImportGcalBtnTitle:"Import events from Google Calendar",
+    ttImportGcalBtnLabel:"Import from Google Calendar (.ics)",
+    ttClearAllTitle:"Remove all events from the timetable",
+    journalPrevDayTitle:"Previous day", journalNextDayTitle:"Next day",
+    closeBtnTitle:"Close",
+    ariaSelectCycleStartDate:"Select cycle start date", ariaSelectDueDate:"Select due date",
+    settingsAboutTitle:"ℹ️ About",
+    settingsAboutLine1:"All data is stored locally in your browser. No account needed.",
+    settingsAboutLine2:"Works offline. Best on laptop / large screen.",
+    settingsDeleteModalTitle:"Select Data to Delete",
+    settingsDeleteModalDesc:"Tick the sections you want to erase. Unticked sections stay safe.",
+    settingsSectionHabits:"📊 Habit Tracker", settingsSectionTimetable:"🗓 Timetable",
+    settingsSectionTasks:"✅ Tasks", settingsSectionShopping:"🛒 Shopping",
+    settingsSectionCycle:"🌸 Cycle", settingsSectionFinance:"💰 Finance",
+    settingsSectionJournal:"📓 Journal", settingsSectionPrefs:"⚙️ Settings & Prefs",
+    settingsSelectAllBtn:"☑ Select All", settingsSelectNoneBtn:"☐ Select None",
+    settingsDeleteSelectedBtn:"🗑 Delete Selected",
+    themeDark:"🌑 Dark", themeLight:"☀️ Light", themeForest:"🌿 Forest", themeSakura:"🌸 Sakura",
+    themeOcean:"🌊 Ocean", themeSunset:"🌅 Sunset", themeMidnight:"🌙 Midnight Purple",
+    themeAmoled:"🖤 AMOLED Black", themePaper:"🤍 Minimal Paper", themeSlate:"🌫️ Slate",
+    tabCalories:"🍎 Calories", tabWorkout:"🏋️ Workout",
+    sbGroupTrack:"Track", sbGroupSchedule:"Schedule", sbGroupHealth:"Health", sbGroupLifestyle:"Lifestyle",
+    sbPomodoro:"Pomodoro", sbPomodoroTitle:"Pomodoro Timer",
+    sbTheme:"Theme", sbThemeTitle:"Change Theme",
+    sbLanguage:"Language", sbSettings:"Settings",
+    sbCollapseTitle:"Collapse sidebar", sbOpenMenuTitle:"Open menu",
     addHabitPlaceholder:"Add a new habit…", addHabitBtn:"+ Add",
     thisDay:"This day", todayBadge:"Today",
     mindsetTitle:"Mindset Check-In", energy:"Energy", focus:"Focus", mood:"Mood", motivation:"Motivation",
@@ -258,6 +298,46 @@ const TRANSLATIONS = {
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Szokások", statCompleted:"Teljesítve", statProgress:"Haladás", statTasksDone:"Kész feladat",
     myHabits:"Szokásaim",
+    habitPacksModalTitle:"📦 Gyors kezdő szokáscsomagok",
+    habitPacksModalSubtitle:"Válassz egy csomagot — a szokások azonnal hozzáadódnak. Bármelyiket kihagyhatod, amire nincs szükséged.",
+    habitPacksBackBtn:"← Vissza",
+    habitPacksAddAllBtn:"✅ Összes szokás hozzáadása",
+    habitPacksAddSelectedBtn:"+ Kiválasztottak hozzáadása",
+    habitPacksAlreadyAdded:"már hozzáadva",
+    habitPacksAddedBadge:"✓ Hozzáadva",
+    habitPacksCountUnit:"szokás",
+    habitPacksBtnLabel:"📦 Gyors kezdő szokáscsomagok",
+    habitPacksBtnSubtitle:"— válassz egy témát, és azonnal hozzáadjuk a szokásokat",
+    habitPacksBtnTitle:"Gyors kezdő szokáscsomagok — adj hozzá egy összeállított szokáscsomagot egy kattintással",
+    calAddFoodTitle:"Étel hozzáadása", finSetBudgetTitle:"Költségvetés beállítása", finPickEmojiTitle:"Emoji kiválasztása",
+    settingsChooseSectionsTitle:"Válaszd ki, mely szekciókat töröljük",
+    ttPrevWeekTitle:"Előző hét", ttNextWeekTitle:"Következő hét",
+    ttImportGcalBtnTitle:"Események importálása a Google Naptárból",
+    ttImportGcalBtnLabel:"Importálás Google Naptárból (.ics)",
+    ttClearAllTitle:"Minden esemény eltávolítása az órarendből",
+    journalPrevDayTitle:"Előző nap", journalNextDayTitle:"Következő nap",
+    closeBtnTitle:"Bezárás",
+    ariaSelectCycleStartDate:"Ciklus kezdő dátumának kiválasztása", ariaSelectDueDate:"Határidő kiválasztása",
+    settingsAboutTitle:"ℹ️ Névjegy",
+    settingsAboutLine1:"Minden adat helyileg, a böngésződben tárolódik. Nincs szükség fiókra.",
+    settingsAboutLine2:"Offline is működik. Laptopon / nagy képernyőn a legjobb.",
+    settingsDeleteModalTitle:"Válaszd ki a törlendő adatokat",
+    settingsDeleteModalDesc:"Jelöld be a törlendő szekciókat. A nem bejelölt szekciók biztonságban maradnak.",
+    settingsSectionHabits:"📊 Szokáskövető", settingsSectionTimetable:"🗓 Órarend",
+    settingsSectionTasks:"✅ Feladatok", settingsSectionShopping:"🛒 Bevásárlás",
+    settingsSectionCycle:"🌸 Ciklus", settingsSectionFinance:"💰 Pénzügy",
+    settingsSectionJournal:"📓 Napló", settingsSectionPrefs:"⚙️ Beállítások és preferenciák",
+    settingsSelectAllBtn:"☑ Összes kijelölése", settingsSelectNoneBtn:"☐ Kijelölés törlése",
+    settingsDeleteSelectedBtn:"🗑 Kijelöltek törlése",
+    themeDark:"🌑 Sötét", themeLight:"☀️ Világos", themeForest:"🌿 Erdő", themeSakura:"🌸 Szakura",
+    themeOcean:"🌊 Óceán", themeSunset:"🌅 Naplemente", themeMidnight:"🌙 Éjféli lila",
+    themeAmoled:"🖤 AMOLED fekete", themePaper:"🤍 Minimál papír", themeSlate:"🌫️ Pala",
+    tabCalories:"🍎 Kalória", tabWorkout:"🏋️ Edzés",
+    sbGroupTrack:"Nyomkövetés", sbGroupSchedule:"Ütemezés", sbGroupHealth:"Egészség", sbGroupLifestyle:"Életmód",
+    sbPomodoro:"Pomodoro", sbPomodoroTitle:"Pomodoro időzítő",
+    sbTheme:"Téma", sbThemeTitle:"Téma váltása",
+    sbLanguage:"Nyelv", sbSettings:"Beállítások",
+    sbCollapseTitle:"Oldalsáv összecsukása", sbOpenMenuTitle:"Menü megnyitása",
     addHabitPlaceholder:"Új szokás hozzáadása…", addHabitBtn:"+ Hozzáad",
     thisDay:"Ezen a napon", todayBadge:"Ma",
     mindsetTitle:"Napi értékelés", energy:"Energia", focus:"Fókusz", mood:"Hangulat", motivation:"Motiváció",
@@ -446,6 +526,46 @@ const TRANSLATIONS = {
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Gewohnheiten", statCompleted:"Erledigt", statProgress:"Fortschritt", statTasksDone:"Aufgaben",
     myHabits:"Meine Gewohnheiten",
+    habitPacksModalTitle:"📦 Schnellstart-Gewohnheitspakete",
+    habitPacksModalSubtitle:"Wähle ein Paket — die Gewohnheiten werden sofort hinzugefügt. Überspringe alle, die du nicht brauchst.",
+    habitPacksBackBtn:"← Zurück",
+    habitPacksAddAllBtn:"✅ Alle Gewohnheiten hinzufügen",
+    habitPacksAddSelectedBtn:"+ Auswahl hinzufügen",
+    habitPacksAlreadyAdded:"bereits hinzugefügt",
+    habitPacksAddedBadge:"✓ Hinzugefügt",
+    habitPacksCountUnit:"Gewohnheiten",
+    habitPacksBtnLabel:"📦 Schnellstart-Gewohnheitspakete",
+    habitPacksBtnSubtitle:"— wähle ein Thema, Gewohnheiten werden sofort hinzugefügt",
+    habitPacksBtnTitle:"Schnellstart-Gewohnheitspakete — füge mit einem Klick ein zusammengestelltes Set an Gewohnheiten hinzu",
+    calAddFoodTitle:"Essen hinzufügen", finSetBudgetTitle:"Budget festlegen", finPickEmojiTitle:"Emoji auswählen",
+    settingsChooseSectionsTitle:"Wähle aus, welche Bereiche gelöscht werden sollen",
+    ttPrevWeekTitle:"Vorherige Woche", ttNextWeekTitle:"Nächste Woche",
+    ttImportGcalBtnTitle:"Termine aus Google Kalender importieren",
+    ttImportGcalBtnLabel:"Aus Google Kalender importieren (.ics)",
+    ttClearAllTitle:"Alle Termine aus dem Stundenplan entfernen",
+    journalPrevDayTitle:"Vorheriger Tag", journalNextDayTitle:"Nächster Tag",
+    closeBtnTitle:"Schließen",
+    ariaSelectCycleStartDate:"Zyklusstartdatum auswählen", ariaSelectDueDate:"Fälligkeitsdatum auswählen",
+    settingsAboutTitle:"ℹ️ Info",
+    settingsAboutLine1:"Alle Daten werden lokal in deinem Browser gespeichert. Kein Konto erforderlich.",
+    settingsAboutLine2:"Funktioniert offline. Am besten auf Laptop / großem Bildschirm.",
+    settingsDeleteModalTitle:"Zu löschende Daten auswählen",
+    settingsDeleteModalDesc:"Hake die Bereiche an, die du löschen möchtest. Nicht angehakte Bereiche bleiben sicher.",
+    settingsSectionHabits:"📊 Gewohnheitstracker", settingsSectionTimetable:"🗓 Stundenplan",
+    settingsSectionTasks:"✅ Aufgaben", settingsSectionShopping:"🛒 Einkaufen",
+    settingsSectionCycle:"🌸 Zyklus", settingsSectionFinance:"💰 Finanzen",
+    settingsSectionJournal:"📓 Tagebuch", settingsSectionPrefs:"⚙️ Einstellungen & Präferenzen",
+    settingsSelectAllBtn:"☑ Alle auswählen", settingsSelectNoneBtn:"☐ Keine auswählen",
+    settingsDeleteSelectedBtn:"🗑 Auswahl löschen",
+    themeDark:"🌑 Dunkel", themeLight:"☀️ Hell", themeForest:"🌿 Wald", themeSakura:"🌸 Sakura",
+    themeOcean:"🌊 Ozean", themeSunset:"🌅 Sonnenuntergang", themeMidnight:"🌙 Mitternachtslila",
+    themeAmoled:"🖤 AMOLED Schwarz", themePaper:"🤍 Minimal Papier", themeSlate:"🌫️ Schiefer",
+    tabCalories:"🍎 Kalorien", tabWorkout:"🏋️ Workout",
+    sbGroupTrack:"Verfolgen", sbGroupSchedule:"Zeitplan", sbGroupHealth:"Gesundheit", sbGroupLifestyle:"Lifestyle",
+    sbPomodoro:"Pomodoro", sbPomodoroTitle:"Pomodoro-Timer",
+    sbTheme:"Design", sbThemeTitle:"Design ändern",
+    sbLanguage:"Sprache", sbSettings:"Einstellungen",
+    sbCollapseTitle:"Seitenleiste einklappen", sbOpenMenuTitle:"Menü öffnen",
     addHabitPlaceholder:"Neue Gewohnheit…", addHabitBtn:"+ Hinzufügen",
     thisDay:"Dieser Tag", todayBadge:"Heute",
     mindsetTitle:"Tages-Check-In", energy:"Energie", focus:"Fokus", mood:"Stimmung", motivation:"Motivation",
@@ -590,6 +710,13 @@ const TRANSLATIONS = {
     settingsGenderHint:"Der Zyklus-Tab wird nur für weibliche Nutzer angezeigt.",
     settingsLanguageTitle:"🌐 Sprache",
     settingsThemeTitle:"🎨 Design",
+    settingsGoalsTitle:"🎯 Tägliche Makroziele",
+    settingsGoalsHint:"Lege deine täglichen Kalorien- und Makroziele fest. Diese steuern die Zielbalken auf der Kalorienseite und die Cross-Statistiken in der Analyse.",
+    settingsGoalsSaveBtn:"💾 Ziele speichern",
+    settingsWorkoutLinkTitle:"🏋️ Gewohnheitsverknüpfung",
+    settingsWorkoutLinkHint:"Wähle eine Gewohnheit, die automatisch vorausgewählt und abgehakt wird, wenn du ein Workout protokollierst.",
+    settingsDefaultHabitLabel:"Standardmäßig verknüpfte Gewohnheit",
+    settingsDefaultHabitNone:"— keine —",
     settingsDangerZone:"⚠️ Gefahrenzone",
     settingsClearAllLabel:"Alle Daten löschen",
     settingsClearAllHint:"Löscht dauerhaft alle Gewohnheiten, Aufgaben, Stundenplan, Finanzen, Zyklus und Einkaufsdaten. Nicht rückgängig machbar.",
@@ -627,6 +754,46 @@ const TRANSLATIONS = {
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Hábitos", statCompleted:"Completado", statProgress:"Progreso", statTasksDone:"Tareas",
     myHabits:"Mis Hábitos",
+    habitPacksModalTitle:"📦 Paquetes de inicio rápido",
+    habitPacksModalSubtitle:"Elige un paquete — los hábitos se añadirán al instante. Omite los que no necesites.",
+    habitPacksBackBtn:"← Atrás",
+    habitPacksAddAllBtn:"✅ Añadir todos los hábitos",
+    habitPacksAddSelectedBtn:"+ Añadir seleccionados",
+    habitPacksAlreadyAdded:"ya añadido",
+    habitPacksAddedBadge:"✓ Añadido",
+    habitPacksCountUnit:"hábitos",
+    habitPacksBtnLabel:"📦 Paquetes de inicio rápido",
+    habitPacksBtnSubtitle:"— elige un tema, los hábitos se añaden al instante",
+    habitPacksBtnTitle:"Paquetes de inicio rápido — añade un conjunto curado de hábitos con un clic",
+    calAddFoodTitle:"Añadir alimento", finSetBudgetTitle:"Establecer presupuesto", finPickEmojiTitle:"Elegir emoji",
+    settingsChooseSectionsTitle:"Elige qué secciones eliminar",
+    ttPrevWeekTitle:"Semana anterior", ttNextWeekTitle:"Semana siguiente",
+    ttImportGcalBtnTitle:"Importar eventos de Google Calendar",
+    ttImportGcalBtnLabel:"Importar desde Google Calendar (.ics)",
+    ttClearAllTitle:"Eliminar todos los eventos del horario",
+    journalPrevDayTitle:"Día anterior", journalNextDayTitle:"Día siguiente",
+    closeBtnTitle:"Cerrar",
+    ariaSelectCycleStartDate:"Seleccionar fecha de inicio del ciclo", ariaSelectDueDate:"Seleccionar fecha de vencimiento",
+    settingsAboutTitle:"ℹ️ Acerca de",
+    settingsAboutLine1:"Todos los datos se almacenan localmente en tu navegador. No se necesita cuenta.",
+    settingsAboutLine2:"Funciona sin conexión. Mejor en portátil / pantalla grande.",
+    settingsDeleteModalTitle:"Selecciona los datos a eliminar",
+    settingsDeleteModalDesc:"Marca las secciones que quieres borrar. Las secciones no marcadas permanecen seguras.",
+    settingsSectionHabits:"📊 Seguimiento de hábitos", settingsSectionTimetable:"🗓 Horario",
+    settingsSectionTasks:"✅ Tareas", settingsSectionShopping:"🛒 Compras",
+    settingsSectionCycle:"🌸 Ciclo", settingsSectionFinance:"💰 Finanzas",
+    settingsSectionJournal:"📓 Diario", settingsSectionPrefs:"⚙️ Configuración y preferencias",
+    settingsSelectAllBtn:"☑ Seleccionar todo", settingsSelectNoneBtn:"☐ No seleccionar nada",
+    settingsDeleteSelectedBtn:"🗑 Eliminar seleccionados",
+    themeDark:"🌑 Oscuro", themeLight:"☀️ Claro", themeForest:"🌿 Bosque", themeSakura:"🌸 Sakura",
+    themeOcean:"🌊 Océano", themeSunset:"🌅 Atardecer", themeMidnight:"🌙 Púrpura medianoche",
+    themeAmoled:"🖤 AMOLED Negro", themePaper:"🤍 Papel minimalista", themeSlate:"🌫️ Pizarra",
+    tabCalories:"🍎 Calorías", tabWorkout:"🏋️ Entrenamiento",
+    sbGroupTrack:"Seguimiento", sbGroupSchedule:"Horario", sbGroupHealth:"Salud", sbGroupLifestyle:"Estilo de vida",
+    sbPomodoro:"Pomodoro", sbPomodoroTitle:"Temporizador Pomodoro",
+    sbTheme:"Tema", sbThemeTitle:"Cambiar tema",
+    sbLanguage:"Idioma", sbSettings:"Configuración",
+    sbCollapseTitle:"Contraer barra lateral", sbOpenMenuTitle:"Abrir menú",
     addHabitPlaceholder:"Añadir un hábito…", addHabitBtn:"+ Añadir",
     thisDay:"Este día", todayBadge:"Hoy",
     mindsetTitle:"Check-In Diario", energy:"Energía", focus:"Enfoque", mood:"Ánimo", motivation:"Motivación",
@@ -771,6 +938,13 @@ const TRANSLATIONS = {
     settingsGenderHint:"La pestaña Ciclo solo se muestra para usuarias femeninas.",
     settingsLanguageTitle:"🌐 Idioma",
     settingsThemeTitle:"🎨 Tema",
+    settingsGoalsTitle:"🎯 Objetivos diarios de macros",
+    settingsGoalsHint:"Establece tus objetivos diarios de calorías y macros. Estos controlan las barras de objetivo en la página de Calorías y las estadísticas cruzadas del Análisis.",
+    settingsGoalsSaveBtn:"💾 Guardar objetivos",
+    settingsWorkoutLinkTitle:"🏋️ Vinculación de hábitos",
+    settingsWorkoutLinkHint:"Elige un hábito que se preseleccione y marque automáticamente cada vez que registres un entrenamiento.",
+    settingsDefaultHabitLabel:"Hábito vinculado predeterminado",
+    settingsDefaultHabitNone:"— ninguno —",
     settingsDangerZone:"⚠️ Zona de peligro",
     settingsClearAllLabel:"Eliminar todos los datos",
     settingsClearAllHint:"Eliminará permanentemente todos tus hábitos, tareas, horario, finanzas, ciclo y lista de compras. No se puede deshacer.",
@@ -808,6 +982,46 @@ const TRANSLATIONS = {
     pomodoroBtn:"⏱ Pomodoro",
     statHabits:"Habitudes", statCompleted:"Complété", statProgress:"Progrès", statTasksDone:"Tâches",
     myHabits:"Mes Habitudes",
+    habitPacksModalTitle:"📦 Packs d'habitudes de démarrage rapide",
+    habitPacksModalSubtitle:"Choisissez un pack — les habitudes seront ajoutées instantanément. Ignorez celles dont vous n'avez pas besoin.",
+    habitPacksBackBtn:"← Retour",
+    habitPacksAddAllBtn:"✅ Ajouter toutes les habitudes",
+    habitPacksAddSelectedBtn:"+ Ajouter la sélection",
+    habitPacksAlreadyAdded:"déjà ajoutée",
+    habitPacksAddedBadge:"✓ Ajouté",
+    habitPacksCountUnit:"habitudes",
+    habitPacksBtnLabel:"📦 Packs d'habitudes de démarrage rapide",
+    habitPacksBtnSubtitle:"— choisissez un thème, les habitudes sont ajoutées instantanément",
+    habitPacksBtnTitle:"Packs d'habitudes de démarrage rapide — ajoutez un ensemble organisé d'habitudes en un clic",
+    calAddFoodTitle:"Ajouter un aliment", finSetBudgetTitle:"Définir le budget", finPickEmojiTitle:"Choisir un emoji",
+    settingsChooseSectionsTitle:"Choisissez les sections à supprimer",
+    ttPrevWeekTitle:"Semaine précédente", ttNextWeekTitle:"Semaine suivante",
+    ttImportGcalBtnTitle:"Importer des événements depuis Google Agenda",
+    ttImportGcalBtnLabel:"Importer depuis Google Agenda (.ics)",
+    ttClearAllTitle:"Supprimer tous les événements de l'emploi du temps",
+    journalPrevDayTitle:"Jour précédent", journalNextDayTitle:"Jour suivant",
+    closeBtnTitle:"Fermer",
+    ariaSelectCycleStartDate:"Sélectionner la date de début du cycle", ariaSelectDueDate:"Sélectionner la date d'échéance",
+    settingsAboutTitle:"ℹ️ À propos",
+    settingsAboutLine1:"Toutes les données sont stockées localement dans votre navigateur. Aucun compte requis.",
+    settingsAboutLine2:"Fonctionne hors ligne. Idéal sur ordinateur portable / grand écran.",
+    settingsDeleteModalTitle:"Sélectionner les données à supprimer",
+    settingsDeleteModalDesc:"Cochez les sections à effacer. Les sections non cochées restent intactes.",
+    settingsSectionHabits:"📊 Suivi des habitudes", settingsSectionTimetable:"🗓 Emploi du temps",
+    settingsSectionTasks:"✅ Tâches", settingsSectionShopping:"🛒 Courses",
+    settingsSectionCycle:"🌸 Cycle", settingsSectionFinance:"💰 Finances",
+    settingsSectionJournal:"📓 Journal", settingsSectionPrefs:"⚙️ Paramètres et préférences",
+    settingsSelectAllBtn:"☑ Tout sélectionner", settingsSelectNoneBtn:"☐ Ne rien sélectionner",
+    settingsDeleteSelectedBtn:"🗑 Supprimer la sélection",
+    themeDark:"🌑 Sombre", themeLight:"☀️ Clair", themeForest:"🌿 Forêt", themeSakura:"🌸 Sakura",
+    themeOcean:"🌊 Océan", themeSunset:"🌅 Coucher de soleil", themeMidnight:"🌙 Violet de minuit",
+    themeAmoled:"🖤 AMOLED Noir", themePaper:"🤍 Papier minimal", themeSlate:"🌫️ Ardoise",
+    tabCalories:"🍎 Calories", tabWorkout:"🏋️ Entraînement",
+    sbGroupTrack:"Suivi", sbGroupSchedule:"Emploi du temps", sbGroupHealth:"Santé", sbGroupLifestyle:"Mode de vie",
+    sbPomodoro:"Pomodoro", sbPomodoroTitle:"Minuteur Pomodoro",
+    sbTheme:"Thème", sbThemeTitle:"Changer de thème",
+    sbLanguage:"Langue", sbSettings:"Paramètres",
+    sbCollapseTitle:"Réduire la barre latérale", sbOpenMenuTitle:"Ouvrir le menu",
     addHabitPlaceholder:"Ajouter une habitude…", addHabitBtn:"+ Ajouter",
     thisDay:"Ce jour", todayBadge:"Aujourd'hui",
     mindsetTitle:"Bilan Quotidien", energy:"Énergie", focus:"Concentration", mood:"Humeur", motivation:"Motivation",
@@ -952,6 +1166,13 @@ const TRANSLATIONS = {
     settingsGenderHint:"L'onglet Cycle n'est visible que pour les utilisatrices féminines.",
     settingsLanguageTitle:"🌐 Langue",
     settingsThemeTitle:"🎨 Thème",
+    settingsGoalsTitle:"🎯 Objectifs macro quotidiens",
+    settingsGoalsHint:"Définissez vos objectifs quotidiens de calories et de macros. Ils alimentent les barres d'objectif de la page Calories et les statistiques croisées de l'Analyse.",
+    settingsGoalsSaveBtn:"💾 Enregistrer les objectifs",
+    settingsWorkoutLinkTitle:"🏋️ Association d'habitude",
+    settingsWorkoutLinkHint:"Choisissez une habitude qui sera automatiquement présélectionnée et cochée chaque fois que vous enregistrez une séance d'entraînement.",
+    settingsDefaultHabitLabel:"Habitude associée par défaut",
+    settingsDefaultHabitNone:"— aucune —",
     settingsDangerZone:"⚠️ Zone de danger",
     settingsClearAllLabel:"Supprimer toutes les données",
     settingsClearAllHint:"Supprimera définitivement toutes vos habitudes, tâches, emplois du temps, finances, cycle et listes de courses. Irréversible.",
@@ -1120,7 +1341,17 @@ function applyTranslations(){
     const key=el.dataset.i18nPlaceholder;
     if(tr[key]) el.placeholder=tr[key];
   });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{
+    const key=el.dataset.i18nTitle;
+    if(tr[key]) el.title=tr[key];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const key=el.dataset.i18nAria;
+    if(tr[key]) el.setAttribute('aria-label',tr[key]);
+  });
   document.getElementById('lang-btn').innerHTML=`🌐 ${tr.langLabel} ▾`;
+  const themeToggleBtn=document.getElementById('theme-toggle'); if(themeToggleBtn&&tr.sbThemeTitle) themeToggleBtn.title=tr.sbThemeTitle;
+  const settingsIconBtn=document.getElementById('settings-icon-btn'); if(settingsIconBtn&&tr.sbSettings){ settingsIconBtn.title=tr.sbSettings; settingsIconBtn.setAttribute('aria-label',tr.sbSettings); }
   document.querySelectorAll('.lang-option').forEach(opt=>{
     opt.classList.toggle('active',opt.dataset.lang===state.lang);
   });
@@ -1174,15 +1405,30 @@ function applyTranslations(){
     'tasks.html': tr.tabTasks,
     'shopping.html': tr.tabShopping,
     'finance.html': tr.tabFinance,
-    'calories.html': tr.calKcal||'Calories',
+    'calories.html': tr.tabCalories||tr.calKcal||'Calories',
+    'workout.html': tr.tabWorkout||'Workout',
     'cycle.html': tr.tabCycle,
     'recipes.html': tr.tabRecipes,
   };
   const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖]+\s*/gu, '').trim();
   document.querySelectorAll('#sidebar .sb-item[href]').forEach(a => {
     const lbl = sbLabelMap[a.getAttribute('href')];
-    if(lbl){ const sp=a.querySelector('.sb-label'); if(sp) sp.textContent=_stripEmoji(lbl); }
+    if(lbl){ const sp=a.querySelector('.sb-label'); if(sp) sp.textContent=_stripEmoji(lbl); a.title=_stripEmoji(lbl); }
   });
+  // Sidebar group labels
+  const sbGroupLabels = [tr.sbGroupTrack, tr.sbGroupSchedule, tr.sbGroupHealth, tr.sbGroupLifestyle];
+  document.querySelectorAll('#sidebar .sb-group-label').forEach((el,i)=>{ if(sbGroupLabels[i]) el.textContent=sbGroupLabels[i]; });
+  // Sidebar footer buttons + collapse/hamburger titles
+  const sbColBtn=document.getElementById('sb-col-btn'); if(sbColBtn&&tr.sbCollapseTitle) sbColBtn.title=tr.sbCollapseTitle;
+  const sbHamburger=document.getElementById('sb-hamburger'); if(sbHamburger&&tr.sbOpenMenuTitle) sbHamburger.title=tr.sbOpenMenuTitle;
+  const sbPomoBtn=document.getElementById('sb-pomo-btn');
+  if(sbPomoBtn){ if(tr.sbPomodoroTitle) sbPomoBtn.title=tr.sbPomodoroTitle; const sp=sbPomoBtn.querySelector('.sb-label'); if(sp&&tr.sbPomodoro) sp.textContent=tr.sbPomodoro; }
+  const sbThemeBtn=document.getElementById('sb-theme-btn');
+  if(sbThemeBtn){ if(tr.sbThemeTitle) sbThemeBtn.title=tr.sbThemeTitle; const sp=sbThemeBtn.querySelector('.sb-label'); if(sp&&tr.sbTheme) sp.textContent=tr.sbTheme; }
+  const sbLangBtnFoot=document.getElementById('sb-lang-btn');
+  if(sbLangBtnFoot){ if(tr.sbLanguage) sbLangBtnFoot.title=tr.sbLanguage; const sp=sbLangBtnFoot.querySelector('.sb-label'); if(sp&&tr.sbLanguage) sp.textContent=tr.sbLanguage; }
+  const sbSettingsBtn=document.getElementById('sb-settings-btn');
+  if(sbSettingsBtn){ if(tr.sbSettings) sbSettingsBtn.title=tr.sbSettings; const sp=sbSettingsBtn.querySelector('.sb-label'); if(sp&&tr.sbSettings) sp.textContent=tr.sbSettings; }
   // Habits sub-tab buttons
   document.querySelectorAll('.habits-subtab-btn').forEach(btn=>{
     if(btn.dataset.subtab==='habits'&&tr.habitsSubtabHabits)btn.textContent=tr.habitsSubtabHabits;
@@ -3144,6 +3390,9 @@ langDropdown.querySelectorAll('.lang-option').forEach(function(opt){
     else if(CURRENT_PAGE==="shopping")renderShoppingList();
     else if(CURRENT_PAGE==="cycle")renderCycleTracker();
     else if(CURRENT_PAGE==="finance")renderFinance();
+    else if(CURRENT_PAGE==="calories")calRenderAll();
+    else if(CURRENT_PAGE==="workout"){wktPopulateHabits();wktRenderAll();}
+    else if(CURRENT_PAGE==="recipes")recRenderGrid();
     try{localStorage.setItem(K.lang(),lang);}catch(e){}
   });
 });
@@ -4059,44 +4308,98 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   }
 
   // ── HABIT PACKS ─────────────────────────────────────────────────────────────
-  const HABIT_PACKS = [
-    {
-      id:"morning", emoji:"🌅", label:"Morning Routine",
+  const HABIT_PACKS_I18N = {
+    morning: {
+      emoji:"🌅",
       color:"linear-gradient(135deg,#f5a623,#e87c1e)",
       shadow:"rgba(245,166,35,.35)",
-      habits:["🌅 Wake up early","🛏 Make the bed","💧 Drink a glass of water","📓 Journal 5 min","🧘 Meditate","🤸 Stretch / yoga","🥗 Eat a healthy breakfast"]
+      label:{en:"Morning Routine",hu:"Reggeli rutin",de:"Morgenroutine",es:"Rutina matutina",fr:"Routine matinale"},
+      habits:{
+        en:["🌅 Wake up early","🛏 Make the bed","💧 Drink a glass of water","📓 Journal 5 min","🧘 Meditate","🤸 Stretch / yoga","🥗 Eat a healthy breakfast"],
+        hu:["🌅 Korai kelés","🛏 Ágy megágyazása","💧 Egy pohár víz elfogyasztása","📓 Napló írása 5 percig","🧘 Meditálás","🤸 Nyújtás / jóga","🥗 Egészséges reggeli elfogyasztása"],
+        de:["🌅 Früh aufstehen","🛏 Bett machen","💧 Ein Glas Wasser trinken","📓 5 Min. Tagebuch schreiben","🧘 Meditieren","🤸 Dehnen / Yoga","🥗 Gesundes Frühstück essen"],
+        es:["🌅 Levantarse temprano","🛏 Hacer la cama","💧 Beber un vaso de agua","📓 Escribir en el diario 5 min","🧘 Meditar","🤸 Estirar / yoga","🥗 Desayunar de forma saludable"],
+        fr:["🌅 Se lever tôt","🛏 Faire le lit","💧 Boire un verre d'eau","📓 Écrire dans le journal 5 min","🧘 Méditer","🤸 S'étirer / yoga","🥗 Prendre un petit-déjeuner sain"],
+      }
     },
-    {
-      id:"fitness", emoji:"💪", label:"Fitness",
+    fitness: {
+      emoji:"💪",
       color:"linear-gradient(135deg,#3ecfb2,#1fa88e)",
       shadow:"rgba(62,207,178,.35)",
-      habits:["🏋️ Workout","🚶 10 000 steps","💧 Drink 2 L water","🚫 No sugar today","🤸 Stretch after workout","😴 Sleep 8 hours"]
+      label:{en:"Fitness",hu:"Fitnesz",de:"Fitness",es:"Fitness",fr:"Fitness"},
+      habits:{
+        en:["🏋️ Workout","🚶 10 000 steps","💧 Drink 2 L water","🚫 No sugar today","🤸 Stretch after workout","😴 Sleep 8 hours"],
+        hu:["🏋️ Edzés","🚶 10 000 lépés","💧 2 liter víz elfogyasztása","🚫 Cukor nélkül mára","🤸 Nyújtás edzés után","😴 8 óra alvás"],
+        de:["🏋️ Workout","🚶 10 000 Schritte","💧 2 L Wasser trinken","🚫 Heute kein Zucker","🤸 Nach dem Training dehnen","😴 8 Stunden schlafen"],
+        es:["🏋️ Entrenar","🚶 10 000 pasos","💧 Beber 2 L de agua","🚫 Sin azúcar hoy","🤸 Estirar después del entrenamiento","😴 Dormir 8 horas"],
+        fr:["🏋️ S'entraîner","🚶 10 000 pas","💧 Boire 2 L d'eau","🚫 Pas de sucre aujourd'hui","🤸 S'étirer après l'entraînement","😴 Dormir 8 heures"],
+      }
     },
-    {
-      id:"study", emoji:"📚", label:"Study",
+    study: {
+      emoji:"📚",
       color:"linear-gradient(135deg,#4f6ef7,#2d4edc)",
       shadow:"rgba(79,110,247,.35)",
-      habits:["📖 Study 2 hours","📚 Read 30 minutes","📝 Review notes","📵 No phone during study","🗓 Plan tomorrow","☕ Morning focus session"]
+      label:{en:"Study",hu:"Tanulás",de:"Lernen",es:"Estudio",fr:"Études"},
+      habits:{
+        en:["📖 Study 2 hours","📚 Read 30 minutes","📝 Review notes","📵 No phone during study","🗓 Plan tomorrow","☕ Morning focus session"],
+        hu:["📖 2 óra tanulás","📚 30 perc olvasás","📝 Jegyzetek átnézése","📵 Telefon nélkül tanulás közben","🗓 Holnap megtervezése","☕ Reggeli fókuszidőszak"],
+        de:["📖 2 Stunden lernen","📚 30 Minuten lesen","📝 Notizen wiederholen","📵 Kein Handy beim Lernen","🗓 Morgen planen","☕ Morgendliche Fokuszeit"],
+        es:["📖 Estudiar 2 horas","📚 Leer 30 minutos","📝 Repasar apuntes","📵 Sin teléfono al estudiar","🗓 Planificar el día siguiente","☕ Sesión de enfoque matutina"],
+        fr:["📖 Étudier 2 heures","📚 Lire 30 minutes","📝 Revoir les notes","📵 Pas de téléphone pendant l'étude","🗓 Planifier demain","☕ Session de concentration matinale"],
+      }
     },
-    {
-      id:"mental", emoji:"🧠", label:"Mental Health",
+    mental: {
+      emoji:"🧠",
       color:"linear-gradient(135deg,#e05a9a,#c84080)",
       shadow:"rgba(224,90,154,.35)",
-      habits:["🧘 Meditate","📓 Journal","🙏 Write 3 gratitudes","🌿 Nature walk","📵 Screen-free hour","😴 Sleep 8 hours","🫂 Connect with someone"]
+      label:{en:"Mental Health",hu:"Mentális egészség",de:"Mentale Gesundheit",es:"Salud mental",fr:"Santé mentale"},
+      habits:{
+        en:["🧘 Meditate","📓 Journal","🙏 Write 3 gratitudes","🌿 Nature walk","📵 Screen-free hour","😴 Sleep 8 hours","🫂 Connect with someone"],
+        hu:["🧘 Meditálás","📓 Napló írása","🙏 3 hála leírása","🌿 Séta a természetben","📵 Képernyőmentes óra","😴 8 óra alvás","🫂 Kapcsolatfelvétel valakivel"],
+        de:["🧘 Meditieren","📓 Tagebuch schreiben","🙏 3 Dankbarkeiten aufschreiben","🌿 Spaziergang in der Natur","📵 Bildschirmfreie Stunde","😴 8 Stunden schlafen","🫂 Mit jemandem verbinden"],
+        es:["🧘 Meditar","📓 Escribir en el diario","🙏 Escribir 3 gratitudes","🌿 Paseo por la naturaleza","📵 Hora sin pantallas","😴 Dormir 8 horas","🫂 Conectar con alguien"],
+        fr:["🧘 Méditer","📓 Écrire dans le journal","🙏 Écrire 3 gratitudes","🌿 Marche dans la nature","📵 Heure sans écran","😴 Dormir 8 heures","🫂 Contacter quelqu'un"],
+      }
     },
-    {
-      id:"finance", emoji:"💰", label:"Finance",
+    finance: {
+      emoji:"💰",
       color:"linear-gradient(135deg,#f7c948,#d4a017)",
       shadow:"rgba(247,201,72,.35)",
-      habits:["📊 Track spending","🚫 No impulse buying","💰 Transfer to savings","📋 Review budget","🧾 Log every expense"]
+      label:{en:"Finance",hu:"Pénzügyek",de:"Finanzen",es:"Finanzas",fr:"Finances"},
+      habits:{
+        en:["📊 Track spending","🚫 No impulse buying","💰 Transfer to savings","📋 Review budget","🧾 Log every expense"],
+        hu:["📊 Kiadások nyomon követése","🚫 Impulzusvásárlás kerülése","💰 Átutalás a megtakarításba","📋 Költségvetés átnézése","🧾 Minden kiadás naplózása"],
+        de:["📊 Ausgaben verfolgen","🚫 Keine Spontankäufe","💰 In die Ersparnisse einzahlen","📋 Budget überprüfen","🧾 Jede Ausgabe protokollieren"],
+        es:["📊 Registrar gastos","🚫 Evitar compras impulsivas","💰 Transferir a ahorros","📋 Revisar el presupuesto","🧾 Anotar cada gasto"],
+        fr:["📊 Suivre les dépenses","🚫 Éviter les achats impulsifs","💰 Virer vers l'épargne","📋 Revoir le budget","🧾 Noter chaque dépense"],
+      }
     },
-    {
-      id:"health", emoji:"🍏", label:"Healthy Living",
+    health: {
+      emoji:"🍏",
       color:"linear-gradient(135deg,#5cdb5c,#3aa83a)",
       shadow:"rgba(92,219,92,.35)",
-      habits:["💧 Drink 8 glasses of water","🥦 Eat vegetables","🚫 No junk food","😴 Sleep 8 hours","🏃 Exercise 30 min","🚭 No alcohol"]
-    }
-  ];
+      label:{en:"Healthy Living",hu:"Egészséges életmód",de:"Gesundes Leben",es:"Vida saludable",fr:"Vie saine"},
+      habits:{
+        en:["💧 Drink 8 glasses of water","🥦 Eat vegetables","🚫 No junk food","😴 Sleep 8 hours","🏃 Exercise 30 min","🚭 No alcohol"],
+        hu:["💧 8 pohár víz elfogyasztása","🥦 Zöldségek fogyasztása","🚫 Junk food kerülése","😴 8 óra alvás","🏃 30 perc edzés","🚭 Alkohol kerülése"],
+        de:["💧 8 Gläser Wasser trinken","🥦 Gemüse essen","🚫 Kein Junk Food","😴 8 Stunden schlafen","🏃 30 Min. Sport","🚭 Kein Alkohol"],
+        es:["💧 Beber 8 vasos de agua","🥦 Comer verduras","🚫 Evitar comida basura","😴 Dormir 8 horas","🏃 Ejercicio 30 min","🚭 Sin alcohol"],
+        fr:["💧 Boire 8 verres d'eau","🥦 Manger des légumes","🚫 Éviter la malbouffe","😴 Dormir 8 heures","🏃 30 min d'exercice","🚭 Pas d'alcool"],
+      }
+    },
+  };
+  const HABIT_PACK_ORDER = ["morning","fitness","study","mental","finance","health"];
+  function getHabitPacks(){
+    const lang = state.lang;
+    return HABIT_PACK_ORDER.map(id=>{
+      const p = HABIT_PACKS_I18N[id];
+      return {
+        id, emoji:p.emoji, color:p.color, shadow:p.shadow,
+        label: p.label[lang]||p.label.en,
+        habits: p.habits[lang]||p.habits.en,
+      };
+    });
+  }
 
   function openPacksModal(){
     let modal=document.getElementById("habit-packs-modal");
@@ -4107,8 +4410,8 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
         <div class="hpm-backdrop" id="hpm-backdrop"></div>
         <div class="hpm-dialog" id="hpm-dialog">
           <div class="hpm-header">
-            <div class="hpm-title">📦 Quick-Start Habit Packs</div>
-            <div class="hpm-subtitle">Pick a pack — habits will be added instantly. Skip any you don't need.</div>
+            <div class="hpm-title" id="hpm-title"></div>
+            <div class="hpm-subtitle" id="hpm-subtitle"></div>
             <button class="hpm-close" id="hpm-close">✕</button>
           </div>
           <div class="hpm-body">
@@ -4116,12 +4419,12 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
             <div class="hpm-preview" id="hpm-preview" style="display:none;">
               <div class="hpm-preview-header">
                 <div class="hpm-preview-title" id="hpm-preview-title"></div>
-                <button class="hpm-back-btn" id="hpm-back-btn">← Back</button>
+                <button class="hpm-back-btn" id="hpm-back-btn"></button>
               </div>
               <div class="hpm-habits-list" id="hpm-habits-list"></div>
               <div class="hpm-preview-footer">
-                <button class="hpm-add-all-btn" id="hpm-add-all-btn">✅ Add All Habits</button>
-                <button class="hpm-add-selected-btn" id="hpm-add-selected-btn">+ Add Selected</button>
+                <button class="hpm-add-all-btn" id="hpm-add-all-btn"></button>
+                <button class="hpm-add-selected-btn" id="hpm-add-selected-btn"></button>
               </div>
             </div>
           </div>
@@ -4179,23 +4482,6 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
       on("hpm-close","click",closePacksModal);
       document.addEventListener("keydown",e=>{if(e.key==="Escape")closePacksModal();},{once:false});
 
-      // Render pack cards
-      const grid=document.getElementById("hpm-packs-grid");
-      HABIT_PACKS.forEach(pack=>{
-        const card=document.createElement("div");
-        card.className="hpm-pack-card";
-        card.dataset.packId=pack.id;
-        card.style.background=pack.color;
-        card.style.boxShadow=`0 6px 20px ${pack.shadow}`;
-        card.innerHTML=`<div class="hpm-pack-emoji">${pack.emoji}</div>
-          <div class="hpm-pack-label">${pack.label}</div>
-          <div class="hpm-pack-count">${pack.habits.length} habits</div>
-          <div class="hpm-pack-added-badge">✓ Added</div>`;
-        card.addEventListener("click",()=>openPackPreview(pack));
-        grid.appendChild(card);
-      });
-      refreshPackAddedBadges();
-
       // Back button
       on("hpm-back-btn","click",()=>{
         document.getElementById("hpm-packs-grid").style.display="";
@@ -4204,7 +4490,7 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
 
       // Add All
       on("hpm-add-all-btn","click",()=>{
-        const pack=HABIT_PACKS.find(p=>p.id===currentPreviewPackId);
+        const pack=getHabitPacks().find(p=>p.id===currentPreviewPackId);
         if(!pack)return;
         let added=0;
         pack.habits.forEach(h=>{
@@ -4217,7 +4503,7 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
 
       // Add Selected
       on("hpm-add-selected-btn","click",()=>{
-        const pack=HABIT_PACKS.find(p=>p.id===currentPreviewPackId);
+        const pack=getHabitPacks().find(p=>p.id===currentPreviewPackId);
         if(!pack)return;
         let added=0;
         document.querySelectorAll(".hpm-habit-row.selected:not(.already-added)").forEach(row=>{
@@ -4229,6 +4515,31 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
         else{refreshPackAddedBadges();}
       });
     }
+
+    // Localize static modal text (every open, so language switches take effect)
+    document.getElementById("hpm-title").textContent = t("habitPacksModalTitle");
+    document.getElementById("hpm-subtitle").textContent = t("habitPacksModalSubtitle");
+    document.getElementById("hpm-back-btn").textContent = t("habitPacksBackBtn");
+    document.getElementById("hpm-add-all-btn").textContent = t("habitPacksAddAllBtn");
+    document.getElementById("hpm-add-selected-btn").textContent = t("habitPacksAddSelectedBtn");
+
+    // Re-render pack cards (rebuilt every open so language switches take effect)
+    const grid=document.getElementById("hpm-packs-grid");
+    grid.innerHTML="";
+    getHabitPacks().forEach(pack=>{
+      const card=document.createElement("div");
+      card.className="hpm-pack-card";
+      card.dataset.packId=pack.id;
+      card.style.background=pack.color;
+      card.style.boxShadow=`0 6px 20px ${pack.shadow}`;
+      card.innerHTML=`<div class="hpm-pack-emoji">${pack.emoji}</div>
+        <div class="hpm-pack-label">${pack.label}</div>
+        <div class="hpm-pack-count">${pack.habits.length} ${t("habitPacksCountUnit")}</div>
+        <div class="hpm-pack-added-badge">${t("habitPacksAddedBadge")}</div>`;
+      card.addEventListener("click",()=>openPackPreview(pack));
+      grid.appendChild(card);
+    });
+    refreshPackAddedBadges();
 
     modal.style.display="flex";
     document.getElementById("hpm-packs-grid").style.display="";
@@ -4256,9 +4567,9 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
       const row=document.createElement("div");
       row.className="hpm-habit-row"+(alreadyAdded?" already-added":" selected");
       row.dataset.habit=h;
-      row.innerHTML=`<div class="hpm-habit-check">${alreadyAdded?"✓":"✓"}</div>
+      row.innerHTML=`<div class="hpm-habit-check">✓</div>
         <div class="hpm-habit-name">${h}</div>
-        ${alreadyAdded?'<div class="hpm-already-lbl">already added</div>':''}`;
+        ${alreadyAdded?`<div class="hpm-already-lbl">${t("habitPacksAlreadyAdded")}</div>`:''}`;
       if(!alreadyAdded){
         row.addEventListener("click",()=>{row.classList.toggle("selected");});
       }
@@ -4267,7 +4578,7 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   }
 
   function refreshPackAddedBadges(){
-    HABIT_PACKS.forEach(pack=>{
+    getHabitPacks().forEach(pack=>{
       const card=document.querySelector(`.hpm-pack-card[data-pack-id="${pack.id}"]`);
       if(!card)return;
       const allAdded=pack.habits.every(h=>state.habits.includes(h));
@@ -4630,20 +4941,20 @@ function initSidebar() {
 
   // Nav definition
   const sections = [
-    { label: 'Track', items: [
+    { label: tr.sbGroupTrack||'Track', items: [
       { page:'habits',    href:'tracker.html',  icon:'📊', label: tr.tabTracker||'Habits' },
       { page:'analysis',  href:'analysis.html', icon:'📈', label: tr.tabAnalysis||'Analysis' },
     ]},
-    { label: 'Schedule', items: [
+    { label: tr.sbGroupSchedule||'Schedule', items: [
       { page:'timetable', href:'timetable.html', icon:'🗓', label: tr.tabTimetable||'Timetable' },
       { page:'tasks',     href:'tasks.html',     icon:'✅', label: tr.tabTasks||'Tasks' },
     ]},
-    { label: 'Health', items: [
-      { page:'calories',  href:'calories.html',  icon:'🍎', label:'Calories' },
-      { page:'workout',   href:'workout.html',   icon:'🏋️', label:'Workout' },
+    { label: tr.sbGroupHealth||'Health', items: [
+      { page:'calories',  href:'calories.html',  icon:'🍎', label: tr.tabCalories||'Calories' },
+      { page:'workout',   href:'workout.html',   icon:'🏋️', label: tr.tabWorkout||'Workout' },
       ...(showCycle ? [{ page:'cycle', href:'cycle.html', icon:'🌸', label: tr.tabCycle||'Cycle', id:'sb-cycle-item' }] : []),
     ]},
-    { label: 'Lifestyle', items: [
+    { label: tr.sbGroupLifestyle||'Lifestyle', items: [
       { page:'shopping', href:'shopping.html', icon:'🛒', label: tr.tabShopping||'Shopping' },
       { page:'finance',  href:'finance.html',  icon:'💰', label: tr.tabFinance||'Finance' },
       { page:'recipes',  href:'recipes.html',  icon:'📖', label: tr.tabRecipes||'Recipes' },
@@ -4681,22 +4992,22 @@ function initSidebar() {
         <span class="sb-logo-icon">✦</span>
         <span class="sb-logo-text">Life Tracker</span>
       </div>
-      <button class="sb-col-btn" id="sb-col-btn" title="Collapse sidebar">‹</button>
+      <button class="sb-col-btn" id="sb-col-btn" title="${tr.sbCollapseTitle||'Collapse sidebar'}">‹</button>
     </div>
     <nav class="sb-nav">${navHTML}</nav>
     <div class="sb-foot">
       <div class="sb-divider"></div>
-      <button class="sb-item" id="sb-pomo-btn" title="Pomodoro Timer">
-        <span class="sb-icon">⏱</span><span class="sb-label">Pomodoro</span>
+      <button class="sb-item" id="sb-pomo-btn" title="${tr.sbPomodoroTitle||'Pomodoro Timer'}">
+        <span class="sb-icon">⏱</span><span class="sb-label">${tr.sbPomodoro||'Pomodoro'}</span>
       </button>
-      <button class="sb-item" id="sb-theme-btn" title="Change Theme">
-        <span class="sb-icon">🎨</span><span class="sb-label">Theme</span>
+      <button class="sb-item" id="sb-theme-btn" title="${tr.sbThemeTitle||'Change Theme'}">
+        <span class="sb-icon">🎨</span><span class="sb-label">${tr.sbTheme||'Theme'}</span>
       </button>
-      <button class="sb-item" id="sb-lang-btn" title="Language">
-        <span class="sb-icon">🌐</span><span class="sb-label">Language</span>
+      <button class="sb-item" id="sb-lang-btn" title="${tr.sbLanguage||'Language'}">
+        <span class="sb-icon">🌐</span><span class="sb-label">${tr.sbLanguage||'Language'}</span>
       </button>
-      <button class="sb-item" id="sb-settings-btn" title="Settings">
-        <span class="sb-icon">⚙️</span><span class="sb-label">Settings</span>
+      <button class="sb-item" id="sb-settings-btn" title="${tr.sbSettings||'Settings'}">
+        <span class="sb-icon">⚙️</span><span class="sb-label">${tr.sbSettings||'Settings'}</span>
       </button>
     </div>`;
 
@@ -4706,7 +5017,7 @@ function initSidebar() {
 
   const hamburger = document.createElement('button');
   hamburger.id = 'sb-hamburger';
-  hamburger.title = 'Open menu';
+  hamburger.title = tr.sbOpenMenuTitle||'Open menu';
   hamburger.textContent = '☰';
 
   // Inject into DOM
@@ -8017,6 +8328,14 @@ const CAL_I18N = {
     calBreakfast:'Frühstück', calLunch:'Mittagessen', calDinner:'Abendessen', calSnacks:'Snacks',
     calGoalsTitle:'🎯 Tagesziele', calSaveGoals:'💾 Ziele speichern',
     calWeeklyTitle:'📅 Diese Woche', calGoalLine:'Ziel',
+    calCyclePhaseTitle:'🌸 Zyklusphasen-Ernährung',
+    calPhasePeriod:'Menstruationsphase', calPhaseFollicular:'Follikelphase', calPhaseFertile:'Fruchtbares Fenster', calPhaseOvulation:'Eisprung', calPhasePms:'Lutealphase',
+    calPhaseTipPeriod:'Setze auf eisenreiche Lebensmittel (rotes Fleisch, Spinat, Linsen) und Magnesium, um Krämpfe zu lindern. Warme, wohltuende Mahlzeiten helfen ebenfalls.',
+    calPhaseTipFollicular:'Die Energie steigt — mageres Eiweiß, frisches Gemüse und gesunde Kohlenhydrate unterstützen den steigenden Östrogenspiegel und das Training.',
+    calPhaseTipFertile:'Leichte, energiespendende Mahlzeiten mit Antioxidantien (Beeren, Blattgemüse) und gesunden Fetten passen gut zu dieser aktiven Phase.',
+    calPhaseTipOvulation:'Die Energie erreicht ihren Höhepunkt — tanke mit ausgewogenem Eiweiß, komplexen Kohlenhydraten und zinkreichen Lebensmitteln (Nüsse, Samen).',
+    calPhaseTipPms:'Das Verlangen steigt — bevorzuge komplexe Kohlenhydrate, Magnesium (dunkle Schokolade, Nüsse) und reduziere Salz/Zucker, um Blähungen und Stimmungsschwankungen zu lindern.',
+    calPhaseTipDefault:'Richte deinen Zyklus im Zyklus-Tab ein, um personalisierte Ernährungstipps für jede Phase zu erhalten.',
     calMacroDist:'🥧 Makro-Aufteilung',
     calTodayBtn:'Heute',
     calAddFood:'Essen hinzufügen', calQuickAdd:'⚡ Schnell hinzufügen',
@@ -8042,6 +8361,14 @@ const CAL_I18N = {
     calBreakfast:'Desayuno', calLunch:'Almuerzo', calDinner:'Cena', calSnacks:'Snacks',
     calGoalsTitle:'🎯 Metas diarias', calSaveGoals:'💾 Guardar metas',
     calWeeklyTitle:'📅 Esta semana', calGoalLine:'Meta',
+    calCyclePhaseTitle:'🌸 Nutrición por fase del ciclo',
+    calPhasePeriod:'Fase menstrual', calPhaseFollicular:'Fase folicular', calPhaseFertile:'Ventana fértil', calPhaseOvulation:'Ovulación', calPhasePms:'Fase lútea',
+    calPhaseTipPeriod:'Prioriza alimentos ricos en hierro (carne roja, espinacas, lentejas) y magnesio para aliviar los cólicos. Las comidas calientes y reconfortantes también ayudan.',
+    calPhaseTipFollicular:'La energía aumenta — las proteínas magras, las verduras frescas y los carbohidratos saludables apoyan el aumento de estrógeno y el ejercicio.',
+    calPhaseTipFertile:'Las comidas ligeras y energizantes con antioxidantes (bayas, verduras de hoja) y grasas saludables funcionan bien durante esta fase activa.',
+    calPhaseTipOvulation:'La energía alcanza su punto máximo — alimenta tu cuerpo con proteínas equilibradas, carbohidratos complejos y alimentos ricos en zinc (nueces, semillas).',
+    calPhaseTipPms:'Los antojos aumentan — prioriza carbohidratos complejos, magnesio (chocolate negro, nueces) y reduce la sal/azúcar para aliviar la hinchazón y los cambios de humor.',
+    calPhaseTipDefault:'Configura tu ciclo en la pestaña Ciclo para recibir consejos de nutrición personalizados para cada fase.',
     calMacroDist:'🥧 Distribución',
     calTodayBtn:'Hoy',
     calAddFood:'Añadir alimento', calQuickAdd:'⚡ Agregar rápido',
@@ -8067,6 +8394,14 @@ const CAL_I18N = {
     calBreakfast:'Petit-déjeuner', calLunch:'Déjeuner', calDinner:'Dîner', calSnacks:'Collations',
     calGoalsTitle:'🎯 Objectifs quotidiens', calSaveGoals:'💾 Enregistrer',
     calWeeklyTitle:'📅 Cette semaine', calGoalLine:'Objectif',
+    calCyclePhaseTitle:'🌸 Nutrition selon la phase du cycle',
+    calPhasePeriod:'Phase menstruelle', calPhaseFollicular:'Phase folliculaire', calPhaseFertile:'Fenêtre fertile', calPhaseOvulation:'Ovulation', calPhasePms:'Phase lutéale',
+    calPhaseTipPeriod:'Privilégiez les aliments riches en fer (viande rouge, épinards, lentilles) et en magnésium pour soulager les crampes. Les repas chauds et réconfortants aident aussi.',
+    calPhaseTipFollicular:"L'énergie augmente — les protéines maigres, les légumes frais et les glucides sains soutiennent la hausse d'œstrogène et l'entraînement.",
+    calPhaseTipFertile:'Des repas légers et énergisants avec des antioxydants (baies, légumes verts) et de bonnes graisses conviennent bien à cette phase active.',
+    calPhaseTipOvulation:"L'énergie atteint son pic — misez sur des protéines équilibrées, des glucides complexes et des aliments riches en zinc (noix, graines).",
+    calPhaseTipPms:'Les envies augmentent — privilégiez les glucides complexes, le magnésium (chocolat noir, noix) et réduisez le sel/sucre pour atténuer les ballonnements et les sautes d\'humeur.',
+    calPhaseTipDefault:'Configurez votre cycle dans l\'onglet Cycle pour obtenir des conseils nutritionnels personnalisés pour chaque phase.',
     calMacroDist:'🥧 Répartition',
     calTodayBtn:"Aujourd'hui",
     calAddFood:'Ajouter un aliment', calQuickAdd:'⚡ Ajout rapide',
@@ -8751,6 +9086,168 @@ if(sbCalBtn) { sbCalBtn.classList.remove('sb-soon'); sbCalBtn.style.pointerEvent
 
 if (CURRENT_PAGE === 'workout') {
 
+// ── WORKOUT TRANSLATIONS ─────────────────────────────────────────────────
+const WKT_I18N = {
+  en: {
+    wktStatStreak:'Streak', wktStatThisMonth:'This Month', wktStatSessionsUnit:'sessions',
+    wktStatTotalVolume:'Total Volume', wktStatAvgDuration:'Avg Duration', wktStatMinUnit:'min',
+    wktStatNetCalToday:'Net Calories Today',
+    wktAddExerciseTitle:'+ Log Exercise',
+    wktExerciseNameLabel:'Exercise Name', wktExerciseNamePh:'e.g. Bench Press, Running…',
+    wktCategoryLabel:'Category',
+    wktCatStrengthOpt:'💪 Strength', wktCatCardioOpt:'🏃 Cardio', wktCatFlexibilityOpt:'🧘 Flexibility',
+    wktCatSportOpt:'⚽ Sport', wktCatOtherOpt:'📦 Other',
+    wktTypeLabel:'Type', wktTypeSetsOpt:'Sets × Reps', wktTypeDurationOpt:'Duration', wktTypeDistanceOpt:'Distance',
+    wktSetsLabel:'Sets', wktRepsLabel:'Reps', wktWeightLabel:'Weight (kg)',
+    wktDurationLabel:'Duration (min)', wktDistanceLabel:'Distance (km)',
+    wktLinkHabitLabel:'Link to Habit', wktNotesLabel:'Notes', wktNotesPh:'Optional notes…',
+    wktWeeklyActivityTitle:'📊 Weekly Activity', wktMonthlyHeatmapTitle:'🗓 Monthly Heatmap',
+    wktHeatmapRest:'Rest', wktHeatmapActive:'Active',
+    wktPersonalRecordsTitle:'🏆 Personal Records', wktTemplatesTitle:'📋 Workout Templates',
+    wktSaveTodayBtn:'💾 Save Today', wktNoTemplatesMsg:'No templates yet. Log a session and save it!',
+    wktEmptyDayTitle:'No workout logged yet', wktEmptyDayHint:'Add exercises below to start.',
+    wktDeleteSessionTitle:'Delete session', wktRemoveTitle:'Remove',
+    wktLinkedHabitPrefix:'✅ Linked habit:',
+    wktCatNameStrength:'Strength', wktCatNameCardio:'Cardio', wktCatNameFlexibility:'Flexibility',
+    wktCatNameSport:'Sport', wktCatNameOther:'Other',
+    wktNoRecordsMsg:'No records yet. Start logging!',
+    wktUseTemplateBtn:'▶ Use', wktDeleteTemplateTitle:'Delete template',
+    wktNetCalIn:'in', wktNetCalBurned:'burned', wktPreviewBurnedSuffix:'kcal burned',
+    wktAlertNoExercisesToday:'No exercises logged today to save as a template.',
+    wktAlertNoExercisesFound:'No exercises found.', wktPromptTemplateName:'Template name:',
+    wktSessionsCountFn: n => `${n} session${n!==1?'s':''}`,
+    wktExerciseCountFn: n => `${n} exercise${n!==1?'s':''}`,
+    wktDefaultTemplateNameFn: n => `Workout ${n}`,
+  },
+  hu: {
+    wktStatStreak:'Sorozat', wktStatThisMonth:'Ebben a hónapban', wktStatSessionsUnit:'edzés',
+    wktStatTotalVolume:'Összes terhelés', wktStatAvgDuration:'Átlagos időtartam', wktStatMinUnit:'perc',
+    wktStatNetCalToday:'Mai nettó kalória',
+    wktAddExerciseTitle:'+ Edzés rögzítése',
+    wktExerciseNameLabel:'Gyakorlat neve', wktExerciseNamePh:'pl. Fekvenyomás, Futás…',
+    wktCategoryLabel:'Kategória',
+    wktCatStrengthOpt:'💪 Erő', wktCatCardioOpt:'🏃 Kardió', wktCatFlexibilityOpt:'🧘 Nyújtás',
+    wktCatSportOpt:'⚽ Sport', wktCatOtherOpt:'📦 Egyéb',
+    wktTypeLabel:'Típus', wktTypeSetsOpt:'Szettek × ismétlés', wktTypeDurationOpt:'Időtartam', wktTypeDistanceOpt:'Távolság',
+    wktSetsLabel:'Szettek', wktRepsLabel:'Ismétlés', wktWeightLabel:'Súly (kg)',
+    wktDurationLabel:'Időtartam (perc)', wktDistanceLabel:'Távolság (km)',
+    wktLinkHabitLabel:'Szokáshoz kapcsolás', wktNotesLabel:'Megjegyzések', wktNotesPh:'Opcionális megjegyzés…',
+    wktWeeklyActivityTitle:'📊 Heti aktivitás', wktMonthlyHeatmapTitle:'🗓 Havi hőtérkép',
+    wktHeatmapRest:'Pihenő', wktHeatmapActive:'Aktív',
+    wktPersonalRecordsTitle:'🏆 Egyéni csúcsok', wktTemplatesTitle:'📋 Edzéssablonok',
+    wktSaveTodayBtn:'💾 Mai mentése', wktNoTemplatesMsg:'Még nincs sablon. Rögzíts egy edzést, és mentsd el!',
+    wktEmptyDayTitle:'Még nincs rögzített edzés', wktEmptyDayHint:'Adj hozzá gyakorlatokat alább a kezdéshez.',
+    wktDeleteSessionTitle:'Edzés törlése', wktRemoveTitle:'Eltávolítás',
+    wktLinkedHabitPrefix:'✅ Kapcsolt szokás:',
+    wktCatNameStrength:'Erő', wktCatNameCardio:'Kardió', wktCatNameFlexibility:'Nyújtás',
+    wktCatNameSport:'Sport', wktCatNameOther:'Egyéb',
+    wktNoRecordsMsg:'Még nincs csúcs. Kezdj el rögzíteni!',
+    wktUseTemplateBtn:'▶ Használat', wktDeleteTemplateTitle:'Sablon törlése',
+    wktNetCalIn:'bevitel', wktNetCalBurned:'elégetve', wktPreviewBurnedSuffix:'kcal elégetve',
+    wktAlertNoExercisesToday:'Mára nincs rögzített gyakorlat, amit sablonként menthetnél.',
+    wktAlertNoExercisesFound:'Nem található gyakorlat.', wktPromptTemplateName:'Sablon neve:',
+    wktSessionsCountFn: n => `${n} edzés`,
+    wktExerciseCountFn: n => `${n} gyakorlat`,
+    wktDefaultTemplateNameFn: n => `Edzés ${n}`,
+  },
+  de: {
+    wktStatStreak:'Serie', wktStatThisMonth:'Dieser Monat', wktStatSessionsUnit:'Einheiten',
+    wktStatTotalVolume:'Gesamtvolumen', wktStatAvgDuration:'Ø Dauer', wktStatMinUnit:'Min',
+    wktStatNetCalToday:'Netto-Kalorien heute',
+    wktAddExerciseTitle:'+ Übung protokollieren',
+    wktExerciseNameLabel:'Übungsname', wktExerciseNamePh:'z.B. Bankdrücken, Laufen…',
+    wktCategoryLabel:'Kategorie',
+    wktCatStrengthOpt:'💪 Kraft', wktCatCardioOpt:'🏃 Cardio', wktCatFlexibilityOpt:'🧘 Flexibilität',
+    wktCatSportOpt:'⚽ Sport', wktCatOtherOpt:'📦 Sonstiges',
+    wktTypeLabel:'Typ', wktTypeSetsOpt:'Sätze × Wdh.', wktTypeDurationOpt:'Dauer', wktTypeDistanceOpt:'Distanz',
+    wktSetsLabel:'Sätze', wktRepsLabel:'Wiederholungen', wktWeightLabel:'Gewicht (kg)',
+    wktDurationLabel:'Dauer (Min.)', wktDistanceLabel:'Distanz (km)',
+    wktLinkHabitLabel:'Mit Gewohnheit verknüpfen', wktNotesLabel:'Notizen', wktNotesPh:'Optionale Notizen…',
+    wktWeeklyActivityTitle:'📊 Wöchentliche Aktivität', wktMonthlyHeatmapTitle:'🗓 Monatliche Heatmap',
+    wktHeatmapRest:'Ruhe', wktHeatmapActive:'Aktiv',
+    wktPersonalRecordsTitle:'🏆 Persönliche Bestleistungen', wktTemplatesTitle:'📋 Workout-Vorlagen',
+    wktSaveTodayBtn:'💾 Heute speichern', wktNoTemplatesMsg:'Noch keine Vorlagen. Protokolliere eine Einheit und speichere sie!',
+    wktEmptyDayTitle:'Noch kein Workout protokolliert', wktEmptyDayHint:'Füge unten Übungen hinzu, um zu starten.',
+    wktDeleteSessionTitle:'Einheit löschen', wktRemoveTitle:'Entfernen',
+    wktLinkedHabitPrefix:'✅ Verknüpfte Gewohnheit:',
+    wktCatNameStrength:'Kraft', wktCatNameCardio:'Cardio', wktCatNameFlexibility:'Flexibilität',
+    wktCatNameSport:'Sport', wktCatNameOther:'Sonstiges',
+    wktNoRecordsMsg:'Noch keine Bestleistungen. Beginne mit dem Protokollieren!',
+    wktUseTemplateBtn:'▶ Verwenden', wktDeleteTemplateTitle:'Vorlage löschen',
+    wktNetCalIn:'Aufnahme', wktNetCalBurned:'verbrannt', wktPreviewBurnedSuffix:'kcal verbrannt',
+    wktAlertNoExercisesToday:'Heute wurden keine Übungen protokolliert, die als Vorlage gespeichert werden könnten.',
+    wktAlertNoExercisesFound:'Keine Übungen gefunden.', wktPromptTemplateName:'Vorlagenname:',
+    wktSessionsCountFn: n => `${n} Einheit${n!==1?'en':''}`,
+    wktExerciseCountFn: n => `${n} Übung${n!==1?'en':''}`,
+    wktDefaultTemplateNameFn: n => `Workout ${n}`,
+  },
+  es: {
+    wktStatStreak:'Racha', wktStatThisMonth:'Este mes', wktStatSessionsUnit:'sesiones',
+    wktStatTotalVolume:'Volumen total', wktStatAvgDuration:'Duración media', wktStatMinUnit:'min',
+    wktStatNetCalToday:'Calorías netas hoy',
+    wktAddExerciseTitle:'+ Registrar ejercicio',
+    wktExerciseNameLabel:'Nombre del ejercicio', wktExerciseNamePh:'ej. Press de banca, Correr…',
+    wktCategoryLabel:'Categoría',
+    wktCatStrengthOpt:'💪 Fuerza', wktCatCardioOpt:'🏃 Cardio', wktCatFlexibilityOpt:'🧘 Flexibilidad',
+    wktCatSportOpt:'⚽ Deporte', wktCatOtherOpt:'📦 Otro',
+    wktTypeLabel:'Tipo', wktTypeSetsOpt:'Series × repeticiones', wktTypeDurationOpt:'Duración', wktTypeDistanceOpt:'Distancia',
+    wktSetsLabel:'Series', wktRepsLabel:'Repeticiones', wktWeightLabel:'Peso (kg)',
+    wktDurationLabel:'Duración (min)', wktDistanceLabel:'Distancia (km)',
+    wktLinkHabitLabel:'Vincular a un hábito', wktNotesLabel:'Notas', wktNotesPh:'Notas opcionales…',
+    wktWeeklyActivityTitle:'📊 Actividad semanal', wktMonthlyHeatmapTitle:'🗓 Mapa de calor mensual',
+    wktHeatmapRest:'Descanso', wktHeatmapActive:'Activo',
+    wktPersonalRecordsTitle:'🏆 Récords personales', wktTemplatesTitle:'📋 Plantillas de entrenamiento',
+    wktSaveTodayBtn:'💾 Guardar hoy', wktNoTemplatesMsg:'Aún no hay plantillas. ¡Registra una sesión y guárdala!',
+    wktEmptyDayTitle:'Aún no hay entrenamiento registrado', wktEmptyDayHint:'Añade ejercicios abajo para empezar.',
+    wktDeleteSessionTitle:'Eliminar sesión', wktRemoveTitle:'Eliminar',
+    wktLinkedHabitPrefix:'✅ Hábito vinculado:',
+    wktCatNameStrength:'Fuerza', wktCatNameCardio:'Cardio', wktCatNameFlexibility:'Flexibilidad',
+    wktCatNameSport:'Deporte', wktCatNameOther:'Otro',
+    wktNoRecordsMsg:'Aún no hay récords. ¡Empieza a registrar!',
+    wktUseTemplateBtn:'▶ Usar', wktDeleteTemplateTitle:'Eliminar plantilla',
+    wktNetCalIn:'ingerido', wktNetCalBurned:'quemado', wktPreviewBurnedSuffix:'kcal quemadas',
+    wktAlertNoExercisesToday:'No hay ejercicios registrados hoy para guardar como plantilla.',
+    wktAlertNoExercisesFound:'No se encontraron ejercicios.', wktPromptTemplateName:'Nombre de la plantilla:',
+    wktSessionsCountFn: n => `${n} sesión${n!==1?'es':''}`,
+    wktExerciseCountFn: n => `${n} ejercicio${n!==1?'s':''}`,
+    wktDefaultTemplateNameFn: n => `Entrenamiento ${n}`,
+  },
+  fr: {
+    wktStatStreak:'Série', wktStatThisMonth:'Ce mois-ci', wktStatSessionsUnit:'séances',
+    wktStatTotalVolume:'Volume total', wktStatAvgDuration:'Durée moyenne', wktStatMinUnit:'min',
+    wktStatNetCalToday:"Calories nettes aujourd'hui",
+    wktAddExerciseTitle:'+ Enregistrer un exercice',
+    wktExerciseNameLabel:"Nom de l'exercice", wktExerciseNamePh:'ex. Développé couché, Course…',
+    wktCategoryLabel:'Catégorie',
+    wktCatStrengthOpt:'💪 Force', wktCatCardioOpt:'🏃 Cardio', wktCatFlexibilityOpt:'🧘 Flexibilité',
+    wktCatSportOpt:'⚽ Sport', wktCatOtherOpt:'📦 Autre',
+    wktTypeLabel:'Type', wktTypeSetsOpt:'Séries × répétitions', wktTypeDurationOpt:'Durée', wktTypeDistanceOpt:'Distance',
+    wktSetsLabel:'Séries', wktRepsLabel:'Répétitions', wktWeightLabel:'Poids (kg)',
+    wktDurationLabel:'Durée (min)', wktDistanceLabel:'Distance (km)',
+    wktLinkHabitLabel:'Associer à une habitude', wktNotesLabel:'Notes', wktNotesPh:'Notes facultatives…',
+    wktWeeklyActivityTitle:'📊 Activité hebdomadaire', wktMonthlyHeatmapTitle:'🗓 Carte de chaleur mensuelle',
+    wktHeatmapRest:'Repos', wktHeatmapActive:'Actif',
+    wktPersonalRecordsTitle:'🏆 Records personnels', wktTemplatesTitle:"📋 Modèles d'entraînement",
+    wktSaveTodayBtn:"💾 Enregistrer aujourd'hui", wktNoTemplatesMsg:"Aucun modèle pour l'instant. Enregistrez une séance et sauvegardez-la !",
+    wktEmptyDayTitle:"Aucun entraînement enregistré pour l'instant", wktEmptyDayHint:'Ajoutez des exercices ci-dessous pour commencer.',
+    wktDeleteSessionTitle:'Supprimer la séance', wktRemoveTitle:'Supprimer',
+    wktLinkedHabitPrefix:'✅ Habitude associée :',
+    wktCatNameStrength:'Force', wktCatNameCardio:'Cardio', wktCatNameFlexibility:'Flexibilité',
+    wktCatNameSport:'Sport', wktCatNameOther:'Autre',
+    wktNoRecordsMsg:'Pas encore de records. Commencez à enregistrer !',
+    wktUseTemplateBtn:'▶ Utiliser', wktDeleteTemplateTitle:'Supprimer le modèle',
+    wktNetCalIn:'ingéré', wktNetCalBurned:'brûlé', wktPreviewBurnedSuffix:'kcal brûlées',
+    wktAlertNoExercisesToday:"Aucun exercice enregistré aujourd'hui pour être sauvegardé comme modèle.",
+    wktAlertNoExercisesFound:'Aucun exercice trouvé.', wktPromptTemplateName:'Nom du modèle :',
+    wktSessionsCountFn: n => `${n} séance${n!==1?'s':''}`,
+    wktExerciseCountFn: n => `${n} exercice${n!==1?'s':''}`,
+    wktDefaultTemplateNameFn: n => `Entraînement ${n}`,
+  },
+};
+Object.keys(TRANSLATIONS).forEach(lang => {
+  if (WKT_I18N[lang]) Object.assign(TRANSLATIONS[lang], WKT_I18N[lang]);
+});
+
 // ── Constants ──────────────────────────────────────────────────────────────
 const WKT_CAT_COLORS = {
   strength:    '#4f6ef7',
@@ -8762,6 +9259,11 @@ const WKT_CAT_COLORS = {
 const WKT_CAT_ICONS = {
   strength:'💪', cardio:'🏃', flexibility:'🧘', sport:'⚽', other:'📦'
 };
+const WKT_CAT_NAME_KEYS = {
+  strength:'wktCatNameStrength', cardio:'wktCatNameCardio', flexibility:'wktCatNameFlexibility',
+  sport:'wktCatNameSport', other:'wktCatNameOther'
+};
+function wktCatLabel(c) { return t(WKT_CAT_NAME_KEYS[c]) || c; }
 
 // ── State ───────────────────────────────────────────────────────────────────
 let wktViewDate = new Date();
@@ -8898,7 +9400,7 @@ function wktUpdateStats() {
   const netEl = document.getElementById('wkt-net-cal-val');
   if (net) {
     const color = net.net < 0 ? '#3ecfb2' : net.net > 500 ? '#e05a9a' : 'var(--text)';
-    netEl.innerHTML = `<span style="color:${color};font-weight:800;">${net.net > 0 ? '+' : ''}${net.net}</span> <span style="font-size:11px;color:var(--text-muted);">kcal (${net.intake}in − ${net.burned}burned)</span>`;
+    netEl.innerHTML = `<span style="color:${color};font-weight:800;">${net.net > 0 ? '+' : ''}${net.net}</span> <span style="font-size:11px;color:var(--text-muted);">kcal (${net.intake} ${t('wktNetCalIn')} − ${net.burned} ${t('wktNetCalBurned')})</span>`;
   } else {
     netEl.textContent = '—';
   }
@@ -8909,7 +9411,7 @@ function wktPopulateHabits() {
   const sel = document.getElementById('wkt-habit-select');
   if (!sel) return;
   // state.habits is available from main app.js
-  sel.innerHTML = '<option value="">— none —</option>';
+  sel.innerHTML = `<option value="">${t('settingsDefaultHabitNone')}</option>`;
   (state.habits || []).forEach((h, i) => {
     const opt = document.createElement('option');
     opt.value = i;
@@ -8933,8 +9435,8 @@ function wktRenderSessionsList() {
   if (sessions.length === 0) {
     list.innerHTML = `<div class="wkt-empty-day">
       <div style="font-size:36px;margin-bottom:8px;">🏋️</div>
-      <div style="font-weight:700;color:var(--text);font-size:14px;">No workout logged yet</div>
-      <div style="color:var(--text-muted);font-size:12px;margin-top:4px;">Add exercises below to start.</div>
+      <div style="font-weight:700;color:var(--text);font-size:14px;">${t('wktEmptyDayTitle')}</div>
+      <div style="color:var(--text-muted);font-size:12px;margin-top:4px;">${t('wktEmptyDayHint')}</div>
     </div>`;
     return;
   }
@@ -8943,7 +9445,7 @@ function wktRenderSessionsList() {
     const vol = wktSessionVolume(sess);
     const dur = wktSessionDuration(sess);
     const cats = [...new Set(sess.exercises.map(e=>e.cat))];
-    const catTags = cats.map(c => `<span class="wkt-cat-tag" style="background:${WKT_CAT_COLORS[c]||'#4f6ef7'}22;color:${WKT_CAT_COLORS[c]||'#4f6ef7'};border:1px solid ${WKT_CAT_COLORS[c]||'#4f6ef7'}44;">${WKT_CAT_ICONS[c]||''} ${c}</span>`).join('');
+    const catTags = cats.map(c => `<span class="wkt-cat-tag" style="background:${WKT_CAT_COLORS[c]||'#4f6ef7'}22;color:${WKT_CAT_COLORS[c]||'#4f6ef7'};border:1px solid ${WKT_CAT_COLORS[c]||'#4f6ef7'}44;">${WKT_CAT_ICONS[c]||''} ${wktCatLabel(c)}</span>`).join('');
 
     const exHTML = sess.exercises.map(ex => {
       let metric = '';
@@ -8954,7 +9456,7 @@ function wktRenderSessionsList() {
         <span class="wkt-ex-icon">${WKT_CAT_ICONS[ex.cat]||'💪'}</span>
         <span class="wkt-ex-name">${ex.name}</span>
         <span class="wkt-ex-metric">${metric}</span>
-        <button class="wkt-ex-del" data-sessid="${sess.id}" data-exid="${ex.id}" title="Remove">✕</button>
+        <button class="wkt-ex-del" data-sessid="${sess.id}" data-exid="${ex.id}" title="${t('wktRemoveTitle')}">✕</button>
       </div>`;
     }).join('');
 
@@ -8966,10 +9468,10 @@ function wktRenderSessionsList() {
           ${dur>0?`<span class="wkt-meta-chip">⏱ ~${dur} min</span>`:''}
           ${sess.estimatedBurn>0?`<span class="wkt-meta-chip">🔥 ~${sess.estimatedBurn} kcal</span>`:''}
         </div>
-        <button class="wkt-session-del" data-sessid="${sess.id}" title="Delete session">🗑</button>
+        <button class="wkt-session-del" data-sessid="${sess.id}" title="${t('wktDeleteSessionTitle')}">🗑</button>
       </div>
       <div class="wkt-ex-list">${exHTML}</div>
-      ${sess.linkedHabitName ? `<div class="wkt-linked-habit">✅ Linked habit: <strong>${sess.linkedHabitName}</strong></div>` : ''}
+      ${sess.linkedHabitName ? `<div class="wkt-linked-habit">${t('wktLinkedHabitPrefix')} <strong>${sess.linkedHabitName}</strong></div>` : ''}
     </div>`;
   }).join('');
 
@@ -9022,7 +9524,7 @@ function wktRenderWeeklyChart() {
   });
 
   const maxSess = Math.max(1, ...dayCounts.map(a=>a.length));
-  const dayNames = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  const dayNames = t('days');
 
   const barsHTML = days.map((d, i) => {
     const sessions = dayCounts[i];
@@ -9045,7 +9547,7 @@ function wktRenderWeeklyChart() {
 
   // Legend — category icon instead of a colored dot
   legendWrap.innerHTML = Object.entries(WKT_CAT_COLORS).map(([cat,col]) =>
-    `<span class="wkt-leg-item" style="color:${col}">${WKT_CAT_ICONS[cat]} ${cat}</span>`
+    `<span class="wkt-leg-item" style="color:${col}">${WKT_CAT_ICONS[cat]} ${wktCatLabel(cat)}</span>`
   ).join('');
 }
 
@@ -9061,7 +9563,7 @@ function wktRenderHeatmap() {
 
   let html = '<div class="wkt-heatmap-grid">';
   // Day headers
-  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d => { html += `<div class="wkt-hm-header">${d}</div>`; });
+  t('days').forEach(d => { html += `<div class="wkt-hm-header">${d}</div>`; });
   // Empty cells before start
   for (let i=0;i<offset;i++) html += '<div class="wkt-hm-cell wkt-hm-empty"></div>';
   // Day cells
@@ -9072,7 +9574,7 @@ function wktRenderHeatmap() {
     const intensity = count === 0 ? 0 : count === 1 ? 0.35 : count === 2 ? 0.65 : 1;
     const isToday = day === now.getDate();
     const bg = count > 0 ? `rgba(79,110,247,${intensity})` : 'var(--border)';
-    const title = `${day}: ${count} session${count!==1?'s':''}`;
+    const title = `${day}: ${t('wktSessionsCountFn')(count)}`;
     html += `<div class="wkt-hm-cell${isToday?' wkt-hm-today':''}" style="background:${bg};" title="${title}">${count>0?`<span class="wkt-hm-num">${count}</span>`:''}</div>`;
   }
   html += '</div>';
@@ -9106,7 +9608,7 @@ function wktRenderPRs() {
   }
 
   const prs = Object.values(prMap);
-  if (!prs.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:8px 0;">No records yet. Start logging!</div>'; return; }
+  if (!prs.length) { el.innerHTML = `<div style="color:var(--text-muted);font-size:12px;padding:8px 0;">${t('wktNoRecordsMsg')}</div>`; return; }
 
   el.innerHTML = prs.slice(0,10).map(pr => {
     const col = WKT_CAT_COLORS[pr.cat]||'#4f6ef7';
@@ -9137,10 +9639,10 @@ function wktRenderTemplates() {
     <div class="wkt-tpl-row">
       <div class="wkt-tpl-info">
         <div class="wkt-tpl-name">${tpl.name}</div>
-        <div class="wkt-tpl-meta">${tpl.exercises.length} exercise${tpl.exercises.length!==1?'s':''}</div>
+        <div class="wkt-tpl-meta">${t('wktExerciseCountFn')(tpl.exercises.length)}</div>
       </div>
-      <button class="goal-add-btn wkt-tpl-use" data-tplidx="${i}" style="padding:5px 12px;font-size:11px;">▶ Use</button>
-      <button class="wkt-tpl-del" data-tplidx="${i}" title="Delete template">✕</button>
+      <button class="goal-add-btn wkt-tpl-use" data-tplidx="${i}" style="padding:5px 12px;font-size:11px;">${t('wktUseTemplateBtn')}</button>
+      <button class="wkt-tpl-del" data-tplidx="${i}" title="${t('wktDeleteTemplateTitle')}">✕</button>
     </div>`).join('');
 
   list.querySelectorAll('.wkt-tpl-use').forEach(btn => {
@@ -9178,10 +9680,10 @@ function wktRenderTemplates() {
 // ── Save today as template ───────────────────────────────────────────────────
 function wktSaveAsTemplate() {
   const sessions = wktGetDaySessions(wktViewDate);
-  if (!sessions.length) { alert('No exercises logged today to save as a template.'); return; }
+  if (!sessions.length) { alert(t('wktAlertNoExercisesToday')); return; }
   const allExercises = sessions.flatMap(s => s.exercises);
-  if (!allExercises.length) { alert('No exercises found.'); return; }
-  const name = prompt('Template name:', `Workout ${wktTemplates.length+1}`);
+  if (!allExercises.length) { alert(t('wktAlertNoExercisesFound')); return; }
+  const name = prompt(t('wktPromptTemplateName'), t('wktDefaultTemplateNameFn')(wktTemplates.length+1));
   if (!name) return;
   wktTemplates.push({ name: name.trim(), exercises: allExercises.map(e => ({ ...e, id: 0 })) });
   wktSaveTemplates();
@@ -9208,10 +9710,10 @@ function wktUpdateDateLabel() {
   if (!el) return;
   const today = new Date(); today.setHours(0,0,0,0);
   const diff = Math.round((wktViewDate - today) / 86400000);
-  if (diff === 0) el.textContent = 'Today';
-  else if (diff === -1) el.textContent = 'Yesterday';
+  if (diff === 0) el.textContent = t('journalToday');
+  else if (diff === -1) el.textContent = t('journalYesterday');
   else {
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const months = t('monthShort');
     el.textContent = `${months[wktViewDate.getMonth()]} ${wktViewDate.getDate()}, ${wktViewDate.getFullYear()}`;
   }
   // If we moved to a different month, reload that month's data
@@ -9253,7 +9755,7 @@ function wktUpdatePreview() {
   if (type==='duration') metric = `${dur} min`;
   if (type==='distance') metric = `${dist} km`;
 
-  prev.innerHTML = name ? `<span style="font-weight:700;">${name}</span> — ${metric} · ~${burn} kcal burned` : '';
+  prev.innerHTML = name ? `<span style="font-weight:700;">${name}</span> — ${metric} · ~${burn} ${t('wktPreviewBurnedSuffix')}` : '';
 }
 
 function wktAddExercise() {
@@ -9309,6 +9811,7 @@ function wktRenderAll() {
   wktRenderPRs();
   wktRenderTemplates();
   wktUpdatePreview();
+  applyTranslations();
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────

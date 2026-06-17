@@ -82,9 +82,9 @@
       <div class="weekly-add-habit-row">
         <input type="text" id="new-habit-input" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"/>
         <button id="add-habit-btn" data-i18n="addHabitBtn">+ Add</button>
-        <button id="habit-packs-btn-weekly" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
-          📦 Quick-Start Habit Packs
-          <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+        <button id="habit-packs-btn-weekly" class="habit-packs-btn" data-i18n-title="habitPacksBtnTitle" title="Quick-start habit packs — add a curated set of habits in one click">
+          <span data-i18n="habitPacksBtnLabel">📦 Quick-Start Habit Packs</span>
+          <span style="opacity:.8;font-weight:500;font-size:11.5px;" data-i18n="habitPacksBtnSubtitle">— pick a theme, add habits instantly</span>
         </button>
       </div>
     </div>
@@ -99,9 +99,9 @@
       <div id="add-habit-row">
         <input type="text" id="new-habit-input-monthly" placeholder="Add a new habit…" data-i18n-placeholder="addHabitPlaceholder"/>
         <button id="add-habit-btn-monthly" data-i18n="addHabitBtn">+ Add</button>
-        <button id="habit-packs-btn" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
-          📦 Quick-Start Habit Packs
-          <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+        <button id="habit-packs-btn" class="habit-packs-btn" data-i18n-title="habitPacksBtnTitle" title="Quick-start habit packs — add a curated set of habits in one click">
+          <span data-i18n="habitPacksBtnLabel">📦 Quick-Start Habit Packs</span>
+          <span style="opacity:.8;font-weight:500;font-size:11.5px;" data-i18n="habitPacksBtnSubtitle">— pick a theme, add habits instantly</span>
         </button>
       </div>
     </div>
@@ -112,9 +112,9 @@
         style="flex:1;min-width:160px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:clamp(10px,1.5vw,14px) clamp(14px,2vw,20px);color:var(--text);font-size:clamp(13px,1.5vw,16px);font-family:'Montserrat',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;"/>
       <button id="add-habit-btn-daily" data-i18n="addHabitBtn"
         style="background:linear-gradient(135deg,#4f6ef7,#6a85fa);border:none;border-radius:10px;color:#fff;padding:clamp(10px,1.5vw,14px) clamp(18px,2.5vw,28px);font-size:clamp(13px,1.5vw,16px);font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;transition:transform .12s,box-shadow .2s,filter .2s;box-shadow:0 4px 16px rgba(79,110,247,.3);">+ Add</button>
-      <button id="habit-packs-btn-daily" class="habit-packs-btn" title="Quick-start habit packs — add a curated set of habits in one click">
-        📦 Quick-Start Habit Packs
-        <span style="opacity:.8;font-weight:500;font-size:11.5px;">— pick a theme, add habits instantly</span>
+      <button id="habit-packs-btn-daily" class="habit-packs-btn" data-i18n-title="habitPacksBtnTitle" title="Quick-start habit packs — add a curated set of habits in one click">
+        <span data-i18n="habitPacksBtnLabel">📦 Quick-Start Habit Packs</span>
+        <span style="opacity:.8;font-weight:500;font-size:11.5px;" data-i18n="habitPacksBtnSubtitle">— pick a theme, add habits instantly</span>
       </button>
     </div>
     <div id="days-grid"></div>
@@ -143,9 +143,9 @@
     <div class="journal-card-header">
       <div class="section-title" data-i18n="journalTitle">📓 Daily Journal</div>
       <div class="journal-date-nav">
-        <button class="journal-date-btn" id="journal-prev-day" title="Previous day">‹</button>
+        <button class="journal-date-btn" id="journal-prev-day" data-i18n-title="journalPrevDayTitle" title="Previous day">‹</button>
         <span class="journal-date-display" id="journal-date-display">Today</span>
-        <button class="journal-date-btn" id="journal-next-day" title="Next day">›</button>
+        <button class="journal-date-btn" id="journal-next-day" data-i18n-title="journalNextDayTitle" title="Next day">›</button>
       </div>
     </div>
     <div class="journal-mood-row" id="journal-mood-row"></div>
@@ -211,18 +211,18 @@
 
 <!-- THEME DROPDOWN -->
 <div id="theme-dropdown">
-  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
-  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-option active" data-theme="dark" data-i18n="themeDark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light" data-i18n="themeLight">☀️ Light</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="forest">🌿 Forest</div>
-  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
-  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
-  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-option" data-theme="forest" data-i18n="themeForest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura" data-i18n="themeSakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean" data-i18n="themeOcean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset" data-i18n="themeSunset">🌅 Sunset</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
-  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
-  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
-  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+  <div class="theme-option" data-theme="midnight" data-i18n="themeMidnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled" data-i18n="themeAmoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper" data-i18n="themePaper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate" data-i18n="themeSlate">🌫️ Slate</div>
 </div>
 
 <!-- POMODORO BACKDROP -->
@@ -232,7 +232,7 @@
 <div id="pomo-widget" class="hidden">
   <div class="pomo-header">
     <div class="pomo-header-title">⏱ Pomodoro Timer</div>
-    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+    <button class="pomo-close-btn" id="pomo-close-btn" data-i18n-title="closeBtnTitle" title="Close">✕</button>
   </div>
   <div class="pomo-mode-btns">
     <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>

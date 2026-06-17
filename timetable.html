@@ -47,14 +47,14 @@
     <div style="display:flex;flex-direction:column;gap:8px;">
       <div class="tt-title" data-i18n="ttTitle">🗓 Weekly Timetable</div>
       <div class="tt-week-nav">
-        <button class="tt-week-btn" id="tt-week-prev-btn" title="Previous week">‹</button>
+        <button class="tt-week-btn" id="tt-week-prev-btn" data-i18n-title="ttPrevWeekTitle" title="Previous week">‹</button>
         <span class="tt-week-label" id="tt-week-label">Week 1</span>
-        <button class="tt-week-btn" id="tt-week-next-btn" title="Next week">›</button>
+        <button class="tt-week-btn" id="tt-week-next-btn" data-i18n-title="ttNextWeekTitle" title="Next week">›</button>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="tt-legend" id="tt-legend-strip"></div>
-      <button class="gcal-import-btn" id="gcal-import-btn" title="Import events from Google Calendar">
+      <button class="gcal-import-btn" id="gcal-import-btn" data-i18n-title="ttImportGcalBtnTitle" title="Import events from Google Calendar">
         <svg class="gcal-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/>
           <path d="M3 9h18" stroke="currentColor" stroke-width="1.8"/>
@@ -63,9 +63,9 @@
           <circle cx="15" cy="14" r="1.2" fill="#ea4335"/>
           <circle cx="12" cy="17" r="1.2" fill="#34a853"/>
         </svg>
-        Import from Google Calendar (.ics)
+        <span data-i18n="ttImportGcalBtnLabel">Import from Google Calendar (.ics)</span>
       </button>
-      <button class="tt-clear-all-btn" id="tt-clear-all-btn" title="Remove all events from the timetable">
+      <button class="tt-clear-all-btn" id="tt-clear-all-btn" data-i18n-title="ttClearAllTitle" title="Remove all events from the timetable">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
           <polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M8 6V4h8v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -167,18 +167,18 @@
 
 <!-- THEME DROPDOWN -->
 <div id="theme-dropdown">
-  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
-  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-option active" data-theme="dark" data-i18n="themeDark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light" data-i18n="themeLight">☀️ Light</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="forest">🌿 Forest</div>
-  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
-  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
-  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-option" data-theme="forest" data-i18n="themeForest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura" data-i18n="themeSakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean" data-i18n="themeOcean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset" data-i18n="themeSunset">🌅 Sunset</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
-  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
-  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
-  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+  <div class="theme-option" data-theme="midnight" data-i18n="themeMidnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled" data-i18n="themeAmoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper" data-i18n="themePaper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate" data-i18n="themeSlate">🌫️ Slate</div>
 </div>
 
 <!-- POMODORO BACKDROP -->
@@ -188,7 +188,7 @@
 <div id="pomo-widget" class="hidden">
   <div class="pomo-header">
     <div class="pomo-header-title">⏱ Pomodoro Timer</div>
-    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+    <button class="pomo-close-btn" id="pomo-close-btn" data-i18n-title="closeBtnTitle" title="Close">✕</button>
   </div>
   <div class="pomo-mode-btns">
     <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>

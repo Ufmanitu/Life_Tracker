@@ -50,35 +50,35 @@
     <div class="wkt-stat-card">
       <div class="wkt-stat-icon">🔥</div>
       <div class="wkt-stat-info">
-        <div class="wkt-stat-label">Streak</div>
-        <div class="wkt-stat-val"><span id="wkt-streak-val">0</span> <span class="wkt-stat-unit">days</span></div>
+        <div class="wkt-stat-label" data-i18n="wktStatStreak">Streak</div>
+        <div class="wkt-stat-val"><span id="wkt-streak-val">0</span> <span class="wkt-stat-unit" data-i18n="daysUnit">days</span></div>
       </div>
     </div>
     <div class="wkt-stat-card">
       <div class="wkt-stat-icon">📅</div>
       <div class="wkt-stat-info">
-        <div class="wkt-stat-label">This Month</div>
-        <div class="wkt-stat-val"><span id="wkt-month-val">0</span> <span class="wkt-stat-unit">sessions</span></div>
+        <div class="wkt-stat-label" data-i18n="wktStatThisMonth">This Month</div>
+        <div class="wkt-stat-val"><span id="wkt-month-val">0</span> <span class="wkt-stat-unit" data-i18n="wktStatSessionsUnit">sessions</span></div>
       </div>
     </div>
     <div class="wkt-stat-card">
       <div class="wkt-stat-icon">⚖️</div>
       <div class="wkt-stat-info">
-        <div class="wkt-stat-label">Total Volume</div>
+        <div class="wkt-stat-label" data-i18n="wktStatTotalVolume">Total Volume</div>
         <div class="wkt-stat-val"><span id="wkt-volume-val">0</span> <span class="wkt-stat-unit">kg</span></div>
       </div>
     </div>
     <div class="wkt-stat-card">
       <div class="wkt-stat-icon">⏱</div>
       <div class="wkt-stat-info">
-        <div class="wkt-stat-label">Avg Duration</div>
-        <div class="wkt-stat-val"><span id="wkt-duration-val">0</span> <span class="wkt-stat-unit">min</span></div>
+        <div class="wkt-stat-label" data-i18n="wktStatAvgDuration">Avg Duration</div>
+        <div class="wkt-stat-val"><span id="wkt-duration-val">0</span> <span class="wkt-stat-unit" data-i18n="wktStatMinUnit">min</span></div>
       </div>
     </div>
     <div class="wkt-stat-card" id="wkt-cal-stat-card">
       <div class="wkt-stat-icon">🍎</div>
       <div class="wkt-stat-info">
-        <div class="wkt-stat-label">Net Calories Today</div>
+        <div class="wkt-stat-label" data-i18n="wktStatNetCalToday">Net Calories Today</div>
         <div class="wkt-stat-val"><span id="wkt-net-cal-val">—</span></div>
       </div>
     </div>
@@ -95,7 +95,7 @@
         <button class="cal-date-nav-btn" id="wkt-prev-day">‹</button>
         <div class="cal-date-nav-label" id="wkt-date-label">Today</div>
         <button class="cal-date-nav-btn" id="wkt-next-day">›</button>
-        <button class="cal-date-today-btn" id="wkt-today-btn">Today</button>
+        <button class="cal-date-today-btn" id="wkt-today-btn" data-i18n="journalToday">Today</button>
       </div>
 
       <!-- Sessions for this day -->
@@ -105,73 +105,73 @@
 
       <!-- Add session form -->
       <div class="wkt-add-card" id="wkt-add-card">
-        <div class="wkt-add-title">+ Log Exercise</div>
+        <div class="wkt-add-title" data-i18n="wktAddExerciseTitle">+ Log Exercise</div>
         <div class="wkt-form-grid">
           <div class="form-field" style="grid-column:1/-1;">
-            <label class="form-label">Exercise Name</label>
-            <input class="form-input" id="wkt-name-input" placeholder="e.g. Bench Press, Running…" style="width:100%;"/>
+            <label class="form-label" data-i18n="wktExerciseNameLabel">Exercise Name</label>
+            <input class="form-input" id="wkt-name-input" placeholder="e.g. Bench Press, Running…" data-i18n-placeholder="wktExerciseNamePh" style="width:100%;"/>
           </div>
           <div class="form-field">
-            <label class="form-label">Category</label>
+            <label class="form-label" data-i18n="wktCategoryLabel">Category</label>
             <select class="form-select" id="wkt-cat-select">
-              <option value="strength">💪 Strength</option>
-              <option value="cardio">🏃 Cardio</option>
-              <option value="flexibility">🧘 Flexibility</option>
-              <option value="sport">⚽ Sport</option>
-              <option value="other">📦 Other</option>
+              <option value="strength" data-i18n="wktCatStrengthOpt">💪 Strength</option>
+              <option value="cardio" data-i18n="wktCatCardioOpt">🏃 Cardio</option>
+              <option value="flexibility" data-i18n="wktCatFlexibilityOpt">🧘 Flexibility</option>
+              <option value="sport" data-i18n="wktCatSportOpt">⚽ Sport</option>
+              <option value="other" data-i18n="wktCatOtherOpt">📦 Other</option>
             </select>
           </div>
           <div class="form-field">
-            <label class="form-label">Type</label>
+            <label class="form-label" data-i18n="wktTypeLabel">Type</label>
             <select class="form-select" id="wkt-type-select">
-              <option value="sets">Sets × Reps</option>
-              <option value="duration">Duration</option>
-              <option value="distance">Distance</option>
+              <option value="sets" data-i18n="wktTypeSetsOpt">Sets × Reps</option>
+              <option value="duration" data-i18n="wktTypeDurationOpt">Duration</option>
+              <option value="distance" data-i18n="wktTypeDistanceOpt">Distance</option>
             </select>
           </div>
           <!-- Sets/Reps fields (shown for strength) -->
           <div id="wkt-sets-fields" style="display:contents;">
             <div class="form-field">
-              <label class="form-label">Sets</label>
+              <label class="form-label" data-i18n="wktSetsLabel">Sets</label>
               <input class="form-input" type="number" id="wkt-sets-input" min="1" max="99" value="3" style="width:80px;"/>
             </div>
             <div class="form-field">
-              <label class="form-label">Reps</label>
+              <label class="form-label" data-i18n="wktRepsLabel">Reps</label>
               <input class="form-input" type="number" id="wkt-reps-input" min="1" max="999" value="10" style="width:80px;"/>
             </div>
             <div class="form-field">
-              <label class="form-label">Weight (kg)</label>
+              <label class="form-label" data-i18n="wktWeightLabel">Weight (kg)</label>
               <input class="form-input" type="number" id="wkt-weight-input" min="0" max="9999" step="0.5" value="0" style="width:90px;"/>
             </div>
           </div>
           <!-- Duration field (shown for cardio/duration) -->
           <div id="wkt-duration-fields" style="display:none;">
             <div class="form-field" style="display:flex;flex-direction:column;gap:4px;">
-              <label class="form-label">Duration (min)</label>
+              <label class="form-label" data-i18n="wktDurationLabel">Duration (min)</label>
               <input class="form-input" type="number" id="wkt-dur-input" min="1" max="999" value="30" style="width:90px;"/>
             </div>
           </div>
           <!-- Distance field -->
           <div id="wkt-distance-fields" style="display:none;">
             <div class="form-field" style="display:flex;flex-direction:column;gap:4px;">
-              <label class="form-label">Distance (km)</label>
+              <label class="form-label" data-i18n="wktDistanceLabel">Distance (km)</label>
               <input class="form-input" type="number" id="wkt-dist-input" min="0.1" max="9999" step="0.1" value="5" style="width:90px;"/>
             </div>
           </div>
           <div class="form-field">
-            <label class="form-label">Link to Habit</label>
+            <label class="form-label" data-i18n="wktLinkHabitLabel">Link to Habit</label>
             <select class="form-select" id="wkt-habit-select">
-              <option value="">— none —</option>
+              <option value="" data-i18n="settingsDefaultHabitNone">— none —</option>
             </select>
           </div>
           <div class="form-field">
-            <label class="form-label">Notes</label>
-            <input class="form-input" id="wkt-notes-input" placeholder="Optional notes…" style="width:100%;"/>
+            <label class="form-label" data-i18n="wktNotesLabel">Notes</label>
+            <input class="form-input" id="wkt-notes-input" placeholder="Optional notes…" data-i18n-placeholder="wktNotesPh" style="width:100%;"/>
           </div>
         </div>
         <div class="wkt-form-footer">
           <div class="wkt-preview" id="wkt-preview"></div>
-          <button class="goal-add-btn" id="wkt-add-btn" style="padding:9px 22px;font-size:12px;">+ Log Exercise</button>
+          <button class="goal-add-btn" id="wkt-add-btn" data-i18n="wktAddExerciseTitle" style="padding:9px 22px;font-size:12px;">+ Log Exercise</button>
         </div>
       </div>
 
@@ -182,36 +182,36 @@
 
       <!-- Weekly volume chart -->
       <div class="analysis-card">
-        <div class="section-title">📊 Weekly Activity</div>
+        <div class="section-title" data-i18n="wktWeeklyActivityTitle">📊 Weekly Activity</div>
         <div id="wkt-weekly-chart" style="margin-top:10px;"></div>
         <div class="wkt-cat-legend" id="wkt-cat-legend"></div>
       </div>
 
       <!-- Monthly heatmap -->
       <div class="analysis-card">
-        <div class="section-title">🗓 Monthly Heatmap</div>
+        <div class="section-title" data-i18n="wktMonthlyHeatmapTitle">🗓 Monthly Heatmap</div>
         <div id="wkt-heatmap" style="margin-top:10px;"></div>
         <div class="wkt-heatmap-legend">
-          <span style="font-size:11px;color:var(--text-muted);">Rest</span>
+          <span style="font-size:11px;color:var(--text-muted);" data-i18n="wktHeatmapRest">Rest</span>
           <div class="wkt-hm-grad"></div>
-          <span style="font-size:11px;color:var(--text-muted);">Active</span>
+          <span style="font-size:11px;color:var(--text-muted);" data-i18n="wktHeatmapActive">Active</span>
         </div>
       </div>
 
       <!-- Personal Records -->
       <div class="analysis-card">
-        <div class="section-title">🏆 Personal Records</div>
+        <div class="section-title" data-i18n="wktPersonalRecordsTitle">🏆 Personal Records</div>
         <div id="wkt-prs" style="margin-top:10px;display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto;"></div>
       </div>
 
       <!-- Templates -->
       <div class="analysis-card">
         <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">
-          <span>📋 Workout Templates</span>
-          <button class="goal-add-btn" id="wkt-save-template-btn" style="padding:5px 12px;font-size:11px;">💾 Save Today</button>
+          <span data-i18n="wktTemplatesTitle">📋 Workout Templates</span>
+          <button class="goal-add-btn" id="wkt-save-template-btn" data-i18n="wktSaveTodayBtn" style="padding:5px 12px;font-size:11px;">💾 Save Today</button>
         </div>
         <div id="wkt-templates-list" style="margin-top:10px;display:flex;flex-direction:column;gap:7px;"></div>
-        <div class="wkt-no-templates" id="wkt-no-templates">No templates yet. Log a session and save it!</div>
+        <div class="wkt-no-templates" id="wkt-no-templates" data-i18n="wktNoTemplatesMsg">No templates yet. Log a session and save it!</div>
       </div>
 
     </div><!-- /wkt-right-col -->
@@ -234,18 +234,18 @@
 
 <!-- THEME DROPDOWN -->
 <div id="theme-dropdown">
-  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
-  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-option active" data-theme="dark" data-i18n="themeDark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light" data-i18n="themeLight">☀️ Light</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="forest">🌿 Forest</div>
-  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
-  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
-  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-option" data-theme="forest" data-i18n="themeForest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura" data-i18n="themeSakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean" data-i18n="themeOcean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset" data-i18n="themeSunset">🌅 Sunset</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
-  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
-  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
-  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+  <div class="theme-option" data-theme="midnight" data-i18n="themeMidnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled" data-i18n="themeAmoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper" data-i18n="themePaper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate" data-i18n="themeSlate">🌫️ Slate</div>
 </div>
 
 <!-- POMODORO BACKDROP -->
@@ -255,7 +255,7 @@
 <div id="pomo-widget" class="hidden">
   <div class="pomo-header">
     <div class="pomo-header-title">⏱ Pomodoro Timer</div>
-    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+    <button class="pomo-close-btn" id="pomo-close-btn" data-i18n-title="closeBtnTitle" title="Close">✕</button>
   </div>
   <div class="pomo-mode-btns">
     <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>

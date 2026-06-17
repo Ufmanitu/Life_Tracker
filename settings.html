@@ -300,18 +300,18 @@
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="settings-danger-btn" id="settings-clear-all-btn" data-i18n="settingsClearAllBtn">🗑 Delete All Data</button>
-        <button class="settings-danger-btn" id="settings-clear-section-btn" style="background:linear-gradient(135deg,#b85af0,#8a3abf);box-shadow:0 3px 12px rgba(184,90,240,.28);" title="Choose which sections to delete">☑ Delete by Section</button>
+        <button class="settings-danger-btn" id="settings-clear-section-btn" style="background:linear-gradient(135deg,#b85af0,#8a3abf);box-shadow:0 3px 12px rgba(184,90,240,.28);" data-i18n-title="settingsChooseSectionsTitle" title="Choose which sections to delete">☑ Delete by Section</button>
       </div>
     </div>
   </div>
 
   <!-- ABOUT -->
   <div class="settings-card">
-    <div class="settings-card-title">ℹ️ About</div>
+    <div class="settings-card-title" data-i18n="settingsAboutTitle">ℹ️ About</div>
     <div class="settings-hint" style="font-size:13px;line-height:1.8;">
       <strong>Life Tracker</strong> — Beta<br>
-      All data is stored locally in your browser. No account needed.<br>
-      Works offline. Best on laptop / large screen.
+      <span data-i18n="settingsAboutLine1">All data is stored locally in your browser. No account needed.</span><br>
+      <span data-i18n="settingsAboutLine2">Works offline. Best on laptop / large screen.</span>
     </div>
   </div>
 </div>
@@ -321,49 +321,49 @@
 <div id="settings-clear-backdrop" class="hidden"></div>
 <div id="settings-clear-modal" class="hidden">
   <div class="tt-confirm-icon">🗑️</div>
-  <div class="tt-confirm-title">Select Data to Delete</div>
-  <div class="tt-confirm-desc" style="margin-bottom:4px;">Tick the sections you want to erase. Unticked sections stay safe.</div>
+  <div class="tt-confirm-title" data-i18n="settingsDeleteModalTitle">Select Data to Delete</div>
+  <div class="tt-confirm-desc" style="margin-bottom:4px;" data-i18n="settingsDeleteModalDesc">Tick the sections you want to erase. Unticked sections stay safe.</div>
   <div id="delete-sections-grid">
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="habits" checked/>
-      <span>📊 Habit Tracker</span>
+      <span data-i18n="settingsSectionHabits">📊 Habit Tracker</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="timetable" checked/>
-      <span>🗓 Timetable</span>
+      <span data-i18n="settingsSectionTimetable">🗓 Timetable</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="tasks" checked/>
-      <span>✅ Tasks</span>
+      <span data-i18n="settingsSectionTasks">✅ Tasks</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="shopping" checked/>
-      <span>🛒 Shopping</span>
+      <span data-i18n="settingsSectionShopping">🛒 Shopping</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="cycle" checked/>
-      <span>🌸 Cycle</span>
+      <span data-i18n="settingsSectionCycle">🌸 Cycle</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="finance" checked/>
-      <span>💰 Finance</span>
+      <span data-i18n="settingsSectionFinance">💰 Finance</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="journal" checked/>
-      <span>📓 Journal</span>
+      <span data-i18n="settingsSectionJournal">📓 Journal</span>
     </label>
     <label class="delete-section-item">
       <input type="checkbox" class="delete-section-cb" data-section="settings" checked/>
-      <span>⚙️ Settings &amp; Prefs</span>
+      <span data-i18n="settingsSectionPrefs">⚙️ Settings &amp; Prefs</span>
     </label>
   </div>
   <div class="delete-toggle-row">
-    <button class="delete-toggle-btn" id="delete-select-all">☑ Select All</button>
-    <button class="delete-toggle-btn" id="delete-select-none">☐ Select None</button>
+    <button class="delete-toggle-btn" id="delete-select-all" data-i18n="settingsSelectAllBtn">☑ Select All</button>
+    <button class="delete-toggle-btn" id="delete-select-none" data-i18n="settingsSelectNoneBtn">☐ Select None</button>
   </div>
   <div class="tt-confirm-btns">
-    <button class="tt-confirm-cancel" id="settings-clear-cancel">Cancel</button>
-    <button class="tt-confirm-delete" id="settings-clear-confirm">🗑 Delete Selected</button>
+    <button class="tt-confirm-cancel" id="settings-clear-cancel" data-i18n="ttConfirmCancel">Cancel</button>
+    <button class="tt-confirm-delete" id="settings-clear-confirm" data-i18n="settingsDeleteSelectedBtn">🗑 Delete Selected</button>
   </div>
 </div>
 
@@ -379,18 +379,18 @@
 
 <!-- THEME DROPDOWN -->
 <div id="theme-dropdown">
-  <div class="theme-option active" data-theme="dark">🌑 Dark</div>
-  <div class="theme-option" data-theme="light">☀️ Light</div>
+  <div class="theme-option active" data-theme="dark" data-i18n="themeDark">🌑 Dark</div>
+  <div class="theme-option" data-theme="light" data-i18n="themeLight">☀️ Light</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="forest">🌿 Forest</div>
-  <div class="theme-option" data-theme="sakura">🌸 Sakura</div>
-  <div class="theme-option" data-theme="ocean">🌊 Ocean</div>
-  <div class="theme-option" data-theme="sunset">🌅 Sunset</div>
+  <div class="theme-option" data-theme="forest" data-i18n="themeForest">🌿 Forest</div>
+  <div class="theme-option" data-theme="sakura" data-i18n="themeSakura">🌸 Sakura</div>
+  <div class="theme-option" data-theme="ocean" data-i18n="themeOcean">🌊 Ocean</div>
+  <div class="theme-option" data-theme="sunset" data-i18n="themeSunset">🌅 Sunset</div>
   <div class="theme-divider"></div>
-  <div class="theme-option" data-theme="midnight">🌙 Midnight Purple</div>
-  <div class="theme-option" data-theme="amoled">🖤 AMOLED Black</div>
-  <div class="theme-option" data-theme="paper">🤍 Minimal Paper</div>
-  <div class="theme-option" data-theme="slate">🌫️ Slate</div>
+  <div class="theme-option" data-theme="midnight" data-i18n="themeMidnight">🌙 Midnight Purple</div>
+  <div class="theme-option" data-theme="amoled" data-i18n="themeAmoled">🖤 AMOLED Black</div>
+  <div class="theme-option" data-theme="paper" data-i18n="themePaper">🤍 Minimal Paper</div>
+  <div class="theme-option" data-theme="slate" data-i18n="themeSlate">🌫️ Slate</div>
 </div>
 
 <!-- POMODORO BACKDROP -->
@@ -400,7 +400,7 @@
 <div id="pomo-widget" class="hidden">
   <div class="pomo-header">
     <div class="pomo-header-title">⏱ Pomodoro Timer</div>
-    <button class="pomo-close-btn" id="pomo-close-btn" title="Close">✕</button>
+    <button class="pomo-close-btn" id="pomo-close-btn" data-i18n-title="closeBtnTitle" title="Close">✕</button>
   </div>
   <div class="pomo-mode-btns">
     <button class="pomo-mode-btn active" data-mode="pomo" data-time="1500" data-i18n="pomodoroMode">Pomodoro</button>

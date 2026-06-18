@@ -4989,7 +4989,7 @@ function initSidebar() {
   sidebar.innerHTML = `
     <div class="sb-head">
       <div class="sb-logo">
-        <span class="sb-logo-icon">✦</span>
+        <img class="sb-logo-icon" src="logo.png" alt="Life Tracker logo" />
         <span class="sb-logo-text">Life Tracker</span>
       </div>
       <button class="sb-col-btn" id="sb-col-btn" title="${tr.sbCollapseTitle||'Collapse sidebar'}">‹</button>

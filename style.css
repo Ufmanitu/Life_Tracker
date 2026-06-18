@@ -113,7 +113,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   animation:fadeSlideUp .65s cubic-bezier(.4,0,.2,1) both;
 }
 /* Header brand — top-left "Life Tracker" */
-.header-brand{flex-shrink:0;display:flex;align-items:center;}
+.header-brand{flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.header-logo{height:clamp(26px,3.2vw,38px);width:auto;flex-shrink:0;display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,.15));}
 .header-brand-title{font-size:clamp(16px,2vw,26px);font-weight:900;letter-spacing:-0.5px;background:linear-gradient(120deg,var(--text) 40%,#7090c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;}
 /* Nav date stack — year above month, fixed width so arrows never shift */
 .nav-date-stack{display:flex;flex-direction:column;align-items:center;gap:0;width:clamp(160px,18vw,300px);flex-shrink:0;overflow:hidden;}
@@ -1642,7 +1643,7 @@ body.has-sidebar .lang-selector{display:none!important;}
   display:flex;align-items:center;gap:10px;
   overflow:hidden;white-space:nowrap;min-width:0;
 }
-.sb-logo-icon{font-size:20px;flex-shrink:0;line-height:1;}
+.sb-logo-icon{width:22px;height:22px;flex-shrink:0;display:block;object-fit:contain;}
 .sb-logo-text{
   font-size:12px;font-weight:900;color:var(--text);
   letter-spacing:-.2px;
@@ -1651,7 +1652,7 @@ body.has-sidebar .lang-selector{display:none!important;}
 }
 #sidebar.sb-collapsed .sb-logo-text{max-width:0;opacity:0;overflow:hidden;}
 #sidebar.sb-collapsed .sb-head{padding:14px 6px 12px;}
-#sidebar.sb-collapsed .sb-logo-icon{font-size:20px;display:block;flex-shrink:0;}
+#sidebar.sb-collapsed .sb-logo-icon{width:24px;height:24px;display:block;flex-shrink:0;}
 
 .sb-col-btn{
   background:none;border:1.5px solid var(--border);border-radius:8px;

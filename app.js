@@ -134,6 +134,7 @@ const TRANSLATIONS = {
     dueOverdue:(n)=>`${n}d overdue`, dueFuture:(n)=>`In ${n} days`,
     langLabel:"EN 🇬🇧",
     tabTimetable:"🗓 Timetable", tabShopping:"🛒 Shop", tabCycle:"🌸 Cycle", tabFinance:"💰 Finance", tabRecipes:"📖 Recipes",
+    sbHome:"🏠 Home", menuHeading:"Where to next?", menuSubheading:"Tap a section of the wheel to jump right in.", menuTagline:"Track. Analyze. Improve.",
     shopTitle:"🛒 Shopping List", shopGrocery:"🥦 Grocery", shopHousehold:"🏠 Household",
     shopPersonal:"💄 Personal", shopOther:"📦 Other",
     shopItemName:"Item Name", shopItemPlaceholder:"Add an item…", shopQty:"Qty",
@@ -364,6 +365,7 @@ const TRANSLATIONS = {
     dueOverdue:(n)=>`${n} napja lejárt`, dueFuture:(n)=>`Még ${n} nap`,
     langLabel:"HU 🇭🇺",
     tabTimetable:"🗓 Órarend", tabShopping:"🛒 Bevásárlás", tabCycle:"🌸 Ciklus", tabFinance:"💰 Pénzügy", tabRecipes:"📖 Receptek",
+    sbHome:"🏠 Kezdőlap", menuHeading:"Hova tovább?", menuSubheading:"Érints meg egy szeletet a kerékből, hogy folytasd.", menuTagline:"Kövesd. Elemezd. Fejlődj.",
     shopTitle:"🛒 Bevásárlólista", shopGrocery:"🥦 Élelmiszer", shopHousehold:"🏠 Háztartás",
     shopPersonal:"💄 Személyes", shopOther:"📦 Egyéb",
     shopItemName:"Termék neve", shopItemPlaceholder:"Elem hozzáadása…", shopQty:"Db",
@@ -592,6 +594,7 @@ const TRANSLATIONS = {
     dueOverdue:(n)=>`${n}T überfällig`, dueFuture:(n)=>`In ${n} Tagen`,
     langLabel:"DE 🇩🇪",
     tabTimetable:"🗓 Stundenplan", tabShopping:"🛒 Einkauf", tabCycle:"🌸 Zyklus", tabFinance:"💰 Finanzen", tabRecipes:"📖 Rezepte",
+    sbHome:"🏠 Start", menuHeading:"Wohin als Nächstes?", menuSubheading:"Tippe auf einen Bereich des Rads, um direkt loszulegen.", menuTagline:"Verfolgen. Analysieren. Verbessern.",
     shopTitle:"🛒 Einkaufsliste", shopGrocery:"🥦 Lebensmittel", shopHousehold:"🏠 Haushalt",
     shopPersonal:"💄 Persönlich", shopOther:"📦 Sonstiges",
     shopItemName:"Artikelname", shopItemPlaceholder:"Artikel hinzufügen…", shopQty:"Menge",
@@ -820,6 +823,7 @@ const TRANSLATIONS = {
     dueOverdue:(n)=>`${n}d de retraso`, dueFuture:(n)=>`En ${n} días`,
     langLabel:"ES 🇪🇸",
     tabTimetable:"🗓 Horario", tabShopping:"🛒 Compras", tabCycle:"🌸 Ciclo", tabFinance:"💰 Finanzas", tabRecipes:"📖 Recetas",
+    sbHome:"🏠 Inicio", menuHeading:"¿A dónde vamos?", menuSubheading:"Toca una sección de la rueda para empezar.", menuTagline:"Sigue. Analiza. Mejora.",
     shopTitle:"🛒 Lista de compras", shopGrocery:"🥦 Supermercado", shopHousehold:"🏠 Hogar",
     shopPersonal:"💄 Personal", shopOther:"📦 Otros",
     shopItemName:"Nombre del artículo", shopItemPlaceholder:"Añadir artículo…", shopQty:"Cant.",
@@ -1048,6 +1052,7 @@ const TRANSLATIONS = {
     dueOverdue:(n)=>`${n}j de retard`, dueFuture:(n)=>`Dans ${n} jours`,
     langLabel:"FR 🇫🇷",
     tabTimetable:"🗓 Emploi du temps", tabShopping:"🛒 Courses", tabCycle:"🌸 Cycle", tabFinance:"💰 Finances", tabRecipes:"📖 Recettes",
+    sbHome:"🏠 Accueil", menuHeading:"Où aller ?", menuSubheading:"Touchez une part de la roue pour y accéder directement.", menuTagline:"Suivez. Analysez. Progressez.",
     shopTitle:"🛒 Liste de courses", shopGrocery:"🥦 Épicerie", shopHousehold:"🏠 Maison",
     shopPersonal:"💄 Personnel", shopOther:"📦 Autre",
     shopItemName:"Nom de l'article", shopItemPlaceholder:"Ajouter un article…", shopQty:"Qté",
@@ -1399,6 +1404,7 @@ function applyTranslations(){
   if(CURRENT_PAGE==='cycle')renderCycleTracker();
   // Update sidebar nav labels when language changes
   const sbLabelMap = {
+    'menu.html': tr.sbHome,
     'tracker.html': tr.tabTracker,
     'analysis.html': tr.tabAnalysis,
     'timetable.html': tr.tabTimetable,
@@ -1429,6 +1435,7 @@ function applyTranslations(){
   if(sbLangBtnFoot){ if(tr.sbLanguage) sbLangBtnFoot.title=tr.sbLanguage; const sp=sbLangBtnFoot.querySelector('.sb-label'); if(sp&&tr.sbLanguage) sp.textContent=tr.sbLanguage; }
   const sbSettingsBtn=document.getElementById('sb-settings-btn');
   if(sbSettingsBtn){ if(tr.sbSettings) sbSettingsBtn.title=tr.sbSettings; const sp=sbSettingsBtn.querySelector('.sb-label'); if(sp&&tr.sbSettings) sp.textContent=tr.sbSettings; }
+  const sbLogo=document.querySelector('#sidebar .sb-logo'); if(sbLogo&&tr.sbHome) sbLogo.title=_stripEmoji(tr.sbHome);
   // Habits sub-tab buttons
   document.querySelectorAll('.habits-subtab-btn').forEach(btn=>{
     if(btn.dataset.subtab==='habits'&&tr.habitsSubtabHabits)btn.textContent=tr.habitsSubtabHabits;
@@ -3393,6 +3400,7 @@ langDropdown.querySelectorAll('.lang-option').forEach(function(opt){
     else if(CURRENT_PAGE==="calories")calRenderAll();
     else if(CURRENT_PAGE==="workout"){wktPopulateHabits();wktRenderAll();}
     else if(CURRENT_PAGE==="recipes")recRenderGrid();
+    else if(CURRENT_PAGE==="menu")renderMenuWheelLabels();
     try{localStorage.setItem(K.lang(),lang);}catch(e){}
   });
 });
@@ -4928,6 +4936,12 @@ function setHabitsSubtab(subtab){
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 const SB_PREF_KEY = 'lt_sidebar_v1';
 
+// Strip leading emoji/symbol characters from a label so an icon glyph shown
+// separately (sidebar icon, menu wheel icon) is never duplicated in the text.
+function stripLeadEmoji(s) {
+  return (s||'').replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱💬🍎🏋️📖🏠]+\s*/gu, '').trim();
+}
+
 function initSidebar() {
   document.body.classList.add('has-sidebar');
 
@@ -4963,9 +4977,13 @@ function initSidebar() {
 
   // Strip leading emoji/symbol characters from a label so the sidebar
   // icon (sb-icon) and the text label (sb-label) are never duplicated.
-  const stripLeadEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱💬🍎🏋️📖]+\s*/gu, '').trim();
+  // (stripLeadEmoji is defined globally above initSidebar.)
 
-  let navHTML = '';
+  const homeLabel = stripLeadEmoji(tr.sbHome||'Home');
+  let navHTML = `<div class="sb-group"><a class="sb-item${CURRENT_PAGE==='menu'?' active':''}" href="menu.html" title="${homeLabel}">
+    <span class="sb-icon">🏠</span>
+    <span class="sb-label">${homeLabel}</span>
+  </a></div>`;
   sections.forEach(sec => {
     navHTML += `<div class="sb-group"><div class="sb-group-label">${sec.label}</div>`;
     sec.items.forEach(item => {
@@ -4988,10 +5006,10 @@ function initSidebar() {
   if(collapsed) sidebar.classList.add('sb-collapsed');
   sidebar.innerHTML = `
     <div class="sb-head">
-      <div class="sb-logo">
+      <a class="sb-logo" href="menu.html" title="${homeLabel}">
         <img class="sb-logo-icon" src="logo.png" alt="Life Tracker logo" />
         <span class="sb-logo-text">Life Tracker</span>
-      </div>
+      </a>
       <button class="sb-col-btn" id="sb-col-btn" title="${tr.sbCollapseTitle||'Collapse sidebar'}">‹</button>
     </div>
     <nav class="sb-nav">${navHTML}</nav>
@@ -5113,11 +5131,28 @@ function initSidebar() {
   syncCycleItem();
 }
 
+// ─── MAIN MENU WHEEL (menu.html) ──────────────────────────────────────────────
+function renderMenuWheelLabels(){
+  if(CURRENT_PAGE!=='menu') return;
+  const tr=TRANSLATIONS[state.lang]||TRANSLATIONS.en;
+  document.querySelectorAll('.menu-wedge-label[data-label-key]').forEach(el=>{
+    const key=el.dataset.labelKey;
+    if(tr[key]) el.textContent=stripLeadEmoji(tr[key]);
+  });
+  const tagline=document.querySelector('.menu-center-tagline[data-label-key="menuTagline"]');
+  if(tagline && tr.menuTagline) tagline.textContent=tr.menuTagline;
+  const heading=document.getElementById('menu-heading');
+  if(heading && tr.menuHeading) heading.textContent=tr.menuHeading;
+  const sub=document.getElementById('menu-subheading');
+  if(sub && tr.menuSubheading) sub.textContent=tr.menuSubheading;
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 loadAll();
 applyTranslations();
 updatePomoDisplay();
 initSidebar();
+renderMenuWheelLabels();
 
 // Mark active tab link — habits page is the tracker tab; analysis has no top tab
 document.querySelectorAll('.tab-btn').forEach(b=>{

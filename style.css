@@ -2647,3 +2647,52 @@ body.has-sidebar #lang-dropdown{
   #rec-controls #rec-search-input { flex: 1; min-width: 0; }
   .rec-ing-row { grid-template-columns: 1fr 56px 56px 24px; gap: 5px; }
 }
+/* ═══════════════════════════════════════════════════════════
+   MAIN MENU WHEEL — circular nav built from the logo motif
+═══════════════════════════════════════════════════════════ */
+.menu-page-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:clamp(24px,4vw,56px) clamp(16px,4vw,48px) clamp(40px,5vw,64px);
+  flex:1;text-align:center;
+}
+.menu-heading{
+  font-size:clamp(20px,2.6vw,32px);font-weight:900;color:var(--text);
+  margin:0 0 6px;letter-spacing:-.3px;
+}
+.menu-subheading{
+  font-size:clamp(12px,1.3vw,15px);color:var(--text-muted);
+  margin:0 0 clamp(26px,3.4vw,44px);
+}
+.menu-wheel-stage{
+  position:relative;width:min(90vw,600px);aspect-ratio:1/1;
+  filter:drop-shadow(0 16px 40px rgba(0,0,0,.25));
+}
+.menu-ring{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,#6ec3f4,#7ee2c0,#bfe98a,#fde98a,#f7b267,#f4978e,#e69bd6,#a78bfa,#7aa6f9,#6ec3f4);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 0%,transparent 89%,#000 90%,#000 97%,transparent 98%);
+  mask:radial-gradient(circle closest-side,transparent 0%,transparent 89%,#000 90%,#000 97%,transparent 98%);
+  opacity:.92;
+}
+#menu-wheel-svg{position:relative;width:100%;height:100%;overflow:visible;display:block;}
+.menu-wedge{cursor:pointer;transition:transform .25s cubic-bezier(.4,0,.2,1),filter .25s;}
+.menu-wedge:hover,.menu-wedge:focus-visible{
+  transform:translate(var(--tx),var(--ty));
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.32)) brightness(1.06);
+  outline:none;
+}
+.menu-wedge-path{fill:var(--bg);stroke:var(--surface);stroke-width:2;transition:fill .25s,stroke .25s,stroke-width .25s;}
+.menu-wedge:hover .menu-wedge-path,.menu-wedge:focus-visible .menu-wedge-path{stroke:var(--accent);stroke-width:2.5;}
+.menu-wedge-icon{font-size:34px;pointer-events:none;transition:transform .25s cubic-bezier(.4,0,.2,1);transform-origin:center;transform-box:fill-box;}
+.menu-wedge:hover .menu-wedge-icon,.menu-wedge:focus-visible .menu-wedge-icon{transform:scale(1.18);}
+.menu-wedge-label{font-size:14px;font-weight:800;fill:var(--accent);pointer-events:none;font-family:'Montserrat',sans-serif;letter-spacing:-.2px;}
+.menu-center{pointer-events:none;}
+.menu-center-circle{fill:var(--surface2);stroke:var(--border);stroke-width:2;}
+.menu-center-emoji{font-size:30px;}
+.menu-center-title{font-size:17px;font-weight:900;fill:var(--text);font-family:'Montserrat',sans-serif;}
+.menu-center-tagline{font-size:9px;fill:var(--text-muted);font-family:'Montserrat',sans-serif;}
+
+/* Header / sidebar logo as a clickable Home link */
+.header-logo-link{display:flex;align-items:center;transition:transform .2s cubic-bezier(.4,0,.2,1);}
+.header-logo-link:hover{transform:scale(1.08) rotate(-4deg);}
+.sb-logo{text-decoration:none;}

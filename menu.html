@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Analysis — Life Tracker</title>
+<title>Main Menu — Life Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 </head>
-<body data-page="analysis">
+<body data-page="menu">
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 <div class="bg-orb bg-orb-3"></div>
@@ -47,77 +47,70 @@
   <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
   <button id="settings-icon-btn" class="settings-icon-btn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
-<!-- ANALYSIS SECTION -->
-<div id="analysis-section" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
-  <div class="analysis-card full-width">
-    <div class="section-title" data-i18n="dailyConsistency">Daily Consistency</div>
-    <div class="bar-chart-wrap" id="bar-chart-days"></div>
-  </div>
-  <div class="analysis-card full-width">
-    <div class="section-title" id="mindset-tracker-title" data-i18n="mindsetTrackerTitle">Mindset Tracker — Energy · Focus · Motivation</div>
-    <div class="mindset-chart-wrap">
-      <svg id="mindset-chart-svg" width="100%" height="90" viewBox="0 0 700 90" preserveAspectRatio="none"></svg>
-    </div>
-    <div class="mindset-legend">
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#f5a623"></div><span data-i18n="energy">Energy</span></div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#4f6ef7"></div><span data-i18n="focus">Focus</span></div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div><span data-i18n="motivation">Motivation</span></div>
-    </div>
-  </div>
-  <div class="analysis-bottom-row">
-    <div class="analysis-main">
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="habitBreakdown">Habit Breakdown</div>
-        <div id="habit-bars" style="margin-top:4px;display:flex;flex-direction:column;gap:6px;"></div>
-      </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="goalsThisMonth">Goals This Month 🎯</div>
-        <div class="goals-add-row">
-          <input class="goal-input" id="goal-input" placeholder="Add a goal for this month…" data-i18n-placeholder="goalPlaceholder"/>
-          <button class="goal-add-btn" id="goal-add-btn" data-i18n="addGoalBtn">+ Add Goal</button>
-        </div>
-        <div class="goal-list" id="goal-list"></div>
-      </div>
-    </div>
-    <div class="analysis-side">
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="weeklyScore">Weekly Score</div>
-        <div class="week-radials" id="week-radials"></div>
-      </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="crossStatsTitle">🔗 Cross-Tracker Stats</div>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
-              <span data-i18n="calGoalToday">Calorie Goal Today</span>
-              <span id="cross-cal-pct">0/2000 kcal (0%)</span>
-            </div>
-            <div class="goal-prog-track"><div class="goal-prog-fill" id="cross-cal-fill" style="width:0%;background:#4f6ef7;"></div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:12px;color:var(--text-muted);" data-i18n="workoutStreak">🔥 Workout Streak</span>
-            <span id="cross-wkt-streak" style="font-weight:800;font-size:14px;color:var(--text);">0 days</span>
-          </div>
-        </div>
-      </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="overallProgress">Overall Progress</div>
-        <div class="overall-row">
-          <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-              <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="9"/>
-              <circle id="overall-arc-2" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
-                stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray .7s cubic-bezier(.4,0,.2,1)"/>
-            </svg>
-            <div class="radial-text">
-              <span class="radial-pct" id="overall-pct-text-2">0%</span>
-              <span class="radial-sub" id="overall-sub-text-2">0/0</span>
-            </div>
-          </div>
-          <div class="overall-stats" id="overall-stats"></div>
-        </div>
-      </div>
-    </div>
+<!-- MAIN MENU WHEEL -->
+<div id="menu-section" class="menu-page-wrap" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
+  <h1 class="menu-heading" id="menu-heading">Where to next?</h1>
+  <p class="menu-subheading" id="menu-subheading">Tap a section of the wheel to jump right in.</p>
+  <div class="menu-wheel-stage">
+    <div class="menu-ring"></div>
+    <svg id="menu-wheel-svg" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Main menu wheel">
+      <a class="menu-wedge" href="tracker.html" tabindex="0" style="--bg:#cdeed7;--accent:#1f7a45;--tx:0.0px;--ty:-13.0px;" aria-label="Habit Tracker">
+        <path class="menu-wedge-path" d="M 246.94,43.49 A 286,286 0 0 1 393.06,43.49 L 347.59,215.58 A 108,108 0 0 0 292.41,215.58 Z"/>
+        <text class="menu-wedge-icon" x="320.0" y="140.8" text-anchor="middle" dominant-baseline="middle">📊</text>
+        <text class="menu-wedge-label" data-label-key="tabTracker" x="320.0" y="76.7" text-anchor="middle" dominant-baseline="middle">Habit Tracker</text>
+      </a>
+      <a class="menu-wedge" href="analysis.html" tabindex="0" style="--bg:#cfe3fb;--accent:#2c5fb8;--tx:7.6px;--ty:-10.5px;" aria-label="Analysis">
+        <path class="menu-wedge-path" d="M 423.42,53.36 A 286,286 0 0 1 541.63,139.24 L 403.69,251.74 A 108,108 0 0 0 359.06,219.31 Z"/>
+        <text class="menu-wedge-icon" x="425.3" y="175.0" text-anchor="middle" dominant-baseline="middle">📈</text>
+        <text class="menu-wedge-label" data-label-key="tabAnalysis" x="463.0" y="123.2" text-anchor="middle" dominant-baseline="middle">Analysis</text>
+      </a>
+      <a class="menu-wedge" href="timetable.html" tabindex="0" style="--bg:#ddd3fb;--accent:#5c3fa6;--tx:12.4px;--ty:-4.0px;" aria-label="Timetable">
+        <path class="menu-wedge-path" d="M 560.40,165.07 A 286,286 0 0 1 605.55,304.04 L 427.83,313.97 A 108,108 0 0 0 410.78,261.50 Z"/>
+        <text class="menu-wedge-icon" x="490.4" y="264.6" text-anchor="middle" dominant-baseline="middle">🗓</text>
+        <text class="menu-wedge-label" data-label-key="tabTimetable" x="551.4" y="244.8" text-anchor="middle" dominant-baseline="middle">Timetable</text>
+      </a>
+      <a class="menu-wedge" href="tasks.html" tabindex="0" style="--bg:#fdeab0;--accent:#ad7a06;--tx:12.4px;--ty:4.0px;" aria-label="Tasks">
+        <path class="menu-wedge-path" d="M 605.55,335.96 A 286,286 0 0 1 560.40,474.93 L 410.78,378.50 A 108,108 0 0 0 427.83,326.03 Z"/>
+        <text class="menu-wedge-icon" x="490.4" y="375.4" text-anchor="middle" dominant-baseline="middle">✅</text>
+        <text class="menu-wedge-label" data-label-key="tabTasks" x="551.4" y="395.2" text-anchor="middle" dominant-baseline="middle">Tasks</text>
+      </a>
+      <a class="menu-wedge" href="calories.html" tabindex="0" style="--bg:#fbd7d2;--accent:#c0392b;--tx:7.6px;--ty:10.5px;" aria-label="Calories">
+        <path class="menu-wedge-path" d="M 541.63,500.76 A 286,286 0 0 1 423.42,586.64 L 359.06,420.69 A 108,108 0 0 0 403.69,388.26 Z"/>
+        <text class="menu-wedge-icon" x="425.3" y="465.0" text-anchor="middle" dominant-baseline="middle">🍎</text>
+        <text class="menu-wedge-label" data-label-key="tabCalories" x="463.0" y="516.8" text-anchor="middle" dominant-baseline="middle">Calories</text>
+      </a>
+      <a class="menu-wedge" href="workout.html" tabindex="0" style="--bg:#fad0e6;--accent:#bb1f63;--tx:0.0px;--ty:13.0px;" aria-label="Workout">
+        <path class="menu-wedge-path" d="M 393.06,596.51 A 286,286 0 0 1 246.94,596.51 L 292.41,424.42 A 108,108 0 0 0 347.59,424.42 Z"/>
+        <text class="menu-wedge-icon" x="320.0" y="499.2" text-anchor="middle" dominant-baseline="middle">🏋️</text>
+        <text class="menu-wedge-label" data-label-key="tabWorkout" x="320.0" y="563.3" text-anchor="middle" dominant-baseline="middle">Workout</text>
+      </a>
+      <a class="menu-wedge" href="cycle.html" data-tab="cycle" tabindex="0" style="--bg:#fde0c2;--accent:#bf6a0c;--tx:-7.6px;--ty:10.5px;" aria-label="Cycle">
+        <path class="menu-wedge-path" d="M 216.58,586.64 A 286,286 0 0 1 98.37,500.76 L 236.31,388.26 A 108,108 0 0 0 280.94,420.69 Z"/>
+        <text class="menu-wedge-icon" x="214.7" y="465.0" text-anchor="middle" dominant-baseline="middle">🌸</text>
+        <text class="menu-wedge-label" data-label-key="tabCycle" x="177.0" y="516.8" text-anchor="middle" dominant-baseline="middle">Cycle</text>
+      </a>
+      <a class="menu-wedge" href="shopping.html" tabindex="0" style="--bg:#c7eef1;--accent:#117a86;--tx:-12.4px;--ty:4.0px;" aria-label="Shopping">
+        <path class="menu-wedge-path" d="M 79.60,474.93 A 286,286 0 0 1 34.45,335.96 L 212.17,326.03 A 108,108 0 0 0 229.22,378.50 Z"/>
+        <text class="menu-wedge-icon" x="149.6" y="375.4" text-anchor="middle" dominant-baseline="middle">🛒</text>
+        <text class="menu-wedge-label" data-label-key="tabShopping" x="88.6" y="395.2" text-anchor="middle" dominant-baseline="middle">Shopping</text>
+      </a>
+      <a class="menu-wedge" href="finance.html" tabindex="0" style="--bg:#f3e3ad;--accent:#8a6d12;--tx:-12.4px;--ty:-4.0px;" aria-label="Finance">
+        <path class="menu-wedge-path" d="M 34.45,304.04 A 286,286 0 0 1 79.60,165.07 L 229.22,261.50 A 108,108 0 0 0 212.17,313.97 Z"/>
+        <text class="menu-wedge-icon" x="149.6" y="264.6" text-anchor="middle" dominant-baseline="middle">💰</text>
+        <text class="menu-wedge-label" data-label-key="tabFinance" x="88.6" y="244.8" text-anchor="middle" dominant-baseline="middle">Finance</text>
+      </a>
+      <a class="menu-wedge" href="recipes.html" tabindex="0" style="--bg:#ecdcc4;--accent:#7a5230;--tx:-7.6px;--ty:-10.5px;" aria-label="Recipes">
+        <path class="menu-wedge-path" d="M 98.37,139.24 A 286,286 0 0 1 216.58,53.36 L 280.94,219.31 A 108,108 0 0 0 236.31,251.74 Z"/>
+        <text class="menu-wedge-icon" x="214.7" y="175.0" text-anchor="middle" dominant-baseline="middle">📖</text>
+        <text class="menu-wedge-label" data-label-key="tabRecipes" x="177.0" y="123.2" text-anchor="middle" dominant-baseline="middle">Recipes</text>
+      </a>
+      <g class="menu-center" aria-hidden="true">
+        <circle cx="320" cy="320" r="102" class="menu-center-circle"/>
+        <text x="320" y="298" text-anchor="middle" dominant-baseline="middle" class="menu-center-emoji">🗓️</text>
+        <text x="320" y="340" text-anchor="middle" dominant-baseline="middle" class="menu-center-title">Life Tracker</text>
+        <text x="320" y="360" text-anchor="middle" dominant-baseline="middle" class="menu-center-tagline" data-label-key="menuTagline">Track. Analyze. Improve.</text>
+      </g>
+    </svg>
   </div>
 </div>
 </div><!-- #app -->

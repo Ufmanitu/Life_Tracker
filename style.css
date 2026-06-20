@@ -1710,6 +1710,9 @@ body.has-sidebar .lang-selector{display:none!important;}
   background:#4f6ef7;
 }
 .sb-item.sb-soon{opacity:.38;pointer-events:none;}
+/* Cycle nav elements (tab button, sidebar item, menu wheel wedge) when the
+   signed-in user is male — stays visible, just greyed out and inert. */
+[data-tab="cycle"].cycle-disabled{opacity:.38;filter:grayscale(1);pointer-events:none;cursor:not-allowed;}
 
 .sb-icon{font-size:15px;flex-shrink:0;width:18px;text-align:center;line-height:1;}
 .sb-label{overflow:hidden;transition:opacity var(--sb-ease),max-width var(--sb-ease);max-width:160px;}

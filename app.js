@@ -23,13 +23,16 @@ function isCycleUser() {
 
 function applyCycleTabVisibility() {
   const show = isCycleUser();
-  document.querySelectorAll('[data-tab="cycle"]').forEach(btn => {
-    btn.style.display = show ? '' : 'none';
+  document.querySelectorAll('[data-tab="cycle"]').forEach(el => {
+    el.classList.toggle('cycle-disabled', !show);
+    el.setAttribute('aria-disabled', String(!show));
+    if (el.tagName === 'BUTTON') {
+      el.disabled = !show;
+    } else {
+      el.setAttribute('tabindex', show ? '0' : '-1');
+    }
   });
-  // Also hide/show sidebar cycle item
-  const sbCycle = document.getElementById('sb-cycle-item');
-  if(sbCycle) sbCycle.style.display = show ? '' : 'none';
-  // If currently on cycle page but cycle is hidden, redirect to tracker
+  // If currently on cycle page but cycle is disabled for this user, redirect to tracker
   if (!show && CURRENT_PAGE === 'cycle') {
     window.location.href = 'tracker.html';
   }
@@ -4950,7 +4953,6 @@ function initSidebar() {
   try { const p = JSON.parse(localStorage.getItem(SB_PREF_KEY)||'null'); if(p) collapsed = !!p.collapsed; } catch(e){}
   if(collapsed) document.body.classList.add('sb-collapsed');
 
-  const showCycle = isCycleUser();
   const tr = TRANSLATIONS[state.lang]||TRANSLATIONS.en;
 
   // Nav definition
@@ -4966,7 +4968,7 @@ function initSidebar() {
     { label: tr.sbGroupHealth||'Health', items: [
       { page:'calories',  href:'calories.html',  icon:'🍎', label: tr.tabCalories||'Calories' },
       { page:'workout',   href:'workout.html',   icon:'🏋️', label: tr.tabWorkout||'Workout' },
-      ...(showCycle ? [{ page:'cycle', href:'cycle.html', icon:'🌸', label: tr.tabCycle||'Cycle', id:'sb-cycle-item' }] : []),
+      { page:'cycle', href:'cycle.html', icon:'🌸', label: tr.tabCycle||'Cycle', id:'sb-cycle-item', dataTab:'cycle' },
     ]},
     { label: tr.sbGroupLifestyle||'Lifestyle', items: [
       { page:'shopping', href:'shopping.html', icon:'🛒', label: tr.tabShopping||'Shopping' },
@@ -4990,9 +4992,10 @@ function initSidebar() {
       const isActive = CURRENT_PAGE === item.page || (item.page==='habits' && (CURRENT_PAGE==='tracker'||CURRENT_PAGE==='habits'));
       const cls = ['sb-item', isActive?'active':'', item.soon?'sb-soon':''].filter(Boolean).join(' ');
       const idAttr = item.id ? `id="${item.id}"` : '';
+      const dataTabAttr = item.dataTab ? `data-tab="${item.dataTab}"` : '';
       const soonBadge = item.soon ? `<span class="sb-soon-badge">SOON</span>` : '';
       const cleanLabel = stripLeadEmoji(item.label);
-      navHTML += `<a class="${cls}" ${idAttr} href="${item.soon?'#':item.href}" title="${cleanLabel}">
+      navHTML += `<a class="${cls}" ${idAttr} ${dataTabAttr} href="${item.soon?'#':item.href}" title="${cleanLabel}">
         <span class="sb-icon">${item.icon}</span>
         <span class="sb-label">${cleanLabel}${soonBadge}</span>
       </a>`;
@@ -5122,13 +5125,9 @@ function initSidebar() {
     });
   });
 
-  // ── Keep cycle item in sync with gender prefs ──
-  function syncCycleItem() {
-    const show = isCycleUser();
-    const item = document.getElementById('sb-cycle-item');
-    if(item) item.closest('.sb-group') && (item.style.display = show ? '' : 'none');
-  }
-  syncCycleItem();
+  // (Cycle item visibility/disabled-state is kept in sync globally by
+  // applyCycleTabVisibility(), called right after initSidebar() at startup
+  // and again whenever the gender preference changes.)
 }
 
 // ─── MAIN MENU WHEEL (menu.html) ──────────────────────────────────────────────

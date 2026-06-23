@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Duck Poses — Step 2 Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#07111f; --surface:#0d1e3a; --surface2:#071828; --border:#1e3060;
+    --text:#fff; --text-sec:#c0d4f0; --text-muted:#4a6a9a; --header-text:#7090c0;
+
+    /* ---- duck palette (Step 2 deliverable — paste into style.css) ---- */
+    --duck-body:#ffc93c; --duck-body-light:#ffe082; --duck-body-dark:#f2a93c;
+    --duck-belly:#fff6da; --duck-beak:#ff9d3d; --duck-beak-dark:#e8762a;
+    --duck-feet:#ff9d3d; --duck-eye:#2b1d12; --duck-cheek:#ff8fa3;
+    --duck-cheek-sick:#a5d6a7; --duck-cheek-angry:#ff7a59; --duck-accent-blue:#4f6ef7;
+    --duck-accent-sleep:#b39ddb; --duck-sick-tint:#8bc34a; --duck-anger:#e64a3b;
+    --duck-crumb:#e8b06a; --duck-shadow:rgba(0,0,0,.18);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;padding:clamp(16px,4vw,48px);}
+  h1{font-size:clamp(18px,2.2vw,24px);font-weight:800;margin:0 0 4px;}
+  .sub{color:var(--header-text);font-size:13px;font-weight:600;margin:0 0 28px;}
+  .section-title{font-size:11px;font-weight:800;color:#5a7aaa;letter-spacing:2px;text-transform:uppercase;margin:0 0 14px;display:flex;align-items:center;gap:7px;}
+  .section-title::before{content:'';width:3px;height:3px;border-radius:50%;background:#4f6ef7;box-shadow:0 0 6px #4f6ef7;}
+
+  /* duck stage card */
+  .stage-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:24px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin-bottom:32px;}
+  .stage-duck{width:160px;height:160px;flex-shrink:0;background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;padding:10px;}
+  .stage-info{flex:1;min-width:220px;}
+  .stage-emotion{font-size:18px;font-weight:800;margin-bottom:4px;}
+  .stage-note{font-size:12.5px;color:var(--text-sec);line-height:1.5;margin-bottom:14px;}
+  .stage-btns{display:flex;flex-wrap:wrap;gap:8px;}
+  .stage-btns button{background:var(--surface2);border:1.5px solid var(--border);color:var(--header-text);font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;letter-spacing:.4px;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all .15s;}
+  .stage-btns button:hover{border-color:#3ecfb2;color:#fff;}
+  .stage-btns button.active{background:#4f6ef7;border-color:#4f6ef7;color:#fff;}
+  .stage-btns button.fallback{opacity:.7;}
+
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px;}
+  .pose-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:16px;text-align:center;transition:border-color .2s;}
+  .pose-card:hover{border-color:#3ecfb2;}
+  .pose-svg{width:100%;aspect-ratio:1;background:var(--surface2);border-radius:12px;padding:8px;margin-bottom:10px;}
+  .pose-name{font-weight:800;font-size:13px;text-transform:capitalize;margin-bottom:3px;}
+  .pose-note{font-size:10.5px;color:var(--text-muted);line-height:1.4;}
+
+  /* palette strip */
+  .palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:10px;}
+  .swatch{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;}
+  .swatch-color{width:30px;height:30px;border-radius:8px;flex-shrink:0;border:1.5px solid rgba(255,255,255,.15);}
+  .swatch-name{font-size:10px;font-weight:700;color:var(--text-sec);}
+  .swatch-hex{font-size:9.5px;color:var(--text-muted);font-family:monospace;}
+</style>
+</head>
+<body>
+
+<h1>🐤 Quackers — Step 2 Pose Preview</h1>
+<p class="sub">8 emotional SVG poses, swappable via getDuckPoseSVG() · same body coordinates across all poses, only face/props change</p>
+
+<div class="section-title">Live Swap Test</div>
+<div class="stage-card">
+  <div class="stage-duck" id="stage-duck"></div>
+  <div class="stage-info">
+    <div class="stage-emotion" id="stage-emotion-label">happy</div>
+    <div class="stage-note" id="stage-emotion-note"></div>
+    <div class="stage-btns" id="stage-btns-real"></div>
+    <div class="stage-btns" id="stage-btns-fallback" style="margin-top:8px;"></div>
+  </div>
+</div>
+
+<div class="section-title">All 8 Poses</div>
+<div class="grid" id="pose-grid"></div>
+
+<div class="section-title">Palette — --duck-* tokens (style.css :root)</div>
+<div class="palette-grid" id="palette-grid"></div>
+
+<script src="duck-poses.js"></script>
+<script>
+  const NOTES = {
+    happy:    'Default / mood > 70 · habitDone, taskDone, pillTaken, pomodoroFinish',
+    sad:      'mood < 30 · pillMissed',
+    tired:    'mood 30–50 or energy < 35 · workoutRecovering',
+    sick:     'health < 25 · period day',
+    grumpy:   'PMS phase',
+    eating:   'foodLogged (4s transient)',
+    drinking: 'waterLogged (3s transient)',
+    sleeping: 'energy < 15 (deep depletion)',
+  };
+  const order = ['happy','sad','tired','sick','grumpy','eating','drinking','sleeping'];
+  const fallbackOrder = ['content','excited','working','hungry','celebrating'];
+
+  // ---- grid ----
+  const grid = document.getElementById('pose-grid');
+  order.forEach(key => {
+    const card = document.createElement('div');
+    card.className = 'pose-card';
+    card.innerHTML = `
+      <div class="pose-svg">${DUCK_POSES[key]}</div>
+      <div class="pose-name">${key}</div>
+      <div class="pose-note">${NOTES[key]}</div>`;
+    grid.appendChild(card);
+  });
+
+  // ---- palette ----
+  const paletteVars = [
+    ['--duck-body','main feather yellow'], ['--duck-body-light','head highlight'],
+    ['--duck-body-dark','wings / shading'], ['--duck-belly','belly patch'],
+    ['--duck-beak','beak top'], ['--duck-beak-dark','beak underside'],
+    ['--duck-feet','webbed feet'], ['--duck-eye','eye color'],
+    ['--duck-cheek','happy blush'], ['--duck-cheek-sick','sick blush'],
+    ['--duck-cheek-angry','grumpy blush'], ['--duck-accent-blue','water / tears'],
+    ['--duck-accent-sleep','Zzz + moon'], ['--duck-sick-tint','sick overlay'],
+    ['--duck-anger','anger marks'], ['--duck-crumb','food crumbs'],
+  ];
+  const pg = document.getElementById('palette-grid');
+  paletteVars.forEach(([varName, label]) => {
+    const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    const sw = document.createElement('div');
+    sw.className = 'swatch';
+    sw.innerHTML = `<div class="swatch-color" style="background:${val}"></div>
+      <div><div class="swatch-name">${label}</div><div class="swatch-hex">${varName}</div></div>`;
+    pg.appendChild(sw);
+  });
+
+  // ---- live swap stage ----
+  const stage = document.getElementById('stage-duck');
+  const label = document.getElementById('stage-emotion-label');
+  const note  = document.getElementById('stage-emotion-note');
+  const btnsReal = document.getElementById('stage-btns-real');
+  const btnsFallback = document.getElementById('stage-btns-fallback');
+
+  function setEmotion(key, isFallback) {
+    const svg = getDuckPoseSVG(key);
+    stage.innerHTML = svg;
+    label.textContent = key;
+    note.textContent = isFallback
+      ? `Not yet designed — falls back to "${EMOTION_FALLBACK[key]}" (Step 8 will give this its own pose)`
+      : (NOTES[key] || '');
+    [...btnsReal.children, ...btnsFallback.children].forEach(b => b.classList.remove('active'));
+    const target = document.querySelector(`button[data-key="${key}"]`);
+    if (target) target.classList.add('active');
+  }
+
+  order.forEach(key => {
+    const b = document.createElement('button');
+    b.textContent = key;
+    b.dataset.key = key;
+    b.onclick = () => setEmotion(key, false);
+    btnsReal.appendChild(b);
+  });
+  fallbackOrder.forEach(key => {
+    const b = document.createElement('button');
+    b.className = 'fallback';
+    b.textContent = key + ' →';
+    b.dataset.key = key;
+    b.onclick = () => setEmotion(key, true);
+    btnsFallback.appendChild(b);
+  });
+
+  setEmotion('happy', false);
+</script>
+
+</body>
+</html>

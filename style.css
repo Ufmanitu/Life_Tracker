@@ -2699,3 +2699,8 @@ body.has-sidebar #lang-dropdown{
 .header-logo-link{display:flex;align-items:center;transition:transform .2s cubic-bezier(.4,0,.2,1);}
 .header-logo-link:hover{transform:scale(1.08) rotate(-4deg);}
 .sb-logo{text-decoration:none;}
+
+/* ── HABIT PACKS BUTTON ── */
+.habit-packs-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:22px;border:2.5px solid #4f6ef7;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap;box-shadow:0 4px 18px rgba(79,110,247,.5);letter-spacing:.3px;}
+.habit-packs-btn:hover{background:linear-gradient(135deg,#6b84ff,#9b59f7);box-shadow:0 6px 24px rgba(79,110,247,.7);transform:translateY(-2px);}
+.habit-packs-btn:active{transform:translateY(0) scale(.97);}

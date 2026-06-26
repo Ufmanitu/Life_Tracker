@@ -13,8 +13,8 @@ Shopping list;
 
 Pomodoro timer for studying;
 
-Mentrual cycle tracker and birth controll pill tracker for women. 
+Menstrual cycle tracker and birth control pill tracker for women.
 
-Has multiple colorful themes and is available in 5 lenguages (English, Deutsch, Spanish, French and Hungarian).
+Has multiple colorful themes and is available in 6 languages (English, Deutsch, Spanish, French, Hungarian and Turkish).
 
 Responsive: works on a scale of devices, but for BEST experience use laptop or big screen.

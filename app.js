@@ -44,6 +44,11 @@ function on(id, ev, fn) {
   if (el) el.addEventListener(ev, fn);
 }
 
+// ─── HTML ESCAPE ─────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ─── NAV STATE PERSISTENCE ───────────────────────────────────────────────────
 const NAV_KEY = 'ht_nav_v1';
 function saveNav() {
@@ -1516,22 +1521,29 @@ const K={
   lang:()=>"ht_lang_v4",
   timetable:()=>"ht_timetable_v1"
 };
+function _lsSet(key, value) {
+  try { localStorage.setItem(key, value); return true; } catch(e) { return false; }
+}
 function saveAll(){
   invalidateStreakCache();
-  try{
-    localStorage.setItem(K.habits(),JSON.stringify(state.habits));
-    localStorage.setItem(K.checked(),JSON.stringify(state.checked));
-    localStorage.setItem(K.mindset(),JSON.stringify(state.mindset));
-    localStorage.setItem(K.tasks(),JSON.stringify({tasks:state.tasks,ctr:state.taskIdCtr}));
-    localStorage.setItem(K.goals(),JSON.stringify({goals:state.goals,ctr:state.goalIdCtr}));
-    localStorage.setItem(K.lang(),state.lang);
-    localStorage.setItem(K.timetable(),JSON.stringify({tt:state.timetable,ctr:state.ttIdCtr}));
-    saveNav();
-    localStorage.setItem('ht_goals_ext_v1',JSON.stringify({daily:state.goalsDaily,dCtr:state.goalsDailyCtr,weekly:state.goalsWeekly,wCtr:state.goalsWeeklyCtr,monthly:state.goalsMonthly,mCtr:state.goalsMonthlyCtr,yearly:state.goalsYearly,yCtr:state.goalsYearlyCtr}));
-    localStorage.setItem('ht_todos_v1',JSON.stringify({todos:state.todos,ctr:state.todoCtr}));
-    localStorage.setItem('ht_journal_v1',JSON.stringify(state.journal));
-  }catch(e){}
-  flashSaved();
+  const ok = [
+    _lsSet(K.habits(), JSON.stringify(state.habits)),
+    _lsSet(K.checked(), JSON.stringify(state.checked)),
+    _lsSet(K.mindset(), JSON.stringify(state.mindset)),
+    _lsSet(K.tasks(), JSON.stringify({tasks:state.tasks,ctr:state.taskIdCtr})),
+    _lsSet(K.goals(), JSON.stringify({goals:state.goals,ctr:state.goalIdCtr})),
+    _lsSet(K.lang(), state.lang),
+    _lsSet(K.timetable(), JSON.stringify({tt:state.timetable,ctr:state.ttIdCtr})),
+    _lsSet('ht_goals_ext_v1', JSON.stringify({daily:state.goalsDaily,dCtr:state.goalsDailyCtr,weekly:state.goalsWeekly,wCtr:state.goalsWeeklyCtr,monthly:state.goalsMonthly,mCtr:state.goalsMonthlyCtr,yearly:state.goalsYearly,yCtr:state.goalsYearlyCtr})),
+    _lsSet('ht_todos_v1', JSON.stringify({todos:state.todos,ctr:state.todoCtr})),
+    _lsSet('ht_journal_v1', JSON.stringify(state.journal)),
+  ];
+  saveNav();
+  if(ok.some(v=>!v)){
+    const el=document.getElementById("save-indicator");
+    if(el){el.textContent='⚠️ Storage full!';el.style.background='#c0392b';el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
+    setTimeout(()=>{el.classList.remove("show");el.style.background='';},3000);}
+  } else { flashSaved(); }
 }
 function loadAll(){
   loadUserPrefs();
@@ -1723,9 +1735,9 @@ function calcStreak(hi){
 function invalidateStreakCache(){for(const k in _streakCheckedCache)delete _streakCheckedCache[k];}
 function streakBadgeHTML(streak,habitName){
   if(streak<1)return'';
-  const fire=streak>=7?'🔥':streak>=3?'🔥':'🔥';
+  const fire=streak>=30?'⚡':streak>=14?'🔥':streak>=7?'🔥':'✨';
   const glow=streak>=30?'#ff6b35':streak>=14?'#ff8c42':streak>=7?'#f5a623':'#ffbe4a';
-  const hn=habitName?(` data-habit="${habitName.replace(/"/g,'&quot;')}"`):'';
+  const hn=habitName?(` data-habit="${esc(habitName)}"`):'';
   return `<span class="streak-badge" style="--streak-color:${glow}" title="${streak}-day streak"${hn} data-streak="${streak}">${fire}<span class="streak-count">${streak}</span></span>`;
 }
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1846,7 +1858,7 @@ function render(animate){
   state.habits.forEach((h,hi)=>{
     const row=document.createElement("div");row.className="habit-name-row";row.style.animationDelay=`${hi*.04}s`;
     if(editingHabit===hi){
-      row.innerHTML=`<input class="habit-name-input" type="text" value="${h.replace(/"/g,'&quot;')}" id="edit-input-${hi}" />
+      row.innerHTML=`<input class="habit-name-input" type="text" value="${esc(h)}" id="edit-input-${hi}" />
         <button class="habit-edit-save-btn" data-savehi="${hi}">✓</button>
         <button class="habit-remove-btn" data-cancelhi="${hi}" style="opacity:.5;font-size:14px;">✕</button>`;
       nl.appendChild(row);
@@ -1854,7 +1866,7 @@ function render(animate){
       requestAnimationFrame(()=>{inp.focus();inp.select();});
     }else{
       const s=calcStreak(hi);
-      row.innerHTML=`<span class="habit-name-text">${h}</span>${streakBadgeHTML(s,h)}
+      row.innerHTML=`<span class="habit-name-text">${esc(h)}</span>${streakBadgeHTML(s,h)}
         <button class="habit-edit-btn" data-edithi="${hi}">✎</button>
         <button class="habit-remove-btn" data-hi="${hi}">×</button>`;
       nl.appendChild(row);
@@ -2138,7 +2150,7 @@ function renderAnalysis(days,total,done,pct,hp,wg,wt,dt){
   state.habits.forEach((h,hi)=>{
     const p=hp[hi];const color=pctColor(p);
     const row=document.createElement("div");row.className="habit-bar-row";
-    row.innerHTML=`<span class="habit-bar-label">${h}</span>
+    row.innerHTML=`<span class="habit-bar-label">${esc(h)}</span>
       <div class="habit-bar-track"><div class="habit-bar-fill" style="width:0%;background:${color};"></div></div>
       <span class="habit-bar-pct" style="color:${color};">${Math.round(p)}%</span>`;
     hbEl.appendChild(row);
@@ -2196,7 +2208,7 @@ function renderGoals(){
   state.goals.forEach(g=>{
     const item=document.createElement("div");item.className="goal-item";
     const done=g.progress>=100;
-    item.innerHTML=`<span class="goal-name ${done?'done-goal':''}">${g.name}</span>
+    item.innerHTML=`<span class="goal-name ${done?'done-goal':''}">${esc(g.name)}</span>
       <div class="goal-progress-wrap">
         <div class="goal-prog-track"><div class="goal-prog-fill" style="width:${g.progress}%"></div></div>
         <div class="goal-prog-pct">${g.progress}%</div>
@@ -2315,7 +2327,7 @@ function renderJournalHistory(activeDateKey) {
       }
       const moodEmoji = en.mood ? JOURNAL_MOODS[en.mood-1] : '';
       const moodColor = en.mood ? JOURNAL_MOOD_COLORS[en.mood-1] : 'transparent';
-      const notePreview = en.note ? en.note.slice(0,100)+(en.note.length>100?'…':'') : `<em class="journal-no-note">${t('journalNoNote')}</em>`;
+      const notePreview = en.note ? esc(en.note.slice(0,100))+(en.note.length>100?'…':'') : `<em class="journal-no-note">${t('journalNoNote')}</em>`;
       const isActive = dk === activeDateKey;
       return `<div class="journal-entry-item${isActive?' active':''}" data-jentry="${dk}">
         <div class="journal-entry-left">
@@ -2375,14 +2387,14 @@ function renderWeeklyView(animate){
   state.habits.forEach((h,hi)=>{
     const row=document.createElement('div');row.className='weekly-habit-name-row';
     if(editingHabit===hi){
-      row.innerHTML=`<input class="habit-name-input" type="text" value="${h.replace(/"/g,'&quot;')}" id="edit-input-${hi}"/>
+      row.innerHTML=`<input class="habit-name-input" type="text" value="${esc(h)}" id="edit-input-${hi}"/>
         <button class="habit-edit-save-btn" data-savehi="${hi}">✓</button>
         <button class="habit-remove-btn" data-cancelhi="${hi}" style="opacity:.5;font-size:14px;">✕</button>`;
       namesCol.appendChild(row);
       requestAnimationFrame(()=>{const inp=row.querySelector('.habit-name-input');if(inp){inp.focus();inp.select();}});
     }else{
       const sw=calcStreak(hi);
-      row.innerHTML=`<span class="weekly-habit-name-text">${h}</span>${streakBadgeHTML(sw,h)}
+      row.innerHTML=`<span class="weekly-habit-name-text">${esc(h)}</span>${streakBadgeHTML(sw,h)}
         <button class="habit-edit-btn" data-edithi="${hi}">✎</button>
         <button class="habit-remove-btn" data-hi="${hi}">×</button>`;
       namesCol.appendChild(row);
@@ -2514,7 +2526,7 @@ function renderGoalPeriod(period){
   goals.forEach(g=>{
     const item=document.createElement('div');item.className='goal-item';
     const isDone=g.progress>=100;
-    item.innerHTML=`<span class="goal-name ${isDone?'done-goal':''}">${g.name}</span>
+    item.innerHTML=`<span class="goal-name ${isDone?'done-goal':''}">${esc(g.name)}</span>
       <div class="goal-progress-wrap">
         <div class="goal-prog-track"><div class="goal-prog-fill" style="width:${g.progress}%"></div></div>
         <div class="goal-prog-pct">${g.progress}%</div>
@@ -2603,7 +2615,7 @@ function renderTodoPage(){
         <div class="todo-cb ${td.done?'checked':''}" data-tdid="${td.id}">
           <svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <span class="todo-item-name ${td.done?'done-name':''}">${td.name}</span>
+        <span class="todo-item-name ${td.done?'done-name':''}">${esc(td.name)}</span>
         <div class="todo-item-meta">
           <span class="todo-pri ${priClass[td.priority]||'todo-pri-medium'}">${priLabel[td.priority]||td.priority}</span>
           ${dueHTML}
@@ -2664,7 +2676,7 @@ function renderShoppingList(){
           <div class="shop-cb ${item.done?"checked":""}" data-sid="${item.id}">
             <svg viewBox="0 0 20 20" fill="none" stroke="#3ecfb2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,10 8,14 16,6"/></svg>
           </div>
-          <span class="shop-item-name ${item.done?"checked-name":""}">${item.name}</span>
+          <span class="shop-item-name ${item.done?"checked-name":""}">${esc(item.name)}</span>
           <span class="shop-item-qty">×${item.qty}</span>
           <button class="shop-edit-btn" data-esid="${item.id}" title="Edit">✎</button>
           <button class="shop-remove-btn" data-rsid="${item.id}">✕</button>`;
@@ -3876,7 +3888,7 @@ function renderTimetable(){
         badge.style.cssText=`background:${cat.bg};border-color:${cat.border};color:${cat.text};`;
         badge.title=ev.title;
         badge.dataset.ttid=ev.id;
-        badge.innerHTML=`<span class="tt-allday-title">${ev.title}</span><button class="tt-event-edit" data-tteditid="${ev.id}" title="Edit">✎</button><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
+        badge.innerHTML=`<span class="tt-allday-title">${esc(ev.title)}</span><button class="tt-event-edit" data-tteditid="${ev.id}" title="Edit">✎</button><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
         cell.appendChild(badge);
       }
       return;
@@ -3897,7 +3909,7 @@ function renderTimetable(){
     const el=document.createElement('div');
     el.className='tt-event';
     el.style.cssText=`grid-row:${rowStart}/${rowEnd};grid-column:${col};background:${cat.bg};border-color:${cat.border};color:${cat.text};`;
-    el.innerHTML=`<span class="tt-event-title"><span class="tt-event-time">${ev.start}</span> ${ev.title}</span><button class="tt-event-edit" data-tteditid="${ev.id}" title="Edit">✎</button><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
+    el.innerHTML=`<span class="tt-event-title"><span class="tt-event-time">${esc(ev.start)}</span> ${esc(ev.title)}</span><button class="tt-event-edit" data-tteditid="${ev.id}" title="Edit">✎</button><button class="tt-event-del" data-ttid="${ev.id}" title="Remove">×</button>`;
     grid.appendChild(el);
   });
 
@@ -4401,13 +4413,6 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{
 
 // ── TRACKER PAGE ──────────────────────────────────────────────────────────────
 if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
-  // Inject packs button styles immediately so button is visible before modal is opened
-  if(!document.getElementById("hpm-btn-styles")){
-    const _bst=document.createElement("style");
-    _bst.id="hpm-btn-styles";
-    _bst.textContent=`.habit-packs-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:22px;border:2.5px solid #4f6ef7;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap;box-shadow:0 4px 18px rgba(79,110,247,.5);letter-spacing:.3px;}.habit-packs-btn:hover{background:linear-gradient(135deg,#6b84ff,#9b59f7);box-shadow:0 6px 24px rgba(79,110,247,.7);transform:translateY(-2px);}.habit-packs-btn:active{transform:translateY(0) scale(.97);}`.replace(/\n\s*/g,'');
-    document.head.appendChild(_bst);
-  }
   on("tracker-section","click",e=>{
     const cb=e.target.closest(".day-habit-cb");
     if(cb){
@@ -4968,7 +4973,7 @@ if(CURRENT_PAGE==="habits"){
 
 
 // ── JOURNAL EVENT HANDLERS ────────────────────────────────────────────────────
-if(CURRENT_PAGE==="habits"){
+if(CURRENT_PAGE==="habits"||CURRENT_PAGE==="analysis"){
   on('journal-prev-day','click',()=>{
     const d=getJournalDateObj(); d.setDate(d.getDate()-1); setJournalDate(d); renderJournal();
   });
@@ -5841,7 +5846,7 @@ function renderExpenseList() {
       <div>
         <div class="fin-entry-desc">
           <span class="fin-entry-emoji">${exp.emoji||'💳'}</span>
-          <span class="fin-entry-name">${exp.desc}</span>
+          <span class="fin-entry-name">${esc(exp.desc)}</span>
         </div>
         <div class="fin-entry-date">${exp.date}</div>
       </div>
@@ -5870,7 +5875,7 @@ function renderIncomeList() {
       <div>
         <div class="fin-entry-desc">
           <span class="fin-entry-emoji">${inc.emoji||'💵'}</span>
-          <span class="fin-entry-name">${inc.desc}</span>
+          <span class="fin-entry-name">${esc(inc.desc)}</span>
         </div>
         <div class="fin-entry-date">${inc.date}</div>
       </div>
@@ -6028,7 +6033,7 @@ function renderSavings() {
     item.className = 'fin-savings-goal-item';
     item.innerHTML = `
       <div class="fin-savings-goal-header">
-        <span class="fin-savings-goal-name">${sav.name}</span>
+        <span class="fin-savings-goal-name">${esc(sav.name)}</span>
         <div class="fin-savings-goal-vals">
           <span class="fin-savings-goal-current">€${sav.current||0}</span>
           <span class="fin-savings-goal-sep">/</span>
@@ -9785,7 +9790,7 @@ function wktRenderSessionsList() {
       if (ex.type === 'distance') metric = `${ex.distance} km`;
       return `<div class="wkt-ex-row">
         <span class="wkt-ex-icon">${WKT_CAT_ICONS[ex.cat]||'💪'}</span>
-        <span class="wkt-ex-name">${ex.name}</span>
+        <span class="wkt-ex-name">${esc(ex.name)}</span>
         <span class="wkt-ex-metric">${metric}</span>
         <button class="wkt-ex-del" data-sessid="${sess.id}" data-exid="${ex.id}" title="${t('wktRemoveTitle')}">✕</button>
       </div>`;
@@ -9802,7 +9807,7 @@ function wktRenderSessionsList() {
         <button class="wkt-session-del" data-sessid="${sess.id}" title="${t('wktDeleteSessionTitle')}">🗑</button>
       </div>
       <div class="wkt-ex-list">${exHTML}</div>
-      ${sess.linkedHabitName ? `<div class="wkt-linked-habit">${t('wktLinkedHabitPrefix')} <strong>${sess.linkedHabitName}</strong></div>` : ''}
+      ${sess.linkedHabitName ? `<div class="wkt-linked-habit">${t('wktLinkedHabitPrefix')} <strong>${esc(sess.linkedHabitName)}</strong></div>` : ''}
     </div>`;
   }).join('');
 
@@ -9949,7 +9954,7 @@ function wktRenderPRs() {
     if (pr.maxDur>0)    metrics.push(`⏱ ${pr.maxDur} min`);
     return `<div class="wkt-pr-row">
       <span class="wkt-pr-icon" style="color:${col}">${WKT_CAT_ICONS[pr.cat]||'💪'}</span>
-      <span class="wkt-pr-name">${pr.name}</span>
+      <span class="wkt-pr-name">${esc(pr.name)}</span>
       <span class="wkt-pr-val">${metrics.join(' · ')}</span>
     </div>`;
   }).join('');
@@ -10086,7 +10091,7 @@ function wktUpdatePreview() {
   if (type==='duration') metric = `${dur} min`;
   if (type==='distance') metric = `${dist} km`;
 
-  prev.innerHTML = name ? `<span style="font-weight:700;">${name}</span> — ${metric} · ~${burn} ${t('wktPreviewBurnedSuffix')}` : '';
+  prev.innerHTML = name ? `<span style="font-weight:700;">${esc(name)}</span> — ${metric} · ~${burn} ${t('wktPreviewBurnedSuffix')}` : '';
 }
 
 function wktAddExercise() {
@@ -10452,7 +10457,7 @@ function recCardHTML(r) {
         <button class="rec-icon-btn" data-rdel="${r.id}" title="Delete">🗑</button>
       </div>
     </div>
-    <div class="rec-card-name">${r.name}</div>
+    <div class="rec-card-name">${esc(r.name)}</div>
     <div class="rec-card-macros">
       <span class="rec-macro-chip rec-chip-kcal">🔥 ${r.kcal||0} kcal</span>
       <span class="rec-macro-chip">P ${r.protein||0}g</span>
@@ -10497,9 +10502,9 @@ function recRenderIngredientRows() {
   }
   wrap.innerHTML = recModalIngredients.map(ing => `
     <div class="rec-ing-row" data-ingid="${ing.id}">
-      <input class="form-input rec-ing-name" data-field="name" value="${(ing.name||'').replace(/"/g,'&quot;')}" placeholder="${tr.recIngNamePh||'Ingredient'}"/>
+      <input class="form-input rec-ing-name" data-field="name" value="${esc(ing.name||'')}" placeholder="${tr.recIngNamePh||'Ingredient'}"/>
       <input class="form-input rec-ing-qty" data-field="qty" type="number" min="0" step="0.1" value="${ing.qty!==undefined&&ing.qty!==''?ing.qty:''}" placeholder="${tr.recIngQtyPh||'Qty'}"/>
-      <input class="form-input rec-ing-unit" data-field="unit" value="${(ing.unit||'').replace(/"/g,'&quot;')}" placeholder="${tr.recIngUnitPh||'unit'}"/>
+      <input class="form-input rec-ing-unit" data-field="unit" value="${esc(ing.unit||'')}" placeholder="${tr.recIngUnitPh||'unit'}"/>
       <button class="rec-ing-del" data-ingdel="${ing.id}" title="Remove">✕</button>
     </div>`).join('');
 }
@@ -10699,6 +10704,5 @@ document.getElementById('rec-log-modal')?.addEventListener('keydown', e => {
 // ── INIT ─────────────────────────────────────────────────────────────
 recLoad();
 recRenderGrid();
-applyTranslations();
 
 } // end if(CURRENT_PAGE === 'recipes')

@@ -64,6 +64,25 @@
       <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div><span data-i18n="motivation">Motivation</span></div>
     </div>
   </div>
+  <!-- JOURNAL CARD -->
+  <div class="analysis-card full-width" id="journal-card">
+    <div class="journal-card-header">
+      <div class="section-title" data-i18n="journalTitle">📓 Daily Journal</div>
+      <div class="journal-date-nav">
+        <button class="journal-date-btn" id="journal-prev-day" data-i18n-title="journalPrevDayTitle" title="Previous day">‹</button>
+        <span class="journal-date-display" id="journal-date-display">Today</span>
+        <button class="journal-date-btn" id="journal-next-day" data-i18n-title="journalNextDayTitle" title="Next day">›</button>
+      </div>
+    </div>
+    <div class="journal-mood-row" id="journal-mood-row"></div>
+    <textarea class="journal-textarea" id="journal-textarea" rows="3" placeholder="What happened today? Even 2–3 sentences builds a powerful record over time…" data-i18n-placeholder="journalPlaceholder"></textarea>
+    <div class="journal-actions">
+      <button class="goal-add-btn" id="journal-save-btn" style="padding:9px 20px;font-size:12px;">💾 <span data-i18n="journalSaveBtn">Save Entry</span></button>
+      <span class="journal-char-count" id="journal-char-count">0 / 2000</span>
+      <span class="journal-hint">Ctrl+Enter to save</span>
+    </div>
+    <div class="journal-history" id="journal-history"></div>
+  </div>
   <div class="analysis-bottom-row">
     <div class="analysis-main">
       <div class="analysis-card">
@@ -190,7 +209,6 @@
 </div>
 
 <div id="save-indicator" data-i18n="saved">✓ Saved</div>
-<script src="duck.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

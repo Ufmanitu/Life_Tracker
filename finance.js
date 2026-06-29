@@ -1,0 +1,536 @@
+// ═══════════════════════════════════════════════════════════════════
+// ── FINANCE MODULE ────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+if (CURRENT_PAGE === 'finance') {
+
+// ── TRANSLATIONS (finance keys) ───────────────────────────────────
+const FIN_I18N = {
+  en: { tabFinance:'💰 Finance', finTotalExpenses:'Total Expenses', finTotalIncome:'Total Income',
+        finBalance:'Balance', finMonthlyBudget:'Monthly Budget', finExpenses:'Expenses',
+        finIncome:'Income', finDescription:'Aa Description', finAmount:'💲 Amount',
+        finCategory:'🏷 Category', finSource:'🏷 Source', finNoExpenses:'No expenses yet. Add one below!',
+        finNoIncome:'No income yet. Add one below!', finDescPlaceholder:'Description…',
+        finSourcePlaceholder:'Source…', finAddEntry:'+ Add', finToday:'Today',
+        finThisWeek:'This week', finThisMonth:'This month', finAll:'All',
+        finBudgetBreakdown:'Budget Breakdown', finTotalSpent:'Total spent',
+        finBudgetEnvelopes:'Budget Envelopes', finEnvelopeHint:'Click ✎ to set a monthly limit per category',
+        finNoDataMonth:'No data this month.', finSavingsEmpty:'No savings goals yet.',
+        finOverBudget:'over budget', finLeftMonth:'left this month',
+        finNoLimit:'No limit', finSetLimit:'Set one',
+        finSavingsGoals:'Savings Goals' },
+  hu: { tabFinance:'💰 Pénzügy', finTotalExpenses:'Összes kiadás', finTotalIncome:'Összes bevétel',
+        finBalance:'Egyenleg', finMonthlyBudget:'Havi keret', finExpenses:'Kiadások',
+        finIncome:'Bevételek', finDescription:'Megnevezés', finAmount:'Összeg',
+        finCategory:'Kategória', finSource:'Forrás', finNoExpenses:'Még nincs kiadás.',
+        finNoIncome:'Még nincs bevétel.', finDescPlaceholder:'Megnevezés…',
+        finSourcePlaceholder:'Forrás…', finAddEntry:'+ Hozzáad', finToday:'Ma',
+        finThisWeek:'Ez a hét', finThisMonth:'Ez a hónap', finAll:'Mind',
+        finBudgetBreakdown:'Kategóriák', finTotalSpent:'Összesen',
+        finBudgetEnvelopes:'Keret borítékok', finEnvelopeHint:'✎ gombra kattintva havi keretet állíthatsz',
+        finNoDataMonth:'Még nincs adat erre a hónapra.', finSavingsEmpty:'Még nincs megtakarítási cél.',
+        finOverBudget:'túllépés', finLeftMonth:'maradt erre a hónapra',
+        finNoLimit:'Nincs limit', finSetLimit:'Beállítás',
+        finSavingsGoals:'Megtakarítási célok' },
+  de: { tabFinance:'💰 Finanzen', finTotalExpenses:'Gesamtausgaben', finTotalIncome:'Gesamteinnahmen',
+        finBalance:'Saldo', finMonthlyBudget:'Monatsbudget', finExpenses:'Ausgaben',
+        finIncome:'Einnahmen', finNoExpenses:'Noch keine Ausgaben.', finNoIncome:'Noch keine Einnahmen.',
+        finDescPlaceholder:'Beschreibung…', finSourcePlaceholder:'Quelle…', finAddEntry:'+ Hinzufügen',
+        finToday:'Heute', finThisWeek:'Diese Woche', finThisMonth:'Dieser Monat', finAll:'Alle',
+        finBudgetBreakdown:'Ausgaben nach Kategorie', finTotalSpent:'Gesamt ausgegeben',
+        finBudgetEnvelopes:'Budget-Umschläge', finEnvelopeHint:'✎ klicken um monatliches Limit zu setzen',
+        finNoDataMonth:'Keine Daten diesen Monat.', finSavingsEmpty:'Noch keine Sparziele.',
+        finOverBudget:'über Budget', finLeftMonth:'noch übrig diesen Monat',
+        finNoLimit:'Kein Limit', finSetLimit:'Festlegen',
+        finSavingsGoals:'Sparziele' },
+  es: { tabFinance:'💰 Finanzas', finTotalExpenses:'Total gastos', finTotalIncome:'Total ingresos',
+        finBalance:'Balance', finMonthlyBudget:'Presupuesto mensual', finExpenses:'Gastos',
+        finIncome:'Ingresos', finNoExpenses:'Sin gastos aún.', finNoIncome:'Sin ingresos aún.',
+        finDescPlaceholder:'Descripción…', finSourcePlaceholder:'Fuente…', finAddEntry:'+ Añadir',
+        finToday:'Hoy', finThisWeek:'Esta semana', finThisMonth:'Este mes', finAll:'Todo',
+        finBudgetBreakdown:'Desglose', finTotalSpent:'Total gastado',
+        finBudgetEnvelopes:'Sobres de presupuesto', finEnvelopeHint:'Haz clic en ✎ para establecer un límite mensual',
+        finNoDataMonth:'Sin datos este mes.', finSavingsEmpty:'Todavía no hay metas de ahorro.',
+        finOverBudget:'sobre presupuesto', finLeftMonth:'restante este mes',
+        finNoLimit:'Sin límite', finSetLimit:'Establecer',
+        finSavingsGoals:'Metas de ahorro' },
+  fr: { tabFinance:'💰 Finances', finTotalExpenses:'Total dépenses', finTotalIncome:'Total revenus',
+        finBalance:'Solde', finMonthlyBudget:'Budget mensuel', finExpenses:'Dépenses',
+        finIncome:'Revenus', finNoExpenses:'Aucune dépense encore.', finNoIncome:'Aucun revenu encore.',
+        finDescPlaceholder:'Description…', finSourcePlaceholder:'Source…', finAddEntry:'+ Ajouter',
+        finToday:"Aujourd'hui", finThisWeek:'Cette semaine', finThisMonth:'Ce mois', finAll:'Tout',
+        finBudgetBreakdown:'Répartition', finTotalSpent:'Total dépensé',
+        finBudgetEnvelopes:'Enveloppes budgétaires', finEnvelopeHint:'Cliquez ✎ pour définir une limite mensuelle',
+        finNoDataMonth:'Aucune donnée ce mois.', finSavingsEmpty:"Aucun objectif d'épargne.",
+        finOverBudget:'au-dessus du budget', finLeftMonth:'restant ce mois',
+        finNoLimit:'Sans limite', finSetLimit:'Définir',
+        finSavingsGoals:"Objectifs d'épargne" },
+};
+// Merge fin translations into main TRANSLATIONS
+Object.keys(TRANSLATIONS).forEach(lang => {
+  if (FIN_I18N[lang]) Object.assign(TRANSLATIONS[lang], FIN_I18N[lang]);
+});
+
+// ── FINANCE STATE & STORAGE ───────────────────────────────────────
+const FIN_KEY = 'ht_finance_v1';
+let finState = {
+  expenses: [], incomes: [], idCtr: 1,
+  monthlyBudget: 0,
+  categoryBudgets: {},
+  savings: [], savIdCtr: 1,
+};
+function loadFinance() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FIN_KEY) || 'null');
+    if (raw) finState = Object.assign(finState, raw);
+  } catch(e) {}
+}
+function saveFinance() {
+  try { localStorage.setItem(FIN_KEY, JSON.stringify(finState)); } catch(e) {}
+  flashSaved();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const CAT_COLORS = {
+  Food:'#f5a623',Health:'#3ecfb2',Transport:'#7090f9',Entertainment:'#a78bfa',
+  Utilities:'#e05a9a',Home:'#c09060',Development:'#20b4f8',Investment:'#ff8c00',
+  Salary:'#3ecfb2',Freelance:'#7090f9',Gift:'#e05a9a',Other:'#8898aa',
+};
+function catClass(cat) {
+  const map = {Food:'food',Health:'health',Transport:'transport',Entertainment:'entertainment',
+    Utilities:'utilities',Home:'home',Development:'development',Investment:'investment',
+    Salary:'salary',Freelance:'freelance',Gift:'gift',Other:'other'};
+  return 'fin-cat-'+(map[cat]||'other');
+}
+// Maps canonical English key → i18n translation key
+const CAT_I18N_KEY = {
+  Food:'finCatFood', Health:'finCatHealth', Transport:'finCatTransport',
+  Entertainment:'finCatEntertainment', Utilities:'finCatUtilities', Home:'finCatHome',
+  Development:'finCatDevelopment', Investment:'finCatInvestment', Other:'finCatOther',
+  Salary:'finIncSalary', Freelance:'finIncFreelance', Gift:'finIncGift',
+};
+function catLabel(cat) {
+  const key = CAT_I18N_KEY[cat];
+  if (!key) return cat;
+  const full = t(key) || cat;
+  // Strip leading emoji + space ("🍔 Étel" → "Étel")
+  return full.replace(/^.{1,2}\s/, '').trim() || cat;
+}
+function fmtAmt(n) { return '€'+Number(n).toFixed(2); }
+
+let expScope = 'month', incScope = 'month';
+function inScope(dateStr, scope) {
+  const d = new Date(dateStr+'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  if (scope === 'all') return true;
+  if (scope === 'today') {
+    return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+  }
+  if (scope === 'week') {
+    const mon = getTTWeekMonday(now);
+    const sun = new Date(mon); sun.setDate(sun.getDate()+6); sun.setHours(23,59,59);
+    return d >= mon && d <= sun;
+  }
+  if (scope === 'month') {
+    return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+  }
+  return true;
+}
+
+// ── EMOJI PICKER ──────────────────────────────────────────────────
+const EMOJIS = ['💳','🏧','💵','💸','🛒','🍔','🥗','☕','🍕','🍺','🏥','💊','🚗','⛽','🚌','🎬','🎮','📚','📗','📒','🏠','🔧','⚡','💧','📱','💻','🎓','📈','🥇','💎','🛍️','🎁','🌍','✈️','🏋️','💼','🤝','🏦','🍫','🥤'];
+function buildEmojiPicker(pickerId, btnId, onPick) {
+  const picker = document.getElementById(pickerId);
+  if (!picker) return;
+  picker.innerHTML = EMOJIS.map(e=>`<div class="fin-emoji-opt" data-e="${e}">${e}</div>`).join('');
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', e => { e.stopPropagation(); picker.classList.toggle('hidden'); });
+  picker.addEventListener('click', e => {
+    const opt = e.target.closest('[data-e]');
+    if (!opt) return;
+    btn.textContent = opt.dataset.e;
+    picker.classList.add('hidden');
+    if (onPick) onPick(opt.dataset.e);
+  });
+  document.addEventListener('click', () => picker.classList.add('hidden'));
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function renderFinanceStats() {
+  const expAll = finState.expenses;
+  const incAll = finState.incomes;
+  const monthExp = expAll.filter(e => inScope(e.date,'month')).reduce((s,e)=>s+Number(e.amount),0);
+  const monthInc = incAll.filter(i => inScope(i.date,'month')).reduce((s,i)=>s+Number(i.amount),0);
+  const balance = monthInc - monthExp;
+
+  document.getElementById('fin-stat-expenses').textContent = fmtAmt(monthExp);
+  document.getElementById('fin-stat-income').textContent = fmtAmt(monthInc);
+  const balEl = document.getElementById('fin-stat-balance');
+  balEl.textContent = fmtAmt(balance);
+  const balCard = document.getElementById('fin-balance-card');
+  balCard.classList.toggle('negative', balance < 0);
+
+  const budgetUsed = monthExp;
+  const budgetLimit = finState.monthlyBudget || 0;
+  document.getElementById('fin-stat-budget-used').textContent = '€'+Math.round(budgetUsed);
+  document.getElementById('fin-stat-budget-limit').textContent = budgetLimit > 0 ? '€'+budgetLimit : '—';
+}
+
+function renderExpenseList() {
+  const list = document.getElementById('fin-expense-list');
+  const filtered = finState.expenses.filter(e => inScope(e.date, expScope));
+  if (!filtered.length) {
+    list.innerHTML = `<div class="fin-empty-msg">${t('finNoExpenses')||'No expenses yet.'}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  [...filtered].reverse().forEach((exp, idx) => {
+    const row = document.createElement('div');
+    row.className = 'fin-entry-row';
+    row.style.animationDelay = idx*0.03+'s';
+    row.innerHTML = `
+      <div>
+        <div class="fin-entry-desc">
+          <span class="fin-entry-emoji">${exp.emoji||'💳'}</span>
+          <span class="fin-entry-name">${esc(exp.desc)}</span>
+        </div>
+        <div class="fin-entry-date">${exp.date}</div>
+      </div>
+      <div class="fin-entry-amt">${fmtAmt(exp.amount)}</div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(exp.category)}">${catLabel(exp.category)}</span></div>
+      <div class="fin-entry-actions">
+        <button class="fin-entry-del-btn" data-del-exp="${exp.id}" title="Delete">×</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderIncomeList() {
+  const list = document.getElementById('fin-income-list');
+  const filtered = finState.incomes.filter(i => inScope(i.date, incScope));
+  if (!filtered.length) {
+    list.innerHTML = `<div class="fin-empty-msg">${t('finNoIncome')||'No income yet.'}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  [...filtered].reverse().forEach((inc, idx) => {
+    const row = document.createElement('div');
+    row.className = 'fin-entry-row income-row';
+    row.style.animationDelay = idx*0.03+'s';
+    row.innerHTML = `
+      <div>
+        <div class="fin-entry-desc">
+          <span class="fin-entry-emoji">${inc.emoji||'💵'}</span>
+          <span class="fin-entry-name">${esc(inc.desc)}</span>
+        </div>
+        <div class="fin-entry-date">${inc.date}</div>
+      </div>
+      <div class="fin-entry-amt">${fmtAmt(inc.amount)}</div>
+      <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(inc.category)}">${catLabel(inc.category)}</span></div>
+      <div class="fin-entry-actions">
+        <button class="fin-entry-del-btn" data-del-inc="${inc.id}" title="Delete">×</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderEnvelopes() {
+  const el = document.getElementById('fin-breakdown-list');
+  const totalEl = document.getElementById('fin-breakdown-total');
+  const monthExp = finState.expenses.filter(e => inScope(e.date,'month'));
+  const totals = {};
+  monthExp.forEach(e => { totals[e.category] = (totals[e.category]||0)+Number(e.amount); });
+  const total = Object.values(totals).reduce((s,v)=>s+v,0);
+  if(totalEl) totalEl.textContent = fmtAmt(total);
+
+  // Merge categories: those with spending + those with a budget set but no spending yet
+  const budgets = finState.categoryBudgets || {};
+  const allCats = [...new Set([...Object.keys(totals), ...Object.keys(budgets)])];
+  // Sort: categories with a limit first (by spent desc), then no-limit by spent desc
+  allCats.sort((a,b) => {
+    const aHas = !!budgets[a], bHas = !!budgets[b];
+    if (aHas !== bHas) return aHas ? -1 : 1;
+    return (totals[b]||0) - (totals[a]||0);
+  });
+
+  if (!allCats.length) {
+    el.innerHTML = `<div class="fin-empty-msg" style="font-size:12px;">${t('finNoDataMonth')||'No data this month.'}</div>`;
+    return;
+  }
+  el.innerHTML = '';
+
+  allCats.forEach((cat, idx) => {
+    const spent = totals[cat] || 0;
+    const limit = budgets[cat] || 0;
+    const hasLimit = limit > 0;
+    const color = CAT_COLORS[cat] || '#8898aa';
+
+    // Bar fill percentage
+    let barPct, barColor;
+    if (hasLimit) {
+      barPct = Math.min(100, (spent / limit) * 100);
+      const ratio = spent / limit;
+      barColor = ratio >= 1 ? '#ef4444' : ratio >= 0.8 ? '#f5a623' : color;
+    } else {
+      barPct = total > 0 ? (spent / total) * 100 : 0;
+      barColor = color;
+    }
+
+    const remaining = limit - spent;
+    const over = hasLimit && remaining < 0;
+    const nearLimit = hasLimit && !over && remaining / limit < 0.2;
+
+    const item = document.createElement('div');
+    item.className = 'fin-envelope-item';
+    item.dataset.cat = cat;
+
+    item.innerHTML = `
+      <div class="fin-envelope-top">
+        <div class="fin-envelope-left">
+          <div class="fin-breakdown-dot" style="background:${color}"></div>
+          <span class="fin-envelope-name">${catLabel(cat)}</span>
+        </div>
+        <div class="fin-envelope-right">
+          <span class="fin-envelope-spent">${fmtAmt(spent)}</span>
+          ${hasLimit ? `<span class="fin-envelope-sep">/</span><span class="fin-envelope-limit">€${limit}</span>` : ''}
+          <div class="fin-envelope-edit-wrap">
+            <button class="fin-envelope-edit-btn" data-editcat="${cat}" title="Set budget limit">✎</button>
+            <div class="fin-envelope-input-pop hidden" data-pop="${cat}">
+              <input class="fin-envelope-input" type="number" placeholder="limit €" min="0" step="1" value="${limit||''}"/>
+              <button class="fin-envelope-save-btn">✓</button>
+              <button class="fin-envelope-clear-btn" title="Remove limit">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fin-envelope-bar-track">
+        <div class="fin-envelope-bar-fill" style="width:0%;background:${barColor}"></div>
+      </div>
+      ${hasLimit
+        ? `<div class="fin-envelope-status ${over?'over':nearLimit?'warn':'ok'}">
+             ${over
+               ? `⚠️ €${Math.abs(remaining).toFixed(2)} ${t('finOverBudget')||'over budget'}`
+               : `✓ €${remaining.toFixed(2)} ${t('finLeftMonth')||'left this month'}`}
+           </div>`
+        : `<div class="fin-envelope-nolimit">${t('finNoLimit')||'No limit'} — <span class="fin-envelope-setlink" data-setlink="${cat}">${t('finSetLimit')||'Set one'}</span></div>`
+      }`;
+
+    el.appendChild(item);
+
+    // Animate bar
+    requestAnimationFrame(() => setTimeout(() => {
+      const f = item.querySelector('.fin-envelope-bar-fill');
+      if (f) { f.style.transition = 'width .65s cubic-bezier(.4,0,.2,1),background .3s'; f.style.width = barPct + '%'; }
+    }, 60 + idx * 30));
+
+    // Toggle input pop
+    const openPop = () => {
+      const pop = item.querySelector('.fin-envelope-input-pop');
+      pop.classList.remove('hidden');
+      const inp = pop.querySelector('.fin-envelope-input');
+      inp.focus(); inp.select();
+    };
+    item.querySelector('[data-editcat]').addEventListener('click', e => { e.stopPropagation(); openPop(); });
+    const setLink = item.querySelector('[data-setlink]');
+    if (setLink) setLink.addEventListener('click', e => { e.stopPropagation(); openPop(); });
+
+    // Save helper
+    const saveEnvelopeLimit = (val) => {
+      if (!finState.categoryBudgets) finState.categoryBudgets = {};
+      if (!isNaN(val) && val > 0) {
+        finState.categoryBudgets[cat] = val;
+      } else {
+        delete finState.categoryBudgets[cat];
+      }
+      saveFinance(); renderFinance();
+    };
+
+    const pop = item.querySelector('.fin-envelope-input-pop');
+    const inp = pop.querySelector('.fin-envelope-input');
+    pop.querySelector('.fin-envelope-save-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      saveEnvelopeLimit(parseFloat(inp.value));
+    });
+    pop.querySelector('.fin-envelope-clear-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      saveEnvelopeLimit(0);
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveEnvelopeLimit(parseFloat(inp.value));
+      if (e.key === 'Escape') pop.classList.add('hidden');
+      e.stopPropagation();
+    });
+    // Close pop on outside click
+    document.addEventListener('click', () => pop.classList.add('hidden'), { once: false });
+    pop.addEventListener('click', e => e.stopPropagation());
+  });
+}
+
+function renderSavings() {
+  const el = document.getElementById('fin-savings-list');
+  if (!finState.savings.length) {
+    el.innerHTML = `<div class="fin-empty-msg" style="font-size:12px;">${t('finSavingsEmpty')||'No savings goals yet.'}</div>`;
+    return;
+  }
+  el.innerHTML = '';
+  finState.savings.forEach(sav => {
+    const pct = sav.target > 0 ? Math.min(100,Math.round(sav.current/sav.target*100)) : 0;
+    const item = document.createElement('div');
+    item.className = 'fin-savings-goal-item';
+    item.innerHTML = `
+      <div class="fin-savings-goal-header">
+        <span class="fin-savings-goal-name">${esc(sav.name)}</span>
+        <div class="fin-savings-goal-vals">
+          <span class="fin-savings-goal-current">€${sav.current||0}</span>
+          <span class="fin-savings-goal-sep">/</span>
+          <span class="fin-savings-goal-target">€${sav.target}</span>
+        </div>
+      </div>
+      <div class="fin-savings-track"><div class="fin-savings-fill" style="width:0%"></div></div>
+      <div class="fin-savings-actions">
+        <input class="fin-savings-contrib-input" type="number" placeholder="+€" min="0" step="1" data-savid="${sav.id}" />
+        <button class="fin-savings-contrib-btn" data-savcontrib="${sav.id}">+ Add</button>
+        <button class="fin-savings-del-btn" data-savdel="${sav.id}">×</button>
+      </div>`;
+    el.appendChild(item);
+    requestAnimationFrame(()=>setTimeout(()=>{ const f=item.querySelector('.fin-savings-fill');if(f)f.style.width=pct+'%'; },120));
+  });
+}
+
+function renderFinance() {
+  renderFinanceStats();
+  renderExpenseList();
+  renderIncomeList();
+  renderEnvelopes();
+  renderSavings();
+  applyTranslations();
+}
+
+// ── EVENT WIRING ──────────────────────────────────────────────────
+// Scope filters — expenses
+document.querySelectorAll('.fin-filter-btn:not(.inc-filter)').forEach(btn => {
+  btn.addEventListener('click', () => {
+    expScope = btn.dataset.fscope;
+    document.querySelectorAll('.fin-filter-btn:not(.inc-filter)').forEach(b=>b.classList.toggle('active',b===btn));
+    renderExpenseList();
+  });
+});
+// Scope filters — income
+document.querySelectorAll('.fin-filter-btn.inc-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    incScope = btn.dataset.fscope;
+    document.querySelectorAll('.fin-filter-btn.inc-filter').forEach(b=>b.classList.toggle('active',b===btn));
+    renderIncomeList();
+  });
+});
+
+// Add expense
+let expEmoji = '💳';
+buildEmojiPicker('fin-exp-emoji-picker','fin-exp-emoji-btn', e => { expEmoji = e; });
+function addExpense() {
+  const desc = document.getElementById('fin-exp-desc').value.trim();
+  const amt = parseFloat(document.getElementById('fin-exp-amt').value);
+  if (!desc || isNaN(amt) || amt <= 0) return;
+  const cat = document.getElementById('fin-exp-cat').value;
+  finState.expenses.push({id:finState.idCtr++,emoji:expEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
+  document.getElementById('fin-exp-desc').value='';
+  document.getElementById('fin-exp-amt').value='';
+  saveFinance(); renderFinance();
+}
+on('fin-exp-add-btn','click',addExpense);
+on('fin-exp-desc','keydown',e=>{ if(e.key==='Enter') addExpense(); });
+on('fin-exp-amt','keydown',e=>{ if(e.key==='Enter') addExpense(); });
+on('fin-exp-newpage-btn','click',()=>{ document.getElementById('fin-exp-desc').focus(); });
+
+// Add income
+let incEmoji = '💼';
+buildEmojiPicker('fin-inc-emoji-picker','fin-inc-emoji-btn', e => { incEmoji = e; });
+function addIncome() {
+  const desc = document.getElementById('fin-inc-desc').value.trim();
+  const amt = parseFloat(document.getElementById('fin-inc-amt').value);
+  if (!desc || isNaN(amt) || amt <= 0) return;
+  const cat = document.getElementById('fin-inc-cat').value;
+  finState.incomes.push({id:finState.idCtr++,emoji:incEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
+  document.getElementById('fin-inc-desc').value='';
+  document.getElementById('fin-inc-amt').value='';
+  saveFinance(); renderFinance();
+}
+on('fin-inc-add-btn','click',addIncome);
+on('fin-inc-desc','keydown',e=>{ if(e.key==='Enter') addIncome(); });
+on('fin-inc-amt','keydown',e=>{ if(e.key==='Enter') addIncome(); });
+
+// Delete entry delegation
+on('fin-expense-list','click',e=>{
+  const btn = e.target.closest('[data-del-exp]');
+  if(btn){ finState.expenses=finState.expenses.filter(x=>x.id!==+btn.dataset.delExp); saveFinance(); renderFinance(); }
+});
+on('fin-income-list','click',e=>{
+  const btn = e.target.closest('[data-del-inc]');
+  if(btn){ finState.incomes=finState.incomes.filter(x=>x.id!==+btn.dataset.delInc); saveFinance(); renderFinance(); }
+});
+
+// Budget modal
+const budgetBackdrop = document.getElementById('fin-budget-backdrop');
+const budgetModal = document.getElementById('fin-budget-modal');
+function openBudgetModal() {
+  document.getElementById('fin-budget-input').value = finState.monthlyBudget || '';
+  budgetBackdrop.classList.remove('hidden');
+  budgetModal.classList.remove('hidden');
+  requestAnimationFrame(()=>document.getElementById('fin-budget-input').focus());
+}
+function closeBudgetModal() {
+  budgetBackdrop.classList.add('hidden');
+  budgetModal.classList.add('hidden');
+}
+on('fin-budget-set-btn','click', openBudgetModal);
+on('fin-budget-modal-close','click', closeBudgetModal);
+on('fin-budget-modal-cancel','click', closeBudgetModal);
+if(budgetBackdrop) budgetBackdrop.addEventListener('click', closeBudgetModal);
+on('fin-budget-modal-save','click',()=>{
+  const val = parseFloat(document.getElementById('fin-budget-input').value);
+  finState.monthlyBudget = isNaN(val) ? 0 : Math.max(0,val);
+  saveFinance(); renderFinance(); closeBudgetModal();
+});
+on('fin-budget-input','keydown',e=>{ if(e.key==='Enter') document.getElementById('fin-budget-modal-save').click(); if(e.key==='Escape') closeBudgetModal(); });
+
+// Savings
+on('fin-sav-add-btn','click',()=>{
+  const name = document.getElementById('fin-sav-name').value.trim();
+  const target = parseFloat(document.getElementById('fin-sav-target').value);
+  if(!name || isNaN(target) || target<=0) return;
+  finState.savings.push({id:finState.savIdCtr++,name,target,current:0});
+  document.getElementById('fin-sav-name').value='';
+  document.getElementById('fin-sav-target').value='';
+  saveFinance(); renderSavings();
+});
+on('fin-savings-list','click',e=>{
+  const contrib = e.target.closest('[data-savcontrib]');
+  if(contrib){
+    const id = +contrib.dataset.savcontrib;
+    const sav = finState.savings.find(s=>s.id===id);
+    const inp = document.querySelector(`.fin-savings-contrib-input[data-savid="${id}"]`);
+    if(sav&&inp){ const v=parseFloat(inp.value); if(!isNaN(v)&&v>0){ sav.current=(sav.current||0)+v; saveFinance(); renderSavings(); } }
+    return;
+  }
+  const del = e.target.closest('[data-savdel]');
+  if(del){ finState.savings=finState.savings.filter(s=>s.id!==+del.dataset.savdel); saveFinance(); renderSavings(); }
+});
+
+// Nav buttons update month title only (no tab re-render needed for finance)
+on('prev-month','click',()=>{
+  state.month--; if(state.month<0){state.month=11;state.year--;}
+  document.getElementById('month-title').textContent=getMonthNames()[state.month];
+  document.getElementById('year-label').textContent=state.year;
+  saveNav();
+});
+on('next-month','click',()=>{
+  state.month++; if(state.month>11){state.month=0;state.year++;}
+  document.getElementById('month-title').textContent=getMonthNames()[state.month];
+  document.getElementById('year-label').textContent=state.year;
+  saveNav();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadFinance();
+renderFinance();
+
+} // end if(CURRENT_PAGE === 'finance')

@@ -3,7 +3,7 @@ const CURRENT_PAGE = document.body.dataset.page || 'tracker';
 
 // ─── USER PREFERENCES ────────────────────────────────────────────────────────
 const PREFS_KEY = 'ht_user_prefs_v1';
-let userPrefs = { gender: null, setupDone: false };
+let userPrefs = { showCycle: null, setupDone: false };
 
 function loadUserPrefs() {
   try {
@@ -17,8 +17,8 @@ function saveUserPrefs() {
 }
 
 function isCycleUser() {
-  // Show cycle tab if gender is female, or not yet set (default show)
-  return !userPrefs.gender || userPrefs.gender === 'female';
+  // Show cycle tab unless the user has explicitly opted out (default show)
+  return userPrefs.showCycle !== false;
 }
 
 function applyCycleTabVisibility() {
@@ -2183,7 +2183,7 @@ function initSidebar() {
 
   // (Cycle item visibility/disabled-state is kept in sync globally by
   // applyCycleTabVisibility(), called right after initSidebar() at startup
-  // and again whenever the gender preference changes.)
+  // and again whenever the show-cycle-tracker preference changes.)
 }
 
 // ─── MAIN MENU WHEEL (menu.html) ──────────────────────────────────────────────
@@ -2216,7 +2216,7 @@ document.querySelectorAll('.tab-btn').forEach(b=>{
   b.classList.toggle('active', b.dataset.tab===effectivePage);
 });
 
-// Apply cycle tab visibility based on gender preference
+// Apply cycle tab visibility based on the show-cycle-tracker preference
 applyCycleTabVisibility();
 
 // Page-specific initialisation
@@ -2505,9 +2505,9 @@ function showOnboardingModal() {
     {id:'tr', label:'🇹🇷 Türkçe'},
   ];
 
-  let obStep = 1; // 1 = lang, 2 = gender, 3 = theme
+  let obStep = 1; // 1 = lang, 2 = show cycle tracker?, 3 = theme
   let obLang = state.lang;
-  let obGender = null;
+  let obShowCycle = true;
   let obTheme = getThemeName();
 
   // Backdrop
@@ -2540,18 +2540,17 @@ function showOnboardingModal() {
         </div>`;
     } else if (obStep === 2) {
       bodyHTML = `
+        <div class="ob-hint" style="margin-bottom:14px;">${curTr.cycleTrackerQuestion||'Do you want the Cycle Tracker page to appear on your site?'}</div>
         <div class="ob-gender-row">
-          <button class="ob-gender-btn ${obGender==='female'?'active':''}" data-obgender="female">
-            <span class="ob-gender-icon">♀️</span>
-            <span class="ob-gender-label">${curTr.genderFemale||'Female'}</span>
+          <button class="ob-gender-btn ${obShowCycle===true?'active':''}" data-obshowcycle="yes">
+            <span class="ob-gender-icon">🌸</span>
+            <span class="ob-gender-label">${curTr.cycleTrackerYes||'Yes'}</span>
           </button>
-          <button class="ob-gender-btn ${obGender==='male'?'active':''}" data-obgender="male">
-            <span class="ob-gender-icon">♂️</span>
-            <span class="ob-gender-label">${curTr.genderMale||'Male'}</span>
+          <button class="ob-gender-btn ${obShowCycle===false?'active':''}" data-obshowcycle="no">
+            <span class="ob-gender-icon">🚫</span>
+            <span class="ob-gender-label">${curTr.cycleTrackerNo||'No'}</span>
           </button>
-
-        </div>
-        <div class="ob-hint">${curTr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>`;
+        </div>`;
     } else if (obStep === 3) {
       bodyHTML = `
         <div class="ob-theme-grid">
@@ -2562,7 +2561,7 @@ function showOnboardingModal() {
     }
 
     const isLast = obStep === 3;
-    const canNext = obStep === 1 ? !!obLang : obStep === 2 ? !!obGender : !!obTheme;
+    const canNext = obStep === 1 ? !!obLang : obStep === 2 ? true : !!obTheme;
 
     modal.innerHTML = `
       <div class="ob-header">
@@ -2589,9 +2588,9 @@ function showOnboardingModal() {
         renderObModal();
       });
     });
-    modal.querySelectorAll('[data-obgender]').forEach(btn => {
+    modal.querySelectorAll('[data-obshowcycle]').forEach(btn => {
       btn.addEventListener('click', () => {
-        obGender = btn.dataset.obgender;
+        obShowCycle = btn.dataset.obshowcycle === 'yes';
         renderObModal();
       });
     });
@@ -2625,7 +2624,7 @@ function showOnboardingModal() {
   function finishOnboarding() {
     // Save all choices
     state.lang = obLang;
-    userPrefs.gender = obGender;
+    userPrefs.showCycle = obShowCycle;
     userPrefs.setupDone = true;
     saveUserPrefs();
     try { localStorage.setItem(K.lang(), obLang); } catch(e) {}
@@ -2774,7 +2773,7 @@ function openSettingsModal() {
       const toDelete = [];
       for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (exactSet.has(k) || prefixList.some(p => k.startsWith(p)))) toDelete.push(k); }
       toDelete.forEach(k => localStorage.removeItem(k));
-      if (checked.includes('settings')) userPrefs = { gender: null, setupDone: false };
+      if (checked.includes('settings')) userPrefs = { showCycle: null, setupDone: false };
       closePop(); closeModal(); window.location.href = 'tracker.html';
     });
   }
@@ -2800,13 +2799,13 @@ function openSettingsModal() {
       <div class="settings-card">
         <div class="settings-card-title">${tr.settingsProfile||'👤 Profile'}</div>
         <div class="settings-row">
-          <div class="settings-row-label">${tr.settingsGenderLabel||'Gender'}</div>
+          <div class="settings-row-label">${tr.settingsCycleLabel||'Cycle Tracker Page'}</div>
           <div class="settings-gender-btns" id="settings-modal-gender-btns">
-            <button class="settings-gender-btn" data-gender="female">♀️ <span>${tr.genderFemale||'Female'}</span></button>
-            <button class="settings-gender-btn" data-gender="male">♂️ <span>${tr.genderMale||'Male'}</span></button>
+            <button class="settings-gender-btn" data-showcycle="yes">🌸 <span>${tr.cycleTrackerYes||'Yes'}</span></button>
+            <button class="settings-gender-btn" data-showcycle="no">🚫 <span>${tr.cycleTrackerNo||'No'}</span></button>
           </div>
         </div>
-        <div class="settings-hint">${tr.settingsGenderHint||'The Cycle Tracker tab is only shown for Female users.'}</div>
+        <div class="settings-hint">${tr.settingsCycleHint||'Choose whether the Cycle Tracker page appears in your navigation.'}</div>
       </div>
 
       <!-- LANGUAGE -->
@@ -2898,7 +2897,7 @@ function openSettingsModal() {
     backdrop.scrollTop = scrollY;
 
     // Highlight active buttons
-    modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
+    modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', (b.dataset.showcycle === 'yes') === isCycleUser()));
     modal.querySelectorAll('.settings-lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === state.lang));
     const curTheme = getThemeName();
     modal.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === curTheme));
@@ -2907,11 +2906,11 @@ function openSettingsModal() {
     modal.querySelector('#settings-modal-close').addEventListener('click', closeModal);
 
     modal.querySelector('#settings-modal-gender-btns').addEventListener('click', e => {
-      const btn = e.target.closest('[data-gender]');
+      const btn = e.target.closest('[data-showcycle]');
       if (!btn) return;
-      userPrefs.gender = btn.dataset.gender;
+      userPrefs.showCycle = btn.dataset.showcycle === 'yes';
       saveUserPrefs();
-      modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === userPrefs.gender));
+      modal.querySelectorAll('.settings-gender-btn').forEach(b => b.classList.toggle('active', (b.dataset.showcycle === 'yes') === isCycleUser()));
       applyCycleTabVisibility();
     });
 
@@ -4154,17 +4153,17 @@ const TOUR_I18N = {
   },
 };
 
-// Pages that have a tour, in order. Cycle page added dynamically for female users.
+// Pages that have a tour, in order. Cycle page added dynamically when enabled.
 const TOUR_PAGES_BASE = ['habits', 'timetable', 'tasks', 'finance', 'shopping'];
 const TOUR_PAGES_FEMALE = ['habits', 'timetable', 'tasks', 'finance', 'shopping', 'cycle'];
 
 function getActiveTourPages() {
-  return isCycleUser() && userPrefs.gender === 'female' ? TOUR_PAGES_FEMALE : TOUR_PAGES_BASE;
+  return isCycleUser() ? TOUR_PAGES_FEMALE : TOUR_PAGES_BASE;
 }
 
 function getActiveTourSteps() {
-  const isFemale = isCycleUser() && userPrefs.gender === 'female';
-  return TOUR_STEPS.filter(s => !s.female || isFemale);
+  const showCycle = isCycleUser();
+  return TOUR_STEPS.filter(s => !s.female || showCycle);
 }
 
 function getTourStepsForPage(page) {

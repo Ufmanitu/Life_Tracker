@@ -7,10 +7,10 @@
 function initSettingsPage() {
   if (CURRENT_PAGE !== 'settings') return;
 
-  // Highlight active gender btn
+  // Highlight active cycle-tracker-visibility btn
   function refreshGenderBtns() {
     document.querySelectorAll('.settings-gender-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.gender === userPrefs.gender);
+      btn.classList.toggle('active', (btn.dataset.showcycle === 'yes') === isCycleUser());
     });
   }
   // Highlight active lang btn
@@ -31,11 +31,11 @@ function initSettingsPage() {
   refreshLangBtns();
   refreshThemeBtns();
 
-  // Gender
+  // Cycle Tracker page visibility
   document.getElementById('settings-gender-btns').addEventListener('click', e => {
-    const btn = e.target.closest('[data-gender]');
+    const btn = e.target.closest('[data-showcycle]');
     if (!btn) return;
-    userPrefs.gender = btn.dataset.gender;
+    userPrefs.showCycle = btn.dataset.showcycle === 'yes';
     saveUserPrefs();
     refreshGenderBtns();
     applyCycleTabVisibility();
@@ -88,7 +88,7 @@ function initSettingsPage() {
     }
     keysToDelete.forEach(k => localStorage.removeItem(k));
     // Reset prefs
-    userPrefs = { gender: null, setupDone: false };
+    userPrefs = { showCycle: null, setupDone: false };
     window.location.href = 'tracker.html';
   });
 

@@ -2066,7 +2066,7 @@ function initSidebar() {
   sidebar.innerHTML = `
     <div class="sb-head">
       <a class="sb-logo" href="menu.html" title="${homeLabel}">
-        <img class="sb-logo-icon" src="logo.png" alt="Life Tracker logo" />
+        <img class="sb-logo-icon" src="assets/logo.png" alt="Life Tracker logo" />
         <span class="sb-logo-text">Life Tracker</span>
       </a>
       <button class="sb-col-btn" id="sb-col-btn" title="${tr.sbCollapseTitle||'Collapse sidebar'}">‹</button>

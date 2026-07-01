@@ -73,7 +73,7 @@ function renderTasksView(){
 if(CURRENT_PAGE==="tasks"){
   on("tasks-section","click",e=>{
     const cb=e.target.closest(".task-cb[data-tid]");
-    if(cb){const task=state.tasks.find(x=>x.id===+cb.dataset.tid);if(task){task.done=!task.done;task.status=task.done?"completed":"inprogress";}saveAll();renderTasksView();render(false);return;}
+    if(cb){const task=state.tasks.find(x=>x.id===+cb.dataset.tid);if(task){task.done=!task.done;task.status=task.done?"completed":"inprogress";if(task.done)Duck.trigger('taskDone');}saveAll();renderTasksView();render(false);return;}
     const editBtn=e.target.closest(".task-edit-btn[data-etid]");
     if(editBtn){
       const task=state.tasks.find(x=>x.id===+editBtn.dataset.etid);

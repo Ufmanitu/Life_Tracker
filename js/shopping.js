@@ -73,7 +73,13 @@ document.getElementById("clear-checked-shop-btn").addEventListener("click",()=>{
 });
 document.getElementById("shop-lists").addEventListener("click",e=>{
   const cb = e.target.closest(".shop-cb[data-sid]");
-  if(cb){const it=state.shopItems.find(x=>x.id===+cb.dataset.sid);if(it)it.done=!it.done;saveShop();renderShoppingList();return;}
+  if(cb){
+    const it=state.shopItems.find(x=>x.id===+cb.dataset.sid);
+    if(it)it.done=!it.done;
+    saveShop();renderShoppingList();
+    if(it&&it.done&&state.shopItems.length&&state.shopItems.every(x=>x.done)) Duck.trigger('shoppingDone');
+    return;
+  }
 
   // Edit button — expand row into inline edit form
   const eb = e.target.closest(".shop-edit-btn[data-esid]");

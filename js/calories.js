@@ -457,10 +457,13 @@ function calRenderWater() {
     btn.addEventListener('click', () => {
       const d   = calGetDay(calViewDate);
       const idx = +btn.dataset.glass;
+      const prevWater = d.water||0;
       // toggle: clicking filled glass at end removes, clicking empty adds
       d.water = (d.water===idx+1) ? idx : idx+1;
       calSaveDay(d, calViewDate);
       calRenderWater();
+      const isViewingToday = calViewDate.toDateString() === new Date().toDateString();
+      if(isViewingToday && d.water>prevWater) Duck.trigger('waterLogged');
     });
   });
 }
@@ -748,11 +751,18 @@ function calAddFoodFromForm() {
 
   const food = { id:calFoodIdCtr++, name, kcal, protein, carbs, fat, serving, qty };
   const day  = calGetDay(calViewDate);
+  const prevKcal = calDayTotals(day).kcal;
   day.meals[calActiveMeal].push(food);
   calSaveDay(day, calViewDate);
 
   // save to recent (strip id/qty)
   calAddToRecent({ name, kcal, protein, carbs, fat, serving });
+
+  if(calViewDate.toDateString() === new Date().toDateString()){
+    Duck.trigger('foodLogged');
+    const newKcal = calDayTotals(day).kcal;
+    if(prevKcal<calGoals.kcal && newKcal>=calGoals.kcal) Duck.trigger('calorieGoalMet');
+  }
 
   calCloseModal();
   calRenderAll();

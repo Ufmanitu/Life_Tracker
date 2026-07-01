@@ -21,6 +21,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   --orb2:rgba(62,207,178,.07);
   --orb3:rgba(224,90,154,.05);
   --input-scheme:dark;
+  /* Duck companion — fixed identity, same in every theme (like a real pet) */
+  --duck-body:#ffc93c; --duck-body-light:#ffe082; --duck-body-dark:#f2a93c;
+  --duck-belly:#fff6da; --duck-beak:#ff9d3d; --duck-beak-dark:#e8762a;
+  --duck-feet:#ff9d3d; --duck-eye:#2b1d12; --duck-cheek:#ff8fa3;
+  --duck-cheek-sick:#a5d6a7; --duck-cheek-angry:#ff7a59; --duck-accent-blue:#4f6ef7;
+  --duck-accent-sleep:#b39ddb; --duck-sick-tint:#8bc34a; --duck-anger:#e64a3b;
+  --duck-crumb:#e8b06a; --duck-tongue:#ff6f91; --duck-shadow:rgba(0,0,0,.18);
 }
 /* ── LIGHT ── */
 body.theme-light{
@@ -2712,3 +2719,71 @@ body.has-sidebar #lang-dropdown{
 .habit-packs-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:22px;border:2.5px solid #4f6ef7;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap;box-shadow:0 4px 18px rgba(79,110,247,.5);letter-spacing:.3px;}
 .habit-packs-btn:hover{background:linear-gradient(135deg,#6b84ff,#9b59f7);box-shadow:0 6px 24px rgba(79,110,247,.7);transform:translateY(-2px);}
 .habit-packs-btn:active{transform:translateY(0) scale(.97);}
+/* ═══════════════════════════════════════════════════════════════════
+   DUCK COMPANION MODULE — styles
+   ═══════════════════════════════════════════════════════════════════ */
+
+.duck-layout{display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:24px;align-items:start;}
+
+.duck-stage-card{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:clamp(18px,2.5vw,28px);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
+
+.duck-name-row{display:flex;align-items:center;gap:8px;}
+.duck-name{font-size:20px;font-weight:900;color:var(--text);}
+.duck-rename-btn{background:none;border:1.5px solid var(--border);border-radius:8px;color:var(--text-muted);width:26px;height:26px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.duck-rename-btn:hover{border-color:#4f6ef7;color:#4f6ef7;background:var(--surface2);}
+
+.duck-pond{width:100%;max-width:280px;aspect-ratio:1/1;border-radius:50%;background:radial-gradient(circle at 50% 40%,rgba(79,158,247,.14),rgba(79,158,247,.03) 70%);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;padding:20px;margin:6px 0;}
+.duck-stage{width:100%;height:100%;animation:duckBob 3.2s ease-in-out infinite;}
+@keyframes duckBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+
+.duck-emotion-label{font-size:15px;font-weight:800;color:var(--text);}
+.duck-status-msg{font-size:13px;color:var(--text-sec);line-height:1.6;max-width:320px;}
+
+.duck-interact-row{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
+.duck-interact-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:22px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;}
+.duck-interact-btn:hover{border-color:#4f6ef7;color:#4f6ef7;transform:translateY(-2px);box-shadow:0 4px 14px rgba(79,110,247,.2);}
+.duck-interact-btn:active{transform:translateY(0) scale(.96);}
+
+.duck-side-col{display:flex;flex-direction:column;gap:16px;}
+
+.duck-stats-list{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
+.duck-stat-row{display:grid;grid-template-columns:110px 1fr 42px;align-items:center;gap:10px;}
+.duck-stat-label{font-size:12px;font-weight:700;color:var(--text-sec);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.duck-stat-icon{font-size:14px;flex-shrink:0;}
+.duck-stat-track{height:9px;border-radius:5px;background:var(--surface2);overflow:hidden;}
+.duck-stat-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.duck-stat-val{font-size:12px;font-weight:800;color:var(--text-muted);text-align:right;}
+
+.duck-log-list{display:flex;flex-direction:column;gap:2px;margin-top:10px;max-height:260px;overflow-y:auto;}
+.duck-log-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border2);font-size:12.5px;}
+.duck-log-row:last-child{border-bottom:none;}
+.duck-log-icon{font-size:15px;flex-shrink:0;}
+.duck-log-text{flex:1;color:var(--text-sec);font-weight:600;}
+.duck-log-time{color:var(--text-muted);font-size:11px;flex-shrink:0;}
+.duck-log-empty{font-size:12px;color:var(--text-muted);padding:6px 0;}
+
+.duck-explainer .settings-hint{margin-top:8px;}
+
+@media(max-width:900px){
+  .duck-layout{grid-template-columns:1fr;}
+}
+
+/* ── Duck Peek — floating ambient companion button (every page) ── */
+#duck-peek-btn{
+  position:fixed;left:24px;bottom:24px;z-index:340;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--border);
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:26px;padding:6px;
+  transition:transform .2s cubic-bezier(.4,0,.2,1),box-shadow .2s,border-color .2s;
+  animation:duckPeekBob 3.6s ease-in-out infinite;
+}
+#duck-peek-btn:hover{transform:scale(1.1);border-color:#f5a623;box-shadow:0 6px 24px rgba(245,166,35,.3);}
+#duck-peek-btn svg,#duck-peek-btn .duck-peek-svg-wrap{width:100%;height:100%;}
+@keyframes duckPeekBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+body.has-sidebar #duck-peek-btn{left:calc(var(--sb-w) + 24px);transition:left var(--sb-ease),transform .2s,box-shadow .2s,border-color .2s;}
+body.has-sidebar.sb-collapsed #duck-peek-btn{left:calc(var(--sb-w-col) + 24px);}
+@media(max-width:820px){
+  body.has-sidebar #duck-peek-btn{left:24px;}
+}

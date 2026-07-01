@@ -281,8 +281,9 @@ function applyTranslations(){
     'workout.html': tr.tabWorkout||'Workout',
     'cycle.html': tr.tabCycle,
     'recipes.html': tr.tabRecipes,
+    'duck.html': tr.tabDuck||'My Duck',
   };
-  const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖]+\s*/gu, '').trim();
+  const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖🦆]+\s*/gu, '').trim();
   document.querySelectorAll('#sidebar .sb-item[href]').forEach(a => {
     const lbl = sbLabelMap[a.getAttribute('href')];
     if(lbl){ const sp=a.querySelector('.sb-label'); if(sp) sp.textContent=_stripEmoji(lbl); a.title=_stripEmoji(lbl); }
@@ -362,6 +363,11 @@ function calcStreak(hi){
   return streak;
 }
 function invalidateStreakCache(){for(const k in _streakCheckedCache)delete _streakCheckedCache[k];}
+const STREAK_MILESTONES=[7,14,30,60,100,365];
+function checkStreakMilestone(hi){
+  // saveAll() already invalidated the streak cache before this runs
+  if(STREAK_MILESTONES.includes(calcStreak(hi)))Duck.trigger('streakMilestone');
+}
 function streakBadgeHTML(streak,habitName){
   if(streak<1)return'';
   const fire=streak>=30?'⚡':streak>=14?'🔥':streak>=7?'🔥':'✨';
@@ -1207,12 +1213,13 @@ function startPomo(){
     clearInterval(pomoInterval);pomoRunning=false;document.getElementById("pomo-start").textContent=t('startBtn');
   }else{
     pomoRunning=true;document.getElementById("pomo-start").textContent=t('pauseBtn');
+    if(pomoMode==="pomo")Duck.trigger('pomodoroStart');
     pomoInterval=setInterval(()=>{
       if(pomoMode==="pomo")pomoFocusSeconds++;
       pomoRemaining--;
       if(pomoRemaining<=0){
         clearInterval(pomoInterval);pomoRunning=false;document.getElementById("pomo-start").textContent=t('startBtn');
-        if(pomoMode==="pomo"){pomoSessions++;pomoCompletedSessions++;}
+        if(pomoMode==="pomo"){pomoSessions++;pomoCompletedSessions++;Duck.trigger('pomodoroFinish');}
         else{pomoBreaks++;}
         try{const a=new AudioContext();const o=a.createOscillator();const g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;o.type="sine";g.gain.setValueAtTime(0,a.currentTime);g.gain.linearRampToValueAtTime(.35,a.currentTime+.05);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.8);o.start(a.currentTime);o.stop(a.currentTime+.8);}catch(e){}
         updatePomoDisplay();
@@ -1353,6 +1360,11 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
         const pctEl=card.querySelector(".day-card-pct");if(pctEl){pctEl.textContent=pct+"%";pctEl.style.color=color;}
       }
       saveAll();
+      if(nowChecked){
+        Duck.trigger('habitDone');
+        checkStreakMilestone(hi);
+        if(isToday(d) && state.habits.length>0 && state.habits.every((_,i)=>isChecked(i,d))) Duck.trigger('allHabitsDone');
+      }
       return;
     }
     const star=e.target.closest(".mindset-star[data-d]");
@@ -1404,7 +1416,13 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
       updateArc('overall-arc',pct);
       document.getElementById('overall-pct-text').textContent=Math.round(pct)+'%';
       document.getElementById('overall-sub-text').textContent=`${done}/${total}`;
-      saveAll();return;
+      saveAll();
+      if(nowChecked){
+        Duck.trigger('habitDone');
+        checkStreakMilestone(hi);
+        if(isToday(d) && state.habits.length>0 && state.habits.every((_,i)=>isChecked(i,d))) Duck.trigger('allHabitsDone');
+      }
+      return;
     }
     const scopeBtn=e.target.closest(".tracker-scope-btn");
     if(scopeBtn){applyTrackerScope(scopeBtn.dataset.tscope);return;}
@@ -1797,7 +1815,7 @@ if(CURRENT_PAGE==="analysis"){
   });
   on("analysis-section","change",e=>{
     const inp=e.target.closest(".goal-prog-input[data-gid]");
-    if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){g.progress=Math.max(0,Math.min(100,+inp.value||0));}saveAll();_renderAnalysisPage();}
+    if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){const wasDone=g.progress>=100;g.progress=Math.max(0,Math.min(100,+inp.value||0));if(g.progress>=100&&!wasDone)Duck.trigger('goalCompleted');}saveAll();_renderAnalysisPage();}
   });
   on("goal-add-btn","click",()=>{
     const name=document.getElementById("goal-input").value.trim();if(!name)return;
@@ -1818,7 +1836,7 @@ if(CURRENT_PAGE==="habits"){
   });
   on("analysis-section","change",e=>{
     const inp=e.target.closest(".goal-prog-input[data-gid]");
-    if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){g.progress=Math.max(0,Math.min(100,+inp.value||0));}saveAll();renderGoals();}
+    if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){const wasDone=g.progress>=100;g.progress=Math.max(0,Math.min(100,+inp.value||0));if(g.progress>=100&&!wasDone)Duck.trigger('goalCompleted');}saveAll();renderGoals();}
   });
   on("goal-add-btn","click",()=>{
     const name=document.getElementById("goal-input").value.trim();if(!name)return;
@@ -2013,6 +2031,9 @@ function initSidebar() {
 
   // Nav definition
   const sections = [
+    { label: tr.sbGroupCompanion||'Companion', items: [
+      { page:'duck', href:'duck.html', icon:'🦆', label: tr.tabDuck||'My Duck' },
+    ]},
     { label: tr.sbGroupTrack||'Track', items: [
       { page:'habits',    href:'tracker.html',  icon:'📊', label: tr.tabTracker||'Habits' },
       { page:'analysis',  href:'analysis.html', icon:'📈', label: tr.tabAnalysis||'Analysis' },

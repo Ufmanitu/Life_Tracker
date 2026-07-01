@@ -183,8 +183,12 @@ function renderPillPack(){
       // Click to mark taken/untaken
       cell.addEventListener("click",()=>{
         if(!state.cycleData.takenPills) state.cycleData.takenPills={};
-        if(state.cycleData.takenPills[dk]) delete state.cycleData.takenPills[dk];
-        else state.cycleData.takenPills[dk]=true;
+        if(state.cycleData.takenPills[dk]){
+          delete state.cycleData.takenPills[dk];
+        } else {
+          state.cycleData.takenPills[dk]=true;
+          if(dk===todayKey()) Duck.trigger('pillTaken');
+        }
         saveCycle(); renderPillPack();
       });
     }

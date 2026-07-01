@@ -435,6 +435,7 @@ function addExpense() {
   document.getElementById('fin-exp-desc').value='';
   document.getElementById('fin-exp-amt').value='';
   saveFinance(); renderFinance();
+  Duck.trigger('expenseLogged');
 }
 on('fin-exp-add-btn','click',addExpense);
 on('fin-exp-desc','keydown',e=>{ if(e.key==='Enter') addExpense(); });

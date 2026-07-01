@@ -756,6 +756,7 @@ function wktAddExercise() {
 
   wktAutoCheckHabit(sess);
   wktSaveMonth(wktViewDate);
+  if(wktDateKey(wktViewDate) === wktDateKey(new Date())) Duck.trigger('workoutDone');
 
   // Reset form name & notes
   document.getElementById('wkt-name-input').value = '';

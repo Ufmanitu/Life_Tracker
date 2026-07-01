@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Analysis — Life Tracker</title>
+<title>Coach — Life Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
 </head>
-<body data-page="analysis">
+<body data-page="coach">
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 <div class="bg-orb bg-orb-3"></div>
@@ -47,96 +47,103 @@
   <button id="pomo-toggle" data-i18n="pomodoroBtn">⏱ Pomodoro</button>
   <button id="settings-icon-btn" class="settings-icon-btn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
-<!-- ANALYSIS SECTION -->
-<div id="analysis-section" style="animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
-  <div class="analysis-card full-width">
-    <div class="section-title" data-i18n="dailyConsistency">Daily Consistency</div>
-    <div class="bar-chart-wrap" id="bar-chart-days"></div>
-  </div>
-  <div class="analysis-card full-width">
-    <div class="section-title" id="mindset-tracker-title" data-i18n="mindsetTrackerTitle">Mindset Tracker — Energy · Focus · Motivation</div>
-    <div class="mindset-chart-wrap">
-      <svg id="mindset-chart-svg" width="100%" height="90" viewBox="0 0 700 90" preserveAspectRatio="none"></svg>
+<!-- COACH SECTION -->
+<div id="coach-section" style="padding:clamp(16px,2.5vw,28px) clamp(16px,4vw,48px) clamp(20px,3vw,40px);flex:1;animation:fadeSlideUp .65s .1s cubic-bezier(.4,0,.2,1) both;">
+  <div class="coach-layout">
+
+    <!-- TIPS FOR YOU -->
+    <div class="analysis-card">
+      <div class="section-title" data-i18n="coachTipsTitle">💡 Tips For You</div>
+      <div class="coach-tips-list" id="coach-tips-list"></div>
     </div>
-    <div class="mindset-legend">
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#f5a623"></div><span data-i18n="energy">Energy</span></div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#4f6ef7"></div><span data-i18n="focus">Focus</span></div>
-      <div class="mindset-legend-item"><div class="mindset-legend-dot" style="background:#e05a9a"></div><span data-i18n="motivation">Motivation</span></div>
-    </div>
-  </div>
-  <!-- JOURNAL CARD -->
-  <div class="analysis-card full-width" id="journal-card">
-    <div class="journal-card-header">
-      <div class="section-title" data-i18n="journalTitle">📓 Daily Journal</div>
-      <div class="journal-date-nav">
-        <button class="journal-date-btn" id="journal-prev-day" data-i18n-title="journalPrevDayTitle" title="Previous day">‹</button>
-        <span class="journal-date-display" id="journal-date-display">Today</span>
-        <button class="journal-date-btn" id="journal-next-day" data-i18n-title="journalNextDayTitle" title="Next day">›</button>
-      </div>
-    </div>
-    <div class="journal-mood-row" id="journal-mood-row"></div>
-    <textarea class="journal-textarea" id="journal-textarea" rows="3" placeholder="What happened today? Even 2–3 sentences builds a powerful record over time…" data-i18n-placeholder="journalPlaceholder"></textarea>
-    <div class="journal-actions">
-      <button class="goal-add-btn" id="journal-save-btn" style="padding:9px 20px;font-size:12px;">💾 <span data-i18n="journalSaveBtn">Save Entry</span></button>
-      <span class="journal-char-count" id="journal-char-count">0 / 2000</span>
-      <span class="journal-hint">Ctrl+Enter to save</span>
-    </div>
-    <div class="journal-history" id="journal-history"></div>
-  </div>
-  <div class="analysis-bottom-row">
-    <div class="analysis-main">
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="habitBreakdown">Habit Breakdown</div>
-        <div id="habit-bars" style="margin-top:4px;display:flex;flex-direction:column;gap:6px;"></div>
-      </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="goalsThisMonth">Goals This Month 🎯</div>
-        <div class="goals-add-row">
-          <input class="goal-input" id="goal-input" placeholder="Add a goal for this month…" data-i18n-placeholder="goalPlaceholder"/>
-          <button class="goal-add-btn" id="goal-add-btn" data-i18n="addGoalBtn">+ Add Goal</button>
+
+    <!-- YOUR GOAL -->
+    <div class="analysis-card">
+      <div class="section-title" data-i18n="coachGoalTitle">🎯 Your Weight Goal</div>
+      <div class="settings-hint" style="margin-top:6px;" data-i18n="coachGoalHint">Set a goal and Coach will suggest a daily calorie target, a workout routine, and recipe ideas to support it.</div>
+
+      <div class="coach-goal-form">
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachSex">Sex</label>
+          <select class="form-select" id="coach-goal-sex">
+            <option value="female" data-i18n="coachSexFemale">Female</option>
+            <option value="male" data-i18n="coachSexMale">Male</option>
+          </select>
         </div>
-        <div class="goal-list" id="goal-list"></div>
-      </div>
-    </div>
-    <div class="analysis-side">
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="weeklyScore">Weekly Score</div>
-        <div class="week-radials" id="week-radials"></div>
-      </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="crossStatsTitle">🔗 Cross-Tracker Stats</div>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
-              <span data-i18n="calGoalToday">Calorie Goal Today</span>
-              <span id="cross-cal-pct">0/2000 kcal (0%)</span>
-            </div>
-            <div class="goal-prog-track"><div class="goal-prog-fill" id="cross-cal-fill" style="width:0%;background:#4f6ef7;"></div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:12px;color:var(--text-muted);" data-i18n="workoutStreak">🔥 Workout Streak</span>
-            <span id="cross-wkt-streak" style="font-weight:800;font-size:14px;color:var(--text);">0 days</span>
-          </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachAge">Age</label>
+          <input class="form-input" type="number" id="coach-goal-age" min="14" max="100" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachHeight">Height (cm)</label>
+          <input class="form-input" type="number" id="coach-goal-height" min="120" max="230" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachActivity">Activity Level</label>
+          <select class="form-select" id="coach-goal-activity">
+            <option value="sedentary" data-i18n="coachActivitySedentary">Sedentary</option>
+            <option value="light" data-i18n="coachActivityLight">Light</option>
+            <option value="moderate" data-i18n="coachActivityModerate">Moderate</option>
+            <option value="active" data-i18n="coachActivityActive">Active</option>
+            <option value="veryActive" data-i18n="coachActivityVeryActive">Very Active</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachUnit">Unit</label>
+          <select class="form-select" id="coach-goal-unit">
+            <option value="kg">kg</option>
+            <option value="lb">lb</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachStartWeight">Start Weight</label>
+          <input class="form-input" type="number" id="coach-goal-start" min="1" step="0.1" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachCurrentWeight">Current Weight</label>
+          <input class="form-input" type="number" id="coach-goal-current" min="1" step="0.1" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" data-i18n="coachTargetWeight">Target Weight</label>
+          <input class="form-input" type="number" id="coach-goal-target" min="1" step="0.1" />
         </div>
       </div>
-      <div class="analysis-card">
-        <div class="section-title" data-i18n="overallProgress">Overall Progress</div>
-        <div class="overall-row">
-          <div class="radial-wrap" style="width:clamp(80px,10vw,110px);height:clamp(80px,10vw,110px);">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-              <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="9"/>
-              <circle id="overall-arc-2" cx="50" cy="50" r="42" fill="none" stroke="#3ecfb2" stroke-width="9"
-                stroke-dasharray="0 263.9" stroke-linecap="round" style="transition:stroke-dasharray .7s cubic-bezier(.4,0,.2,1)"/>
-            </svg>
-            <div class="radial-text">
-              <span class="radial-pct" id="overall-pct-text-2">0%</span>
-              <span class="radial-sub" id="overall-sub-text-2">0/0</span>
-            </div>
-          </div>
-          <div class="overall-stats" id="overall-stats"></div>
+
+      <div class="coach-goal-actions">
+        <button class="goal-add-btn" id="coach-goal-save-btn" data-i18n="coachSaveGoal">💾 Save Goal</button>
+        <button class="clear-shop-btn" id="coach-goal-clear-btn" data-i18n="coachClearGoal">✕ Clear Goal</button>
+      </div>
+
+      <div class="coach-progress-wrap hidden" id="coach-progress-wrap">
+        <div class="coach-progress-label">
+          <span data-i18n="coachProgress">Progress toward goal</span>
+          <span id="coach-progress-pct">0%</span>
         </div>
+        <div class="coach-progress-track"><div class="coach-progress-fill" id="coach-progress-fill" style="width:0%;"></div></div>
       </div>
     </div>
+
+    <!-- SUGGESTED PLAN -->
+    <div class="analysis-card hidden" id="coach-plan-card">
+      <div class="section-title" data-i18n="coachPlanTitle">📋 Your Suggested Plan</div>
+
+      <div class="coach-plan-stats">
+        <div class="coach-plan-stat"><div class="coach-plan-stat-val" id="coach-plan-kcal">—</div><div class="coach-plan-stat-lbl" data-i18n="coachPlanDailyCal">Daily Calories</div></div>
+        <div class="coach-plan-stat"><div class="coach-plan-stat-val" id="coach-plan-tdee">—</div><div class="coach-plan-stat-lbl" data-i18n="coachPlanTdee">Maintenance (TDEE)</div></div>
+        <div class="coach-plan-stat"><div class="coach-plan-stat-val" id="coach-plan-remaining">—</div><div class="coach-plan-stat-lbl" data-i18n="coachPlanRemaining">Remaining</div></div>
+        <div class="coach-plan-stat"><div class="coach-plan-stat-val" id="coach-plan-weeks">—</div><div class="coach-plan-stat-lbl" data-i18n="coachPlanWeeks">Est. Weeks Left</div></div>
+      </div>
+
+      <button class="goal-add-btn" id="coach-apply-cal-btn" data-i18n="coachApplyCal">✓ Apply to Daily Calorie Goal</button>
+
+      <div class="coach-routine-title" id="coach-routine-title"></div>
+      <div class="coach-routine-tagline" id="coach-routine-tagline"></div>
+      <div class="coach-routine-days" id="coach-routine-days"></div>
+
+      <div class="section-title" style="margin-top:20px;" data-i18n="coachRecipeIdeasTitle">🍽 Recipe Ideas</div>
+      <div class="coach-recipe-grid" id="coach-recipe-grid"></div>
+    </div>
+
   </div>
 </div>
 </div><!-- #app -->
@@ -209,6 +216,6 @@
 </div>
 
 <div id="save-indicator" data-i18n="saved">✓ Saved</div>
-<script src="../js/translations.js"></script><script src="../js/core.js"></script><script src="../js/duck.js"></script><script src="../js/duck_poses.js"></script><script src="../js/duck_peek.js"></script><script src="../js/coach_content.js"></script><script src="../js/coach.js"></script><script src="../js/coach_banner.js"></script>
+<script src="../js/translations.js"></script><script src="../js/core.js"></script><script src="../js/duck.js"></script><script src="../js/duck_poses.js"></script><script src="../js/duck_peek.js"></script><script src="../js/coach_content.js"></script><script src="../js/coach.js"></script><script src="../js/coach_banner.js"></script><script src="../js/coach_page.js"></script>
 </body>
 </html>

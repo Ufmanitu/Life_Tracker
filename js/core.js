@@ -282,8 +282,9 @@ function applyTranslations(){
     'cycle.html': tr.tabCycle,
     'recipes.html': tr.tabRecipes,
     'duck.html': tr.tabDuck||'My Duck',
+    'coach.html': tr.tabCoach||'Coach',
   };
-  const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖🦆]+\s*/gu, '').trim();
+  const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖🦆🎯]+\s*/gu, '').trim();
   document.querySelectorAll('#sidebar .sb-item[href]').forEach(a => {
     const lbl = sbLabelMap[a.getAttribute('href')];
     if(lbl){ const sp=a.querySelector('.sb-label'); if(sp) sp.textContent=_stripEmoji(lbl); a.title=_stripEmoji(lbl); }
@@ -2033,6 +2034,7 @@ function initSidebar() {
   const sections = [
     { label: tr.sbGroupCompanion||'Companion', items: [
       { page:'duck', href:'duck.html', icon:'🦆', label: tr.tabDuck||'My Duck' },
+      { page:'coach', href:'coach.html', icon:'🎯', label: tr.tabCoach||'Coach' },
     ]},
     { label: tr.sbGroupTrack||'Track', items: [
       { page:'habits',    href:'tracker.html',  icon:'📊', label: tr.tabTracker||'Habits' },

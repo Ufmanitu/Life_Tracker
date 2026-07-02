@@ -59,37 +59,63 @@ const Coach = (() => {
     if (!goal.active) return null;
 
     const tdee = calcTDEE(goal);
-    const floor = goal.sex === 'male' ? 1500 : 1200;
-    const deficit = 500; // ~0.5kg/week, a standard safe-deficit guideline
-    const suggestedKcal = Math.max(floor, tdee - deficit);
-
     const startKg = goal.unit === 'lb' ? lbToKg(goal.startWeight) : goal.startWeight;
     const targetKg = goal.unit === 'lb' ? lbToKg(goal.targetWeight) : goal.targetWeight;
     const currentKg = goal.unit === 'lb' ? lbToKg(goal.currentWeight) : goal.currentWeight;
-    const totalToLoseKg = Math.max(0, startKg - targetKg);
-    const remainingKg = Math.max(0, currentKg - targetKg);
-    const progressPct = totalToLoseKg > 0 ? Math.min(100, Math.round((startKg - currentKg) / totalToLoseKg * 100)) : 0;
-    const weeksRemaining = remainingKg > 0 ? Math.ceil(remainingKg / 0.5) : 0;
 
-    // Pick one routine (round-robin by how much weight is left, just to vary it)
-    const routine = WEIGHT_ROUTINES[Math.min(WEIGHT_ROUTINES.length - 1, Math.floor(remainingKg / 5))] || WEIGHT_ROUTINES[0];
+    // Direction matters: a target ABOVE the start weight is a gain goal
+    // (calorie surplus, strength routines, calorie-dense recipes), not a
+    // loss goal — treating every goal as "lose weight" was the bug.
+    const direction = targetKg > startKg + 0.05 ? 'gain' : targetKg < startKg - 0.05 ? 'lose' : 'maintain';
 
-    // Recipe ideas: prewritten library, filtered to fit comfortably under a
-    // typical meal-sized share of the suggested daily calories, plus any of
-    // the user's own saved recipes that already fit.
+    let suggestedKcal, remainingKg, totalDistanceKg, weeksRemaining, ratePerWeek;
+    if (direction === 'gain') {
+      suggestedKcal = Math.round(tdee + 350); // lean-bulk surplus
+      totalDistanceKg = Math.max(0, targetKg - startKg);
+      remainingKg = Math.max(0, targetKg - currentKg);
+      ratePerWeek = 0.25; // slower than loss — minimizes excess fat gain
+    } else if (direction === 'lose') {
+      const floor = goal.sex === 'male' ? 1500 : 1200;
+      suggestedKcal = Math.max(floor, Math.round(tdee - 500)); // standard safe deficit
+      totalDistanceKg = Math.max(0, startKg - targetKg);
+      remainingKg = Math.max(0, currentKg - targetKg);
+      ratePerWeek = 0.5;
+    } else {
+      suggestedKcal = tdee;
+      totalDistanceKg = 0; remainingKg = 0; ratePerWeek = 0.5;
+    }
+    const progressPct = totalDistanceKg > 0
+      ? Math.min(100, Math.max(0, Math.round(Math.abs(currentKg - startKg) / totalDistanceKg * 100)))
+      : (direction === 'maintain' ? 100 : 0);
+    weeksRemaining = remainingKg > 0 ? Math.ceil(remainingKg / ratePerWeek) : 0;
+
+    const routinePool = direction === 'gain' ? GAIN_ROUTINES : LOSE_ROUTINES;
+    const recipePool = direction === 'gain' ? GAIN_RECIPE_IDEAS : LOSE_RECIPE_IDEAS;
+
+    // Pick one routine (round-robin by how much distance is left, just to vary it)
+    const routine = routinePool[Math.min(routinePool.length - 1, Math.floor(remainingKg / 5))] || routinePool[0];
+
+    // Recipe ideas: prewritten library, ranked by closeness to a typical
+    // meal-sized share of the suggested daily calories (a hard pass/fail
+    // filter could exclude every recipe in extreme cases — e.g. a very
+    // active bulking goal with a very high TDEE — so this always returns
+    // results, just prioritizing the closest fits), plus any of the
+    // user's own saved recipes that are at least in the right direction.
     const perMealBudget = suggestedKcal / 3;
-    const ideas = RECIPE_IDEAS.filter(r => r.kcal <= perMealBudget * 1.15).slice(0, 3);
+    const byCloseness = (a, b) => Math.abs(a.kcal - perMealBudget) - Math.abs(b.kcal - perMealBudget);
+    const ideas = [...recipePool].sort(byCloseness).slice(0, 3);
     let ownRecipeMatches = [];
     try {
       const raw = JSON.parse(localStorage.getItem('lt_recipes') || 'null');
       if (raw && Array.isArray(raw.recipes)) {
-        ownRecipeMatches = raw.recipes.filter(r => (r.kcal || 0) > 0 && r.kcal <= perMealBudget * 1.15).slice(0, 3);
+        const inDirection = r => (r.kcal || 0) > 0 && (direction === 'gain' ? r.kcal >= perMealBudget * 0.5 : true);
+        ownRecipeMatches = raw.recipes.filter(inDirection).sort(byCloseness).slice(0, 3);
       }
     } catch (e) {}
 
     return {
-      tdee, suggestedKcal, deficit,
-      totalToLoseKg: +totalToLoseKg.toFixed(1), remainingKg: +remainingKg.toFixed(1),
+      direction, tdee, suggestedKcal,
+      totalDistanceKg: +totalDistanceKg.toFixed(1), remainingKg: +remainingKg.toFixed(1),
       progressPct, weeksRemaining, routine, ideas, ownRecipeMatches,
       unit: goal.unit,
     };
@@ -103,6 +129,47 @@ const Coach = (() => {
     } catch (e) {}
     calGoals.kcal = Math.round(kcal);
     try { localStorage.setItem(CAL_GOALS_KEY, JSON.stringify(calGoals)); } catch (e) {}
+  }
+
+  // ── Push a suggested routine into the Workout page as templates ────
+  // workout.js's wktTemplates/lt_workout_templates live inside its own
+  // if(CURRENT_PAGE==='workout') closure, not globally exposed (same
+  // situation as calGoals) — so this writes localStorage directly,
+  // matching applySuggestedCalorieGoal(). One template per routine day.
+  function addRoutineToWorkoutPage(routine) {
+    let templates = [];
+    try { templates = JSON.parse(localStorage.getItem('lt_workout_templates') || 'null') || []; } catch (e) {}
+    routine.days.forEach(day => {
+      templates.push({
+        name: `${routine.title} — ${day.day} (${day.focus})`,
+        exercises: day.exercises.map(ex => ({
+          id: 0, name: ex.name, cat: ex.cat || 'strength', type: ex.type || 'sets',
+          sets: ex.sets || 0, reps: ex.reps || 0, weight: 0,
+          duration: ex.duration || 0, distance: 0, notes: ex.notes || '',
+        })),
+      });
+    });
+    try { localStorage.setItem('lt_workout_templates', JSON.stringify(templates)); } catch (e) {}
+  }
+
+  // ── Push suggested recipe ideas into the Recipe Book ────────────────
+  // Same localStorage-direct pattern — recipes.js's recRecipes/recIdCtr
+  // are scoped inside if(CURRENT_PAGE==='recipes').
+  function addRecipesToRecipesPage(ideas) {
+    let recipes = [], ctr = 1;
+    try {
+      const raw = JSON.parse(localStorage.getItem('lt_recipes') || 'null');
+      if (raw) { recipes = raw.recipes || []; ctr = raw.ctr || 1; }
+    } catch (e) {}
+    ideas.forEach(idea => {
+      recipes.push({
+        id: ctr++, name: idea.name, tag: idea.tag || 'lunch',
+        servings: idea.servings || 1, kcal: idea.kcal || 0,
+        protein: idea.protein || 0, carbs: idea.carbs || 0, fat: idea.fat || 0,
+        notes: idea.blurb || '', ingredients: idea.ingredients || [],
+      });
+    });
+    try { localStorage.setItem('lt_recipes', JSON.stringify({ recipes, ctr })); } catch (e) {}
   }
 
   // ── Context gathering (reuses core.js's global helpers where possible) ──
@@ -176,6 +243,7 @@ const Coach = (() => {
   return {
     getContext, getInsights, getTopInsight,
     getBodyGoal, saveBodyGoal, calcTDEE, getWeightPlan, applySuggestedCalorieGoal,
+    addRoutineToWorkoutPage, addRecipesToRecipesPage,
     ACTIVITY_MULTIPLIERS, DEFAULT_BODY_GOAL,
   };
 

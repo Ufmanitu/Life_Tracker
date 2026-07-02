@@ -56,16 +56,22 @@ function renderCoachGoalProgress(goal) {
   document.getElementById('coach-progress-fill').style.width = (plan ? plan.progressPct : 0) + '%';
 }
 
+let currentPlan = null;
+
 function renderCoachPlan() {
   const tr = coachTr();
   const plan = Coach.getWeightPlan();
+  currentPlan = plan;
   const card = document.getElementById('coach-plan-card');
   if (!plan) { card.classList.add('hidden'); return; }
   card.classList.remove('hidden');
 
+  const directionLabel = plan.direction === 'gain' ? (tr.coachDirectionGain || 'to gain')
+    : plan.direction === 'lose' ? (tr.coachDirectionLose || 'to lose') : '';
+
   document.getElementById('coach-plan-kcal').textContent = plan.suggestedKcal + ' kcal';
   document.getElementById('coach-plan-tdee').textContent = plan.tdee + ' kcal';
-  document.getElementById('coach-plan-remaining').textContent = plan.remainingKg + ' ' + plan.unit;
+  document.getElementById('coach-plan-remaining').textContent = plan.remainingKg + ' ' + plan.unit + (directionLabel ? ' ' + directionLabel : '');
   document.getElementById('coach-plan-weeks').textContent = plan.weeksRemaining > 0 ? plan.weeksRemaining : (tr.coachGoalReached || 'Reached!');
 
   document.getElementById('coach-routine-title').textContent = plan.routine.title;
@@ -111,9 +117,27 @@ document.getElementById('coach-apply-cal-btn').addEventListener('click', (e) => 
   const kcal = +e.target.dataset.kcal;
   if (kcal) {
     Coach.applySuggestedCalorieGoal(kcal);
-    const ind = document.getElementById('save-indicator');
-    ind.classList.add('show');
-    setTimeout(() => ind.classList.remove('show'), 1700);
+    flashSaveIndicator();
+  }
+});
+
+function flashSaveIndicator() {
+  const ind = document.getElementById('save-indicator');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1700);
+}
+
+document.getElementById('coach-add-routine-btn').addEventListener('click', () => {
+  if (currentPlan && currentPlan.routine) {
+    Coach.addRoutineToWorkoutPage(currentPlan.routine);
+    flashSaveIndicator();
+  }
+});
+
+document.getElementById('coach-add-recipes-btn').addEventListener('click', () => {
+  if (currentPlan && currentPlan.ideas && currentPlan.ideas.length) {
+    Coach.addRecipesToRecipesPage(currentPlan.ideas);
+    flashSaveIndicator();
   }
 });
 

@@ -741,7 +741,7 @@ function calRenderRecentList() {
 
 function calAddFoodFromForm() {
   const name = (document.getElementById('cal-food-name')?.value||'').trim();
-  if(!name) { document.getElementById('cal-food-name')?.focus(); return; }
+  if(!name) { flagInvalidField('cal-food-name'); return; }
   const kcal    = +(document.getElementById('cal-food-kcal')?.value)||0;
   const protein = +(document.getElementById('cal-food-protein')?.value)||0;
   const carbs   = +(document.getElementById('cal-food-carbs')?.value)||0;

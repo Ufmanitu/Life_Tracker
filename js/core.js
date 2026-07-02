@@ -49,6 +49,22 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+// ─── REQUIRED-FIELD VALIDATION ────────────────────────────────────────────────
+// Shared across every "Add" form in the app: highlights a required field in
+// red (with a brief shake) when the user tries to submit it empty/invalid.
+// Clears itself the moment the user edits the field. Works on inputs,
+// selects, and buttons (e.g. a DatePicker trigger button standing in for a
+// hidden date input).
+function flagInvalidField(idOrEl) {
+  const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+  if (!el) return;
+  el.classList.remove('field-invalid'); void el.offsetWidth; el.classList.add('field-invalid');
+  el.focus();
+  const clear = () => { el.classList.remove('field-invalid'); };
+  el.addEventListener('input', clear, { once: true });
+  el.addEventListener('change', clear, { once: true });
+}
+
 // ─── NAV STATE PERSISTENCE ───────────────────────────────────────────────────
 const NAV_KEY = 'ht_nav_v1';
 function saveNav() {
@@ -1473,13 +1489,14 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   // Monthly add-habit
   on("add-habit-btn-monthly","click",()=>{
     const v=document.getElementById("new-habit-input-monthly").value.trim();
-    if(!v)return;state.habits.push(v);document.getElementById("new-habit-input-monthly").value="";saveAll();render(true);
+    if(!v){flagInvalidField("new-habit-input-monthly");return;}
+    state.habits.push(v);document.getElementById("new-habit-input-monthly").value="";saveAll();render(true);
   });
   on("new-habit-input-monthly","keydown",e=>{if(e.key==="Enter")document.getElementById("add-habit-btn-monthly").click();});
   const addBtn=document.getElementById("add-habit-btn");
   const addInput=document.getElementById("new-habit-input");
   if(addBtn&&addInput){
-    addBtn.addEventListener("click",()=>{const v=addInput.value.trim();if(!v)return;state.habits.push(v);addInput.value="";saveAll();render(true);});
+    addBtn.addEventListener("click",()=>{const v=addInput.value.trim();if(!v){flagInvalidField(addInput);return;}state.habits.push(v);addInput.value="";saveAll();render(true);});
     addInput.addEventListener("keydown",e=>{if(e.key==="Enter")addBtn.click();});
   }
 
@@ -1773,7 +1790,9 @@ if(CURRENT_PAGE==="tracker"||CURRENT_PAGE==="habits"){
   // Daily add-habit
   on("add-habit-btn-daily","click",()=>{
     const inp=document.getElementById("new-habit-input-daily");
-    if(!inp)return;const v=inp.value.trim();if(!v)return;
+    if(!inp)return;
+    const v=inp.value.trim();
+    if(!v){flagInvalidField(inp);return;}
     state.habits.push(v);inp.value="";saveAll();render(true);
   });
   on("new-habit-input-daily","keydown",e=>{if(e.key==="Enter")document.getElementById("add-habit-btn-daily").click();});
@@ -1819,12 +1838,12 @@ if(CURRENT_PAGE==="analysis"){
     if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){const wasDone=g.progress>=100;g.progress=Math.max(0,Math.min(100,+inp.value||0));if(g.progress>=100&&!wasDone)Duck.trigger('goalCompleted');}saveAll();_renderAnalysisPage();}
   });
   on("goal-add-btn","click",()=>{
-    const name=document.getElementById("goal-input").value.trim();if(!name)return;
+    const name=document.getElementById("goal-input").value.trim();if(!name){flagInvalidField("goal-input");return;}
     state.goals.push({id:state.goalIdCtr++,name,progress:0});
     document.getElementById("goal-input").value="";saveAll();_renderAnalysisPage();
   });
   on("goal-input","keydown",e=>{
-    if(e.key==="Enter"){const name=document.getElementById("goal-input").value.trim();if(!name)return;
+    if(e.key==="Enter"){const name=document.getElementById("goal-input").value.trim();if(!name){flagInvalidField("goal-input");return;}
       state.goals.push({id:state.goalIdCtr++,name,progress:0});
       document.getElementById("goal-input").value="";saveAll();_renderAnalysisPage();}
   });
@@ -1840,7 +1859,7 @@ if(CURRENT_PAGE==="habits"){
     if(inp){const g=state.goals.find(x=>x.id===+inp.dataset.gid);if(g){const wasDone=g.progress>=100;g.progress=Math.max(0,Math.min(100,+inp.value||0));if(g.progress>=100&&!wasDone)Duck.trigger('goalCompleted');}saveAll();renderGoals();}
   });
   on("goal-add-btn","click",()=>{
-    const name=document.getElementById("goal-input").value.trim();if(!name)return;
+    const name=document.getElementById("goal-input").value.trim();if(!name){flagInvalidField("goal-input");return;}
     state.goals.push({id:state.goalIdCtr++,name,progress:0});
     document.getElementById("goal-input").value="";saveAll();renderGoals();
   });

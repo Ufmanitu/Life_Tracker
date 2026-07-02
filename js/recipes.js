@@ -324,7 +324,7 @@ function recCloseModal() {
 // ── SAVE / DELETE recipe ─────────────────────────────────────────────
 function recSaveFromForm() {
   const name = (document.getElementById('rec-name-input')?.value||'').trim();
-  if (!name) { document.getElementById('rec-name-input')?.focus(); return; }
+  if (!name) { flagInvalidField('rec-name-input'); return; }
   const tag      = document.getElementById('rec-tag-select')?.value || 'breakfast';
   const servings = Math.max(1, +(document.getElementById('rec-servings-input')?.value)||1);
   const kcal     = +(document.getElementById('rec-kcal-input')?.value)||0;

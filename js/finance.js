@@ -429,7 +429,8 @@ buildEmojiPicker('fin-exp-emoji-picker','fin-exp-emoji-btn', e => { expEmoji = e
 function addExpense() {
   const desc = document.getElementById('fin-exp-desc').value.trim();
   const amt = parseFloat(document.getElementById('fin-exp-amt').value);
-  if (!desc || isNaN(amt) || amt <= 0) return;
+  if (!desc) { flagInvalidField('fin-exp-desc'); return; }
+  if (isNaN(amt) || amt <= 0) { flagInvalidField('fin-exp-amt'); return; }
   const cat = document.getElementById('fin-exp-cat').value;
   finState.expenses.push({id:finState.idCtr++,emoji:expEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
   document.getElementById('fin-exp-desc').value='';
@@ -448,7 +449,8 @@ buildEmojiPicker('fin-inc-emoji-picker','fin-inc-emoji-btn', e => { incEmoji = e
 function addIncome() {
   const desc = document.getElementById('fin-inc-desc').value.trim();
   const amt = parseFloat(document.getElementById('fin-inc-amt').value);
-  if (!desc || isNaN(amt) || amt <= 0) return;
+  if (!desc) { flagInvalidField('fin-inc-desc'); return; }
+  if (isNaN(amt) || amt <= 0) { flagInvalidField('fin-inc-amt'); return; }
   const cat = document.getElementById('fin-inc-cat').value;
   finState.incomes.push({id:finState.idCtr++,emoji:incEmoji,desc,amount:amt,category:cat,date:fmtDate(new Date())});
   document.getElementById('fin-inc-desc').value='';

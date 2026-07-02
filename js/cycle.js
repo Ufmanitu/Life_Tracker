@@ -713,7 +713,7 @@ document.querySelectorAll(".cycle-mode-btn").forEach(btn=>{
 
 if(CURRENT_PAGE==="cycle"){ document.getElementById("add-cycle-btn").addEventListener("click",()=>{
   const start=document.getElementById("cycle-start-input").value;
-  if(!start)return;
+  if(!start){flagInvalidField("cycle-start-trigger");return;}
   const dur=parseInt(document.getElementById("cycle-duration-input").value)||5;
   const cycleLen=parseInt(document.getElementById("cycle-length-input").value)||28;
   state.cycleData.cycleLen=cycleLen;

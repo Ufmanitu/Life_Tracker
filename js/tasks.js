@@ -113,7 +113,7 @@ if(CURRENT_PAGE==="tasks"){
   }
   on("task-cancel-edit","click",taskCancelEdit);
   on("add-task-btn","click",()=>{
-    const name=document.getElementById("task-name-input").value.trim();if(!name)return;
+    const name=document.getElementById("task-name-input").value.trim();if(!name){flagInvalidField("task-name-input");return;}
     const priority=document.getElementById("task-priority-select").value;
     const due=document.getElementById("task-due-input").value;
     const status=document.getElementById("task-status-select").value;

@@ -723,7 +723,7 @@ function wktUpdatePreview() {
 
 function wktAddExercise() {
   const name = document.getElementById('wkt-name-input')?.value.trim();
-  if (!name) { document.getElementById('wkt-name-input')?.focus(); return; }
+  if (!name) { flagInvalidField('wkt-name-input'); return; }
 
   const cat    = document.getElementById('wkt-cat-select')?.value || 'strength';
   const type   = document.getElementById('wkt-type-select')?.value || 'sets';

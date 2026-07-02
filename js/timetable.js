@@ -172,14 +172,14 @@ function ttCancelEdit(){
 if(CURRENT_PAGE==='timetable'){ document.getElementById('tt-cancel-edit').addEventListener('click',ttCancelEdit);
 document.getElementById('tt-add-btn').addEventListener('click',()=>{
   const title=document.getElementById('tt-title-input').value.trim();
-  if(!title)return;
+  if(!title){flagInvalidField('tt-title-input');return;}
   const day=+document.getElementById('tt-day-select').value;
   const isAllDay=document.getElementById('tt-allday-check').checked;
   const start=isAllDay?'00:00':document.getElementById('tt-start-input').value;
   const end=isAllDay?'23:59':document.getElementById('tt-end-input').value;
   const cat=document.getElementById('tt-cat-select').value;
-  if(!isAllDay&&(!start||!end||start>=end))return;
-  if(!isAllDay){const startSlot=ttTimeToSlot(start),endSlot=ttTimeToSlot(end);if(startSlot<0||endSlot>TT_SLOTS||startSlot>=endSlot)return;}
+  if(!isAllDay&&(!start||!end||start>=end)){flagInvalidField(!start?'tt-start-input':!end?'tt-end-input':'tt-end-input');return;}
+  if(!isAllDay){const startSlot=ttTimeToSlot(start),endSlot=ttTimeToSlot(end);if(startSlot<0||endSlot>TT_SLOTS||startSlot>=endSlot){flagInvalidField('tt-end-input');return;}}
   const date=ttDowToDateStr(day); // actual date for selected DOW in current week
   if(editingTTId!==null){
     const ev=state.timetable.find(x=>x.id===editingTTId);

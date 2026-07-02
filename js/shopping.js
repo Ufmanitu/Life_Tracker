@@ -58,7 +58,7 @@ function renderShoppingList(){
 
 if(CURRENT_PAGE==="shopping"){ document.getElementById("add-shop-btn").addEventListener("click",()=>{
   const name = document.getElementById("shop-name-input").value.trim();
-  if(!name)return;
+  if(!name){flagInvalidField("shop-name-input");return;}
   const qty = Math.max(1,parseInt(document.getElementById("shop-qty-input").value)||1);
   const cat = document.getElementById("shop-cat-select").value;
   state.shopItems.push({id:state.shopIdCtr++, name, qty, cat, done:false});

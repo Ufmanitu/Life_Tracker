@@ -114,7 +114,17 @@ const Coach = (() => {
         // once not).
         const ideaNames = new Set(ideas.map(r => r.name));
         const inDirection = r => (r.kcal || 0) > 0 && !ideaNames.has(r.name) && (direction === 'gain' ? r.kcal >= perMealBudget * 0.5 : true);
-        ownRecipeMatches = raw.recipes.filter(inDirection).sort(byCloseness).slice(0, 3);
+        // Dedupe by name — if the same recipe name exists more than once in
+        // the user's own saved recipes (e.g. leftover from adding a Coach
+        // suggestion more than once before duplicates were prevented),
+        // only show it once here.
+        const seenNames = new Set();
+        const uniqueOwnRecipes = raw.recipes.filter(r => {
+          if (seenNames.has(r.name)) return false;
+          seenNames.add(r.name);
+          return true;
+        });
+        ownRecipeMatches = uniqueOwnRecipes.filter(inDirection).sort(byCloseness).slice(0, 3);
       }
     } catch (e) {}
 

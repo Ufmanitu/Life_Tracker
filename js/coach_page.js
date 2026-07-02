@@ -93,6 +93,22 @@ function renderCoachPlan() {
     : `<div class="coach-tips-empty">${tr.coachNoRecipes || 'No matching recipe ideas right now.'}</div>`;
 
   document.getElementById('coach-apply-cal-btn').dataset.kcal = plan.suggestedKcal;
+
+  const routineBtn = document.getElementById('coach-add-routine-btn');
+  const routineAdded = Coach.isRoutineAdded(plan.routine);
+  routineBtn.disabled = routineAdded;
+  routineBtn.classList.toggle('coach-added-btn', routineAdded);
+  routineBtn.textContent = routineAdded
+    ? (tr.coachRoutineAdded || '✓ Added to Workout Page')
+    : (tr.coachAddRoutine || '🏋️ Add This Routine to Workout Page');
+
+  const recipesBtn = document.getElementById('coach-add-recipes-btn');
+  const recipesAdded = Coach.isAllRecipesAdded(plan.ideas);
+  recipesBtn.disabled = recipesAdded;
+  recipesBtn.classList.toggle('coach-added-btn', recipesAdded);
+  recipesBtn.textContent = recipesAdded
+    ? (tr.coachRecipesAdded || '✓ Added to Recipe Book')
+    : (tr.coachAddRecipes || '📖 Add These Recipes to Recipe Book');
 }
 
 function renderCoachPage() {
@@ -128,16 +144,18 @@ function flashSaveIndicator() {
 }
 
 document.getElementById('coach-add-routine-btn').addEventListener('click', () => {
-  if (currentPlan && currentPlan.routine) {
+  if (currentPlan && currentPlan.routine && !Coach.isRoutineAdded(currentPlan.routine)) {
     Coach.addRoutineToWorkoutPage(currentPlan.routine);
     flashSaveIndicator();
+    renderCoachPlan();
   }
 });
 
 document.getElementById('coach-add-recipes-btn').addEventListener('click', () => {
-  if (currentPlan && currentPlan.ideas && currentPlan.ideas.length) {
+  if (currentPlan && currentPlan.ideas && currentPlan.ideas.length && !Coach.isAllRecipesAdded(currentPlan.ideas)) {
     Coach.addRecipesToRecipesPage(currentPlan.ideas);
     flashSaveIndicator();
+    renderCoachPlan();
   }
 });
 

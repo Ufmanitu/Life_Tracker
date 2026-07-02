@@ -108,7 +108,12 @@ const Coach = (() => {
     try {
       const raw = JSON.parse(localStorage.getItem('lt_recipes') || 'null');
       if (raw && Array.isArray(raw.recipes)) {
-        const inDirection = r => (r.kcal || 0) > 0 && (direction === 'gain' ? r.kcal >= perMealBudget * 0.5 : true);
+        // Exclude anything already shown as a suggested idea above — most
+        // often a suggested idea the user already added to their own
+        // Recipe Book, which would otherwise show up twice (once starred,
+        // once not).
+        const ideaNames = new Set(ideas.map(r => r.name));
+        const inDirection = r => (r.kcal || 0) > 0 && !ideaNames.has(r.name) && (direction === 'gain' ? r.kcal >= perMealBudget * 0.5 : true);
         ownRecipeMatches = raw.recipes.filter(inDirection).sort(byCloseness).slice(0, 3);
       }
     } catch (e) {}
@@ -131,17 +136,46 @@ const Coach = (() => {
     try { localStorage.setItem(CAL_GOALS_KEY, JSON.stringify(calGoals)); } catch (e) {}
   }
 
+  function routineDayTemplateName(routine, day) {
+    return `${routine.title} — ${day.day} (${day.focus})`;
+  }
+  function readWorkoutTemplates() {
+    try { return JSON.parse(localStorage.getItem('lt_workout_templates') || 'null') || []; } catch (e) { return []; }
+  }
+  function readRecipes() {
+    try {
+      const raw = JSON.parse(localStorage.getItem('lt_recipes') || 'null');
+      return raw ? { recipes: raw.recipes || [], ctr: raw.ctr || 1 } : { recipes: [], ctr: 1 };
+    } catch (e) { return { recipes: [], ctr: 1 }; }
+  }
+
+  // Checked against the ACTUAL saved data (not a separate remembered flag),
+  // so this self-heals if the user later deletes the template/recipe on its
+  // own page — the Coach button correctly offers to add it again.
+  function isRoutineAdded(routine) {
+    const names = new Set(readWorkoutTemplates().map(t => t.name));
+    return routine.days.every(day => names.has(routineDayTemplateName(routine, day)));
+  }
+  function isAllRecipesAdded(ideas) {
+    const names = new Set(readRecipes().recipes.map(r => r.name));
+    return ideas.length > 0 && ideas.every(idea => names.has(idea.name));
+  }
+
   // ── Push a suggested routine into the Workout page as templates ────
   // workout.js's wktTemplates/lt_workout_templates live inside its own
   // if(CURRENT_PAGE==='workout') closure, not globally exposed (same
   // situation as calGoals) — so this writes localStorage directly,
   // matching applySuggestedCalorieGoal(). One template per routine day.
+  // Skips any day whose template name already exists, so re-clicking
+  // "Add" (or adding the same routine again later) never duplicates it.
   function addRoutineToWorkoutPage(routine) {
-    let templates = [];
-    try { templates = JSON.parse(localStorage.getItem('lt_workout_templates') || 'null') || []; } catch (e) {}
+    const templates = readWorkoutTemplates();
+    const existingNames = new Set(templates.map(t => t.name));
     routine.days.forEach(day => {
+      const name = routineDayTemplateName(routine, day);
+      if (existingNames.has(name)) return;
       templates.push({
-        name: `${routine.title} — ${day.day} (${day.focus})`,
+        name,
         exercises: day.exercises.map(ex => ({
           id: 0, name: ex.name, cat: ex.cat || 'strength', type: ex.type || 'sets',
           sets: ex.sets || 0, reps: ex.reps || 0, weight: 0,
@@ -154,14 +188,14 @@ const Coach = (() => {
 
   // ── Push suggested recipe ideas into the Recipe Book ────────────────
   // Same localStorage-direct pattern — recipes.js's recRecipes/recIdCtr
-  // are scoped inside if(CURRENT_PAGE==='recipes').
+  // are scoped inside if(CURRENT_PAGE==='recipes'). Skips any recipe
+  // whose name already exists, same anti-duplicate reasoning as above.
   function addRecipesToRecipesPage(ideas) {
-    let recipes = [], ctr = 1;
-    try {
-      const raw = JSON.parse(localStorage.getItem('lt_recipes') || 'null');
-      if (raw) { recipes = raw.recipes || []; ctr = raw.ctr || 1; }
-    } catch (e) {}
+    const { recipes, ctr: startCtr } = readRecipes();
+    let ctr = startCtr;
+    const existingNames = new Set(recipes.map(r => r.name));
     ideas.forEach(idea => {
+      if (existingNames.has(idea.name)) return;
       recipes.push({
         id: ctr++, name: idea.name, tag: idea.tag || 'lunch',
         servings: idea.servings || 1, kcal: idea.kcal || 0,
@@ -244,6 +278,7 @@ const Coach = (() => {
     getContext, getInsights, getTopInsight,
     getBodyGoal, saveBodyGoal, calcTDEE, getWeightPlan, applySuggestedCalorieGoal,
     addRoutineToWorkoutPage, addRecipesToRecipesPage,
+    isRoutineAdded, isAllRecipesAdded,
     ACTIVITY_MULTIPLIERS, DEFAULT_BODY_GOAL,
   };
 

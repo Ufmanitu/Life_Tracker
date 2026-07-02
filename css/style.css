@@ -2948,3 +2948,6 @@ body.has-sidebar.sb-collapsed #duck-peek-btn{left:calc(var(--sb-w-col) + 24px);}
   60%{transform:translateX(-4px);}
   80%{transform:translateX(4px);}
 }
+
+.coach-added-btn{background:linear-gradient(135deg,#3a4258,#2c3244)!important;box-shadow:none!important;cursor:default!important;color:var(--text-sec)!important;}
+.coach-added-btn:hover{filter:none!important;transform:none!important;}

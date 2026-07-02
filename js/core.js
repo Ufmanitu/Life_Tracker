@@ -297,7 +297,6 @@ function applyTranslations(){
     'workout.html': tr.tabWorkout||'Workout',
     'cycle.html': tr.tabCycle,
     'recipes.html': tr.tabRecipes,
-    'duck.html': tr.tabDuck||'My Duck',
     'coach.html': tr.tabCoach||'Coach',
   };
   const _stripEmoji = s => s.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}✅📊📈🗓💰🛒🌸⏱📖🦆🎯]+\s*/gu, '').trim();
@@ -2052,7 +2051,6 @@ function initSidebar() {
   // Nav definition
   const sections = [
     { label: tr.sbGroupCompanion||'Companion', items: [
-      { page:'duck', href:'duck.html', icon:'🦆', label: tr.tabDuck||'My Duck' },
       { page:'coach', href:'coach.html', icon:'🎯', label: tr.tabCoach||'Coach' },
     ]},
     { label: tr.sbGroupTrack||'Track', items: [

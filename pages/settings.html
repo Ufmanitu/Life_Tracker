@@ -45,62 +45,6 @@
   backdrop-filter: blur(3px);
   z-index: 3000;
 }
-/* ── Selective Delete Modal – only new UI styles; positioning/z-index come from style.css ── */
-#settings-clear-modal {
-  width: min(520px, 94vw); /* wider to fit the 2-col checkbox grid */
-}
-#delete-sections-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px 12px;
-  margin: 14px 0 10px;
-  text-align: left;
-}
-.delete-section-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  padding: 9px 12px;
-  border-radius: 9px;
-  border: 1.5px solid var(--border);
-  transition: border-color .15s, background .15s;
-  background: var(--surface2);
-  user-select: none;
-}
-.delete-section-item:hover { border-color: #e05a9a; }
-.delete-section-item:has(input:checked) {
-  border-color: #e05a9a;
-  background: rgba(224,90,154,.08);
-}
-.delete-section-item input[type="checkbox"] {
-  width: 15px; height: 15px;
-  accent-color: #e05a9a;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.delete-toggle-row {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 14px;
-}
-.delete-toggle-btn {
-  padding: 5px 14px;
-  border-radius: 7px;
-  border: 1.5px solid var(--border);
-  background: var(--surface2);
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all .15s;
-}
-.delete-toggle-btn:hover { border-color: var(--accent); color: var(--text); }
 #import-modal {
   position: fixed;
   top: 50%; left: 50%;
@@ -323,56 +267,6 @@
   </div>
 </div>
 </div><!-- #app -->
-
-<!-- SELECTIVE DELETE MODAL -->
-<div id="settings-clear-backdrop" class="hidden"></div>
-<div id="settings-clear-modal" class="hidden">
-  <div class="tt-confirm-icon">🗑️</div>
-  <div class="tt-confirm-title" data-i18n="settingsDeleteModalTitle">Select Data to Delete</div>
-  <div class="tt-confirm-desc" style="margin-bottom:4px;" data-i18n="settingsDeleteModalDesc">Tick the sections you want to erase. Unticked sections stay safe.</div>
-  <div id="delete-sections-grid">
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="habits" checked/>
-      <span data-i18n="settingsSectionHabits">📊 Habit Tracker</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="timetable" checked/>
-      <span data-i18n="settingsSectionTimetable">🗓 Timetable</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="tasks" checked/>
-      <span data-i18n="settingsSectionTasks">✅ Tasks</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="shopping" checked/>
-      <span data-i18n="settingsSectionShopping">🛒 Shopping</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="cycle" checked/>
-      <span data-i18n="settingsSectionCycle">🌸 Cycle</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="finance" checked/>
-      <span data-i18n="settingsSectionFinance">💰 Finance</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="journal" checked/>
-      <span data-i18n="settingsSectionJournal">📓 Journal</span>
-    </label>
-    <label class="delete-section-item">
-      <input type="checkbox" class="delete-section-cb" data-section="settings" checked/>
-      <span data-i18n="settingsSectionPrefs">⚙️ Settings &amp; Prefs</span>
-    </label>
-  </div>
-  <div class="delete-toggle-row">
-    <button class="delete-toggle-btn" id="delete-select-all" data-i18n="settingsSelectAllBtn">☑ Select All</button>
-    <button class="delete-toggle-btn" id="delete-select-none" data-i18n="settingsSelectNoneBtn">☐ Select None</button>
-  </div>
-  <div class="tt-confirm-btns">
-    <button class="tt-confirm-cancel" id="settings-clear-cancel" data-i18n="ttConfirmCancel">Cancel</button>
-    <button class="tt-confirm-delete" id="settings-clear-confirm" data-i18n="settingsDeleteSelectedBtn">🗑 Delete Selected</button>
-  </div>
-</div>
 
 <!-- LANGUAGE DROPDOWN -->
 <div id="lang-dropdown">

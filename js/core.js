@@ -2765,12 +2765,20 @@ function showOnboardingModal() {
 }
 
 // ─── SETTINGS MODAL ───────────────────────────────────────────────────────────
+// Every app-owned localStorage key falls under one of these three prefixes
+// (ht_ for most features, lt_ for workout/recipes/sidebar, duck_ for the
+// Duck Companion engine). Used everywhere a "clear/export/import ALL app
+// data" operation needs to recognize the full set of keys, not just ht_.
+function isAppDataKey(k) {
+  return !!k && (k.startsWith('ht_') || k.startsWith('lt_') || k.startsWith('duck_'));
+}
+
 // ─── BACKUP HELPERS (used by modal + settings page) ──────────────────────────
 function buildBackup() {
   const data = {};
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && key.startsWith('ht_')) {
+    if (isAppDataKey(key)) {
       data[key] = localStorage.getItem(key);
     }
   }
@@ -2789,8 +2797,105 @@ function describeBackup(backup) {
   try { const k = Object.keys(d).find(k=>k.startsWith('ht_timetable_')); if(k){ const tt=JSON.parse(d[k]); lines.push(`🗓 Timetable events: ${(tt.tt||[]).length}`); } } catch(e){}
   const hasCycle = Object.keys(d).some(k=>k.startsWith('ht_cycle_'));
   if (hasCycle) lines.push(`🌸 Cycle data: included`);
+  try { const k = Object.keys(d).find(k=>k.startsWith('ht_calories_')); if(k){ lines.push(`🍎 Calorie log days: ${Object.keys(JSON.parse(d[k]).days||{}).length}`); } } catch(e){}
+  try { if(d['lt_workout_templates']){ lines.push(`🏋 Workout templates: ${JSON.parse(d['lt_workout_templates']).length}`); } } catch(e){}
+  try { if(d['lt_recipes']){ lines.push(`📖 Recipes: ${(JSON.parse(d['lt_recipes']).recipes||[]).length}`); } } catch(e){}
+  try { if(d['ht_body_goal_v1'] && JSON.parse(d['ht_body_goal_v1']).active){ lines.push(`🎯 Coach goal: active`); } } catch(e){}
+  if (d['duck_state_v1']) lines.push(`🦆 Duck Companion: included`);
   lines.push(`🔑 Total keys: ${Object.keys(d).length}`);
   return lines.join('\n');
+}
+
+// ── Section → localStorage key mapping, shared by the settings MODAL
+// (any page, via the header gear icon) and the standalone settings PAGE ──
+const DELETE_SECTION_KEY_MAP = {
+  habits:    { exact: ['ht_habits_v4','ht_goals_ext_v1','ht_todos_v1'], prefix: ['ht_habits_'] },
+  timetable: { exact: ['ht_timetable_v4'], prefix: ['ht_timetable_'] },
+  tasks:     { exact: ['ht_tasks_v3'], prefix: ['ht_tasks_'] },
+  shopping:  { exact: ['ht_shopping_v3'], prefix: ['ht_shop_'] },
+  cycle:     { exact: ['ht_cycle_v2'], prefix: ['ht_cycle_'] },
+  finance:   { exact: ['ht_finance_v1'], prefix: ['ht_finance_'] },
+  calories:  { exact: ['ht_cal_goals_v1','ht_cal_recent_v1'], prefix: ['ht_calories_'] },
+  workout:   { exact: ['lt_workout_templates'], prefix: ['lt_workouts_'] },
+  recipes:   { exact: ['lt_recipes'], prefix: [] },
+  coach:     { exact: ['ht_body_goal_v1'], prefix: [] },
+  duck:      { exact: ['duck_state_v1','duck_name_v1','duck_last_reset_v1','duck_event_log_v1'], prefix: [] },
+  journal:   { exact: ['ht_journal_v1'], prefix: [] },
+  settings:  { exact: ['ht_lang_v4','ht_theme_v2','ht_nav_v1','ht_tour_v1','ht_user_prefs_v1'], prefix: [] },
+};
+
+// preCheckAll: whether every section starts ticked ("Delete All Data" vs
+// "Choose & Delete"). onClose: optional extra cleanup to run once the user
+// confirms and navigates away (the settings MODAL uses this to also close
+// itself; the standalone settings PAGE has nothing extra to close).
+function openDeletePopup(preCheckAll, onClose) {
+  document.getElementById('del-popup-bd')?.remove();
+  document.getElementById('del-popup-modal')?.remove();
+  const SECTIONS = [
+    { key:'habits',    label:'📊 Habit Tracker' },
+    { key:'timetable', label:'🗓 Timetable' },
+    { key:'tasks',     label:'✅ Tasks' },
+    { key:'shopping',  label:'🛒 Shopping' },
+    { key:'cycle',     label:'🌸 Cycle' },
+    { key:'finance',   label:'💰 Finance' },
+    { key:'calories',  label:'🍎 Calories' },
+    { key:'workout',   label:'🏋 Workout' },
+    { key:'recipes',   label:'📖 Recipes' },
+    { key:'coach',     label:'🎯 Coach Goal' },
+    { key:'duck',      label:'🦆 Duck Companion' },
+    { key:'journal',   label:'📓 Journal' },
+    { key:'settings',  label:'⚙️ Settings &amp; Prefs' },
+  ];
+  const bd = document.createElement('div');
+  bd.id = 'del-popup-bd';
+  bd.style.cssText = 'position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);animation:fadeIn .2s ease;';
+  const rows = SECTIONS.map(s => `
+    <label class="del-sec-row" data-key="${s.key}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:border-color .15s,background .15s;font-size:13px;font-weight:600;color:var(--text);user-select:none;">
+      <input type="checkbox" data-section="${s.key}" ${preCheckAll?'checked':''}
+        style="width:16px;height:16px;accent-color:#e05a9a;cursor:pointer;flex-shrink:0;"/>
+      ${s.label}
+    </label>`).join('');
+  const pm = document.createElement('div');
+  pm.id = 'del-popup-modal';
+  pm.style.cssText = 'position:fixed;z-index:9201;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,92vw);background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:centeredModalPop .28s cubic-bezier(.4,0,.2,1);';
+  pm.innerHTML = `
+    <div style="text-align:center;font-size:30px;margin-bottom:8px;">🗑️</div>
+    <div style="text-align:center;font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;">Select Data to Delete</div>
+    <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">Tick the sections you want to erase.<br>Anything left unticked stays safe.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">${rows}</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
+      <button id="del-sel-all" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☑ Select All</button>
+      <button id="del-sel-none" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☐ Select None</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="del-cancel" style="padding:10px 22px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button>
+      <button id="del-confirm" style="padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#e05a9a,#c84080);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(224,90,154,.4);">🗑 Delete Selected</button>
+    </div>`;
+  document.body.appendChild(bd);
+  document.body.appendChild(pm);
+  pm.querySelectorAll('.del-sec-row').forEach(row => {
+    const cb = row.querySelector('input');
+    function sync() { row.style.borderColor = cb.checked ? '#e05a9a' : ''; row.style.background = cb.checked ? 'rgba(224,90,154,.1)' : ''; }
+    cb.addEventListener('change', sync); sync();
+  });
+  function closePop() { bd.remove(); pm.remove(); }
+  bd.addEventListener('click', closePop);
+  pm.querySelector('#del-cancel').addEventListener('click', closePop);
+  pm.querySelector('#del-sel-all').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = true; cb.dispatchEvent(new Event('change')); }); });
+  pm.querySelector('#del-sel-none').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = false; cb.dispatchEvent(new Event('change')); }); });
+  pm.querySelector('#del-confirm').addEventListener('click', () => {
+    const checked = Array.from(pm.querySelectorAll('input[data-section]:checked')).map(cb => cb.dataset.section);
+    if (checked.length === 0) { closePop(); return; }
+    const exactSet = new Set(); const prefixList = [];
+    checked.forEach(sec => { const map = DELETE_SECTION_KEY_MAP[sec]; if (!map) return; map.exact.forEach(k => exactSet.add(k)); map.prefix.forEach(p => prefixList.push(p)); });
+    const toDelete = [];
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (exactSet.has(k) || prefixList.some(p => k.startsWith(p)))) toDelete.push(k); }
+    toDelete.forEach(k => localStorage.removeItem(k));
+    if (checked.includes('settings')) userPrefs = { showCycle: null, setupDone: false };
+    closePop();
+    if (typeof onClose === 'function') onClose();
+    window.location.href = 'tracker.html';
+  });
 }
 
 function openSettingsModal() {
@@ -2817,81 +2922,6 @@ function openSettingsModal() {
   // Escape key handler (attached once, removed on close)
   function escHandler(e) { if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); } }
   document.addEventListener('keydown', escHandler);
-
-  // ── Section → localStorage key mapping ──
-  const SECTION_KEY_MAP = {
-    habits:    { exact: ['ht_habits_v4','ht_goals_ext_v1','ht_todos_v1'], prefix: ['ht_habits_'] },
-    timetable: { exact: ['ht_timetable_v4'], prefix: ['ht_timetable_'] },
-    tasks:     { exact: ['ht_tasks_v3'], prefix: ['ht_tasks_'] },
-    shopping:  { exact: ['ht_shopping_v3'], prefix: ['ht_shop_'] },
-    cycle:     { exact: ['ht_cycle_v2'], prefix: ['ht_cycle_'] },
-    finance:   { exact: ['ht_finance_v1'], prefix: ['ht_finance_'] },
-    journal:   { exact: ['ht_journal_v1'], prefix: [] },
-    settings:  { exact: ['ht_lang_v1','ht_theme_v2','ht_nav_v1','ht_tour_v1','ht_user_prefs_v1'], prefix: [] },
-  };
-
-  function openDeletePopup(preCheckAll) {
-    document.getElementById('del-popup-bd')?.remove();
-    document.getElementById('del-popup-modal')?.remove();
-    const SECTIONS = [
-      { key:'habits',    label:'📊 Habit Tracker' },
-      { key:'timetable', label:'🗓 Timetable' },
-      { key:'tasks',     label:'✅ Tasks' },
-      { key:'shopping',  label:'🛒 Shopping' },
-      { key:'cycle',     label:'🌸 Cycle' },
-      { key:'finance',   label:'💰 Finance' },
-      { key:'journal',   label:'📓 Journal' },
-      { key:'settings',  label:'⚙️ Settings &amp; Prefs' },
-    ];
-    const bd = document.createElement('div');
-    bd.id = 'del-popup-bd';
-    bd.style.cssText = 'position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);animation:fadeIn .2s ease;';
-    const rows = SECTIONS.map(s => `
-      <label class="del-sec-row" data-key="${s.key}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:border-color .15s,background .15s;font-size:13px;font-weight:600;color:var(--text);user-select:none;">
-        <input type="checkbox" data-section="${s.key}" ${preCheckAll?'checked':''}
-          style="width:16px;height:16px;accent-color:#e05a9a;cursor:pointer;flex-shrink:0;"/>
-        ${s.label}
-      </label>`).join('');
-    const pm = document.createElement('div');
-    pm.id = 'del-popup-modal';
-    pm.style.cssText = 'position:fixed;z-index:9201;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,92vw);background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:centeredModalPop .28s cubic-bezier(.4,0,.2,1);';
-    pm.innerHTML = `
-      <div style="text-align:center;font-size:30px;margin-bottom:8px;">🗑️</div>
-      <div style="text-align:center;font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;">Select Data to Delete</div>
-      <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">Tick the sections you want to erase.<br>Anything left unticked stays safe.</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">${rows}</div>
-      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
-        <button id="del-sel-all" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☑ Select All</button>
-        <button id="del-sel-none" style="padding:5px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;">☐ Select None</button>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;">
-        <button id="del-cancel" style="padding:10px 22px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button>
-        <button id="del-confirm" style="padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#e05a9a,#c84080);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(224,90,154,.4);">🗑 Delete Selected</button>
-      </div>`;
-    document.body.appendChild(bd);
-    document.body.appendChild(pm);
-    pm.querySelectorAll('.del-sec-row').forEach(row => {
-      const cb = row.querySelector('input');
-      function sync() { row.style.borderColor = cb.checked ? '#e05a9a' : ''; row.style.background = cb.checked ? 'rgba(224,90,154,.1)' : ''; }
-      cb.addEventListener('change', sync); sync();
-    });
-    function closePop() { bd.remove(); pm.remove(); }
-    bd.addEventListener('click', closePop);
-    pm.querySelector('#del-cancel').addEventListener('click', closePop);
-    pm.querySelector('#del-sel-all').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = true; cb.dispatchEvent(new Event('change')); }); });
-    pm.querySelector('#del-sel-none').addEventListener('click', () => { pm.querySelectorAll('input[data-section]').forEach(cb => { cb.checked = false; cb.dispatchEvent(new Event('change')); }); });
-    pm.querySelector('#del-confirm').addEventListener('click', () => {
-      const checked = Array.from(pm.querySelectorAll('input[data-section]:checked')).map(cb => cb.dataset.section);
-      if (checked.length === 0) { closePop(); return; }
-      const exactSet = new Set(); const prefixList = [];
-      checked.forEach(sec => { const map = SECTION_KEY_MAP[sec]; if (!map) return; map.exact.forEach(k => exactSet.add(k)); map.prefix.forEach(p => prefixList.push(p)); });
-      const toDelete = [];
-      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (exactSet.has(k) || prefixList.some(p => k.startsWith(p)))) toDelete.push(k); }
-      toDelete.forEach(k => localStorage.removeItem(k));
-      if (checked.includes('settings')) userPrefs = { showCycle: null, setupDone: false };
-      closePop(); closeModal(); window.location.href = 'tracker.html';
-    });
-  }
 
   // ── render(): builds modal HTML + wires all listeners; safe to call again ──
   function renderSettingsContent() {
@@ -3058,8 +3088,8 @@ function openSettingsModal() {
       modal.querySelectorAll('.settings-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
     });
 
-    modal.querySelector('#settings-modal-clear-section-btn').addEventListener('click', () => openDeletePopup(false));
-    modal.querySelector('#settings-modal-clear-btn').addEventListener('click', () => openDeletePopup(true));
+    modal.querySelector('#settings-modal-clear-section-btn').addEventListener('click', () => openDeletePopup(false, closeModal));
+    modal.querySelector('#settings-modal-clear-btn').addEventListener('click', () => openDeletePopup(true, closeModal));
 
     modal.querySelector('#settings-modal-tour-btn').addEventListener('click', () => {
       closeModal();
@@ -3108,7 +3138,7 @@ function openSettingsModal() {
         const preview = describeBackup(backup);
         if (confirm(`Import this backup?\n\n${preview}\n\nThis will overwrite all current data. Cannot be undone.`)) {
           const existing = [];
-          for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('ht_')) existing.push(k); }
+          for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (isAppDataKey(k)) existing.push(k); }
           existing.forEach(k => localStorage.removeItem(k));
           Object.entries(backup.data).forEach(([key, val]) => { try { localStorage.setItem(key, val); } catch(e) {} });
           closeModal();
@@ -3639,6 +3669,7 @@ function getWizards() {
             { value: 'de', label: '🇩🇪 Deutsch' },
             { value: 'es', label: '🇪🇸 Español' },
             { value: 'fr', label: '🇫🇷 Français' },
+            { value: 'tr', label: '🇹🇷 Türkçe' },
           ]
         },
       ],
@@ -3646,12 +3677,8 @@ function getWizards() {
       action: function(answers) {
         const lang = answers.lang;
         if (!lang) return;
-        try { localStorage.setItem('ht_lang_v1', lang); } catch(e){}
-        if (typeof setLang === 'function') {
-          setLang(lang);
-        } else {
-          location.reload();
-        }
+        try { localStorage.setItem(K.lang(), lang); } catch(e){}
+        location.reload();
       }
     },
   };
@@ -4009,6 +4036,21 @@ const TOUR_STEPS = [
   { page: 'cycle', female: true, selector: '#cycle-cal-card',       position: 'left',   titleKey: 'tourCycleCalTitle',     descKey: 'tourCycleCalDesc' },
   { page: 'cycle', female: true, selector: '#symptom-grid',         position: 'top',    titleKey: 'tourCycleSympTitle',    descKey: 'tourCycleSympDesc' },
   { page: 'cycle', female: true, selector: '#cycle-insights',       position: 'top',    titleKey: 'tourCycleInsightsTitle',descKey: 'tourCycleInsightsDesc' },
+  // ── Calories page ───────────────────────────────────────────────────
+  { page: 'calories',  selector: '#cal-macro-row',           position: 'bottom', titleKey: 'tourCalMacroTitle',  descKey: 'tourCalMacroDesc' },
+  { page: 'calories',  selector: '#cal-meals-col',           position: 'right',  titleKey: 'tourCalMealsTitle',  descKey: 'tourCalMealsDesc' },
+  { page: 'calories',  selector: '#cal-water-glasses',       position: 'top',    titleKey: 'tourCalWaterTitle',  descKey: 'tourCalWaterDesc' },
+  // ── Workout page ────────────────────────────────────────────────────
+  { page: 'workout',   selector: '#wkt-stats-row',           position: 'bottom', titleKey: 'tourWktStatsTitle',  descKey: 'tourWktStatsDesc' },
+  { page: 'workout',   selector: '#wkt-add-card',             position: 'top',    titleKey: 'tourWktAddTitle',    descKey: 'tourWktAddDesc' },
+  { page: 'workout',   selector: '#wkt-right-col',            position: 'left',   titleKey: 'tourWktTplTitle',    descKey: 'tourWktTplDesc' },
+  // ── Recipes page ────────────────────────────────────────────────────
+  { page: 'recipes',   selector: '#rec-top-bar',              position: 'bottom', titleKey: 'tourRecTopTitle',    descKey: 'tourRecTopDesc' },
+  { page: 'recipes',   selector: '#rec-grid',                 position: 'top',    titleKey: 'tourRecGridTitle',   descKey: 'tourRecGridDesc' },
+  // ── Coach page ──────────────────────────────────────────────────────
+  { page: 'coach',     selector: '#coach-tips-list',           position: 'bottom', titleKey: 'tourCoachTipsTitle', descKey: 'tourCoachTipsDesc' },
+  { page: 'coach',     selector: '.coach-goal-form',           position: 'top',    titleKey: 'tourCoachGoalTitle', descKey: 'tourCoachGoalDesc' },
+  { page: 'coach',     selector: '#coach-plan-card',           position: 'top',    titleKey: 'tourCoachPlanTitle', descKey: 'tourCoachPlanDesc' },
   // ── Pomodoro (any page) ────────────────────────────────────────────
   { page: null,        selector: '#sb-pomo-btn',             position: 'right',  titleKey: 'tourPomoTitle',      descKey: 'tourPomoDesc' },
   // ── Assistant FAB ──────────────────────────────────────────────────
@@ -4065,6 +4107,28 @@ const TOUR_I18N = {
     tourCycleSympDesc:   'Tap any symptom you are experiencing today — cramps, fatigue, cravings, and more. Then pick a mood emoji and add a personal note. Hit 💾 Save Today to record it.',
     tourCycleInsightsTitle: '📊 Cycle Insights',
     tourCycleInsightsDesc:  'Your personal cycle stats live here: current cycle day, days until next period, estimated ovulation date, and your full cycle history. Everything updates automatically.',
+    tourCalMacroTitle:   '📊 Daily Macro Rings',
+    tourCalMacroDesc:    'These rings track your calories, protein, carbs, and fat for the day against the goals you set below.',
+    tourCalMealsTitle:   '🍽 Log Your Meals',
+    tourCalMealsDesc:    'Tap the + on Breakfast, Lunch, Dinner, or Snacks to log a food item — its calories and macros are added to your rings instantly.',
+    tourCalWaterTitle:   '💧 Water Tracker',
+    tourCalWaterDesc:    'Tap a glass each time you drink water. Quackers gets thirsty if you fall behind on your daily goal!',
+    tourWktStatsTitle:   '🏋 Your Workout Stats',
+    tourWktStatsDesc:    'Your current streak, sessions this month, total volume, and total duration — all tracked automatically as you log workouts.',
+    tourWktAddTitle:     '➕ Log an Exercise',
+    tourWktAddDesc:      'Name the exercise, pick a category, then enter sets & reps or a duration/distance. It\'s added to today\'s session instantly.',
+    tourWktTplTitle:     '📋 Personal Records & Templates',
+    tourWktTplDesc:      'Your personal records are tracked automatically. Save a session as a template to reuse a whole routine with one click next time.',
+    tourRecTopTitle:     '📖 Your Recipe Book',
+    tourRecTopDesc:      'Search your saved recipes or click + New Recipe to add one with its own calories, macros, and ingredients.',
+    tourRecGridTitle:    '🍳 Browse & Log Meals',
+    tourRecGridDesc:     'Click any recipe card to view, edit, or log it straight to today\'s Calories page — no need to re-enter the numbers.',
+    tourCoachTipsTitle:  '💡 Tips For You',
+    tourCoachTipsDesc:   'Coach looks at your habits, Duck, cycle, and more to surface personalized tips — like reminders to drink water or celebrate a streak.',
+    tourCoachGoalTitle:  '🎯 Set a Weight Goal',
+    tourCoachGoalDesc:   'Enter your stats and a target weight — Coach calculates a daily calorie target tailored to gaining, losing, or maintaining.',
+    tourCoachPlanTitle:  '📋 Your Suggested Plan',
+    tourCoachPlanDesc:   'A matching workout routine and recipe ideas, picked for your goal. Add them straight to your Workout page or Recipe Book with one click.',
   },
   hu: {
     tourNext: 'Következő →', tourPrev: '← Vissza', tourSkip: 'Átugorja', tourFinish: '🎉 Kezdjük!',
@@ -4115,6 +4179,28 @@ const TOUR_I18N = {
     tourCycleSympDesc:   'Jelöld be a mai tüneteidet — görcsök, fáradtság, sóvárgás és egyebek. Ezután válassz hangulat emojit és adj hozzá személyes megjegyzést. Nyomd meg a 💾 Mentés gombra.',
     tourCycleInsightsTitle: '📊 Ciklus statisztikák',
     tourCycleInsightsDesc:  'Személyes ciklus adataid: aktuális ciklusnap, napok a következő menstruációig, becsült ovulációs dátum és teljes ciklustörténet. Minden automatikusan frissül.',
+    tourCalMacroTitle:   '📊 Napi makró gyűrűk',
+    tourCalMacroDesc:    'Ezek a gyűrűk követik a napi kalória-, fehérje-, szénhidrát- és zsírbevitelt a lent beállított céljaidhoz képest.',
+    tourCalMealsTitle:   '🍽 Étkezések naplózása',
+    tourCalMealsDesc:    'Koppints a + gombra a Reggeli, Ebéd, Vacsora vagy Nassolás mellett egy étel naplózásához — a kalóriák és makrók azonnal hozzáadódnak a gyűrűkhöz.',
+    tourCalWaterTitle:   '💧 Vízfogyasztás követése',
+    tourCalWaterDesc:    'Koppints egy pohárra minden alkalommal, amikor vizet iszol. Kacsád megszomjazik, ha lemaradsz a napi céltól!',
+    tourWktStatsTitle:   '🏋 Edzés statisztikáid',
+    tourWktStatsDesc:    'Jelenlegi sorozatod, havi edzéseid száma, összes volumen és összes időtartam — mind automatikusan követve, ahogy edzéseket naplózol.',
+    tourWktAddTitle:     '➕ Gyakorlat naplózása',
+    tourWktAddDesc:      'Nevezd meg a gyakorlatot, válassz kategóriát, majd add meg a sorozatokat/ismétléseket vagy az időtartamot/távolságot. Azonnal bekerül a mai edzésbe.',
+    tourWktTplTitle:     '📋 Egyéni csúcsok & Sablonok',
+    tourWktTplDesc:      'Egyéni csúcsaidat az app automatikusan követi. Mentsd el egy edzésedet sablonként, hogy legközelebb egy kattintással újra felhasználhasd a teljes rutint.',
+    tourRecTopTitle:     '📖 Receptkönyved',
+    tourRecTopDesc:      'Keress a mentett receptek között, vagy kattints a + Új recept gombra egy saját kalória-, makró- és hozzávaló-listás recept hozzáadásához.',
+    tourRecGridTitle:    '🍳 Böngészés & naplózás',
+    tourRecGridDesc:     'Kattints bármelyik recept kártyára a megtekintéshez, szerkesztéshez, vagy naplózd egyenesen a mai Kalória oldalra — nem kell újra beírni a számokat.',
+    tourCoachTipsTitle:  '💡 Neked szóló tippek',
+    tourCoachTipsDesc:   'Az Edző megnézi a szokásaidat, Kacsádat, ciklusodat és egyebeket, hogy személyre szabott tippeket adjon — például emlékeztetőt vízivásra vagy egy sorozat ünneplésére.',
+    tourCoachGoalTitle:  '🎯 Testsúlycél beállítása',
+    tourCoachGoalDesc:   'Add meg az adataidat és a célsúlyt — az Edző kiszámol egy napi kalóriacélt, ami illik a hízáshoz, fogyáshoz vagy a súly tartásához.',
+    tourCoachPlanTitle:  '📋 Javasolt terved',
+    tourCoachPlanDesc:   'A célodhoz illő edzésrutin és receptötletek. Add hozzá őket egy kattintással az Edzés oldaladhoz vagy Receptkönyvedhez.',
   },
   de: {
     tourNext: 'Weiter →', tourPrev: '← Zurück', tourSkip: 'Tour überspringen', tourFinish: '🎉 Los geht\'s!',
@@ -4165,6 +4251,28 @@ const TOUR_I18N = {
     tourCycleSympDesc:   'Tippe auf aktuelle Symptome — Krämpfe, Müdigkeit, Heißhunger und mehr. Wähle dann ein Stimmungs-Emoji und füge eine persönliche Notiz hinzu. Mit 💾 Heute speichern bestätigen.',
     tourCycleInsightsTitle: '📊 Zyklus-Statistiken',
     tourCycleInsightsDesc:  'Deine persönlichen Zyklusdaten: aktueller Zyklustag, Tage bis zur nächsten Periode, geschätztes Eisprungdatum und vollständige Zyklushistorie. Alles wird automatisch aktualisiert.',
+    tourCalMacroTitle:   '📊 Tägliche Makro-Ringe',
+    tourCalMacroDesc:    'Diese Ringe verfolgen deine Kalorien, Protein, Kohlenhydrate und Fett für den Tag im Vergleich zu deinen unten gesetzten Zielen.',
+    tourCalMealsTitle:   '🍽 Mahlzeiten erfassen',
+    tourCalMealsDesc:    'Tippe auf das + bei Frühstück, Mittag-, Abendessen oder Snacks, um ein Lebensmittel zu erfassen — Kalorien und Makros werden sofort zu deinen Ringen hinzugefügt.',
+    tourCalWaterTitle:   '💧 Wasser-Tracker',
+    tourCalWaterDesc:    'Tippe auf ein Glas, jedes Mal wenn du Wasser trinkst. Quackers wird durstig, wenn du hinter deinem Tagesziel zurückbleibst!',
+    tourWktStatsTitle:   '🏋 Deine Workout-Statistik',
+    tourWktStatsDesc:    'Deine aktuelle Serie, Einheiten diesen Monat, Gesamtvolumen und Gesamtdauer — alles automatisch erfasst, während du Workouts protokollierst.',
+    tourWktAddTitle:     '➕ Übung erfassen',
+    tourWktAddDesc:      'Benenne die Übung, wähle eine Kategorie, dann gib Sätze & Wiederholungen oder Dauer/Distanz ein. Sie wird sofort zur heutigen Einheit hinzugefügt.',
+    tourWktTplTitle:     '📋 Persönliche Bestleistungen & Vorlagen',
+    tourWktTplDesc:      'Deine persönlichen Bestleistungen werden automatisch erfasst. Speichere eine Einheit als Vorlage, um eine ganze Routine beim nächsten Mal mit einem Klick wiederzuverwenden.',
+    tourRecTopTitle:     '📖 Dein Rezeptbuch',
+    tourRecTopDesc:      'Durchsuche deine gespeicherten Rezepte oder klicke auf + Neues Rezept, um eines mit eigenen Kalorien, Makros und Zutaten hinzuzufügen.',
+    tourRecGridTitle:    '🍳 Durchstöbern & erfassen',
+    tourRecGridDesc:     'Klicke auf eine Rezeptkarte, um sie anzusehen, zu bearbeiten oder direkt in die heutige Kalorien-Seite zu übernehmen — ohne die Zahlen erneut einzugeben.',
+    tourCoachTipsTitle:  '💡 Tipps für dich',
+    tourCoachTipsDesc:   'Coach betrachtet deine Gewohnheiten, Ente, Zyklus und mehr, um personalisierte Tipps zu geben — z. B. Erinnerungen zum Wassertrinken oder zum Feiern einer Serie.',
+    tourCoachGoalTitle:  '🎯 Gewichtsziel festlegen',
+    tourCoachGoalDesc:   'Gib deine Werte und ein Zielgewicht ein — Coach berechnet ein tägliches Kalorienziel, passend zum Zunehmen, Abnehmen oder Halten.',
+    tourCoachPlanTitle:  '📋 Dein vorgeschlagener Plan',
+    tourCoachPlanDesc:   'Eine passende Workout-Routine und Rezeptideen, gewählt für dein Ziel. Füge sie mit einem Klick direkt zu deiner Workout-Seite oder deinem Rezeptbuch hinzu.',
   },
   es: {
     tourNext: 'Siguiente →', tourPrev: '← Atrás', tourSkip: 'Saltar tour', tourFinish: '🎉 ¡Vamos!',
@@ -4215,6 +4323,28 @@ const TOUR_I18N = {
     tourCycleSympDesc:   'Toca los síntomas que estés experimentando hoy — calambres, fatiga, antojos y más. Luego elige un emoji de estado de ánimo y añade una nota personal. Pulsa 💾 Guardar hoy.',
     tourCycleInsightsTitle: '📊 Estadísticas del ciclo',
     tourCycleInsightsDesc:  'Tus estadísticas personales: día actual del ciclo, días hasta el próximo período, fecha estimada de ovulación e historial completo del ciclo. Todo se actualiza automáticamente.',
+    tourCalMacroTitle:   '📊 Anillos de macros diarios',
+    tourCalMacroDesc:    'Estos anillos siguen tus calorías, proteínas, carbohidratos y grasas del día frente a los objetivos que definiste abajo.',
+    tourCalMealsTitle:   '🍽 Registra tus comidas',
+    tourCalMealsDesc:    'Toca el + en Desayuno, Almuerzo, Cena o Snacks para registrar un alimento — sus calorías y macros se añaden al instante a tus anillos.',
+    tourCalWaterTitle:   '💧 Control de agua',
+    tourCalWaterDesc:    'Toca un vaso cada vez que bebas agua. ¡Quackers se pondrá sediento si te quedas atrás en tu objetivo diario!',
+    tourWktStatsTitle:   '🏋 Tus estadísticas de entrenamiento',
+    tourWktStatsDesc:    'Tu racha actual, sesiones este mes, volumen total y duración total — todo registrado automáticamente al registrar entrenamientos.',
+    tourWktAddTitle:     '➕ Registra un ejercicio',
+    tourWktAddDesc:      'Nombra el ejercicio, elige una categoría, luego introduce series y repeticiones o duración/distancia. Se añade al instante a la sesión de hoy.',
+    tourWktTplTitle:     '📋 Récords personales y plantillas',
+    tourWktTplDesc:      'Tus récords personales se registran automáticamente. Guarda una sesión como plantilla para reutilizar toda una rutina con un clic la próxima vez.',
+    tourRecTopTitle:     '📖 Tu recetario',
+    tourRecTopDesc:      'Busca en tus recetas guardadas o haz clic en + Nueva receta para añadir una con sus propias calorías, macros e ingredientes.',
+    tourRecGridTitle:    '🍳 Explora y registra comidas',
+    tourRecGridDesc:     'Haz clic en cualquier tarjeta de receta para verla, editarla o registrarla directamente en la página de Calorías de hoy — sin volver a introducir los números.',
+    tourCoachTipsTitle:  '💡 Consejos para ti',
+    tourCoachTipsDesc:   'Coach analiza tus hábitos, tu Pato, tu ciclo y más para ofrecerte consejos personalizados — como recordatorios para beber agua o celebrar una racha.',
+    tourCoachGoalTitle:  '🎯 Define un objetivo de peso',
+    tourCoachGoalDesc:   'Introduce tus datos y un peso objetivo — Coach calcula un objetivo calórico diario adaptado a ganar, perder o mantener peso.',
+    tourCoachPlanTitle:  '📋 Tu plan sugerido',
+    tourCoachPlanDesc:   'Una rutina de entrenamiento e ideas de recetas a juego con tu objetivo. Añádelas directamente a tu página de Entrenamiento o Recetario con un clic.',
   },
   fr: {
     tourNext: 'Suivant →', tourPrev: '← Précédent', tourSkip: 'Passer la visite', tourFinish: '🎉 C\'est parti !',
@@ -4265,12 +4395,106 @@ const TOUR_I18N = {
     tourCycleSympDesc:   'Touchez les symptômes que vous ressentez aujourd\'hui — crampes, fatigue, envies et plus encore. Choisissez ensuite un emoji d\'humeur et ajoutez une note personnelle. Cliquez sur 💾 Enregistrer.',
     tourCycleInsightsTitle: '📊 Statistiques du cycle',
     tourCycleInsightsDesc:  'Vos statistiques personnelles : jour actuel du cycle, jours avant les prochaines règles, date d\'ovulation estimée et historique complet du cycle. Tout se met à jour automatiquement.',
+    tourCalMacroTitle:   '📊 Anneaux de macros quotidiens',
+    tourCalMacroDesc:    'Ces anneaux suivent vos calories, protéines, glucides et lipides du jour par rapport aux objectifs définis ci-dessous.',
+    tourCalMealsTitle:   '🍽 Enregistrez vos repas',
+    tourCalMealsDesc:    'Touchez le + sur Petit-déjeuner, Déjeuner, Dîner ou Collations pour enregistrer un aliment — ses calories et macros s\'ajoutent instantanément à vos anneaux.',
+    tourCalWaterTitle:   '💧 Suivi de l\'eau',
+    tourCalWaterDesc:    'Touchez un verre chaque fois que vous buvez de l\'eau. Quackers aura soif si vous prenez du retard sur votre objectif quotidien !',
+    tourWktStatsTitle:   '🏋 Vos statistiques d\'entraînement',
+    tourWktStatsDesc:    'Votre série actuelle, séances ce mois-ci, volume total et durée totale — tout est suivi automatiquement au fil de vos entraînements.',
+    tourWktAddTitle:     '➕ Enregistrer un exercice',
+    tourWktAddDesc:      'Nommez l\'exercice, choisissez une catégorie, puis saisissez séries & répétitions ou durée/distance. Il est ajouté instantanément à la séance du jour.',
+    tourWktTplTitle:     '📋 Records personnels & modèles',
+    tourWktTplDesc:      'Vos records personnels sont suivis automatiquement. Enregistrez une séance comme modèle pour réutiliser toute une routine en un clic la prochaine fois.',
+    tourRecTopTitle:     '📖 Votre livre de recettes',
+    tourRecTopDesc:      'Recherchez parmi vos recettes enregistrées ou cliquez sur + Nouvelle recette pour en ajouter une avec ses propres calories, macros et ingrédients.',
+    tourRecGridTitle:    '🍳 Parcourir & enregistrer des repas',
+    tourRecGridDesc:     'Cliquez sur une carte de recette pour la consulter, la modifier ou l\'enregistrer directement dans la page Calories du jour — sans ressaisir les chiffres.',
+    tourCoachTipsTitle:  '💡 Conseils pour vous',
+    tourCoachTipsDesc:   'Coach examine vos habitudes, votre Canard, votre cycle et plus encore pour proposer des conseils personnalisés — comme des rappels pour boire de l\'eau ou célébrer une série.',
+    tourCoachGoalTitle:  '🎯 Définir un objectif de poids',
+    tourCoachGoalDesc:   'Entrez vos données et un poids cible — Coach calcule un objectif calorique quotidien adapté à la prise, la perte ou le maintien du poids.',
+    tourCoachPlanTitle:  '📋 Votre plan suggéré',
+    tourCoachPlanDesc:   'Une routine d\'entraînement et des idées de recettes assorties à votre objectif. Ajoutez-les directement à votre page Entraînement ou à votre livre de recettes en un clic.',
+  },
+  tr: {
+    tourNext: 'İleri →', tourPrev: '← Geri', tourSkip: 'Turu atla', tourFinish: '🎉 Hadi başlayalım!',
+    tourProgress: (n, t) => `${n}. adım / ${t}`,
+    tourTabsTitle:       '🗂 Gezinme Sekmeleri',
+    tourTabsDesc:        'Life Tracker\'ın ana bölümleri arasında bu sekmelerle geçiş yapın — Alışkanlık Takibi, Ders Programı, Görevler, Alışveriş, Döngü ve Finans.',
+    tourSubtabTitle:     '📊 Alışkanlık Takibi & Analiz',
+    tourSubtabDesc:      'Alışkanlık Takibi içinde iki alt görünüm vardır: ana takip tablosu ve detaylı istatistikler ile grafikler içeren Analiz sekmesi.',
+    tourScopeTitle:      '☀️ Günlük · Haftalık · Aylık Görünümler',
+    tourScopeDesc:       'Alışkanlıklarını nasıl göreceğini seç. Günlük, her alışkanlık için basit bir onay kutusu gösterir. Haftalık, mevcut 7 günü gösterir. Aylık, tüm takvim tablosunu gösterir.',
+    tourGridTitle:       '✅ Alışkanlık Tablosu',
+    tourGridDesc:        'Her satır bir alışkanlık, her sütun bir gündür. Bir günü tamamlandı olarak işaretlemek için hücreye tıkla — yanar. Tekrar tıklayarak işareti kaldır.',
+    tourAddHabitTitle:   '➕ Alışkanlık Ekle',
+    tourAddHabitDesc:    'Buraya bir alışkanlık adı yaz ve Enter\'a bas ya da + Ekle\'ye tıkla. Yeni alışkanlığın anında tablonun en üstünde görünür.',
+    tourStatsTitle:      '📈 Genel Bakış İstatistikleri',
+    tourStatsDesc:       'Bu kartlar her zaman günlük ilerlemeni gösterir: toplam alışkanlık sayısı, bugün tamamladıkların, tamamlama yüzden ve görev sayısı.',
+    tourTTGridTitle:     '🗓 Haftalık Ders Programın',
+    tourTTGridDesc:      'Haftanın görsel bir tablosu. Zaman aşağı doğru, günler yatay olarak ilerler. Etkinlikler renkli bloklar olarak görünür — her kategorinin kendi rengi vardır.',
+    tourTTFormTitle:     '➕ Etkinlik Ekle',
+    tourTTFormDesc:      'Etkinlik başlığını, gününü, başlangıç & bitiş saatini ve kategorisini doldur, sonra + Etkinlik Ekle\'ye tıkla. Mevcut bir etkinliğe tıklayarak düzenleyebilir ya da silebilirsin.',
+    tourGcalTitle:       '📅 Google Takvim\'den İçe Aktar',
+    tourGcalDesc:        'Zaten Google Takvim mi kullanıyorsun? Takvimini .ics dosyası olarak dışa aktar ve buradan içe aktar — tüm etkinliklerin anında ders programında görünür.',
+    tourTaskScopeTitle:  '📋 Görev Kapsamları',
+    tourTaskScopeDesc:   'Görevleri zaman ufkuna göre düzenle: Günlük (sadece bugün), Haftalık (bu hafta), Aylık (bu ay) ya da Yıllık (büyük hedefler). Her kapsam ayrı bir listedir.',
+    tourTaskListTitle:   '✅ Görev Listen',
+    tourTaskListDesc:    'Görevler önceliğe göre renk kodludur: 🔴 Yüksek, ⚡ Orta, 🔵 Düşük. Tamamlamak için onay kutusuna, düzenlemek için ✎ simgesine, silmek için 🗑 simgesine dokun.',
+    tourTaskFormTitle:   '➕ Görev Ekle',
+    tourTaskFormDesc:    'Adı doldur, öncelik ve isteğe bağlı bir son tarih seç, sonra + Görev Ekle\'ye tıkla. Süresi geçen tarihler kırmızı yanar.',
+    tourFinSummaryTitle: '💰 Finans Özeti',
+    tourFinSummaryDesc:  'Bu kartlar seçili ay için toplam gelirini, toplam giderini ve mevcut bakiyeni gösterir. Aylar arasında gezinmek için başlıktaki ‹ › oklarını kullan.',
+    tourFinAddTitle:     '➕ Gelir & Gider Kaydet',
+    tourFinAddDesc:      'Gelir ya da gider kayıtlarını buraya ekle. Her kaydın bir açıklaması, tutarı, kategorisi ve tarihi vardır. Her şey aşağıdaki dağılım grafiğinde kategoriye göre gruplanır.',
+    tourShopListTitle:   '🛒 Alışveriş Listeleri',
+    tourShopListDesc:    'Ürünler kategoriye göre kartlar halinde gruplanır. Satın alındı olarak işaretlemek için bir ürüne dokun. Bir kategoriye odaklanmak için üstteki filtre düğmelerini kullan.',
+    tourShopFormTitle:   '➕ Alışveriş Ürünü Ekle',
+    tourShopFormDesc:    'Ürün adını, miktarını ve kategorisini gir, sonra + Ürün Ekle\'ye tıkla. Zaten satın aldığın her şeyi kaldırmak için 🗑 İşaretlileri Temizle\'yi kullan.',
+    tourPomoTitle:       '⏱ Pomodoro Zamanlayıcı',
+    tourPomoDesc:        'Pomodoro zamanlayıcı her sayfada kullanılabilir. Bir odaklanma zamanlayıcısı açmak için tıkla: 25 dk çalışma → 5 dk mola → tekrar. Başlatmak için Boşluk, kapatmak için Esc.',
+    tourAsstTitle:       '💬 Asistanın',
+    tourAsstDesc:        'Bu senin Life Tracker Asistanın — her sayfada kullanılabilir. Özelliklerin nasıl çalıştığını sor, alışkanlık, görev ya da etkinlik eklemek için kullan, ya da ipuçları al. İstediğin zaman tıkla!',
+    tourCycleModeTitle:  '🌸 Doğal Döngü & Hap Modu',
+    tourCycleModeDesc:   'İki takip modu arasından seç: Doğal Döngü (adet ve yumurtlamayı takip et) ya da Doğum Kontrol Hapı (aktif ve plasebo haplarla günlük hap paketini takip et).',
+    tourCycleSetupTitle: '📅 Döngü Başlangıcını Kaydet',
+    tourCycleSetupDesc:  'Son adetinin başlangıç tarihini, ne kadar sürdüğünü ve ortalama döngü uzunluğunu gir. Uygulama fazlarını otomatik olarak hesaplar ve bir sonraki adetini tahmin eder.',
+    tourCycleCalTitle:   '🗓 Döngü Takvimi',
+    tourCycleCalDesc:    'Her gün faza göre renklendirilir: 🔴 Adet · 🟠 Doğurgan pencere · 🟡 Yumurtlama · 🟣 PMS/Luteal. Hangi fazda olduğunu görmek için bir güne gel.',
+    tourCycleSympTitle:  '💊 Belirti & Ruh Hali Kaydet',
+    tourCycleSympDesc:   'Bugün yaşadığın herhangi bir belirtiye dokun — kramplar, yorgunluk, canın çekmesi ve daha fazlası. Sonra bir ruh hali emojisi seç ve kişisel bir not ekle. Kaydetmek için 💾 Bugünü Kaydet\'e bas.',
+    tourCycleInsightsTitle: '📊 Döngü İstatistikleri',
+    tourCycleInsightsDesc:  'Kişisel döngü istatistiklerin burada: mevcut döngü günü, bir sonraki adete kalan gün, tahmini yumurtlama tarihi ve tüm döngü geçmişin. Her şey otomatik olarak güncellenir.',
+    tourCalMacroTitle:   '📊 Günlük Makro Halkaları',
+    tourCalMacroDesc:    'Bu halkalar, aşağıda belirlediğin hedeflere göre günün kalori, protein, karbonhidrat ve yağını takip eder.',
+    tourCalMealsTitle:   '🍽 Öğünlerini Kaydet',
+    tourCalMealsDesc:    'Bir besin kaydetmek için Kahvaltı, Öğle, Akşam ya da Atıştırmalık üzerindeki +\'ya dokun — kalorileri ve makroları anında halkalarına eklenir.',
+    tourCalWaterTitle:   '💧 Su Takibi',
+    tourCalWaterDesc:    'Her su içtiğinde bir bardağa dokun. Günlük hedefinin gerisinde kalırsan Kacsa susar!',
+    tourWktStatsTitle:   '🏋 Antrenman İstatistiklerin',
+    tourWktStatsDesc:    'Mevcut serin, bu ayki antrenmanların, toplam hacim ve toplam süre — antrenman kaydettikçe hepsi otomatik olarak takip edilir.',
+    tourWktAddTitle:     '➕ Egzersiz Kaydet',
+    tourWktAddDesc:      'Egzersize bir isim ver, bir kategori seç, sonra set & tekrar ya da süre/mesafe gir. Anında bugünkü antrenmana eklenir.',
+    tourWktTplTitle:     '📋 Kişisel Rekorlar & Şablonlar',
+    tourWktTplDesc:      'Kişisel rekorların otomatik olarak takip edilir. Bir sonraki sefer tüm bir rutini tek tıkla tekrar kullanmak için bir antrenmanı şablon olarak kaydet.',
+    tourRecTopTitle:     '📖 Tarif Kitabın',
+    tourRecTopDesc:      'Kaydedilmiş tariflerinde ara ya da kendi kalori, makro ve malzemeleriyle bir tarif eklemek için + Yeni Tarif\'e tıkla.',
+    tourRecGridTitle:    '🍳 Göz At & Öğün Kaydet',
+    tourRecGridDesc:     'Görüntülemek, düzenlemek ya da doğrudan bugünkü Kalori sayfasına kaydetmek için herhangi bir tarif kartına tıkla — sayıları tekrar girmene gerek yok.',
+    tourCoachTipsTitle:  '💡 Senin İçin İpuçları',
+    tourCoachTipsDesc:   'Koç, kişiselleştirilmiş ipuçları sunmak için alışkanlıklarına, Ördeğine, döngüne ve daha fazlasına bakar — örneğin su içme hatırlatmaları ya da bir seriyi kutlama gibi.',
+    tourCoachGoalTitle:  '🎯 Kilo Hedefi Belirle',
+    tourCoachGoalDesc:   'Bilgilerini ve hedef kilonu gir — Koç, kilo almaya, vermeye ya da korumaya uygun günlük bir kalori hedefi hesaplar.',
+    tourCoachPlanTitle:  '📋 Önerilen Planın',
+    tourCoachPlanDesc:   'Hedefine uygun bir antrenman rutini ve tarif fikirleri. Bunları tek tıkla doğrudan Antrenman sayfana ya da Tarif Kitabına ekle.',
   },
 };
 
 // Pages that have a tour, in order. Cycle page added dynamically when enabled.
-const TOUR_PAGES_BASE = ['habits', 'timetable', 'tasks', 'finance', 'shopping'];
-const TOUR_PAGES_FEMALE = ['habits', 'timetable', 'tasks', 'finance', 'shopping', 'cycle'];
+const TOUR_PAGES_BASE = ['habits', 'timetable', 'tasks', 'finance', 'shopping', 'calories', 'workout', 'recipes', 'coach'];
+const TOUR_PAGES_FEMALE = ['habits', 'timetable', 'tasks', 'finance', 'shopping', 'cycle', 'calories', 'workout', 'recipes', 'coach'];
 
 function getActiveTourPages() {
   return isCycleUser() ? TOUR_PAGES_FEMALE : TOUR_PAGES_BASE;
@@ -4366,7 +4590,7 @@ function showTourStep(globalStep) {
   if (stepDef.page && stepDef.page !== CURRENT_PAGE) {
     saveTourState({ globalStep, totalSteps: total });
     // Map page name to file
-    const pageMap = { habits: 'tracker.html', timetable: 'timetable.html', tasks: 'tasks.html', finance: 'finance.html', shopping: 'shopping.html', cycle: 'cycle.html', analysis: 'tracker.html', calories: 'calories.html', workout: 'workout.html', recipes: 'recipes.html' };
+    const pageMap = { habits: 'tracker.html', timetable: 'timetable.html', tasks: 'tasks.html', finance: 'finance.html', shopping: 'shopping.html', cycle: 'cycle.html', analysis: 'tracker.html', calories: 'calories.html', workout: 'workout.html', recipes: 'recipes.html', coach: 'coach.html' };
     window.location.href = (pageMap[stepDef.page] || 'tracker.html') + '?tour=1';
     return;
   }

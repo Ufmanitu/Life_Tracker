@@ -63,34 +63,11 @@ function initSettingsPage() {
     refreshThemeBtns();
   });
 
-  // Clear all data modal
-  const clearBackdrop = document.getElementById('settings-clear-backdrop');
-  const clearModal = document.getElementById('settings-clear-modal');
-
-  on('settings-clear-all-btn','click',() => {
-    clearBackdrop.classList.remove('hidden');
-    clearModal.classList.remove('hidden');
-  });
-  on('settings-clear-cancel','click',() => {
-    clearBackdrop.classList.add('hidden');
-    clearModal.classList.add('hidden');
-  });
-  if (clearBackdrop) clearBackdrop.addEventListener('click',() => {
-    clearBackdrop.classList.add('hidden');
-    clearModal.classList.add('hidden');
-  });
-  on('settings-clear-confirm','click',() => {
-    // Delete all ht_* keys from localStorage
-    const keysToDelete = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('ht_')) keysToDelete.push(key);
-    }
-    keysToDelete.forEach(k => localStorage.removeItem(k));
-    // Reset prefs
-    userPrefs = { showCycle: null, setupDone: false };
-    window.location.href = 'tracker.html';
-  });
+  // Clear all data — shared with the settings MODAL (core.js) so both
+  // surfaces offer the exact same up-to-date list of sections and the
+  // same actually-working per-section deletion logic.
+  on('settings-clear-all-btn','click',() => openDeletePopup(true));
+  on('settings-clear-section-btn','click',() => openDeletePopup(false));
 
   // ─── EXPORT / IMPORT (settings.html standalone page) ─────────────────────
 
@@ -134,7 +111,7 @@ function initSettingsPage() {
           const existing = [];
           for (let i = 0; i < localStorage.length; i++) {
             const k = localStorage.key(i);
-            if (k && k.startsWith('ht_')) existing.push(k);
+            if (isAppDataKey(k)) existing.push(k);
           }
           existing.forEach(k => localStorage.removeItem(k));
           Object.entries(backup.data).forEach(([key, val]) => {

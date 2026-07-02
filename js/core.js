@@ -2528,10 +2528,12 @@ function showOnboardingModal() {
     {id:'tr', label:'🇹🇷 Türkçe'},
   ];
 
-  let obStep = 1; // 1 = lang, 2 = show cycle tracker?, 3 = theme
+  let obStep = 1; // 1=lang, 2=show cycle?, 3=cycle quiz (only if step2=yes), 4=health goal quiz, 5=theme
   let obLang = state.lang;
   let obShowCycle = true;
   let obTheme = getThemeName();
+  let obCyclePhase = 'ask'; // 'ask' | 'quiz'
+  let obHealthPhase = 'ask'; // 'ask' | 'quiz'
 
   // Backdrop
   const backdrop = document.createElement('div');
@@ -2548,11 +2550,16 @@ function showOnboardingModal() {
     const curTr = TRANSLATIONS[obLang] || TRANSLATIONS.en;
     const stepTitles = [
       curTr.onboardingStep1 || 'Choose your language',
-      curTr.onboardingStep2 || 'Who are you?',
+      curTr.onboardingStep2 || 'Show Cycle Tracker?',
+      curTr.onboardingStepCycleQuiz || 'Set Up Your Cycle',
+      curTr.onboardingStepHealthQuiz || 'Health & Weight Goal',
       curTr.onboardingStep3 || 'Pick a theme',
     ];
 
     let bodyHTML = '';
+    // Steps 3/4 use their own two-phase ask/quiz body + a persistent Skip
+    // button in the footer instead of the standard Next flow.
+    const isSetupStep = obStep === 3 || obStep === 4;
 
     if (obStep === 1) {
       bodyHTML = `
@@ -2575,6 +2582,22 @@ function showOnboardingModal() {
           </button>
         </div>`;
     } else if (obStep === 3) {
+      bodyHTML = obCyclePhase === 'ask' ? `
+        <div class="ob-setup-ask">
+          <div class="ob-setup-ask-icon">🌸</div>
+          <div class="ob-setup-ask-text">${curTr.onboardingCycleAsk||'Want to set up your cycle now? A few quick questions and you\'re all set.'}</div>
+          <button class="ob-setup-yes-btn" id="ob-cycle-yes">${curTr.onboardingLetsDoIt||"✅ Let's do it"}</button>
+        </div>` : `
+        <div class="ob-body-scroll">${buildCycleQuizHTML({})}</div>`;
+    } else if (obStep === 4) {
+      bodyHTML = obHealthPhase === 'ask' ? `
+        <div class="ob-setup-ask">
+          <div class="ob-setup-ask-icon">🎯</div>
+          <div class="ob-setup-ask-text">${curTr.onboardingHealthAsk||"Want to set up your health & weight goal now? Coach will suggest a calorie target, workout routine, and recipe ideas."}</div>
+          <button class="ob-setup-yes-btn" id="ob-health-yes">${curTr.onboardingLetsDoIt||"✅ Let's do it"}</button>
+        </div>` : `
+        <div class="ob-body-scroll">${buildHealthGoalQuizHTML({})}</div>`;
+    } else if (obStep === 5) {
       bodyHTML = `
         <div class="ob-theme-grid">
           ${THEMES.map(th => `
@@ -2583,8 +2606,26 @@ function showOnboardingModal() {
         </div>`;
     }
 
-    const isLast = obStep === 3;
-    const canNext = obStep === 1 ? !!obLang : obStep === 2 ? true : !!obTheme;
+    const isLast = obStep === 5;
+    const canNext = obStep === 1 ? !!obLang : obStep === 2 ? true : obStep === 5 ? !!obTheme : true;
+
+    // Footer: steps 3/4 always show a big, persistent Skip button (in both
+    // the ask and quiz phases) instead of the standard Next flow.
+    let footerHTML;
+    if (isSetupStep) {
+      const continueBtn = (obStep === 3 ? obCyclePhase : obHealthPhase) === 'quiz'
+        ? `<button class="ob-next-btn" id="ob-setup-continue">${curTr.onboardingContinue||'Continue →'}</button>` : '';
+      footerHTML = `
+        <button class="ob-back-btn" id="ob-back">← Back</button>
+        <button class="ob-skip-btn" id="ob-skip">${curTr.onboardingSkip||'⏭ Skip for now'}</button>
+        ${continueBtn}`;
+    } else {
+      footerHTML = `
+        ${obStep > 1 ? `<button class="ob-back-btn" id="ob-back">← Back</button>` : '<span></span>'}
+        <button class="ob-next-btn ${canNext?'':'disabled'}" id="ob-next" ${canNext?'':'disabled'}>
+          ${isLast ? (curTr.onboardingFinish||'Get Started →') : 'Next →'}
+        </button>`;
+    }
 
     modal.innerHTML = `
       <div class="ob-header">
@@ -2593,16 +2634,11 @@ function showOnboardingModal() {
         <div class="ob-subtitle">${curTr.onboardingSubtitle||"Let's set up your experience."}</div>
       </div>
       <div class="ob-steps">
-        ${[1,2,3].map(s=>`<div class="ob-step-dot ${s===obStep?'active':s<obStep?'done':''}"></div>`).join('')}
+        ${[1,2,3,4,5].map(s=>`<div class="ob-step-dot ${s===obStep?'active':s<obStep?'done':''}"></div>`).join('')}
       </div>
       <div class="ob-section-title">${stepTitles[obStep-1]}</div>
       <div class="ob-body">${bodyHTML}</div>
-      <div class="ob-footer">
-        ${obStep > 1 ? `<button class="ob-back-btn" id="ob-back">← Back</button>` : '<span></span>'}
-        <button class="ob-next-btn ${canNext?'':'disabled'}" id="ob-next" ${canNext?'':'disabled'}>
-          ${isLast ? (curTr.onboardingFinish||'Get Started →') : 'Next →'}
-        </button>
-      </div>`;
+      <div class="ob-footer">${footerHTML}</div>`;
 
     // Bind buttons
     modal.querySelectorAll('[data-oblang]').forEach(btn => {
@@ -2626,21 +2662,60 @@ function showOnboardingModal() {
         renderObModal();
       });
     });
+
+    // Cycle quiz mode toggle (only rendered in obStep===3, obCyclePhase==='quiz')
+    const cycleQuizBody = modal.querySelector('.ob-body-scroll');
+    if (obStep === 3 && obCyclePhase === 'quiz' && cycleQuizBody) wireCycleQuizToggle(cycleQuizBody);
+
+    const cycleYesBtn = modal.querySelector('#ob-cycle-yes');
+    if (cycleYesBtn) cycleYesBtn.addEventListener('click', () => { obCyclePhase = 'quiz'; renderObModal(); });
+
+    const healthYesBtn = modal.querySelector('#ob-health-yes');
+    if (healthYesBtn) healthYesBtn.addEventListener('click', () => { obHealthPhase = 'quiz'; renderObModal(); });
+
+    const setupContinueBtn = modal.querySelector('#ob-setup-continue');
+    if (setupContinueBtn) {
+      setupContinueBtn.addEventListener('click', () => {
+        if (obStep === 3) {
+          saveCycleQuizAnswers(readCycleQuizForm(modal));
+        } else if (obStep === 4) {
+          Coach.saveBodyGoal(readHealthGoalForm(modal));
+        }
+        obStep++;
+        renderObModal();
+      });
+    }
+
+    const skipBtn = modal.querySelector('#ob-skip');
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => { obStep++; renderObModal(); });
+    }
+
     const nextBtn = modal.querySelector('#ob-next');
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
         if (!canNext) return;
-        if (obStep < 3) {
+        if (obStep === 2 && !obShowCycle) {
+          obStep = 4; // skip the cycle quiz step entirely
+        } else if (obStep < 5) {
           obStep++;
-          renderObModal();
         } else {
           finishOnboarding();
+          return;
         }
+        renderObModal();
       });
     }
     const backBtn = modal.querySelector('#ob-back');
     if (backBtn) {
-      backBtn.addEventListener('click', () => { obStep--; renderObModal(); });
+      backBtn.addEventListener('click', () => {
+        if (obStep === 4 && !obShowCycle) {
+          obStep = 2; // cycle quiz step was skipped on the way in
+        } else {
+          obStep--;
+        }
+        renderObModal();
+      });
     }
   }
 

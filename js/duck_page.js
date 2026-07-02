@@ -123,6 +123,32 @@ function renderDuckPage() {
   }
 }
 
+// ── Coach advice bubble — periodically rotates through Coach.getInsights() ──
+let coachBubbleIdx = 0;
+function renderCoachBubble() {
+  const tr = duckTr();
+  const bubble = document.getElementById('duck-coach-bubble');
+  const insights = Coach.getInsights();
+  if (!insights.length) {
+    bubble.innerHTML = `<span><span class="duck-coach-bubble-icon">🎯</span>${tr.coachTipsEmpty || "Nothing urgent right now — you're doing great!"}</span>`;
+    return;
+  }
+  if (coachBubbleIdx >= insights.length) coachBubbleIdx = 0;
+  const tip = insights[coachBubbleIdx];
+  const actionLabel = tip.actionLabelKey ? (tr[tip.actionLabelKey] || tip.actionLabel) : tip.actionLabel;
+  const action = tip.actionHref ? `<a class="duck-coach-bubble-action" href="${tip.actionHref}">${actionLabel || 'Open'}</a>` : '';
+  bubble.style.opacity = '0';
+  setTimeout(() => {
+    bubble.innerHTML = `<span><span class="duck-coach-bubble-icon">${tip.icon}</span>${esc(tip.text)}</span>${action}`;
+    bubble.style.opacity = '1';
+  }, 200);
+}
+
+setInterval(() => {
+  coachBubbleIdx++;
+  renderCoachBubble();
+}, 8000);
+
 // Registered so Duck.trigger()'s notifyUI() can refresh this page live
 // (e.g. when a transient emotion like "eating" resolves back after its
 // timeout while the user is sitting on this page).
@@ -146,3 +172,85 @@ document.getElementById('duck-treat-btn').addEventListener('click', () => {
 });
 
 renderDuckPage();
+renderCoachBubble();
+
+// ── Skipped-setup reminder popup — Duck page only, once per session ──
+// If the user skipped cycle/health setup at onboarding (or never saw
+// onboarding at all), gently offer to collect it here. At most one
+// popup shown per page load; dismissing (Skip) marks it done for the
+// rest of this browser session (sessionStorage), same pattern as
+// coach_banner.js's Home-page tip dismissal.
+function showCoachSetupPopup(kind) {
+  const tr = duckTr();
+  const isCycle = kind === 'cycle';
+
+  const backdrop = document.createElement('div');
+  backdrop.id = 'coach-setup-backdrop';
+  const modal = document.createElement('div');
+  modal.id = 'coach-setup-modal';
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+
+  let phase = 'ask';
+
+  function render() {
+    const askText = isCycle
+      ? (tr.onboardingCycleAsk || "Want to set up your cycle now? A few quick questions and you're all set.")
+      : (tr.onboardingHealthAsk || 'Want to set up your health & weight goal now? Coach will suggest a calorie target, workout routine, and recipe ideas.');
+    const icon = isCycle ? '🌸' : '🎯';
+    const title = isCycle ? (tr.onboardingStepCycleQuiz || 'Set Up Your Cycle') : (tr.onboardingStepHealthQuiz || 'Health & Weight Goal');
+
+    const bodyHTML = phase === 'ask'
+      ? `<div class="ob-setup-ask">
+           <div class="ob-setup-ask-icon">${icon}</div>
+           <div class="ob-setup-ask-text">${askText}</div>
+           <button class="ob-setup-yes-btn" id="cs-yes">${tr.onboardingLetsDoIt || "✅ Let's do it"}</button>
+         </div>`
+      : `<div class="ob-body-scroll">${isCycle ? buildCycleQuizHTML({}) : buildHealthGoalQuizHTML({})}</div>`;
+
+    modal.innerHTML = `
+      <div class="ob-header">
+        <div class="ob-logo">${icon}</div>
+        <div class="ob-title">${title}</div>
+      </div>
+      <div class="ob-body">${bodyHTML}</div>
+      <div class="ob-footer">
+        <span></span>
+        <button class="ob-skip-btn" id="cs-skip">${tr.onboardingSkip || '⏭ Skip for now'}</button>
+        ${phase === 'quiz' ? `<button class="ob-next-btn" id="cs-continue">${tr.onboardingContinue || 'Continue →'}</button>` : ''}
+      </div>`;
+
+    const quizBody = modal.querySelector('.ob-body-scroll');
+    if (isCycle && phase === 'quiz' && quizBody) wireCycleQuizToggle(quizBody);
+
+    modal.querySelector('#cs-yes')?.addEventListener('click', () => { phase = 'quiz'; render(); });
+    modal.querySelector('#cs-skip').addEventListener('click', close);
+    modal.querySelector('#cs-continue')?.addEventListener('click', () => {
+      if (isCycle) saveCycleQuizAnswers(readCycleQuizForm(modal));
+      else Coach.saveBodyGoal(readHealthGoalForm(modal));
+      close();
+      renderCoachBubble();
+    });
+  }
+
+  function close() {
+    try { sessionStorage.setItem('coach_setup_' + kind + '_dismissed', '1'); } catch (e) {}
+    backdrop.remove();
+    modal.remove();
+  }
+
+  render();
+}
+
+(function checkCoachSetupReminders() {
+  try {
+    const cycleNeeded = userPrefs.showCycle !== false
+      && (state.cycleData.periods || []).length === 0
+      && !sessionStorage.getItem('coach_setup_cycle_dismissed');
+    if (cycleNeeded) { showCoachSetupPopup('cycle'); return; }
+
+    const goalNeeded = !Coach.getBodyGoal().active
+      && !sessionStorage.getItem('coach_setup_goal_dismissed');
+    if (goalNeeded) { showCoachSetupPopup('goal'); }
+  } catch (e) {}
+})();

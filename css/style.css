@@ -1317,6 +1317,21 @@ body.theme-slate{
   .fin-form-row{gap:6px;}
   .fin-form-select{display:none;}
 }
+/* ── FINANCE INLINE ENTRY EDIT ──────────────────────────────────── */
+.fin-entry-edit-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:6px;transition:color .15s,background .15s;line-height:1;}
+.fin-entry-edit-btn:hover{color:#4f6ef7;background:rgba(79,110,247,.08);}
+.fin-entry-row.editing{display:flex;}
+.fin-edit-wrap{display:flex;align-items:center;gap:6px;flex:1;flex-wrap:wrap;}
+.fin-edit-input{background:var(--surface2);border:1.5px solid #4f6ef7;border-radius:6px;color:var(--text);font-size:12px;font-family:'Montserrat',sans-serif;padding:5px 8px;outline:none;color-scheme:var(--input-scheme);}
+.fin-edit-desc{flex:1;min-width:90px;}
+.fin-edit-amt{width:86px;}
+.fin-edit-date{width:130px;}
+.fin-edit-cat{font-size:12px;font-family:'Montserrat',sans-serif;background:var(--surface2);border:1.5px solid #4f6ef7;border-radius:6px;color:var(--text);padding:5px 6px;outline:none;cursor:pointer;color-scheme:var(--input-scheme);}
+.fin-edit-save{background:#4f6ef7;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:700;padding:6px 10px;font-family:'Montserrat',sans-serif;transition:filter .15s;}
+.fin-edit-save:hover{filter:brightness(1.15);}
+.fin-edit-cancel{background:var(--surface2);border:1.5px solid var(--border);border-radius:6px;color:var(--text-muted);cursor:pointer;font-size:12px;font-weight:700;padding:5px 9px;font-family:'Montserrat',sans-serif;transition:color .15s,border-color .15s;}
+.fin-edit-cancel:hover{color:var(--text);border-color:var(--text-muted);}
+
 /* ── EXCHANGE RATES WIDGET ──────────────────────────────────────── */
 .fin-rates-card{margin-bottom:18px;}
 /* the mobile rule hides .fin-form-select in forms — keep the currency picker visible */

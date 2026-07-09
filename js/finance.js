@@ -226,6 +226,7 @@ function renderExpenseList() {
       <div class="fin-entry-amt">${fmtAmt(exp.amount)}</div>
       <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(exp.category)}">${catLabel(exp.category)}</span></div>
       <div class="fin-entry-actions">
+        <button class="fin-entry-edit-btn" data-edit-exp="${exp.id}" title="Edit">✎</button>
         <button class="fin-entry-del-btn" data-del-exp="${exp.id}" title="Delete">×</button>
       </div>`;
     list.appendChild(row);
@@ -255,6 +256,7 @@ function renderIncomeList() {
       <div class="fin-entry-amt">${fmtAmt(inc.amount)}</div>
       <div class="fin-entry-cat"><span class="fin-cat-badge ${catClass(inc.category)}">${catLabel(inc.category)}</span></div>
       <div class="fin-entry-actions">
+        <button class="fin-entry-edit-btn" data-edit-inc="${inc.id}" title="Edit">✎</button>
         <button class="fin-entry-del-btn" data-del-inc="${inc.id}" title="Delete">×</button>
       </div>`;
     list.appendChild(row);
@@ -618,12 +620,61 @@ on('fin-inc-add-btn','click',addIncome);
 on('fin-inc-desc','keydown',e=>{ if(e.key==='Enter') addIncome(); });
 on('fin-inc-amt','keydown',e=>{ if(e.key==='Enter') addIncome(); });
 
-// Delete entry delegation
+// ── INLINE EDIT ───────────────────────────────────────────────────
+// Turns an entry row into an edit form. Category options are cloned from
+// the matching add-form select so labels stay translated.
+function enterEntryEdit(row, entry, type) {
+  if (row.classList.contains('editing')) return;
+  row.classList.add('editing');
+  const srcSel = document.getElementById(type === 'exp' ? 'fin-exp-cat' : 'fin-inc-cat');
+  const opts = [...srcSel.options].map(o =>
+    `<option value="${o.value}"${o.value === entry.category ? ' selected' : ''}>${esc(o.textContent)}</option>`).join('');
+  row.innerHTML = `
+    <div class="fin-edit-wrap">
+      <span class="fin-entry-emoji">${entry.emoji || (type === 'exp' ? '💳' : '💵')}</span>
+      <input class="fin-edit-input fin-edit-desc" value="${esc(entry.desc)}" data-field="desc" placeholder="${esc(t(type==='exp'?'finDescPlaceholder':'finSourcePlaceholder')||'Description…')}"/>
+      <input class="fin-edit-input fin-edit-amt" type="number" min="0" step="0.01" value="${entry.amount}" data-field="amount"/>
+      <select class="fin-edit-cat" data-field="category">${opts}</select>
+      <input class="fin-edit-input fin-edit-date" type="date" value="${entry.date}" data-field="date"/>
+      <button class="fin-edit-save" data-save-${type}="${entry.id}" title="Save">✓</button>
+      <button class="fin-edit-cancel" data-cancel-edit="1" title="Cancel">✕</button>
+    </div>`;
+  const desc = row.querySelector('.fin-edit-desc');
+  desc.focus(); desc.select();
+  row.addEventListener('keydown', e => {
+    if (e.key === 'Enter') row.querySelector('.fin-edit-save').click();
+    if (e.key === 'Escape') row.querySelector('.fin-edit-cancel').click();
+  });
+}
+function saveEntryEdit(btn, entry) {
+  const row = btn.closest('.fin-entry-row');
+  const desc = row.querySelector('[data-field="desc"]').value.trim();
+  const amt = parseFloat(row.querySelector('[data-field="amount"]').value);
+  const cat = row.querySelector('[data-field="category"]').value;
+  const date = row.querySelector('[data-field="date"]').value;
+  if (!desc) { flagInvalidField(row.querySelector('[data-field="desc"]')); return; }
+  if (isNaN(amt) || amt <= 0) { flagInvalidField(row.querySelector('[data-field="amount"]')); return; }
+  entry.desc = desc; entry.amount = amt; entry.category = cat;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) entry.date = date;
+  saveFinance(); renderFinance();
+}
+
+// Entry actions delegation (edit / save / cancel / delete)
 on('fin-expense-list','click',e=>{
+  const eb = e.target.closest('[data-edit-exp]');
+  if(eb){ const exp=finState.expenses.find(x=>x.id===+eb.dataset.editExp); if(exp) enterEntryEdit(eb.closest('.fin-entry-row'), exp, 'exp'); return; }
+  const sb = e.target.closest('[data-save-exp]');
+  if(sb){ const exp=finState.expenses.find(x=>x.id===+sb.dataset.saveExp); if(exp) saveEntryEdit(sb, exp); return; }
+  if(e.target.closest('[data-cancel-edit]')){ renderExpenseList(); applyTranslations(); return; }
   const btn = e.target.closest('[data-del-exp]');
   if(btn){ finState.expenses=finState.expenses.filter(x=>x.id!==+btn.dataset.delExp); saveFinance(); renderFinance(); }
 });
 on('fin-income-list','click',e=>{
+  const eb = e.target.closest('[data-edit-inc]');
+  if(eb){ const inc=finState.incomes.find(x=>x.id===+eb.dataset.editInc); if(inc) enterEntryEdit(eb.closest('.fin-entry-row'), inc, 'inc'); return; }
+  const sb = e.target.closest('[data-save-inc]');
+  if(sb){ const inc=finState.incomes.find(x=>x.id===+sb.dataset.saveInc); if(inc) saveEntryEdit(sb, inc); return; }
+  if(e.target.closest('[data-cancel-edit]')){ renderIncomeList(); applyTranslations(); return; }
   const btn = e.target.closest('[data-del-inc]');
   if(btn){ finState.incomes=finState.incomes.filter(x=>x.id!==+btn.dataset.delInc); saveFinance(); renderFinance(); }
 });

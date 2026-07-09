@@ -104,11 +104,15 @@ function saveFinance() {
 const CAT_COLORS = {
   Food:'#f5a623',Health:'#3ecfb2',Transport:'#7090f9',Entertainment:'#a78bfa',
   Utilities:'#e05a9a',Home:'#c09060',Development:'#20b4f8',Investment:'#ff8c00',
+  Clothes:'#ec4899',Gifts:'#f43f5e',Travel:'#22d3ee',Pets:'#a3e635',
+  Subscriptions:'#818cf8',Beauty:'#d946ef',
   Salary:'#3ecfb2',Freelance:'#7090f9',Gift:'#e05a9a',Other:'#8898aa',
 };
 function catClass(cat) {
   const map = {Food:'food',Health:'health',Transport:'transport',Entertainment:'entertainment',
     Utilities:'utilities',Home:'home',Development:'development',Investment:'investment',
+    Clothes:'clothes',Gifts:'gifts',Travel:'travel',Pets:'pets',
+    Subscriptions:'subscriptions',Beauty:'beauty',
     Salary:'salary',Freelance:'freelance',Gift:'gift',Other:'other'};
   return 'fin-cat-'+(map[cat]||'other');
 }
@@ -117,6 +121,8 @@ const CAT_I18N_KEY = {
   Food:'finCatFood', Health:'finCatHealth', Transport:'finCatTransport',
   Entertainment:'finCatEntertainment', Utilities:'finCatUtilities', Home:'finCatHome',
   Development:'finCatDevelopment', Investment:'finCatInvestment', Other:'finCatOther',
+  Clothes:'finCatClothes', Gifts:'finCatGifts', Travel:'finCatTravel',
+  Pets:'finCatPets', Subscriptions:'finCatSubscriptions', Beauty:'finCatBeauty',
   Salary:'finIncSalary', Freelance:'finIncFreelance', Gift:'finIncGift',
 };
 function catLabel(cat) {

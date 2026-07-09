@@ -271,7 +271,7 @@ function applyTranslations(){
   // Finance expense category select options
   const finExpCat=document.getElementById('fin-exp-cat');
   if(finExpCat){
-    const expCatKeys=['finCatFood','finCatHealth','finCatTransport','finCatEntertainment','finCatUtilities','finCatHome','finCatDevelopment','finCatInvestment','finCatOther'];
+    const expCatKeys=['finCatFood','finCatHealth','finCatTransport','finCatEntertainment','finCatUtilities','finCatHome','finCatDevelopment','finCatInvestment','finCatClothes','finCatGifts','finCatTravel','finCatPets','finCatSubscriptions','finCatBeauty','finCatOther'];
     finExpCat.querySelectorAll('option').forEach((opt,i)=>{if(tr[expCatKeys[i]])opt.text=tr[expCatKeys[i]];});
   }
   // Finance income category select options

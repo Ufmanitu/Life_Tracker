@@ -17,7 +17,9 @@ const FIN_I18N = {
         finNoDataMonth:'No data this month.', finSavingsEmpty:'No savings goals yet.',
         finOverBudget:'over budget', finLeftMonth:'left this month',
         finNoLimit:'No limit', finSetLimit:'Set one',
-        finSavingsGoals:'Savings Goals' },
+        finSavingsGoals:'Savings Goals',
+        finRatesTitle:'Exchange Rates', finRatesLive:'Live', finRatesOffline:'Offline — cached rates',
+        finRatesLoading:'Loading rates…', finRatesError:'Could not load rates', finRatesUpdated:'Updated' },
   hu: { tabFinance:'💰 Pénzügy', finTotalExpenses:'Összes kiadás', finTotalIncome:'Összes bevétel',
         finBalance:'Egyenleg', finMonthlyBudget:'Havi keret', finExpenses:'Kiadások',
         finIncome:'Bevételek', finDescription:'Megnevezés', finAmount:'Összeg',
@@ -30,7 +32,9 @@ const FIN_I18N = {
         finNoDataMonth:'Még nincs adat erre a hónapra.', finSavingsEmpty:'Még nincs megtakarítási cél.',
         finOverBudget:'túllépés', finLeftMonth:'maradt erre a hónapra',
         finNoLimit:'Nincs limit', finSetLimit:'Beállítás',
-        finSavingsGoals:'Megtakarítási célok' },
+        finSavingsGoals:'Megtakarítási célok',
+        finRatesTitle:'Árfolyamok', finRatesLive:'Élő', finRatesOffline:'Offline — mentett árfolyamok',
+        finRatesLoading:'Árfolyamok betöltése…', finRatesError:'Nem sikerült betölteni az árfolyamokat', finRatesUpdated:'Frissítve' },
   de: { tabFinance:'💰 Finanzen', finTotalExpenses:'Gesamtausgaben', finTotalIncome:'Gesamteinnahmen',
         finBalance:'Saldo', finMonthlyBudget:'Monatsbudget', finExpenses:'Ausgaben',
         finIncome:'Einnahmen', finNoExpenses:'Noch keine Ausgaben.', finNoIncome:'Noch keine Einnahmen.',
@@ -41,7 +45,9 @@ const FIN_I18N = {
         finNoDataMonth:'Keine Daten diesen Monat.', finSavingsEmpty:'Noch keine Sparziele.',
         finOverBudget:'über Budget', finLeftMonth:'noch übrig diesen Monat',
         finNoLimit:'Kein Limit', finSetLimit:'Festlegen',
-        finSavingsGoals:'Sparziele' },
+        finSavingsGoals:'Sparziele',
+        finRatesTitle:'Wechselkurse', finRatesLive:'Live', finRatesOffline:'Offline — gespeicherte Kurse',
+        finRatesLoading:'Kurse werden geladen…', finRatesError:'Kurse konnten nicht geladen werden', finRatesUpdated:'Aktualisiert' },
   es: { tabFinance:'💰 Finanzas', finTotalExpenses:'Total gastos', finTotalIncome:'Total ingresos',
         finBalance:'Balance', finMonthlyBudget:'Presupuesto mensual', finExpenses:'Gastos',
         finIncome:'Ingresos', finNoExpenses:'Sin gastos aún.', finNoIncome:'Sin ingresos aún.',
@@ -52,7 +58,9 @@ const FIN_I18N = {
         finNoDataMonth:'Sin datos este mes.', finSavingsEmpty:'Todavía no hay metas de ahorro.',
         finOverBudget:'sobre presupuesto', finLeftMonth:'restante este mes',
         finNoLimit:'Sin límite', finSetLimit:'Establecer',
-        finSavingsGoals:'Metas de ahorro' },
+        finSavingsGoals:'Metas de ahorro',
+        finRatesTitle:'Tipos de cambio', finRatesLive:'En vivo', finRatesOffline:'Sin conexión — tasas guardadas',
+        finRatesLoading:'Cargando tasas…', finRatesError:'No se pudieron cargar las tasas', finRatesUpdated:'Actualizado' },
   fr: { tabFinance:'💰 Finances', finTotalExpenses:'Total dépenses', finTotalIncome:'Total revenus',
         finBalance:'Solde', finMonthlyBudget:'Budget mensuel', finExpenses:'Dépenses',
         finIncome:'Revenus', finNoExpenses:'Aucune dépense encore.', finNoIncome:'Aucun revenu encore.',
@@ -63,7 +71,9 @@ const FIN_I18N = {
         finNoDataMonth:'Aucune donnée ce mois.', finSavingsEmpty:"Aucun objectif d'épargne.",
         finOverBudget:'au-dessus du budget', finLeftMonth:'restant ce mois',
         finNoLimit:'Sans limite', finSetLimit:'Définir',
-        finSavingsGoals:"Objectifs d'épargne" },
+        finSavingsGoals:"Objectifs d'épargne",
+        finRatesTitle:'Taux de change', finRatesLive:'En direct', finRatesOffline:'Hors ligne — taux en cache',
+        finRatesLoading:'Chargement des taux…', finRatesError:'Impossible de charger les taux', finRatesUpdated:'Mis à jour' },
 };
 // Merge fin translations into main TRANSLATIONS
 Object.keys(TRANSLATIONS).forEach(lang => {
@@ -77,6 +87,7 @@ let finState = {
   monthlyBudget: 0,
   categoryBudgets: {},
   savings: [], savIdCtr: 1,
+  currency: 'EUR',
 };
 function loadFinance() {
   try {
@@ -115,7 +126,24 @@ function catLabel(cat) {
   // Strip leading emoji + space ("🍔 Étel" → "Étel")
   return full.replace(/^.{1,2}\s/, '').trim() || cat;
 }
-function fmtAmt(n) { return '€'+Number(n).toFixed(2); }
+// ── CURRENCIES ────────────────────────────────────────────────────
+// suffix: symbol goes after the amount ("1200 Ft"); dec: default decimals
+const CURRENCIES = {
+  EUR:{symbol:'€'},                 USD:{symbol:'$'},
+  GBP:{symbol:'£'},                 HUF:{symbol:'Ft', suffix:true, dec:0},
+  CHF:{symbol:'CHF', suffix:true},  JPY:{symbol:'¥', dec:0},
+  PLN:{symbol:'zł', suffix:true},   CZK:{symbol:'Kč', suffix:true, dec:0},
+  SEK:{symbol:'kr', suffix:true},   TRY:{symbol:'₺'},
+};
+function curInfo() { return CURRENCIES[finState.currency] || CURRENCIES.EUR; }
+function curSym() { return curInfo().symbol; }
+function fmtAmt(n, decimals) {
+  const c = curInfo();
+  const d = decimals != null ? decimals : (c.dec != null ? c.dec : 2);
+  const s = Number(n).toFixed(d);
+  return c.suffix ? s+' '+c.symbol : c.symbol+s;
+}
+function fmtAmt0(n) { return fmtAmt(Math.round(n), 0); }
 
 let expScope = 'month', incScope = 'month';
 function inScope(dateStr, scope) {
@@ -171,8 +199,8 @@ function renderFinanceStats() {
 
   const budgetUsed = monthExp;
   const budgetLimit = finState.monthlyBudget || 0;
-  document.getElementById('fin-stat-budget-used').textContent = '€'+Math.round(budgetUsed);
-  document.getElementById('fin-stat-budget-limit').textContent = budgetLimit > 0 ? '€'+budgetLimit : '—';
+  document.getElementById('fin-stat-budget-used').textContent = fmtAmt0(budgetUsed);
+  document.getElementById('fin-stat-budget-limit').textContent = budgetLimit > 0 ? fmtAmt0(budgetLimit) : '—';
 }
 
 function renderExpenseList() {
@@ -291,11 +319,11 @@ function renderEnvelopes() {
         </div>
         <div class="fin-envelope-right">
           <span class="fin-envelope-spent">${fmtAmt(spent)}</span>
-          ${hasLimit ? `<span class="fin-envelope-sep">/</span><span class="fin-envelope-limit">€${limit}</span>` : ''}
+          ${hasLimit ? `<span class="fin-envelope-sep">/</span><span class="fin-envelope-limit">${fmtAmt0(limit)}</span>` : ''}
           <div class="fin-envelope-edit-wrap">
             <button class="fin-envelope-edit-btn" data-editcat="${cat}" title="Set budget limit">✎</button>
             <div class="fin-envelope-input-pop hidden" data-pop="${cat}">
-              <input class="fin-envelope-input" type="number" placeholder="limit €" min="0" step="1" value="${limit||''}"/>
+              <input class="fin-envelope-input" type="number" placeholder="limit ${curSym()}" min="0" step="1" value="${limit||''}"/>
               <button class="fin-envelope-save-btn">✓</button>
               <button class="fin-envelope-clear-btn" title="Remove limit">✕</button>
             </div>
@@ -308,8 +336,8 @@ function renderEnvelopes() {
       ${hasLimit
         ? `<div class="fin-envelope-status ${over?'over':nearLimit?'warn':'ok'}">
              ${over
-               ? `⚠️ €${Math.abs(remaining).toFixed(2)} ${t('finOverBudget')||'over budget'}`
-               : `✓ €${remaining.toFixed(2)} ${t('finLeftMonth')||'left this month'}`}
+               ? `⚠️ ${fmtAmt(Math.abs(remaining))} ${t('finOverBudget')||'over budget'}`
+               : `✓ ${fmtAmt(remaining)} ${t('finLeftMonth')||'left this month'}`}
            </div>`
         : `<div class="fin-envelope-nolimit">${t('finNoLimit')||'No limit'} — <span class="fin-envelope-setlink" data-setlink="${cat}">${t('finSetLimit')||'Set one'}</span></div>`
       }`;
@@ -380,19 +408,143 @@ function renderSavings() {
       <div class="fin-savings-goal-header">
         <span class="fin-savings-goal-name">${esc(sav.name)}</span>
         <div class="fin-savings-goal-vals">
-          <span class="fin-savings-goal-current">€${sav.current||0}</span>
+          <span class="fin-savings-goal-current">${fmtAmt0(sav.current||0)}</span>
           <span class="fin-savings-goal-sep">/</span>
-          <span class="fin-savings-goal-target">€${sav.target}</span>
+          <span class="fin-savings-goal-target">${fmtAmt0(sav.target)}</span>
         </div>
       </div>
       <div class="fin-savings-track"><div class="fin-savings-fill" style="width:0%"></div></div>
       <div class="fin-savings-actions">
-        <input class="fin-savings-contrib-input" type="number" placeholder="+€" min="0" step="1" data-savid="${sav.id}" />
+        <input class="fin-savings-contrib-input" type="number" placeholder="+${curSym()}" min="0" step="1" data-savid="${sav.id}" />
         <button class="fin-savings-contrib-btn" data-savcontrib="${sav.id}">+ Add</button>
         <button class="fin-savings-del-btn" data-savdel="${sav.id}">×</button>
       </div>`;
     el.appendChild(item);
     requestAnimationFrame(()=>setTimeout(()=>{ const f=item.querySelector('.fin-savings-fill');if(f)f.style.width=pct+'%'; },120));
+  });
+}
+
+// ── LIVE EXCHANGE RATES ───────────────────────────────────────────
+const RATES_KEY = 'ht_finance_rates_v1';   // ht_finance_ prefix → covered by Delete Data
+const RATES_MAX_AGE = 30*60*1000;          // consider cache fresh for 30 min
+let ratesCache = null;   // {base, rates:{USD:1.08,…}, prev:{…}|null, date, fetchedAt}
+let ratesLive = false;
+let ratesFetching = false;
+
+function loadRatesCache() {
+  try { ratesCache = JSON.parse(localStorage.getItem(RATES_KEY) || 'null'); } catch(e) {}
+}
+
+function fmtRate(r) {
+  if (r >= 100) return r.toFixed(2);
+  if (r >= 10) return r.toFixed(3);
+  return r.toFixed(4);
+}
+
+function rateDelta(cur) {
+  if (!ratesCache || !ratesCache.prev) return '';
+  const now = ratesCache.rates[cur], old = ratesCache.prev[cur];
+  if (!now || !old || now === old) return '';
+  return now > old
+    ? '<span class="fin-rate-up">▲</span>'
+    : '<span class="fin-rate-down">▼</span>';
+}
+
+function renderRates() {
+  const listEl = document.getElementById('fin-rates-list');
+  const tickerEl = document.getElementById('fin-rates-ticker');
+  const statusEl = document.getElementById('fin-rates-status');
+  if (!listEl) return;
+
+  const base = finState.currency || 'EUR';
+  const haveData = ratesCache && ratesCache.base === base && ratesCache.rates;
+
+  if (!haveData) {
+    listEl.innerHTML = '';
+    tickerEl.innerHTML = '';
+    statusEl.innerHTML = ratesFetching
+      ? (t('finRatesLoading')||'Loading rates…')
+      : `<span class="fin-live-dot offline"></span>${t('finRatesError')||'Could not load rates'}`;
+    return;
+  }
+
+  const curs = Object.keys(CURRENCIES).filter(c => c !== base && ratesCache.rates[c] != null);
+
+  // News-style ticker (content doubled for a seamless loop)
+  const tickerItems = curs.map(c =>
+    `<span class="fin-ticker-item"><span class="fin-ticker-cur">${c}</span> ${fmtRate(ratesCache.rates[c])} ${rateDelta(c)}</span>`
+  ).join('');
+  tickerEl.innerHTML = tickerItems + tickerItems;
+
+  // Rate list
+  listEl.innerHTML = curs.map(c => `
+    <div class="fin-rate-row">
+      <span class="fin-rate-pair">1 ${base} → ${c}</span>
+      <span class="fin-rate-val">${fmtRate(ratesCache.rates[c])} ${rateDelta(c)}</span>
+    </div>`).join('');
+
+  // Status line
+  const when = ratesCache.fetchedAt
+    ? new Date(ratesCache.fetchedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+    : (ratesCache.date || '');
+  statusEl.innerHTML = ratesLive
+    ? `<span class="fin-live-dot"></span>${t('finRatesLive')||'Live'} · ${t('finRatesUpdated')||'Updated'} ${when}`
+    : `<span class="fin-live-dot offline"></span>${t('finRatesOffline')||'Offline — cached rates'}`;
+}
+
+async function fetchRates(force) {
+  const base = finState.currency || 'EUR';
+  if (!force && ratesCache && ratesCache.base === base &&
+      Date.now() - (ratesCache.fetchedAt||0) < RATES_MAX_AGE) {
+    ratesLive = true; renderRates(); return;
+  }
+  if (ratesFetching) return;
+  ratesFetching = true;
+  const btn = document.getElementById('fin-rates-refresh');
+  if (btn) btn.classList.add('spinning');
+  renderRates();
+
+  const targets = Object.keys(CURRENCIES).filter(c => c !== base);
+  try {
+    let rates = null, dateStr = '';
+    try {
+      const r = await fetch(`https://api.frankfurter.dev/v1/latest?base=${base}&symbols=${targets.join(',')}`);
+      if (!r.ok) throw new Error('http '+r.status);
+      const j = await r.json();
+      rates = j.rates; dateStr = j.date || '';
+    } catch(e) {
+      // Fallback provider
+      const r = await fetch(`https://open.er-api.com/v6/latest/${base}`);
+      if (!r.ok) throw new Error('http '+r.status);
+      const j = await r.json();
+      rates = {};
+      targets.forEach(c => { if (j.rates && j.rates[c] != null) rates[c] = j.rates[c]; });
+      dateStr = j.time_last_update_utc || '';
+    }
+    const prev = (ratesCache && ratesCache.base === base) ? ratesCache.rates : null;
+    ratesCache = { base, rates, prev, date: dateStr, fetchedAt: Date.now() };
+    try { localStorage.setItem(RATES_KEY, JSON.stringify(ratesCache)); } catch(e) {}
+    ratesLive = true;
+  } catch(e) {
+    ratesLive = false;
+  }
+  ratesFetching = false;
+  if (btn) btn.classList.remove('spinning');
+  renderRates();
+}
+
+// ── CURRENCY SELECTOR ─────────────────────────────────────────────
+function initCurrencySelect() {
+  const sel = document.getElementById('fin-currency-select');
+  if (!sel) return;
+  sel.innerHTML = Object.keys(CURRENCIES).map(c =>
+    `<option value="${c}">${c} ${CURRENCIES[c].symbol}</option>`).join('');
+  sel.value = CURRENCIES[finState.currency] ? finState.currency : 'EUR';
+  sel.addEventListener('change', () => {
+    finState.currency = sel.value;
+    saveFinance();
+    renderFinance();
+    fetchRates(true);
   });
 }
 
@@ -402,6 +554,7 @@ function renderFinance() {
   renderIncomeList();
   renderEnvelopes();
   renderSavings();
+  renderRates();
   applyTranslations();
 }
 
@@ -475,6 +628,8 @@ on('fin-income-list','click',e=>{
 const budgetBackdrop = document.getElementById('fin-budget-backdrop');
 const budgetModal = document.getElementById('fin-budget-modal');
 function openBudgetModal() {
+  const lbl = document.querySelector('#fin-budget-modal .fin-modal-label');
+  if (lbl) lbl.textContent = (t('finBudgetLabel')||'Budget limit (€)').replace(/\([^)]*\)\s*$/, '('+curSym()+')');
   document.getElementById('fin-budget-input').value = finState.monthlyBudget || '';
   budgetBackdrop.classList.remove('hidden');
   budgetModal.classList.remove('hidden');
@@ -532,8 +687,15 @@ on('next-month','click',()=>{
   saveNav();
 });
 
+// Refresh rates manually
+on('fin-rates-refresh','click',()=>fetchRates(true));
+
 // ── INIT ─────────────────────────────────────────────────────────
 loadFinance();
+loadRatesCache();
+initCurrencySelect();
 renderFinance();
+fetchRates(false);
+setInterval(()=>fetchRates(true), 10*60*1000); // keep the widget live
 
 } // end if(CURRENT_PAGE === 'finance')

@@ -203,6 +203,23 @@
     <!-- RIGHT COLUMN: Budget Breakdown + Savings Goal -->
     <div class="finance-side-col">
 
+      <!-- LIVE EXCHANGE RATES -->
+      <div class="fin-card fin-rates-card">
+        <div class="fin-card-header" style="margin-bottom:10px;">
+          <div class="fin-card-title">
+            <span class="fin-card-icon">💱</span>
+            <span data-i18n="finRatesTitle">Exchange Rates</span>
+          </div>
+          <select class="fin-form-select fin-currency-select" id="fin-currency-select" title="Currency"></select>
+        </div>
+        <div class="fin-ticker-wrap"><div class="fin-ticker" id="fin-rates-ticker"></div></div>
+        <div id="fin-rates-list"></div>
+        <div class="fin-rates-footer">
+          <span class="fin-rates-status" id="fin-rates-status">…</span>
+          <button class="fin-rates-refresh-btn" id="fin-rates-refresh" title="Refresh rates">⟳</button>
+        </div>
+      </div>
+
       <!-- BUDGET ENVELOPES -->
       <div class="fin-card fin-breakdown-card">
         <div class="fin-envelope-card-header">

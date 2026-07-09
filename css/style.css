@@ -1317,6 +1317,32 @@ body.theme-slate{
   .fin-form-row{gap:6px;}
   .fin-form-select{display:none;}
 }
+/* ── EXCHANGE RATES WIDGET ──────────────────────────────────────── */
+.fin-rates-card{margin-bottom:18px;}
+/* the mobile rule hides .fin-form-select in forms — keep the currency picker visible */
+.fin-form-select.fin-currency-select{display:inline-block;padding:6px 8px;font-size:11px;}
+.fin-ticker-wrap{overflow:hidden;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;margin-bottom:10px;}
+.fin-ticker{display:inline-flex;gap:26px;white-space:nowrap;padding:7px 13px;will-change:transform;animation:finTicker 28s linear infinite;}
+.fin-ticker:hover{animation-play-state:paused;}
+@keyframes finTicker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.fin-ticker-item{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--text-sec);letter-spacing:.3px;}
+.fin-ticker-cur{color:var(--text-muted);font-weight:700;}
+.fin-rate-up{color:#3ecfb2;font-size:9px;}
+.fin-rate-down{color:#ef4444;font-size:9px;}
+.fin-rate-row{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;border-bottom:1px solid var(--border2);}
+.fin-rate-row:last-child{border-bottom:none;}
+.fin-rate-pair{font-size:11px;font-weight:700;color:var(--text-sec);letter-spacing:.2px;}
+.fin-rate-val{font-size:12px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:4px;}
+.fin-rates-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1.5px solid var(--border2);}
+.fin-rates-status{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;}
+.fin-live-dot{width:7px;height:7px;border-radius:50%;background:#3ecfb2;box-shadow:0 0 6px rgba(62,207,178,.8);animation:finLivePulse 1.6s ease-in-out infinite;flex-shrink:0;}
+.fin-live-dot.offline{background:#f5a623;box-shadow:none;animation:none;}
+@keyframes finLivePulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.fin-rates-refresh-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;color:var(--text-muted);width:26px;height:26px;cursor:pointer;font-size:14px;line-height:1;transition:color .18s,border-color .18s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fin-rates-refresh-btn:hover{color:var(--text);border-color:var(--text-muted);}
+.fin-rates-refresh-btn.spinning{animation:finSpin .8s linear infinite;}
+@keyframes finSpin{to{transform:rotate(360deg);}}
+
 /* ── INTIMACY TRACKER ───────────────────────────────────────────── */
 .intimacy-grid{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
 .intimacy-row{display:flex;align-items:center;gap:8px;}

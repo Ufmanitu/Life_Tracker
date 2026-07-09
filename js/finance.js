@@ -441,14 +441,18 @@ function fmtRate(r) {
   return r.toFixed(4);
 }
 
+// Rates are fetched as "1 [base] = rates[c] of c"; we display them inverted
+// ("1 USD = 358 HUF"), so the arrow direction flips too: the foreign currency
+// strengthened when rates[c] went DOWN.
 function rateDelta(cur) {
   if (!ratesCache || !ratesCache.prev) return '';
   const now = ratesCache.rates[cur], old = ratesCache.prev[cur];
   if (!now || !old || now === old) return '';
-  return now > old
+  return now < old
     ? '<span class="fin-rate-up">▲</span>'
     : '<span class="fin-rate-down">▼</span>';
 }
+function invRate(cur) { return 1 / ratesCache.rates[cur]; }
 
 function renderRates() {
   const listEl = document.getElementById('fin-rates-list');
@@ -472,15 +476,15 @@ function renderRates() {
 
   // News-style ticker (content doubled for a seamless loop)
   const tickerItems = curs.map(c =>
-    `<span class="fin-ticker-item"><span class="fin-ticker-cur">${c}</span> ${fmtRate(ratesCache.rates[c])} ${rateDelta(c)}</span>`
+    `<span class="fin-ticker-item"><span class="fin-ticker-cur">1 ${c}</span> ${fmtRate(invRate(c))} ${base} ${rateDelta(c)}</span>`
   ).join('');
   tickerEl.innerHTML = tickerItems + tickerItems;
 
   // Rate list
   listEl.innerHTML = curs.map(c => `
     <div class="fin-rate-row">
-      <span class="fin-rate-pair">1 ${base} → ${c}</span>
-      <span class="fin-rate-val">${fmtRate(ratesCache.rates[c])} ${rateDelta(c)}</span>
+      <span class="fin-rate-pair">1 ${c} =</span>
+      <span class="fin-rate-val">${fmtRate(invRate(c))} ${base} ${rateDelta(c)}</span>
     </div>`).join('');
 
   // Status line
